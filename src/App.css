@@ -1,9 +1,85 @@
 #root {
-  margin: 0 auto;
-  padding: 0;
-  text-align: center;
+    --pixel-size: 1px;
+    --grid-cell: calc(var(--pixel-size) * 32);
+    --bg: #9fa7e4;
+    --view-width: 600;
+    --view-height: 600;
+    margin: 0 auto;
+    padding: 0;
+    text-align: center;
 }
 
-.card {
-  padding: 2em;
+.view {
+    width: calc(var(--pixel-size) * var(--view-width));
+    height: calc(var(--pixel-size) * var(--view-height));
+    outline: var(--pixel-size) solid #fff;
+    border-radius: calc(var(--pixel-size));
+    overflow: hidden;
+    background: #fff5a6;
+    position: relative;
+}
+
+.map {
+    background-image: url("/Grass_Sample.png");
+    background-size: 40%;
+    width: calc(40 * var(--grid-cell));
+    height: calc(40 * var(--grid-cell));
+    position: relative;
+}
+
+.pixel-art {
+    image-rendering: pixelated;
+}
+
+.hero {
+    width: calc(var(--grid-cell) * 2);
+    height: calc(var(--grid-cell) * 2);
+    position: absolute;
+    left: calc(var(--pixel-size) * var(--view-width) / 2 - var(--grid-cell));
+    top: calc(var(--pixel-size) * var(--view-height) / 2 - var(--grid-cell));
+    overflow: hidden;
+    z-index: 1;
+}
+
+.shadow {
+    width: calc(var(--grid-cell) * 2);
+    height: calc(var(--grid-cell) * 2);
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: url("/DemoRpgCharacterShadow.png") no-repeat no-repeat;
+    background-size: 100%;
+}
+
+.hero_spritesheet {
+    position: absolute;
+    background: url("/DemoRpgCharacter.png") no-repeat no-repeat;
+    background-size: 100%;
+    width: calc(var(--grid-cell) * 8);
+    height: calc(var(--grid-cell) * 8);
+}
+
+.hero[data-facing="right"] .hero_spritesheet {
+    background-position-y: calc(var(--pixel-size) * -32 * 2);
+}
+
+.hero[data-facing="up"] .hero_spritesheet {
+    background-position-y: calc(var(--pixel-size) * -64 * 2);
+}
+
+.hero[data-facing="left"] .hero_spritesheet {
+    background-position-y: calc(var(--pixel-size) * -96 * 2);
+}
+
+.hero[data-walking="true"] .hero_spritesheet {
+    animation: walkAnimation 1s steps(4) infinite;
+}
+
+@keyframes walkAnimation {
+    from {
+        transform: translate3d(0%, 0%, 0);
+    }
+    to {
+        transform: translate3d(-100%, 0%, 0);
+    }
 }
