@@ -87,9 +87,5 @@ export const Wolf = ({ id }: { id: number }) => {
     }
   }, [x, y, wolfX, wolfY, moving, movingTo]);
 
-  return (
-    <div style={{ position: "absolute", top: wolfY, left: wolfX }}>
-      <img src="/wolf.png" width="64" alt="wolf" />
-    </div>
-  );
+  return <div className="wolf" style={{ top: wolfY, left: wolfX }}></div>;
 };

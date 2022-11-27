@@ -94,3 +94,11 @@
     font-weight: bold;
     line-height: 1.2;
 }
+
+.wolf {
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    background: url("/wolf.png") no-repeat no-repeat;
+    background-size: cover;
+}
