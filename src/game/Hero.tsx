@@ -1,25 +1,17 @@
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { useEffect, useRef } from "react";
-import {
-  setHeroDown,
-  setHeroLeft,
-  setHeroRight,
-  setHeroUp,
-} from "../redux/slices/hero";
+import { useEffect, useRef, useState } from "react";
 import { FPS } from "./constants";
+import { setHeroPosition } from "../redux/slices/hero";
 
 export const Hero = () => {
   const dispatch = useAppDispatch();
-  const { x, y, direction, moving } = useAppSelector((state) => state.hero);
+  const { x, y, direction, moving, speed } = useAppSelector(
+    (state) => state.hero
+  );
 
+  const [heroX, setHeroX] = useState(x);
+  const [heroY, setHeroY] = useState(y);
   const heroDivRef = useRef(null);
-
-  // On hero position change
-  useEffect(() => {
-    if (!heroDivRef.current) return;
-
-    //console.log(x, y);
-  }, [x, y]);
 
   // On direction change
   useEffect(() => {
@@ -31,44 +23,48 @@ export const Hero = () => {
   }, [direction]);
 
   useEffect(() => {
-    if (x === undefined || x === null) return;
+    if (heroX === undefined || heroX === null) return;
 
     let intervalX: any;
 
     // how far to go
-    const distanceX = Math.abs(moving.x - x);
+    const distanceX = Math.abs(moving.x - heroX);
     // where to go
-    const direction = moving.x >= x ? "right" : "left";
+    const direction = moving.x >= heroX ? "RIGHT" : "LEFT";
 
     if (distanceX >= 1) {
       intervalX = setInterval(() => {
-        if (direction === "right") dispatch(setHeroRight());
-        if (direction === "left") dispatch(setHeroLeft());
+        if (direction === "RIGHT") setHeroX((prev) => prev + speed);
+        if (direction === "LEFT") setHeroX((prev) => prev - speed);
       }, FPS);
     }
 
+    dispatch(setHeroPosition({ x: heroX, y: heroY }));
+
     return () => clearInterval(intervalX);
-  }, [moving, x]);
+  }, [moving, heroX]);
 
   useEffect(() => {
-    if (y === undefined || y === null) return;
+    if (heroY === undefined || heroY === null) return;
 
     let intervalY: any;
 
     // how far to go
-    const distanceY = Math.abs(moving.y - y);
+    const distanceY = Math.abs(moving.y - heroY);
     // where to go
-    const direction = moving.y >= y ? "down" : "up";
+    const direction = moving.y >= heroY ? "DOWN" : "UP";
 
     if (distanceY >= 1) {
       intervalY = setInterval(() => {
-        if (direction === "down") dispatch(setHeroDown());
-        if (direction === "up") dispatch(setHeroUp());
+        if (direction === "DOWN") setHeroY((prev) => prev + speed);
+        if (direction === "UP") setHeroY((prev) => prev - speed);
       }, FPS);
     }
 
+    dispatch(setHeroPosition({ x: heroX, y: heroY }));
+
     return () => clearInterval(intervalY);
-  }, [moving, y]);
+  }, [moving, heroY]);
 
   return (
     <div

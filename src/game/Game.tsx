@@ -4,6 +4,7 @@ import { setHeroMoving } from "../redux/slices/hero";
 import { PIXEL_SIZE } from "./constants";
 import { Interface } from "./Interface";
 import { Hero } from "./Hero";
+import { Wolf } from "./Wolf";
 
 const mapRender = (mapDiv: HTMLDivElement, hero: any) => {
   if (!mapDiv) return;
@@ -49,8 +50,15 @@ export const Game = (props: ComponentProps<any>) => {
       }}
     >
       <Hero />
-      <div ref={mapRef} className="map pixel-art">
+      <div
+        ref={mapRef}
+        className="map pixel-art"
+        style={{ transform: "translate(-150px, -150px)" }}
+      >
         {children}
+        <Wolf id={1} />
+        <Wolf id={2} />
+        <Wolf id={3} />
       </div>
       <Interface />
     </div>
