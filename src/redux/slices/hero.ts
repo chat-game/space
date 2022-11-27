@@ -48,12 +48,6 @@ export const heroSlice = createSlice({
   },
 });
 
-export const {
-  setHeroUp,
-  setHeroDown,
-  setHeroLeft,
-  setHeroRight,
-  setHeroMoving,
-} = heroSlice.actions;
+export const { setHeroPosition, setHeroMoving } = heroSlice.actions;
 
 export default heroSlice.reducer;

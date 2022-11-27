@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import hero from "./slices/hero";
+import creatures from "./slices/creatures";
 
 export const store = configureStore({
   reducer: {
     hero,
+    creatures,
   },
 });
 
