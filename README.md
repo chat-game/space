@@ -1,7 +1,8 @@
-# [Client] Online game Royal Madness
+# [Client] Online game Royal Madness 👑
+
 👉 Check latest build: https://hmbanan666.github.io/royal-madness-client/
 
-Imagine an open world where your Hero can:
+🤔 Imagine an open world where your Hero can:
 - 🗺️ **Travel**, **defeat** creatures and **find** an infinite number of quests
 - 💎 **Gather** loot and a variety of materials
 - 🏗️ **Construct** buildings with other Heroes
@@ -24,4 +25,4 @@ Let's build a similar world together!
 - Want to discover something new in software development. Some new challenges and their overcoming!
 - I enjoy the new achievements on GitHub, especially Starstruck x4: "Created a repository that has 4096 stars". Why not to try?
 
-Become a Stargazer - star this repo. Make forks, issues, PRs, and have fun! Thank for your ideas and activity! 😉
+⭐️ Become a Stargazer ⭐️ Star this repo. Make forks, issues, PRs, and have fun! Thank for your ideas and activity! 😉
