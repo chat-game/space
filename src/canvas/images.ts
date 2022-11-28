@@ -4,8 +4,8 @@ const IMAGES = {
   wolf: new Image(),
 };
 
-IMAGES.background.src = "/Grass_Sample.png";
-IMAGES.hero.src = "/person-pixel.svg";
-IMAGES.wolf.src = "/wolf.png";
+IMAGES.background.src = "Grass_Sample.png";
+IMAGES.hero.src = "person-pixel.svg";
+IMAGES.wolf.src = "wolf.png";
 
 export { IMAGES };
