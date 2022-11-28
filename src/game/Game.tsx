@@ -1,9 +1,6 @@
 import { ComponentProps, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { setHeroMoving } from "../redux/slices/hero";
 import { Interface } from "./Interface";
-import { Hero } from "./Hero";
-import { Wolf } from "./Wolf";
 
 const mapRender = (mapDiv: HTMLDivElement, hero: any) => {
   if (!mapDiv) return;
@@ -35,40 +32,35 @@ export const Game = (props: ComponentProps<any>) => {
     const clickedX = event.pageX;
     const clickedY = event.pageY;
 
-    dispatch(setHeroMoving({ x: clickedX, y: clickedY }));
-
-    window.scrollTo({
-      top: event.clientY,
-      left: event.clientX,
-      behavior: "smooth",
-    });
+    // dispatch(setHeroMoving({ x: clickedX, y: clickedY }));
+    //
+    // window.scrollTo({
+    //   top: event.clientY,
+    //   left: event.clientX,
+    //   behavior: "smooth",
+    // });
 
     console.log("map clicked", event, clickedX, clickedY);
   };
 
   return (
     <>
-      <div
-        className="view"
-        onClick={(event) => {
-          handleMapClick(event);
-        }}
-      >
+      <div className="view" onClick={handleMapClick}>
         <Interface />
 
-        <div
-          ref={mapRef}
-          className="map pixel-art"
-          onClick={(event) => {
-            handleMapClick(event);
-          }}
-        >
-          {children}
-          <Hero />
-          <Wolf id={1} />
-          <Wolf id={2} />
-          <Wolf id={3} />
-        </div>
+        {/*<div*/}
+        {/*  ref={mapRef}*/}
+        {/*  className="map pixel-art"*/}
+        {/*  onClick={(event) => {*/}
+        {/*    handleMapClick(event);*/}
+        {/*  }}*/}
+        {/*>*/}
+        {/*  {children}*/}
+        {/*  <Hero />*/}
+        {/*  <Wolf id={1} />*/}
+        {/*  <Wolf id={2} />*/}
+        {/*  <Wolf id={3} />*/}
+        {/*</div>*/}
       </div>
     </>
   );

@@ -9,6 +9,16 @@
     text-align: center;
 }
 
+#game {
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg);
+    border: 1px solid #000;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
 .view {
     /*width: calc(var(--pixel-size) * var(--view-width));*/
     /*height: calc(var(--pixel-size) * var(--view-height));*/
