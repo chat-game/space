@@ -1,7 +1,6 @@
 import { ComponentProps, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { setHeroMoving } from "../redux/slices/hero";
-import { PIXEL_SIZE } from "./constants";
 import { Interface } from "./Interface";
 import { Hero } from "./Hero";
 import { Wolf } from "./Wolf";
@@ -9,9 +8,15 @@ import { Wolf } from "./Wolf";
 const mapRender = (mapDiv: HTMLDivElement, hero: any) => {
   if (!mapDiv) return;
 
-  mapDiv.style.transform = `translate( ${-hero.x * PIXEL_SIZE}px, ${
-    -hero.y * PIXEL_SIZE
-  }px)`;
+  // mapDiv.style.transform = `translate( ${-hero.x * PIXEL_SIZE}px, ${
+  //   -hero.y * PIXEL_SIZE
+  // }px)`;
+
+  // window.scrollTo({
+  //   top: hero.y,
+  //   left: hero.x,
+  //   behavior: "smooth",
+  // });
 
   window.requestAnimationFrame(() => {
     mapRender(mapDiv, hero);
@@ -27,40 +32,44 @@ export const Game = (props: ComponentProps<any>) => {
   const mapRef = useRef(null);
 
   const handleMapClick = (event: any) => {
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
+    const clickedX = event.pageX;
+    const clickedY = event.pageY;
 
-    const clickedX = Math.floor(event.clientX - windowWidth / 2);
-    const clickedY = Math.floor(event.clientY - windowHeight / 2);
+    dispatch(setHeroMoving({ x: clickedX, y: clickedY }));
 
-    dispatch(setHeroMoving({ x: x + clickedX, y: y + clickedY }));
+    window.scrollTo({
+      top: event.clientY,
+      left: event.clientX,
+      behavior: "smooth",
+    });
 
     console.log("map clicked", event, clickedX, clickedY);
   };
 
-  if (mapRef.current) {
-    mapRender(mapRef.current, { x, y });
-  }
-
   return (
-    <div
-      className="view"
-      onClick={(event) => {
-        handleMapClick(event);
-      }}
-    >
-      <Hero />
+    <>
       <div
-        ref={mapRef}
-        className="map pixel-art"
-        style={{ transform: "translate(-150px, -150px)" }}
+        className="view"
+        onClick={(event) => {
+          handleMapClick(event);
+        }}
       >
-        {children}
-        <Wolf id={1} />
-        <Wolf id={2} />
-        <Wolf id={3} />
+        <Interface />
+
+        <div
+          ref={mapRef}
+          className="map pixel-art"
+          onClick={(event) => {
+            handleMapClick(event);
+          }}
+        >
+          {children}
+          <Hero />
+          <Wolf id={1} />
+          <Wolf id={2} />
+          <Wolf id={3} />
+        </div>
       </div>
-      <Interface />
-    </div>
+    </>
   );
 };

@@ -23,7 +23,7 @@ export const Hero = () => {
   }, [direction]);
 
   useEffect(() => {
-    if (heroX === undefined || heroX === null) return;
+    if (heroX === undefined || heroX === null || moving.x <= 0) return;
 
     let intervalX: any;
 
@@ -45,7 +45,7 @@ export const Hero = () => {
   }, [moving, heroX]);
 
   useEffect(() => {
-    if (heroY === undefined || heroY === null) return;
+    if (heroY === undefined || heroY === null || moving.y <= 0) return;
 
     let intervalY: any;
 
@@ -72,6 +72,7 @@ export const Hero = () => {
       className="hero"
       data-facing="down"
       data-walking="false"
+      style={{ top: heroY, left: heroX }}
     >
       <div className="shadow pixel-art"></div>
       <div className="hero_spritesheet pixel-art"></div>
