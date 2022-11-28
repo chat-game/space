@@ -10,13 +10,19 @@
 }
 
 .view {
-    width: calc(var(--pixel-size) * var(--view-width));
-    height: calc(var(--pixel-size) * var(--view-height));
-    outline: var(--pixel-size) solid #fff;
+    /*width: calc(var(--pixel-size) * var(--view-width));*/
+    /*height: calc(var(--pixel-size) * var(--view-height));*/
+    width: 100vw;
+    height: 100vh;
+    /*outline: var(--pixel-size) solid #fff;*/
     border-radius: calc(var(--pixel-size));
     overflow: hidden;
-    background: #fff5a6;
-    position: relative;
+    /*background: #fff5a6;*/
+    background: transparent;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
 }
 
 .map {
