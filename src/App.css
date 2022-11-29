@@ -57,16 +57,6 @@
     z-index: 1;
 }
 
-.shadow {
-    width: calc(var(--grid-cell) * 2);
-    height: calc(var(--grid-cell) * 2);
-    position: absolute;
-    left: 0;
-    top: 0;
-    background: url("/DemoRpgCharacterShadow.png") no-repeat no-repeat;
-    background-size: 100%;
-}
-
 .hero_spritesheet {
     position: absolute;
     background: url("/DemoRpgCharacter.png") no-repeat no-repeat;
@@ -102,19 +92,11 @@
 
 .interface {
     position: absolute;
-    top: 10px;
+    top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 50px;
     z-index: 2;
     font-weight: bold;
     line-height: 1.2;
-}
-
-.wolf {
-    position: absolute;
-    width: 64px;
-    height: 64px;
-    background: url("/wolf.png") no-repeat no-repeat;
-    background-size: cover;
 }

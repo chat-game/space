@@ -1,12 +1,12 @@
 import "./App.css";
-import { Game } from "./game/Game";
+import { Game } from "./react/Game";
+import { Interface } from "./react/Interface";
 
 function App() {
-  const test = 1;
-
   return (
     <div className="App">
       <Game />
+      <Interface />
     </div>
   );
 }

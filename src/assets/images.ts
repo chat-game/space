@@ -5,7 +5,7 @@ const IMAGES = {
 };
 
 IMAGES.background.src = "Grass_Sample.png";
-IMAGES.hero.src = "person-pixel.svg";
+IMAGES.hero.src = "hero/hero_64.png";
 IMAGES.wolf.src = "wolf.png";
 
 export { IMAGES };
