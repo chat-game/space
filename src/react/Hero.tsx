@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { useEffect, useRef, useState } from "react";
-import { FPS } from "./constants";
+import { FPS } from "../assets/constants";
 import { setHeroPosition } from "../redux/slices/hero";
 
 export const Hero = () => {
