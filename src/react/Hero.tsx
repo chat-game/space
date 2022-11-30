@@ -5,7 +5,7 @@ import { setHeroPosition } from "../redux/slices/hero";
 
 export const Hero = () => {
   const dispatch = useAppDispatch();
-  const { x, y, direction, moving, speed } = useAppSelector(
+  const { x, y, direction, movingTo, speed } = useAppSelector(
     (state) => state.hero
   );
 
@@ -23,14 +23,14 @@ export const Hero = () => {
   }, [direction]);
 
   useEffect(() => {
-    if (heroX === undefined || heroX === null || moving.x <= 0) return;
+    if (heroX === undefined || heroX === null || movingTo.x <= 0) return;
 
     let intervalX: any;
 
     // how far to go
-    const distanceX = Math.abs(moving.x - heroX);
+    const distanceX = Math.abs(movingTo.x - heroX);
     // where to go
-    const direction = moving.x >= heroX ? "RIGHT" : "LEFT";
+    const direction = movingTo.x >= heroX ? "RIGHT" : "LEFT";
 
     if (distanceX >= 1) {
       intervalX = setInterval(() => {
@@ -42,17 +42,17 @@ export const Hero = () => {
     dispatch(setHeroPosition({ x: heroX, y: heroY }));
 
     return () => clearInterval(intervalX);
-  }, [moving, heroX]);
+  }, [movingTo, heroX]);
 
   useEffect(() => {
-    if (heroY === undefined || heroY === null || moving.y <= 0) return;
+    if (heroY === undefined || heroY === null || movingTo.y <= 0) return;
 
     let intervalY: any;
 
     // how far to go
-    const distanceY = Math.abs(moving.y - heroY);
+    const distanceY = Math.abs(movingTo.y - heroY);
     // where to go
-    const direction = moving.y >= heroY ? "DOWN" : "UP";
+    const direction = movingTo.y >= heroY ? "DOWN" : "UP";
 
     if (distanceY >= 1) {
       intervalY = setInterval(() => {
@@ -64,7 +64,7 @@ export const Hero = () => {
     dispatch(setHeroPosition({ x: heroX, y: heroY }));
 
     return () => clearInterval(intervalY);
-  }, [moving, heroY]);
+  }, [movingTo, heroY]);
 
   return (
     <div

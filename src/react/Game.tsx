@@ -40,8 +40,12 @@ export const Game = () => {
 
       requestAnimationFrame(step);
     }
-
     step();
+
+    // On remove - clear loop
+    return () => {
+      cancelAnimationFrame(lastFrameTime);
+    };
   }, [x, y]);
 
   const handleGameCanvasClick = (

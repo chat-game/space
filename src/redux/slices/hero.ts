@@ -1,11 +1,24 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const initialState = {
+export interface HeroState {
+  x: number;
+  y: number;
+  speed: number;
+  direction: "UP" | "DOWN" | "LEFT" | "RIGHT";
+  isMoving: boolean;
+  movingTo: {
+    x: number;
+    y: number;
+  };
+}
+
+const initialState: HeroState = {
   x: 150,
   y: 150,
   speed: 1,
-  direction: "down",
-  moving: {
+  direction: "DOWN",
+  isMoving: false,
+  movingTo: {
     x: 150,
     y: 150,
   },
@@ -23,27 +36,24 @@ export const heroSlice = createSlice({
       state.y = action.payload.y;
     },
     setHeroUp: (state) => {
-      state.direction = "up";
+      state.direction = "UP";
       state.y -= state.speed;
     },
     setHeroDown: (state) => {
-      state.direction = "down";
+      state.direction = "DOWN";
       state.y += state.speed;
     },
     setHeroLeft: (state) => {
-      state.direction = "left";
+      state.direction = "LEFT";
       state.x -= state.speed;
     },
     setHeroRight: (state) => {
-      state.direction = "right";
+      state.direction = "RIGHT";
       state.x += state.speed;
     },
-    setHeroDirection: (state, action: PayloadAction<string>) => {
-      state.direction = action.payload;
-    },
     setHeroMoving: (state, action: PayloadAction<{ x: number; y: number }>) => {
-      state.moving.x = action.payload.x;
-      state.moving.y = action.payload.y;
+      state.movingTo.x = action.payload.x;
+      state.movingTo.y = action.payload.y;
     },
   },
 });
