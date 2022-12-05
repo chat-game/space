@@ -51,13 +51,17 @@ export const heroSlice = createSlice({
       state.direction = "RIGHT";
       state.x += state.speed;
     },
-    setHeroMoving: (state, action: PayloadAction<{ x: number; y: number }>) => {
+    setHeroMovingTo: (
+      state,
+      action: PayloadAction<{ x: number; y: number }>
+    ) => {
+      state.isMoving = true;
       state.movingTo.x = action.payload.x;
       state.movingTo.y = action.payload.y;
     },
   },
 });
 
-export const { setHeroPosition } = heroSlice.actions;
+export const { setHeroPosition, setHeroMovingTo } = heroSlice.actions;
 
 export default heroSlice.reducer;

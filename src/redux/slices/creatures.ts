@@ -9,7 +9,7 @@ const initialState = {
       type: "WOLF",
       speed: 0.03,
       direction: "down",
-      moving: true,
+      moving: false,
       movingTo: {
         x: 260,
         y: 250,
