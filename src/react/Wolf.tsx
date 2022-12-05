@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../hooks";
-import React, { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   setCreatureMoving,
   setCreatureMovingTo,
@@ -17,17 +17,18 @@ export const Wolf = ({ id }: { id: number }) => {
   const [wolfX, setWolfX] = useState(x);
   const [wolfY, setWolfY] = useState(y);
 
-  // Random walk
+  // Create random walk
   useEffect(() => {
     if (moving) return;
 
     const randomInterval = Math.floor(Math.random() * 15000);
 
     const interval = setInterval(() => {
-      const newX = Math.floor(Math.random() * 1100);
-      const newY = Math.floor(Math.random() * 1100);
+      const newX = Math.floor(Math.random() * 300);
+      const newY = Math.floor(Math.random() * 300);
 
       dispatch(setCreatureMovingTo({ id, x: newX, y: newY }));
+      console.log("Wolf is moving to", newX, newY);
     }, randomInterval);
 
     return () => clearInterval(interval);
@@ -40,39 +41,72 @@ export const Wolf = ({ id }: { id: number }) => {
   const directionX = movingTo.x >= wolfX ? "RIGHT" : "LEFT";
   const directionY = movingTo.y >= wolfY ? "DOWN" : "UP";
 
-  const requestRef = React.useRef();
-  const previousTimeRef = React.useRef();
+  const requestRef = useRef();
+  const previousTimeRef = useRef();
 
-  const animate = (time: number) => {
-    if (previousTimeRef.current != undefined) {
-      const deltaTime = time - previousTimeRef.current;
+  // const step = (time: number) => {
+  //   if (previousTimeRef.current != undefined) {
+  //     const deltaTime = time - previousTimeRef.current;
+  //
+  //     if (distanceX >= 0) {
+  //       if (directionX === "RIGHT") {
+  //         setWolfX((prevCount) => prevCount + deltaTime * speed);
+  //         setCreaturePosition({ id, x: x + deltaTime * speed, y: wolfY });
+  //       }
+  //       if (directionX === "LEFT") {
+  //         setWolfX((prevCount) => prevCount - deltaTime * speed);
+  //         setCreaturePosition({ id, x: x - deltaTime * speed, y: wolfY });
+  //       }
+  //     }
+  //
+  //     if (distanceY >= 0) {
+  //       if (directionY === "DOWN")
+  //         setWolfY((prevCount) => prevCount + deltaTime * speed);
+  //       if (directionY === "UP")
+  //         setWolfY((prevCount) => prevCount - deltaTime * speed);
+  //     }
+  //   }
+  //   // @ts-ignore
+  //   previousTimeRef.current = time;
+  //   // @ts-ignore
+  //   requestRef.current = requestAnimationFrame(step);
+  // };
 
-      if (distanceX >= 0) {
-        if (directionX === "RIGHT")
-          setWolfX((prevCount) => prevCount + deltaTime * speed);
-        if (directionX === "LEFT")
-          setWolfX((prevCount) => prevCount - deltaTime * speed);
+  // useEffect(() => {
+  //   // @ts-ignore
+  //   requestRef.current = requestAnimationFrame(step);
+  //   // @ts-ignore
+  //   return () => cancelAnimationFrame(requestRef.current);
+  // }, [x, y, wolfX, wolfY]);
+
+  let lastFrameTime = 0;
+  let fps = 0;
+
+  const step = (time = 0) => {
+    fps = Math.floor(1 / ((performance.now() - lastFrameTime) / 1000));
+    lastFrameTime = time;
+
+    if (distanceX >= 0) {
+      if (directionX === "RIGHT") {
+        setWolfX((prevCount) => prevCount + fps * speed);
+        setCreaturePosition({ id, x: x + fps * speed, y: wolfY });
       }
-
-      if (distanceY >= 0) {
-        if (directionY === "DOWN")
-          setWolfY((prevCount) => prevCount + deltaTime * speed);
-        if (directionY === "UP")
-          setWolfY((prevCount) => prevCount - deltaTime * speed);
+      if (directionX === "LEFT") {
+        setWolfX((prevCount) => prevCount - fps * speed);
+        setCreaturePosition({ id, x: x - fps * speed, y: wolfY });
       }
     }
-    // @ts-ignore
-    previousTimeRef.current = time;
-    // @ts-ignore
-    requestRef.current = requestAnimationFrame(animate);
+
+    if (distanceY >= 0) {
+      if (directionY === "DOWN")
+        setWolfY((prevCount) => prevCount + fps * speed);
+      if (directionY === "UP") setWolfY((prevCount) => prevCount - fps * speed);
+    }
+
+    //requestAnimationFrame(step);
   };
 
-  React.useEffect(() => {
-    // @ts-ignore
-    requestRef.current = requestAnimationFrame(animate);
-    // @ts-ignore
-    return () => cancelAnimationFrame(requestRef.current);
-  }, [wolfX, wolfY]);
+  //requestAnimationFrame(step);
 
   // Is on target position?
   useEffect(() => {
@@ -87,5 +121,5 @@ export const Wolf = ({ id }: { id: number }) => {
     }
   }, [x, y, wolfX, wolfY, moving, movingTo]);
 
-  return <div className="wolf" style={{ top: wolfY, left: wolfX }}></div>;
+  return null;
 };
