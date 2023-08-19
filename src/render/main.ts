@@ -1,11 +1,4 @@
-import {
-  Application,
-  Assets,
-  ICanvas,
-  Sprite,
-  Texture,
-  TilingSprite,
-} from "pixi.js";
+import { Application, ICanvas, Sprite, Texture, TilingSprite } from "pixi.js";
 
 const gameDiv = document.getElementById("game");
 
@@ -24,7 +17,7 @@ const grassTilingSprite = new TilingSprite(
 );
 
 // Sprites
-const heroSprite = new Sprite(await Assets.load("hero/hero_64.png"));
+const heroSprite = Sprite.from("hero/hero_64.png");
 
 // Set up the position of the hero
 heroSprite.x = app.renderer.width / 2;
