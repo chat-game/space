@@ -77,7 +77,7 @@ export const Game = () => {
         x: heroPosition.movingTo.x,
         y: heroPosition.movingTo.y,
       },
-      heroPosition.moving
+      heroPosition.moving,
     );
     renderHero(ctx, { x: heroPosition.x, y: heroPosition.y });
 
@@ -87,7 +87,7 @@ export const Game = () => {
   useAnimationFrame(step);
 
   const handleGameCanvasClick = (
-    event: React.MouseEvent<HTMLCanvasElement, MouseEvent>
+    event: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
   ) => {
     const clickedX = event.pageX;
     const clickedY = event.pageY;
