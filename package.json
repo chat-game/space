@@ -1,31 +1,30 @@
 {
-	"name": "royal-madness-client",
+	"name": "royal-madness-twitch-game",
 	"version": "0.0.1",
-	"description": "Royal Madness game client",
+	"description": "Royal Madness: Twitch Chat Game",
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc && vite build",
 		"preview": "vite preview",
-		"lint": "npx @biomejs/biome check --apply ./src"
+		"lint": "npx @biomejs/biome check --apply ./src",
+		"server": "node --env-file=.env server/main.js"
 	},
-	"keywords": [
-		"game",
-		"online"
-	],
+	"type": "module",
+	"keywords": ["game", "online", "twitch"],
 	"author": "Nick Kosarev <hmbanan666@hotmail.com>",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/hmbanan666/royal-madness-client.git"
+		"url": "git+https://github.com/hmbanan666/royal-madness-twitch-game.git"
 	},
 	"bugs": {
-		"url": "https://github.com/hmbanan666/royal-madness-client/issues"
+		"url": "https://github.com/hmbanan666/royal-madness-twitch-game/issues"
 	},
-	"homepage": "https://github.com/hmbanan666/royal-madness-client#readme",
-	"type": "module",
+	"homepage": "https://github.com/hmbanan666/royal-madness-twitch-game#readme",
 	"dependencies": {
 		"@twurple/auth": "7.1.0",
 		"@twurple/chat": "7.1.0",
+		"@twurple/easy-bot": "7.1.0",
 		"pixi.js": "8.0.2",
 		"react": "18.2.0",
 		"react-dom": "18.2.0"
