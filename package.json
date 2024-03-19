@@ -3,11 +3,10 @@
 	"version": "0.0.1",
 	"description": "Royal Madness: Twitch Chat Game",
 	"scripts": {
-		"dev": "vite",
-		"build": "tsc && vite build",
-		"preview": "vite preview",
-		"lint": "npx @biomejs/biome check --apply ./src",
-		"server": "node --env-file=.env server/main.js"
+		"lint": "npx @biomejs/biome check --apply ./apps",
+		"api:start": "tsx watch --env-file=.env apps/api/src/index.ts",
+		"db:start": "docker compose up",
+		"db:edit": "prisma studio"
 	},
 	"type": "module",
 	"keywords": ["game", "online", "twitch"],
@@ -22,10 +21,15 @@
 	},
 	"homepage": "https://github.com/hmbanan666/royal-madness-twitch-game#readme",
 	"dependencies": {
+		"@hono/node-server": "1.8.2",
+		"@paralleldrive/cuid2": "2.2.2",
+		"@pixi/react": "7.1.1",
+		"@prisma/client": "5.11.0",
 		"@twurple/auth": "7.1.0",
 		"@twurple/chat": "7.1.0",
 		"@twurple/easy-bot": "7.1.0",
-		"pixi.js": "8.0.2",
+		"hono": "4.1.2",
+		"pixi.js": "7.4.0",
 		"react": "18.2.0",
 		"react-dom": "18.2.0"
 	},
@@ -35,7 +39,9 @@
 		"@types/react": "18.2.67",
 		"@types/react-dom": "18.2.22",
 		"@vitejs/plugin-react": "4.2.1",
+		"prisma": "5.11.0",
 		"tailwindcss": "4.0.0-alpha.9",
+		"tsx": "4.7.1",
 		"typescript": "5.4.2",
 		"vite": "5.1.6"
 	}
