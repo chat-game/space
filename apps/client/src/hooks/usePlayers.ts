@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { getPlayers } from "../lib/api.client.ts";
+import { type Player, getPlayers } from "../../../../packages/api-sdk/src";
 
 export const usePlayers = () => {
-	const [players, setPlayers] = useState<any>([]);
+	const [players, setPlayers] = useState<Player[]>([]);
 
 	useEffect(() => {
 		getPlayers().then((res) => {
-			console.log(res);
 			if (!res) return;
 
 			setPlayers(res);

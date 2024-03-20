@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  build-and-deploy:
+  lint:
     concurrency: ci-${{ github.ref }}
     runs-on: ubuntu-latest
     steps:

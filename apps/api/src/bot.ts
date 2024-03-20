@@ -1,11 +1,15 @@
 import { promises as fs } from "node:fs";
-import { createId } from "@paralleldrive/cuid2";
 import { RefreshingAuthProvider } from "@twurple/auth";
 import { Bot, createBotCommand } from "@twurple/easy-bot";
-import { createPlayer, updatePlayer } from "./client.ts";
-import type { Command } from "./types";
+import {
+	createCommand,
+	findOrCreatePlayer,
+	findTreeToChop,
+	setPlayerChopping,
+	setTreeInProgress,
+} from "./db.repository.ts";
 
-export async function serveBot(commands: Command[]) {
+export async function serveBot() {
 	const channel = process.env.TWITCH_CHANNEL_NAME as string;
 	const userId = process.env.TWITCH_CHANNEL_ID as string;
 
@@ -36,26 +40,48 @@ export async function serveBot(commands: Command[]) {
 		authProvider,
 		channels: [channel],
 		commands: [
-			createBotCommand("рубить", (params, { userId, userName, reply }) => {
-				console.log(userId, userName, params);
+			createBotCommand(
+				"рубить",
+				async (params, { userId, userName, reply }) => {
+					console.log(userId, userName, params);
 
-				commands.unshift({
-					id: createId(),
-					userId,
-					userName,
-					command: "!рубить",
-					createdAt: new Date().getTime(),
-				});
+					const player = await findOrCreatePlayer({
+						twitchId: userId,
+						userName,
+					});
+					if (!player || player.isBusy) {
+						// No way
+						void reply(`${userName}, ты пока занят(а).`);
+						return;
+					}
 
-				createPlayer({ id: userId, userName });
+					// Find tree
+					const tree = await findTreeToChop();
+					if (!tree || !tree.id) {
+						void reply(
+							`${userName}, нет доступного дерева. Может скоро подрастет?`,
+						);
+						return;
+					}
 
-				const x = Math.random() * 1000;
-				const y = Math.random() * 1000;
+					// Send player to chop
+					const x = tree.x;
+					const y = tree.y;
 
-				updatePlayer({ id: userId, x, y });
+					await setPlayerChopping({ id: player.id, x, y });
 
-				void reply(`${userName}, ты рубишь дерево! (пока не по настоящему)`);
-			}),
+					// Working time
+					await setTreeInProgress(tree.id);
+
+					await createCommand({
+						playerId: player.id,
+						command: "!рубить",
+						target: tree.id,
+					});
+
+					void reply(`${userName}, ты рубишь дерево!`);
+				},
+			),
 		],
 	});
 

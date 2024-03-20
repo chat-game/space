@@ -7,12 +7,46 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Village {
+  id                  String   @id
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @default(now())
+  globalTarget        Int?
+  globalTargetSuccess Int?
+  wood                Int      @default(0)
+}
+
 model Player {
+  id           String    @id
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @default(now())
+  lastActionAt DateTime  @default(now())
+  twitchId     String
+  userName     String
+  x            Int       @default(0)
+  y            Int       @default(0)
+  isBusy       Boolean   @default(false)
+  commands     Command[]
+}
+
+model Command {
   id        String   @id
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
-  twitchId  String
-  userName String
-  x   Int @default(0)
-  y Int @default(0)
+  command   String
+  target    String?
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id])
+}
+
+model Tree {
+  id               String   @id
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @default(now())
+  x                Int      @default(0)
+  y                Int      @default(0)
+  size             Int      @default(0)
+  resource         Int
+  inProgress       Boolean  @default(false)
+  progressFinishAt DateTime @default(now())
 }

@@ -8,7 +8,6 @@
 		"db:start": "docker compose up",
 		"db:edit": "prisma studio"
 	},
-	"type": "module",
 	"keywords": ["game", "online", "twitch"],
 	"author": "Nick Kosarev <hmbanan666@hotmail.com>",
 	"license": "MIT",

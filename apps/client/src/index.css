@@ -1,9 +1,14 @@
 @import "tailwindcss";
 
-#game {
-    width: 100vw;
-    height: 100vh;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
+@keyframes skew-x-shake {
+    0% { transform: skewX(-15deg); }
+    5% { transform: skewX(15deg); }
+    10% { transform: skewX(-15deg); }
+    15% { transform: skewX(15deg); }
+    20% { transform: skewX(0deg); }
+    100% { transform: skewX(0deg); }
+}
+
+.skew-x-shake {
+    animation: skew-x-shake 1.5s infinite;
 }

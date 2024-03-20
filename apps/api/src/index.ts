@@ -4,21 +4,26 @@ import { cors } from "hono/cors";
 import { serveBot } from "./bot";
 import {
 	findActivePlayers,
+	findCommands,
 	findOrCreatePlayer,
+	findTreeToChop,
+	findTrees,
+	findVillage,
 	updatePlayer,
+	updateTree,
 } from "./db.repository.ts";
-import type { Command } from "./types";
-
-// Temp
-const commands: Command[] = [];
+import { serveTree } from "./tree.ts";
 
 const app = new Hono();
 
 app.use("/*", cors());
 
-app.get("/commands", (c) => {
+app.get("/commands", async (c) => {
+	const commands = await findCommands();
+
 	return c.json(commands);
 });
+
 app.get("/players", async (c) => {
 	const players = await findActivePlayers();
 
@@ -44,10 +49,38 @@ app.patch("players/:id", async (c) => {
 	});
 });
 
+app.get("/trees", async (c) => {
+	const trees = await findTrees();
+
+	return c.json(trees);
+});
+app.get("/trees/chop", async (c) => {
+	const trees = await findTreeToChop();
+
+	return c.json(trees);
+});
+app.patch("trees/:id", async (c) => {
+	const id = c.req.param("id");
+	const body = await c.req.json<{ size: number }>();
+
+	await updateTree({ id, size: body.size });
+
+	return c.json({
+		ok: true,
+	});
+});
+
+app.get("/village", async (c) => {
+	const village = await findVillage();
+
+	return c.json(village);
+});
+
 const port = 4001;
 console.log(`Server is running on port ${port}`);
 
-void serveBot(commands);
+void serveBot();
+void serveTree();
 
 serve({
 	fetch: app.fetch,

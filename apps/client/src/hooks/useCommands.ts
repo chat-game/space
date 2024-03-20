@@ -1,16 +1,20 @@
 import { useEffect, useState } from "react";
-import { getCommands } from "../lib/api.client.ts";
+import { type Command, getCommands } from "../../../../packages/api-sdk/src";
 
 export const useCommands = () => {
-	const [commands, setCommands] = useState([]);
+	const [commands, setCommands] = useState<Command[]>([]);
 
 	useEffect(() => {
 		getCommands().then((res) => {
+			if (!res) return;
+
 			setCommands(res);
 		});
 
 		const reload = setInterval(() => {
 			getCommands().then((res) => {
+				if (!res) return;
+
 				setCommands(res);
 			});
 		}, 5000);
