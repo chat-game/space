@@ -38,4 +38,5 @@ export interface Tree {
 	resource: number;
 	inProgress: boolean;
 	progressFinishAt: Date;
+	type: string;
 }

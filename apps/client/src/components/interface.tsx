@@ -1,3 +1,6 @@
+import { Howl } from "howler";
+import type { Tree } from "packages/api-sdk/src/index.ts";
+import { useEffect, useMemo } from "react";
 import { useCommands } from "../hooks/useCommands.ts";
 import { usePlayers } from "../hooks/usePlayers.ts";
 import { useTrees } from "../hooks/useTrees.ts";
@@ -54,29 +57,9 @@ export const Interface = () => {
 		);
 	});
 
-	const showTrees = trees?.map((tree) => {
-		const size = tree.size;
-		const height = (size * 128) / 100;
-
-		const isShaking = tree.inProgress;
-
-		return (
-			<div
-				key={tree.id}
-				className={`fixed ${isShaking && "skew-x-shake"}`}
-				style={{ zIndex: tree.y, top: tree.y, left: tree.x }}
-			>
-				<div style={{ marginTop: -height, marginLeft: -height / 2 }}>
-					<img
-						src={"tree/tree_128.png"}
-						alt=""
-						className="w-fit"
-						style={{ height: height }}
-					/>
-				</div>
-			</div>
-		);
-	});
+	const showTrees = trees?.map((tree) => (
+		<TreeBlock key={tree.id} tree={tree} />
+	));
 
 	return (
 		<>
@@ -84,9 +67,13 @@ export const Interface = () => {
 				className="fixed top-0 bottom-0 left-0 right-0"
 				style={{ backgroundImage: "url('/Grass_Sample.png')" }}
 			/>
+			<div className="fixed top-0 bottom-0 left-0 right-0 bg-green-500/10" />
+
 			<div className="z-10 absolute top-0 left-0">
 				{showPlayers}
 				{showTrees}
+
+				<Stone />
 
 				<Village />
 
@@ -148,23 +135,88 @@ const Village = () => {
 						Строим деревню тут?
 					</div>
 
-					<img
-						src={"dirt1_128.png"}
-						alt=""
-						className="w-fit"
-						style={{ height: height }}
-					/>
-
-					<div className="mx-auto -mt-4 px-2 py-1 w-fit text-center text-amber-900 rounded-2xl text-sm">
-						<div className="flex gap-2 justify-center">
-							<div className="px-2 py-1 bg-amber-900/90 text-amber-100 border-b-4 border-amber-950 rounded-2xl">
-								<p>Древесина</p>
-								<p className="text-xl font-bold">{village?.wood}</p>
-							</div>
+					<div className="relative">
+						<img
+							src={"wood/wood1_64.png"}
+							alt=""
+							className="ml-0 w-fit h-auto"
+						/>
+						<div className="absolute top-9 left-3 text-base text-center font-bold text-amber-200">
+							{village?.wood}
 						</div>
 					</div>
 				</div>
 			</div>
 		</>
+	);
+};
+
+const Stone = () => {
+	const stone = {
+		x: 1250,
+		y: 200,
+	};
+
+	const size = 100;
+	const height = (size * 128) / 100;
+
+	const isShaking = false;
+
+	return (
+		<div
+			className={`fixed ${isShaking && "skew-x-shake"}`}
+			style={{ zIndex: stone.y, top: stone.y, left: stone.x }}
+		>
+			<div style={{ marginTop: -height, marginLeft: -height / 2 }}>
+				<img
+					src={"stone/stone1_128.png"}
+					alt=""
+					className="w-fit"
+					style={{ height: height }}
+				/>
+			</div>
+		</div>
+	);
+};
+
+const TreeBlock = ({ tree }: { tree: Tree }) => {
+	const type = tree.type;
+	const size = tree.size;
+	const height = (size * 128) / 100;
+
+	const isShaking = tree.inProgress;
+
+	const sound = useMemo(
+		() =>
+			new Howl({
+				src: ["/sound/chopping1.wav"],
+				loop: true,
+			}),
+		[],
+	);
+
+	useEffect(() => {
+		if (isShaking) {
+			sound.play();
+			return;
+		}
+
+		sound.stop();
+	}, [isShaking, sound]);
+
+	return (
+		<div
+			className={`fixed ${isShaking && "skew-x-shake"}`}
+			style={{ zIndex: tree.y, top: tree.y, left: tree.x }}
+		>
+			<div style={{ marginTop: -height, marginLeft: -height / 2 }}>
+				<img
+					src={`tree/tree${type}_128.png`}
+					alt=""
+					className="w-fit"
+					style={{ height: height }}
+				/>
+			</div>
+		</div>
 	);
 };

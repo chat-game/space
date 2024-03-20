@@ -49,4 +49,5 @@ model Tree {
   resource         Int
   inProgress       Boolean  @default(false)
   progressFinishAt DateTime @default(now())
+  type             String
 }
