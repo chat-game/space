@@ -9,24 +9,15 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@hono/node-server": "1.8.2",
-		"@twurple/auth": "7.1.0",
-		"@twurple/chat": "7.1.0",
-		"@twurple/easy-bot": "7.1.0",
-		"hono": "4.1.2",
-		"pixi.js": "7.4.0",
-		"react": "18.2.0",
-		"react-dom": "18.2.0"
+		"react": "*",
+		"react-dom": "*"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "1.6.1",
-		"@tailwindcss/vite": "4.0.0-alpha.9",
-		"@types/react": "18.2.67",
-		"@types/react-dom": "18.2.22",
-		"@vitejs/plugin-react": "4.2.1",
-		"tailwindcss": "4.0.0-alpha.9",
-		"tsx": "4.7.1",
-		"typescript": "5.4.2",
-		"vite": "5.1.6"
+		"@tailwindcss/vite": "*",
+		"@types/react": "*",
+		"@types/react-dom": "*",
+		"@vitejs/plugin-react": "*",
+		"tailwindcss": "*",
+		"vite": "*"
 	}
 }

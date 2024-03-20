@@ -79,19 +79,25 @@ export const Interface = () => {
 	});
 
 	return (
-		<div className="z-10 absolute top-0 left-0">
-			{showPlayers}
-			{showTrees}
+		<>
+			<div
+				className="fixed top-0 bottom-0 left-0 right-0"
+				style={{ backgroundImage: "url('/Grass_Sample.png')" }}
+			/>
+			<div className="z-10 absolute top-0 left-0">
+				{showPlayers}
+				{showTrees}
 
-			<Village />
+				<Village />
 
-			<div className="fixed bottom-4 left-4">
-				<div className="mb-2 w-fit px-3 py-1 font-semibold text-xl text-amber-900 bg-amber-100/90 border-b-4 rounded-2xl">
-					Последние действия:
+				<div className="fixed bottom-4 left-4">
+					<div className="mb-2 w-fit px-3 py-1 font-semibold text-xl text-amber-900 bg-amber-100/90 border-b-4 rounded-2xl">
+						Последние действия:
+					</div>
+					<div className="flex flex-nowrap gap-2">{showLastCommands}</div>
 				</div>
-				<div className="flex flex-nowrap gap-2">{showLastCommands}</div>
 			</div>
-		</div>
+		</>
 	);
 };
 
