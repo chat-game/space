@@ -2,25 +2,25 @@ import { useEffect, useState } from "react";
 import { type Village, getVillage } from "../../../../packages/api-sdk/src";
 
 export const useVillage = () => {
-	const [village, setVillage] = useState<Village>();
+  const [village, setVillage] = useState<Village>();
 
-	useEffect(() => {
-		getVillage().then((res) => {
-			if (!res) return;
+  useEffect(() => {
+    getVillage().then((res) => {
+      if (!res) return;
 
-			setVillage(res);
-		});
+      setVillage(res);
+    });
 
-		const reload = setInterval(() => {
-			getVillage().then((res) => {
-				if (!res) return;
+    const reload = setInterval(() => {
+      getVillage().then((res) => {
+        if (!res) return;
 
-				setVillage(res);
-			});
-		}, 1000);
+        setVillage(res);
+      });
+    }, 1000);
 
-		return () => clearInterval(reload);
-	}, []);
+    return () => clearInterval(reload);
+  }, []);
 
-	return village;
+  return village;
 };

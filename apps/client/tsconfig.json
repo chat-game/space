@@ -1,26 +1,26 @@
 {
-	"compilerOptions": {
-		"target": "ESNext",
-		"useDefineForClassFields": true,
-		"lib": ["ESNext", "DOM", "DOM.Iterable"],
-		"module": "ESNext",
-		"skipLibCheck": true,
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
 
-		/* Bundler mode */
-		"moduleResolution": "Bundler",
-		"allowImportingTsExtensions": true,
-		"resolveJsonModule": true,
-		"isolatedModules": true,
-		"noEmit": true,
-		"jsx": "react-jsx",
+    /* Bundler mode */
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
 
-		/* Linting */
-		"strict": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-		"noFallthroughCasesInSwitch": true
-	},
-	"include": ["src"],
-	"references": [{ "path": "./tsconfig.node.json" }],
-	"extends": "../../tsconfig.base.json"
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }],
+  "extends": "../../tsconfig.base.json"
 }

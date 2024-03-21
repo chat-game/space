@@ -17,16 +17,21 @@ model Village {
 }
 
 model Player {
-  id           String    @id
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @default(now())
-  lastActionAt DateTime  @default(now())
-  twitchId     String
-  userName     String
-  x            Int       @default(0)
-  y            Int       @default(0)
-  isBusy       Boolean   @default(false)
-  commands     Command[]
+  id              String    @id
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @default(now())
+  lastActionAt    DateTime  @default(now())
+  twitchId        String
+  userName        String
+  x               Int       @default(0)
+  y               Int       @default(0)
+  isBusy          Boolean   @default(false)
+  colorIndex      Int       @default(0)
+  handsItemType   String?
+  handsItemAmount Int       @default(0)
+  coins           Int       @default(0)
+  reputation      Int       @default(0)
+  commands        Command[]
 }
 
 model Command {

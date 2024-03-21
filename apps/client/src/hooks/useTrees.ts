@@ -2,25 +2,25 @@ import { useEffect, useState } from "react";
 import { type Tree, getTrees } from "../../../../packages/api-sdk/src";
 
 export const useTrees = () => {
-	const [trees, setTrees] = useState<Tree[]>([]);
+  const [trees, setTrees] = useState<Tree[]>([]);
 
-	useEffect(() => {
-		getTrees().then((res) => {
-			if (!res) return;
+  useEffect(() => {
+    getTrees().then((res) => {
+      if (!res) return;
 
-			setTrees(res);
-		});
+      setTrees(res);
+    });
 
-		const reload = setInterval(() => {
-			getTrees().then((res) => {
-				if (!res) return;
+    const reload = setInterval(() => {
+      getTrees().then((res) => {
+        if (!res) return;
 
-				setTrees(res);
-			});
-		}, 1000);
+        setTrees(res);
+      });
+    }, 1000);
 
-		return () => clearInterval(reload);
-	}, []);
+    return () => clearInterval(reload);
+  }, []);
 
-	return trees;
+  return trees;
 };
