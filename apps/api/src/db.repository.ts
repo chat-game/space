@@ -9,7 +9,7 @@ export function createPlayer(dto: { twitchId: string; userName: string }) {
       id: createId(),
       twitchId: dto.twitchId,
       userName: dto.userName,
-      x: 600,
+      x: -100,
       y: 600,
       colorIndex,
     },
@@ -43,18 +43,17 @@ export async function findOrCreatePlayer({
 }
 
 export function findActivePlayers() {
-  // Active = 10 minutes?
-  const time = new Date();
-  const milliseconds = 10 * 60 * 1000;
-  const lastActionAt = new Date(time.getTime() - milliseconds);
+  // Active = 20 minutes?
+  //const time = new Date();
+  //const milliseconds = 20 * 60 * 1000;
+  //const lastActionAt = new Date(time.getTime() - milliseconds);
 
-  return db.player.findMany({
-    where: { lastActionAt: { gte: lastActionAt } },
-  });
+  return db.player.findMany();
 }
 
 export function findTopByReputationPlayers() {
   return db.player.findMany({
+    where: { reputation: { gt: 0 } },
     orderBy: { reputation: "desc" },
     take: 10,
   });
@@ -85,6 +84,10 @@ export function findCommands() {
   });
 }
 
+export function findTree(id: string) {
+  return db.tree.findUnique({ where: { id } });
+}
+
 export function findTrees() {
   return db.tree.findMany();
 }
@@ -92,11 +95,21 @@ export function findTrees() {
 export function findTreeToChop() {
   return db.tree.findFirst({
     where: {
-      size: { gte: 80 },
+      size: { gte: 50 },
       inProgress: false,
+      isReserved: false,
     },
     orderBy: {
       progressFinishAt: "asc",
+    },
+  });
+}
+
+export function reserveTree(id: string) {
+  return db.tree.update({
+    where: { id },
+    data: {
+      isReserved: true,
     },
   });
 }
@@ -170,8 +183,20 @@ export function setPlayerMadeAction(playerId: string) {
   });
 }
 
-export async function setPlayerChopping(dto: {
+export function clearPlayerTarget(playerId: string) {
+  return db.player.update({
+    where: { id: playerId },
+    data: {
+      targetX: null,
+      targetY: null,
+      targetId: null,
+    },
+  });
+}
+
+export async function setPlayerMovingToTarget(dto: {
   id: string;
+  targetId: string;
   x: number;
   y: number;
 }) {
@@ -180,9 +205,69 @@ export async function setPlayerChopping(dto: {
   return db.player.update({
     where: { id: dto.id },
     data: {
-      x: dto.x,
-      y: dto.y,
-      isBusy: true,
+      targetX: dto.x,
+      targetY: dto.y,
+      targetId: dto.targetId,
+      isBusy: true, // running?
+      lastActionAt: new Date(),
+    },
+  });
+}
+
+export async function setPlayerIsOnTarget(playerId: string) {
+  const player = await db.player.findUnique({
+    where: { id: playerId },
+  });
+  if (!player || !player.targetId || !player.targetX || !player.targetY) {
+    return null;
+  }
+
+  // If target is outScreen
+  if (player.targetId === "0") {
+    await setPlayerCoordinates(player.id, player.targetX, player.targetY);
+    await clearPlayerTarget(player.id);
+    await setPlayerNotBusy(player.id);
+    return;
+  }
+
+  // Find target
+  const tree = await findTree(player.targetId);
+  if (!tree) {
+    return null;
+  }
+
+  // After - will chop
+  await setPlayerCoordinates(player.id, tree.x, tree.y);
+  await setPlayerChopping(player.id);
+
+  // Working time
+  await setTreeInProgress(tree.id);
+
+  await createCommand({
+    playerId: player.id,
+    command: "!рубить",
+    target: tree.id,
+  });
+}
+
+export function setPlayerCoordinates(id: string, x: number, y: number) {
+  return db.player.update({
+    where: { id },
+    data: {
+      x,
+      y,
+    },
+  });
+}
+
+export async function setPlayerChopping(id: string) {
+  await setPlayerMadeAction(id);
+  await clearPlayerTarget(id); // now player is on target
+
+  return db.player.update({
+    where: { id },
+    data: {
+      isBusy: true, // chopping?
       lastActionAt: new Date(),
     },
   });
@@ -268,6 +353,38 @@ export async function donateItemsFromPlayerHands(playerId: string) {
   });
 }
 
+export async function sellItemsFromPlayerHands(playerId: string) {
+  const player = await db.player.findUnique({
+    where: { id: playerId },
+  });
+
+  // Check hands?
+  if (!player) {
+    return null;
+  }
+
+  // + coins for every resource
+  await db.player.update({
+    where: { id: playerId },
+    data: {
+      coins: {
+        increment: player.handsItemAmount,
+      },
+    },
+  });
+
+  await setPlayerMadeAction(playerId);
+
+  // Clear hands
+  return db.player.update({
+    where: { id: playerId },
+    data: {
+      handsItemType: null,
+      handsItemAmount: 0,
+    },
+  });
+}
+
 function setPlayerNotBusy(playerId: string) {
   return db.player.update({
     where: { id: playerId },
@@ -275,6 +392,27 @@ function setPlayerNotBusy(playerId: string) {
       isBusy: false,
     },
   });
+}
+
+export async function findInactivePlayers() {
+  // Active = 10 minutes?
+  const time = new Date();
+  const milliseconds = 10 * 60 * 1000;
+  const lastActionAt = new Date(time.getTime() - milliseconds);
+
+  const outScreenX = -100;
+
+  const players = await db.player.findMany({
+    where: { lastActionAt: { lt: lastActionAt }, x: { not: outScreenX } },
+  });
+  for (const player of players) {
+    await setPlayerMovingToTarget({
+      id: player.id,
+      targetId: "0",
+      x: -100,
+      y: 600,
+    });
+  }
 }
 
 export async function findCompletedTrees() {
@@ -308,6 +446,7 @@ export async function findCompletedTrees() {
     await db.tree.update({
       where: { id: tree.id },
       data: {
+        isReserved: false,
         inProgress: false,
         resource: 0,
         size: 0,

@@ -29,7 +29,9 @@ export const TreeBlock = ({ tree }: { tree: Tree }) => {
 
   return (
     <div
-      className={`fixed ${isShaking && "animation-tree-shake"}`}
+      className={`fixed ${
+        isShaking ? "animation-tree-shake" : "animation-tree-wind-shake"
+      }`}
       style={{ zIndex: tree.y, top: tree.y, left: tree.x }}
     >
       <div style={{ marginTop: -height, marginLeft: -height / 2 }}>

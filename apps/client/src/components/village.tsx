@@ -41,13 +41,17 @@ export const Village = () => {
             Камень будем складывать тут?
           </div>
 
+          <div className="ml-40 mt-12 px-3 py-1 w-fit text-center bg-amber-100/90 text-amber-900 rounded-2xl font-bold text-sm">
+            Торговца посадим тут?
+          </div>
+
           <div className="relative">
             <img
               src={"wood/wood1_64.png"}
               alt=""
               className="ml-0 w-fit h-auto"
             />
-            <div className="absolute top-9 left-3 text-base text-center font-bold text-amber-200">
+            <div className="absolute top-9 left-3 text-base text-center font-bold text-amber-100">
               {village?.wood}
             </div>
           </div>

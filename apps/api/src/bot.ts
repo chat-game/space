@@ -6,8 +6,9 @@ import {
   donateItemsFromPlayerHands,
   findOrCreatePlayer,
   findTreeToChop,
-  setPlayerChopping,
-  setTreeInProgress,
+  reserveTree,
+  sellItemsFromPlayerHands,
+  setPlayerMovingToTarget,
 } from "./db.repository.ts";
 
 export async function serveBot() {
@@ -44,7 +45,7 @@ export async function serveBot() {
       createBotCommand(
         "рубить",
         async (params, { userId, userName, reply }) => {
-          console.log(userId, userName, params);
+          console.log("рубить", userId, userName, params);
 
           const player = await findOrCreatePlayer({
             twitchId: userId,
@@ -65,24 +66,19 @@ export async function serveBot() {
             return;
           }
 
+          await reserveTree(tree.id);
+
           // Send player to chop
-          const x = tree.x;
-          const y = tree.y;
-
-          await setPlayerChopping({ id: player.id, x, y });
-
-          // Working time
-          await setTreeInProgress(tree.id);
-
-          await createCommand({
-            playerId: player.id,
-            command: "!рубить",
-            target: tree.id,
+          await setPlayerMovingToTarget({
+            id: player.id,
+            targetId: tree.id,
+            x: tree.x,
+            y: tree.y,
           });
         },
       ),
       createBotCommand("дар", async (params, { userId, userName, reply }) => {
-        console.log(userId, userName, params);
+        console.log("дар", userId, userName, params);
 
         const player = await findOrCreatePlayer({
           twitchId: userId,
@@ -105,6 +101,33 @@ export async function serveBot() {
           `${userName}, ты подарил деревне ресурсы, которые у тебя были в руках!`,
         );
       }),
+      createBotCommand(
+        "продать",
+        async (params, { userId, userName, reply }) => {
+          console.log("продать", userId, userName, params);
+
+          const player = await findOrCreatePlayer({
+            twitchId: userId,
+            userName,
+          });
+          if (!player || player.handsItemAmount === 0) {
+            // No way
+            void reply(`${userName}, руки твои пусты.`);
+            return;
+          }
+
+          await sellItemsFromPlayerHands(player.id);
+
+          await createCommand({
+            playerId: player.id,
+            command: "!продать",
+          });
+
+          void reply(
+            `${userName}, ты продал ресурсы торговцу, которые у тебя были в руках!`,
+          );
+        },
+      ),
     ],
   });
 

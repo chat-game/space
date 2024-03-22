@@ -21,6 +21,25 @@
     100% { transform: skewX(0deg); }
 }
 
+.animation-tree-shake {
+    animation: animation-tree-shake 2.6s infinite;
+}
+
+@keyframes animation-tree-wind-shake {
+    0% { transform: skewX(0deg); }
+    10% { transform: skewX(-5deg); }
+    15% { transform: skewX(0); }
+    50% { transform: skewX(0); }
+    57% { transform: skewX(2deg); }
+    65% { transform: skewX(-4deg); }
+    73% { transform: skewX(0); }
+    100% { transform: skewX(0deg); }
+}
+
+.animation-tree-wind-shake {
+    animation: animation-tree-wind-shake 10s infinite;
+}
+
 @keyframes animation-tree-chopping {
     0% { transform: translate(0, 0) rotate(0deg); }
     /* Chop */
@@ -43,10 +62,50 @@
     100% { transform: translate(0, 0) rotate(0deg); }
 }
 
-.animation-tree-shake {
-    animation: animation-tree-shake 2.6s infinite;
-}
-
 .animation-tree-chopping {
     animation: animation-tree-chopping 2.6s infinite;
+}
+
+@keyframes animation-rabbit-hop {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    70% {
+        transform: translate(0, 1px) rotate(0deg);
+    }
+    80% {
+        transform: translate(0, -6px) rotate(-8deg) scale(0.7);
+    }
+    90% {
+        transform: translate(0, 2px) rotate(2deg);
+    }
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+}
+
+.animation-rabbit-hop {
+    animation: animation-rabbit-hop 0.7s infinite;
+}
+
+@keyframes animation-wolf-move {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    70% {
+        transform: translate(0, 1px) rotate(0deg);
+    }
+    80% {
+        transform: translate(0, -1px) rotate(-4deg) scale(0.88);
+    }
+    90% {
+        transform: translate(0, 1px) rotate(2deg);
+    }
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+}
+
+.animation-wolf-move {
+    animation: animation-wolf-move 0.8s infinite;
 }

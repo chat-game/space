@@ -25,6 +25,9 @@ model Player {
   userName        String
   x               Int       @default(0)
   y               Int       @default(0)
+  targetX         Int?      @default(0)
+  targetY         Int?      @default(0)
+  targetId        String?
   isBusy          Boolean   @default(false)
   colorIndex      Int       @default(0)
   handsItemType   String?
@@ -52,6 +55,7 @@ model Tree {
   y                Int      @default(0)
   size             Int      @default(0)
   resource         Int
+  isReserved       Boolean  @default(false)
   inProgress       Boolean  @default(false)
   progressFinishAt DateTime @default(now())
   type             String

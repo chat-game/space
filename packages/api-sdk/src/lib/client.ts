@@ -81,17 +81,10 @@ export const createPlayer = async ({
   return res.json();
 };
 
-export const updatePlayer = async ({
-  id,
-  x,
-  y,
-}: { id: string; x: number; y: number }) => {
-  const res = await fetch(`http://localhost:4001/players/${id}`, {
-    method: "PATCH",
-    body: JSON.stringify({
-      x,
-      y,
-    }),
+export const setPlayerIsOnTarget = async (id: string) => {
+  const res = await fetch(`http://localhost:4001/players/${id}/target`, {
+    method: "POST",
+    body: JSON.stringify({}),
   });
   return res.json();
 };

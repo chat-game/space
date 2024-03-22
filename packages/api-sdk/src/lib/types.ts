@@ -23,6 +23,9 @@ export interface Player {
   lastActionAt: Date;
   x: number;
   y: number;
+  targetX: number | null;
+  targetY: number | null;
+  targetId: string | null;
   userName: string;
   twitchId: string;
   isBusy: boolean;
@@ -41,6 +44,7 @@ export interface Tree {
   y: number;
   size: number;
   resource: number;
+  isReserved: boolean;
   inProgress: boolean;
   progressFinishAt: Date;
   type: string;

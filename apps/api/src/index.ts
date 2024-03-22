@@ -10,9 +10,11 @@ import {
   findTreeToChop,
   findTrees,
   findVillage,
+  setPlayerIsOnTarget,
   updatePlayer,
   updateTree,
 } from "./db.repository.ts";
+import { servePlayer } from "./player.ts";
 import { serveTree } from "./tree.ts";
 
 const app = new Hono();
@@ -44,6 +46,15 @@ app.patch("players/:id", async (c) => {
   const body = await c.req.json<{ x: number; y: number }>();
 
   await updatePlayer({ twitchId: id, x: body.x, y: body.y });
+
+  return c.json({
+    ok: true,
+  });
+});
+app.post("players/:id/target", async (c) => {
+  const id = c.req.param("id");
+
+  await setPlayerIsOnTarget(id);
 
   return c.json({
     ok: true,
@@ -86,6 +97,7 @@ const port = 4001;
 console.log(`Server is running on port ${port}`);
 
 void serveBot();
+void servePlayer();
 void serveTree();
 
 serve({
