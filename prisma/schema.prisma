@@ -17,24 +17,39 @@ model Village {
 }
 
 model Player {
-  id              String    @id
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @default(now())
-  lastActionAt    DateTime  @default(now())
-  twitchId        String
-  userName        String
-  x               Int       @default(0)
-  y               Int       @default(0)
-  targetX         Int?      @default(0)
-  targetY         Int?      @default(0)
-  targetId        String?
-  isBusy          Boolean   @default(false)
-  colorIndex      Int       @default(0)
-  handsItemType   String?
-  handsItemAmount Int       @default(0)
-  coins           Int       @default(0)
-  reputation      Int       @default(0)
-  commands        Command[]
+  id               String          @id
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @default(now())
+  lastActionAt     DateTime        @default(now())
+  twitchId         String
+  userName         String
+  x                Int             @default(0)
+  y                Int             @default(0)
+  targetX          Int?            @default(0)
+  targetY          Int?            @default(0)
+  targetId         String?
+  isBusy           Boolean         @default(false)
+  colorIndex       Int             @default(0)
+  handsItemType    String?
+  handsItemAmount  Int             @default(0)
+  coins            Int             @default(0)
+  reputation       Int             @default(0)
+  skillWoodLvl     Int             @default(0)
+  skillWoodNextLvl Int             @default(20)
+  skillWood        Int             @default(0)
+  commands         Command[]
+  items            InventoryItem[]
+}
+
+model InventoryItem {
+  id         String   @id
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+  playerId   String
+  player     Player   @relation(fields: [playerId], references: [id])
+  type       String
+  amount     Int      @default(1)
+  durability Int      @default(100)
 }
 
 model Command {

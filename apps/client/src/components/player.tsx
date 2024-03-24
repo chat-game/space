@@ -3,11 +3,16 @@ import {
   type Player,
   setPlayerIsOnTarget,
 } from "../../../../packages/api-sdk/src";
+import { useInventory } from "../hooks/useInventory.ts";
 import { PlayerHandsBlock } from "./player-hands.tsx";
+import { PlayerSkillBlock } from "./player-skill.tsx";
 import { PlayerTopBlock } from "./player-top.tsx";
 import { ToolBlock } from "./tool.tsx";
 
 export const PlayerBlock = ({ player }: { player: Player }) => {
+  const items = useInventory(player.id);
+  const itemsWood = items[0] ?? null;
+
   const size = 100;
   const height = (size * 64) / 100;
 
@@ -62,7 +67,19 @@ export const PlayerBlock = ({ player }: { player: Player }) => {
     needToMoveY,
   ]);
 
-  const showAxe = player.isBusy && !needToMove;
+  const isChopping = player.isBusy && !needToMove;
+
+  const [handVisibleSeconds, setHandVisibleSeconds] = useState(0);
+
+  useEffect(() => {
+    isChopping && setHandVisibleSeconds(50);
+
+    const timer = setInterval(() => {
+      setHandVisibleSeconds((prevState) => (prevState > 0 ? prevState - 1 : 0));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [isChopping]);
 
   return (
     <div className="fixed" style={{ zIndex: y + height, top: y, left: x }}>
@@ -75,8 +92,21 @@ export const PlayerBlock = ({ player }: { player: Player }) => {
             style={{ height: height }}
           />
           <PlayerTopBlock top="BASIC" colorIndex={player.colorIndex} />
-          {showAxe && <ToolBlock tool="AXE" isWorking />}
-          <PlayerHandsBlock player={player} />
+          {isChopping && <ToolBlock tool="AXE" isWorking />}
+          <PlayerHandsBlock
+            item={itemsWood}
+            isVisible={handVisibleSeconds > 0}
+          />
+        </div>
+
+        <div className="absolute -top-14 left-10">
+          <PlayerSkillBlock
+            playerId={player.id}
+            isGrowing={isChopping}
+            skill={player.skillWood}
+            skillLvl={player.skillWoodLvl}
+            skillNextLvl={player.skillWoodNextLvl}
+          />
         </div>
 
         <div className="w-fit text-center">

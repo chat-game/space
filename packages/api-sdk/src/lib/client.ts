@@ -1,4 +1,4 @@
-import type { Command, Player, Tree, Village } from "./types";
+import type { Command, InventoryItem, Player, Tree, Village } from "./types";
 
 export async function getVillage() {
   try {
@@ -87,4 +87,21 @@ export const setPlayerIsOnTarget = async (id: string) => {
     body: JSON.stringify({}),
   });
   return res.json();
+};
+
+export const setPlayerWoodSkillUp = async (id: string) => {
+  const res = await fetch(`http://localhost:4001/players/${id}/skill/wood`, {
+    method: "POST",
+    body: JSON.stringify({}),
+  });
+  return res.json();
+};
+
+export const getPlayerInventory = async (id: string) => {
+  try {
+    const res = await fetch(`http://localhost:4001/players/${id}/inventory`);
+    return (await res.json()) as InventoryItem[];
+  } catch (err) {
+    return null;
+  }
 };

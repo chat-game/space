@@ -1,4 +1,5 @@
 import { createId } from "@paralleldrive/cuid2";
+import type { ItemType } from "../../../packages/api-sdk/src";
 import { db } from "./db.client.ts";
 import { getRandomInRange } from "./lib/helpers.ts";
 
@@ -214,6 +215,46 @@ export async function setPlayerMovingToTarget(dto: {
   });
 }
 
+export async function setPlayerSkillUp(playerId: string, skill: "WOOD") {
+  const player = await db.player.findUnique({
+    where: { id: playerId },
+  });
+  if (!player) {
+    return null;
+  }
+
+  if (skill === "WOOD") {
+    if (player.skillWood >= player.skillWoodNextLvl) {
+      // Max out!
+      console.log("skill lvl up!", playerId);
+
+      const skillWoodNextLvl = Math.floor(player.skillWoodNextLvl * 1.5);
+
+      return db.player.update({
+        where: { id: playerId },
+        data: {
+          skillWoodLvl: {
+            increment: 1,
+          },
+          skillWoodNextLvl,
+          skillWood: 0,
+        },
+      });
+    }
+
+    console.log("+1 skill", playerId);
+
+    return db.player.update({
+      where: { id: playerId },
+      data: {
+        skillWood: {
+          increment: 1,
+        },
+      },
+    });
+  }
+}
+
 export async function setPlayerIsOnTarget(playerId: string) {
   const player = await db.player.findUnique({
     where: { id: playerId },
@@ -298,68 +339,35 @@ async function addWoodToVillage(amount: number) {
   }
 }
 
-async function addWoodToPlayerHands(playerId: string, increment: number) {
-  const player = await db.player.findUnique({
-    where: { id: playerId },
-  });
-
-  // Check hands?
-  if (!player) {
+export async function donateWoodFromPlayerInventory(playerId: string) {
+  const wood = await getInventoryItem(playerId, "WOOD");
+  if (!wood) {
     return null;
   }
 
-  return db.player.update({
-    where: { id: player.id },
-    data: {
-      handsItemType: "WOOD",
-      handsItemAmount: { increment },
-    },
-  });
-}
-
-export async function donateItemsFromPlayerHands(playerId: string) {
-  const player = await db.player.findUnique({
-    where: { id: playerId },
-  });
-
-  // Check hands?
-  if (!player) {
-    return null;
-  }
-
-  if (player.handsItemType === "WOOD") {
-    await addWoodToVillage(player.handsItemAmount);
-  }
+  await addWoodToVillage(wood.amount);
 
   // + reputation for every resource
   await db.player.update({
     where: { id: playerId },
     data: {
       reputation: {
-        increment: player.handsItemAmount,
+        increment: wood.amount,
       },
     },
   });
 
   await setPlayerMadeAction(playerId);
 
-  // Clear hands
-  return db.player.update({
-    where: { id: playerId },
-    data: {
-      handsItemType: null,
-      handsItemAmount: 0,
-    },
+  // Destroy item in inventory
+  return db.inventoryItem.delete({
+    where: { id: wood.id },
   });
 }
 
-export async function sellItemsFromPlayerHands(playerId: string) {
-  const player = await db.player.findUnique({
-    where: { id: playerId },
-  });
-
-  // Check hands?
-  if (!player) {
+export async function sellWoodFromPlayerInventory(playerId: string) {
+  const wood = await getInventoryItem(playerId, "WOOD");
+  if (!wood) {
     return null;
   }
 
@@ -368,20 +376,16 @@ export async function sellItemsFromPlayerHands(playerId: string) {
     where: { id: playerId },
     data: {
       coins: {
-        increment: player.handsItemAmount,
+        increment: wood.amount,
       },
     },
   });
 
   await setPlayerMadeAction(playerId);
 
-  // Clear hands
-  return db.player.update({
-    where: { id: playerId },
-    data: {
-      handsItemType: null,
-      handsItemAmount: 0,
-    },
+  // Destroy item in inventory
+  return db.inventoryItem.delete({
+    where: { id: wood.id },
   });
 }
 
@@ -427,16 +431,13 @@ export async function findCompletedTrees() {
   for (const tree of trees) {
     console.log(tree.id, `${tree.resource} resource`, "tree completed");
 
-    // await addWoodToVillage(tree.resource);
-
     // Get command
     const command = await db.command.findFirst({
       where: { target: tree.id },
       orderBy: { createdAt: "desc" },
     });
     if (command) {
-      // Wood to hands
-      await addWoodToPlayerHands(command.playerId, tree.resource);
+      await checkAndAddInventoryItem(command.playerId, "WOOD", tree.resource);
       // Player is free now
       await setPlayerNotBusy(command.playerId);
     }
@@ -468,4 +469,48 @@ function getNewTreeType(typeNow: string): string {
     return String(1);
   }
   return String(typeAsNumber + 1);
+}
+
+export async function checkAndAddInventoryItem(
+  playerId: string,
+  type: ItemType,
+  amount: number,
+) {
+  const item = await db.inventoryItem.findFirst({
+    where: { playerId, type },
+  });
+  if (!item) {
+    // Create
+    return db.inventoryItem.create({
+      data: {
+        id: createId(),
+        playerId,
+        amount,
+        type,
+      },
+    });
+  }
+
+  // +amount
+  return db.inventoryItem.update({
+    where: { id: item.id },
+    data: {
+      amount: {
+        increment: amount,
+      },
+    },
+  });
+}
+
+export async function getInventoryItem(playerId: string, type: ItemType) {
+  const item = await db.inventoryItem.findFirst({
+    where: { playerId, type },
+  });
+  return item ? item : null;
+}
+
+export function getInventory(playerId: string) {
+  return db.inventoryItem.findMany({
+    where: { playerId },
+  });
 }

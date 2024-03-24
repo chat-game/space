@@ -30,10 +30,25 @@ export interface Player {
   twitchId: string;
   isBusy: boolean;
   colorIndex: number;
-  handsItemType: null | "WOOD";
+  handsItemType: null | ItemType;
   handsItemAmount: number;
   coins: number;
   reputation: number;
+  skillWoodLvl: number;
+  skillWoodNextLvl: number;
+  skillWood: number;
+}
+
+export type ItemType = "WOOD" | "STONE" | "AXE" | "PICKAXE";
+
+export interface InventoryItem {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  playerId: string;
+  type: ItemType;
+  amount: number;
+  durability: number;
 }
 
 export interface Tree {

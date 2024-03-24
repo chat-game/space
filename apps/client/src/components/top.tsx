@@ -8,7 +8,7 @@ export const TopBlock = () => {
     return (
       <div
         key={player.id}
-        className="w-fit h-auto px-4 py-4 text-xl bg-blue-100/90 text-blue-800 border-b-4 rounded-2xl"
+        className="w-fit h-auto px-4 pt-4 pb-2 text-xl bg-blue-100/90 text-blue-800 border-b-4 rounded-2xl"
       >
         <div className="-mt-16 -mb-2">
           <PlayerFullBody player={player} />

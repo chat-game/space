@@ -1,6 +1,7 @@
 import { usePlayers } from "../hooks/usePlayers.ts";
 import { useTrees } from "../hooks/useTrees.ts";
 import { Background } from "./background.tsx";
+import { DealerBlock } from "./dealer.tsx";
 import { PlayerBlock } from "./player.tsx";
 import { RabbitBlock } from "./rabbit.tsx";
 import { Stone } from "./stone.tsx";
@@ -38,16 +39,18 @@ export const Interface = () => {
 
         <WolfBlock start={{ x: 400, y: 450 }} />
 
+        <DealerBlock dealer={{ x: 630, y: 680 }} />
+
         <div className="fixed top-4 left-4" style={{ zIndex: 1000 }}>
-          <div className="w-64 h-auto px-4 py-4 text-amber-900 bg-amber-100/90 border-b-4 rounded-2xl">
+          <div className="w-72 h-auto px-4 py-4 text-amber-900 bg-amber-100/90 border-b-4 rounded-2xl">
             <p className="hidden font-bold text-xl tracking-tight leading-tight">
               Пиши команды в чат
             </p>
 
             <p className="font-semibold">Пиши команды в чат:</p>
             <p className="font-bold text-2xl">!рубить</p>
-            <p className="font-bold text-2xl">!дар</p>
-            <p className="font-bold text-2xl">!продать</p>
+            <p className="font-bold text-2xl">!подарить древесину</p>
+            <p className="font-bold text-2xl">!продать [что?]</p>
 
             <p className="hidden mt-4 font-semibold">В разработке:</p>
           </div>

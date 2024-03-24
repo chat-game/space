@@ -10,7 +10,9 @@ import {
   findTreeToChop,
   findTrees,
   findVillage,
+  getInventory,
   setPlayerIsOnTarget,
+  setPlayerSkillUp,
   updatePlayer,
   updateTree,
 } from "./db.repository.ts";
@@ -55,6 +57,23 @@ app.post("players/:id/target", async (c) => {
   const id = c.req.param("id");
 
   await setPlayerIsOnTarget(id);
+
+  return c.json({
+    ok: true,
+  });
+});
+app.get("/players/:id/inventory", async (c) => {
+  const id = c.req.param("id");
+
+  const items = await getInventory(id);
+
+  return c.json(items);
+});
+app.post("players/:id/skill/wood", async (c) => {
+  const id = c.req.param("id");
+
+  // +1
+  await setPlayerSkillUp(id, "WOOD");
 
   return c.json({
     ok: true,

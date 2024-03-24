@@ -1,5 +1,4 @@
 import type { Player } from "packages/api-sdk/src/index.ts";
-import { PlayerHandsBlock } from "./player-hands.tsx";
 import { PlayerTopBlock } from "./player-top.tsx";
 
 export const PlayerFullBody = ({ player }: { player: Player }) => {
@@ -15,7 +14,6 @@ export const PlayerFullBody = ({ player }: { player: Player }) => {
         style={{ height: height }}
       />
       <PlayerTopBlock top="BASIC" colorIndex={player.colorIndex} />
-      <PlayerHandsBlock player={player} />
     </div>
   );
 };

@@ -3,11 +3,12 @@ import { RefreshingAuthProvider } from "@twurple/auth";
 import { Bot, createBotCommand } from "@twurple/easy-bot";
 import {
   createCommand,
-  donateItemsFromPlayerHands,
+  donateWoodFromPlayerInventory,
   findOrCreatePlayer,
   findTreeToChop,
+  getInventory,
   reserveTree,
-  sellItemsFromPlayerHands,
+  sellWoodFromPlayerInventory,
   setPlayerMovingToTarget,
 } from "./db.repository.ts";
 
@@ -77,30 +78,43 @@ export async function serveBot() {
           });
         },
       ),
-      createBotCommand("дар", async (params, { userId, userName, reply }) => {
-        console.log("дар", userId, userName, params);
+      createBotCommand(
+        "подарить",
+        async (params, { userId, userName, reply }) => {
+          console.log("подарить", userId, userName, params);
 
-        const player = await findOrCreatePlayer({
-          twitchId: userId,
-          userName,
-        });
-        if (!player || player.handsItemAmount === 0) {
-          // No way
-          void reply(`${userName}, руки твои пусты.`);
-          return;
-        }
+          const player = await findOrCreatePlayer({
+            twitchId: userId,
+            userName,
+          });
+          const items = await getInventory(player.id);
 
-        await donateItemsFromPlayerHands(player.id);
+          if (params[0] === "древесину" || params[0] === "древесина") {
+            // Find Wood
+            const wood = items.find((item) => item.type === "WOOD");
+            if (!wood) {
+              // No way
+              void reply(`${userName}, у тебя нет древесины.`);
+              return;
+            }
 
-        await createCommand({
-          playerId: player.id,
-          command: "!дар",
-        });
+            await donateWoodFromPlayerInventory(player.id);
 
-        void reply(
-          `${userName}, ты подарил деревне ресурсы, которые у тебя были в руках!`,
-        );
-      }),
+            await createCommand({
+              playerId: player.id,
+              command: "!подарить",
+            });
+
+            void reply(
+              `${userName}, ты подарил деревне всю древесину! Твоя репутация возросла.`,
+            );
+          }
+
+          void reply(
+            `${userName}, укажи конкретнее, например: !подарить древесину`,
+          );
+        },
+      ),
       createBotCommand(
         "продать",
         async (params, { userId, userName, reply }) => {
@@ -110,21 +124,29 @@ export async function serveBot() {
             twitchId: userId,
             userName,
           });
-          if (!player || player.handsItemAmount === 0) {
-            // No way
-            void reply(`${userName}, руки твои пусты.`);
-            return;
+          const items = await getInventory(player.id);
+
+          if (params[0] === "древесину" || params[0] === "древесина") {
+            // Find Wood
+            const wood = items.find((item) => item.type === "WOOD");
+            if (!wood) {
+              // No way
+              void reply(`${userName}, у тебя нет древесины.`);
+              return;
+            }
+
+            await sellWoodFromPlayerInventory(player.id);
+
+            await createCommand({
+              playerId: player.id,
+              command: "!продать",
+            });
+
+            void reply(`${userName}, ты продал всю древесину торговцу!`);
           }
 
-          await sellItemsFromPlayerHands(player.id);
-
-          await createCommand({
-            playerId: player.id,
-            command: "!продать",
-          });
-
           void reply(
-            `${userName}, ты продал ресурсы торговцу, которые у тебя были в руках!`,
+            `${userName}, укажи конкретнее, например: !продать древесину`,
           );
         },
       ),

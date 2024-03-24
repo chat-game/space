@@ -3,8 +3,8 @@ import { useVillage } from "../hooks/useVillage.ts";
 export const Village = () => {
   const village = useVillage();
 
-  const size = village?.wood ? village?.wood / 2 : 1;
-  const height = (size * 128) / 100;
+  // const size = village?.wood ? village?.wood / 2 : 1;
+  // const height = (size * 128) / 100;
 
   const targetWidth =
     village?.globalTarget &&
@@ -31,18 +31,14 @@ export const Village = () => {
         </div>
       </div>
 
-      <div className="fixed" style={{ top: 700, left: 700 }}>
-        <div style={{ marginTop: -height, marginLeft: -height / 2 }}>
+      <div className="fixed" style={{ top: 450, left: 450 }}>
+        <div style={{ marginTop: 0, marginLeft: 0 }}>
           <div className="ml-20 -mt-0 px-3 py-1 w-fit text-center bg-amber-100/90 text-amber-900 rounded-2xl font-bold text-sm">
             Строим деревню тут?
           </div>
 
           <div className="-ml-40 mt-8 px-3 py-1 w-fit text-center bg-amber-100/90 text-amber-900 rounded-2xl font-bold text-sm">
             Камень будем складывать тут?
-          </div>
-
-          <div className="ml-40 mt-12 px-3 py-1 w-fit text-center bg-amber-100/90 text-amber-900 rounded-2xl font-bold text-sm">
-            Торговца посадим тут?
           </div>
 
           <div className="relative">
