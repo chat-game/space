@@ -44,11 +44,10 @@ export const DealerBlock = ({ dealer }: { dealer: Dealer }) => {
               />
               <DealBlock
                 deal={{
-                  price: 200,
+                  price: 20,
                   amount: 1,
-                  item: "PICKAXE",
+                  item: "AXE",
                   type: "SELL",
-                  isOver: true,
                 }}
               />
             </div>
@@ -99,18 +98,10 @@ const DealBlock = ({
 
 function getDealMessage(type: "BUY" | "SELL") {
   if (type === "BUY") {
-    return (
-      <>
-        <span className="font-bold">!продать древесину</span>
-      </>
-    );
+    return <span className="font-bold">!продать древесину</span>;
   }
   if (type === "SELL") {
-    return (
-      <>
-        <span className="font-bold">!купить кирку</span>
-      </>
-    );
+    return <span className="font-bold">!купить топор</span>;
   }
 }
 
@@ -122,6 +113,13 @@ function getDealItem(type: ItemType, amount: number) {
         <div className="w-full absolute top-6 left-0 text-amber-100 text-base font-semibold">
           {amount}
         </div>
+      </div>
+    );
+  }
+  if (type === "AXE") {
+    return (
+      <div className="-mt-6 -mb-2 relative text-center">
+        <img src={"tools/axe1_64.png"} alt="" className="-ml-1 w-18 h-auto" />
       </div>
     );
   }

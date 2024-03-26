@@ -27,7 +27,7 @@ export const Village = () => {
         </div>
 
         <div className="w-fit h-auto mx-auto -mt-2 px-3 py-2 text-xl text-amber-900 bg-amber-300 border-b-4 rounded-2xl">
-          <p className="font-semibold text-base">Фаза Альфа-1: Рубим деревья</p>
+          <p className="font-semibold text-base">Фаза Альфа-2: ???</p>
         </div>
       </div>
 

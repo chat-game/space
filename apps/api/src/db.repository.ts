@@ -1,7 +1,12 @@
 import { createId } from "@paralleldrive/cuid2";
-import type { ItemType } from "../../../packages/api-sdk/src";
+import type {
+  ItemType,
+  PlayerBusinessType,
+  SkillType,
+  TargetType,
+} from "../../../packages/api-sdk/src";
+import { getRandomInRange } from "../../../packages/api-sdk/src/lib/random.ts";
 import { db } from "./db.client.ts";
-import { getRandomInRange } from "./lib/helpers.ts";
 
 export function createPlayer(dto: { twitchId: string; userName: string }) {
   const colorIndex = getRandomInRange(0, 100);
@@ -24,6 +29,12 @@ export function updatePlayer(dto: { twitchId: string; x: number; y: number }) {
       x: dto.x,
       y: dto.y,
     },
+  });
+}
+
+export function findPlayer(id: string) {
+  return db.player.findUnique({
+    where: { id },
   });
 }
 
@@ -58,6 +69,13 @@ export function findTopByReputationPlayers() {
     orderBy: { reputation: "desc" },
     take: 10,
   });
+}
+
+export async function getPlayerCoins(id: string) {
+  const player = await db.player.findUnique({
+    where: { id },
+  });
+  return player ? player.coins : null;
 }
 
 export function createCommand(dto: {
@@ -153,7 +171,7 @@ export async function growTrees() {
   }
 }
 
-export async function setTreeInProgress(id: string) {
+export async function setTreeInProgress(id: string, seconds: number) {
   const tree = await db.tree.findUnique({
     where: { id },
   });
@@ -161,9 +179,9 @@ export async function setTreeInProgress(id: string) {
     return null;
   }
 
-  // 30 seconds to chop?
+  // Time to chop
   const time = new Date();
-  const milliseconds = 30 * 1000;
+  const milliseconds = seconds * 1000;
   const progressFinishAt = new Date(time.getTime() + milliseconds);
 
   return db.tree.update({
@@ -209,16 +227,15 @@ export async function setPlayerMovingToTarget(dto: {
       targetX: dto.x,
       targetY: dto.y,
       targetId: dto.targetId,
-      isBusy: true, // running?
+      isBusy: true,
+      businessType: "RUNNING",
       lastActionAt: new Date(),
     },
   });
 }
 
-export async function setPlayerSkillUp(playerId: string, skill: "WOOD") {
-  const player = await db.player.findUnique({
-    where: { id: playerId },
-  });
+export async function setPlayerSkillUp(playerId: string, skill: SkillType) {
+  const player = await findPlayer(playerId);
   if (!player) {
     return null;
   }
@@ -242,14 +259,44 @@ export async function setPlayerSkillUp(playerId: string, skill: "WOOD") {
       });
     }
 
-    console.log("+1 skill", playerId);
+    const instrument = await getInventoryItem(playerId, "AXE");
+    const increment = instrument ? 3 : 1;
+
+    console.log(`+${increment} skill`, playerId);
 
     return db.player.update({
       where: { id: playerId },
       data: {
-        skillWood: {
-          increment: 1,
+        skillWood: { increment },
+      },
+    });
+  }
+
+  if (skill === "MINING") {
+    if (player.skillMining >= player.skillMiningNextLvl) {
+      console.log("skill lvl up!", playerId);
+
+      const skillMiningNextLvl = Math.floor(player.skillMiningNextLvl * 1.5);
+
+      return db.player.update({
+        where: { id: playerId },
+        data: {
+          skillMiningLvl: { increment: 1 },
+          skillMiningNextLvl,
+          skillMining: 0,
         },
+      });
+    }
+
+    const instrument = await getInventoryItem(playerId, "PICKAXE");
+    const increment = instrument ? 3 : 1;
+
+    console.log(`+${increment} skill`, playerId);
+
+    return db.player.update({
+      where: { id: playerId },
+      data: {
+        skillMining: { increment },
       },
     });
   }
@@ -271,24 +318,52 @@ export async function setPlayerIsOnTarget(playerId: string) {
     return;
   }
 
-  // Find target
-  const tree = await findTree(player.targetId);
-  if (!tree) {
+  const targetType = await getTargetType(player.targetId);
+  if (!targetType) {
     return null;
   }
 
-  // After - will chop
-  await setPlayerCoordinates(player.id, tree.x, tree.y);
-  await setPlayerChopping(player.id);
+  if (targetType === "TREE") {
+    const tree = await findTree(player.targetId);
+    if (!tree) {
+      return null;
+    }
 
-  // Working time
-  await setTreeInProgress(tree.id);
+    await setPlayerCoordinates(player.id, tree.x, tree.y);
+    await setPlayerStartedWorking(player.id, "CHOPPING");
 
-  await createCommand({
-    playerId: player.id,
-    command: "!рубить",
-    target: tree.id,
-  });
+    const axe = await getInventoryItem(playerId, "AXE");
+    const workTimeSeconds = axe ? 10 : 30;
+
+    await setTreeInProgress(tree.id, workTimeSeconds);
+
+    return createCommand({
+      playerId: player.id,
+      command: "!рубить",
+      target: tree.id,
+    });
+  }
+
+  if (targetType === "STONE") {
+    const stone = await findStone(player.targetId);
+    if (!stone) {
+      return null;
+    }
+
+    await setPlayerCoordinates(player.id, stone.x, stone.y);
+    await setPlayerStartedWorking(player.id, "MINING");
+
+    const pickaxe = await getInventoryItem(playerId, "PICKAXE");
+    const workTimeSeconds = pickaxe ? 10 : 30;
+
+    await setStoneInProgress(stone.id, workTimeSeconds);
+
+    return createCommand({
+      playerId: player.id,
+      command: "!копать",
+      target: stone.id,
+    });
+  }
 }
 
 export function setPlayerCoordinates(id: string, x: number, y: number) {
@@ -301,17 +376,34 @@ export function setPlayerCoordinates(id: string, x: number, y: number) {
   });
 }
 
-export async function setPlayerChopping(id: string) {
+export async function setPlayerStartedWorking(
+  id: string,
+  businessType: PlayerBusinessType,
+) {
   await setPlayerMadeAction(id);
-  await clearPlayerTarget(id); // now player is on target
+  await clearPlayerTarget(id);
 
   return db.player.update({
     where: { id },
     data: {
-      isBusy: true, // chopping?
-      lastActionAt: new Date(),
+      isBusy: true,
+      businessType,
     },
   });
+}
+
+export async function getTargetType(id: string): Promise<TargetType | null> {
+  const tree = await findTree(id);
+  if (tree) {
+    return "TREE";
+  }
+
+  const stone = await findStone(id);
+  if (stone) {
+    return "STONE";
+  }
+
+  return null;
 }
 
 async function addWoodToVillage(amount: number) {
@@ -365,6 +457,31 @@ export async function donateWoodFromPlayerInventory(playerId: string) {
   });
 }
 
+export async function buyAxeFromDealer(playerId: string) {
+  const AXE_PRICE = 20;
+
+  const axe = await getInventoryItem(playerId, "AXE");
+  if (axe) {
+    return null;
+  }
+
+  const coins = await getPlayerCoins(playerId);
+  if (!coins || coins < AXE_PRICE) {
+    return null;
+  }
+
+  await db.player.update({
+    where: { id: playerId },
+    data: {
+      coins: {
+        decrement: AXE_PRICE,
+      },
+    },
+  });
+
+  return checkAndAddInventoryItem(playerId, "AXE", 1);
+}
+
 export async function sellWoodFromPlayerInventory(playerId: string) {
   const wood = await getInventoryItem(playerId, "WOOD");
   if (!wood) {
@@ -394,6 +511,7 @@ function setPlayerNotBusy(playerId: string) {
     where: { id: playerId },
     data: {
       isBusy: false,
+      businessType: null,
     },
   });
 }
@@ -440,6 +558,13 @@ export async function findCompletedTrees() {
       await checkAndAddInventoryItem(command.playerId, "WOOD", tree.resource);
       // Player is free now
       await setPlayerNotBusy(command.playerId);
+
+      const minusDurability = getRandomInRange(8, 16);
+      await checkAndBreakInventoryItem(
+        command.playerId,
+        "AXE",
+        minusDurability,
+      );
     }
 
     // Destroy tree
@@ -512,5 +637,126 @@ export async function getInventoryItem(playerId: string, type: ItemType) {
 export function getInventory(playerId: string) {
   return db.inventoryItem.findMany({
     where: { playerId },
+  });
+}
+
+export async function checkAndBreakInventoryItem(
+  playerId: string,
+  type: ItemType,
+  durabilityAmount: number,
+) {
+  const item = await getInventoryItem(playerId, type);
+  if (!item) {
+    return null;
+  }
+
+  console.log(`Reduce item ${item.id} durability by ${durabilityAmount}!`);
+
+  if (item.durability <= durabilityAmount) {
+    // Destroy item!
+    return db.inventoryItem.delete({
+      where: { id: item.id },
+    });
+  }
+
+  return db.inventoryItem.update({
+    where: { id: item.id },
+    data: {
+      durability: {
+        decrement: durabilityAmount,
+      },
+    },
+  });
+}
+
+export function findStones() {
+  return db.stone.findMany();
+}
+
+export function findStone(id: string) {
+  return db.stone.findUnique({ where: { id } });
+}
+
+export function findStoneToMine() {
+  return db.stone.findFirst({
+    where: {
+      size: { gte: 50 },
+      inProgress: false,
+      isReserved: false,
+    },
+    orderBy: {
+      progressFinishAt: "asc",
+    },
+  });
+}
+
+export function reserveStone(id: string) {
+  return db.stone.update({
+    where: { id },
+    data: {
+      isReserved: true,
+    },
+  });
+}
+
+export async function findCompletedStones() {
+  const stones = await db.stone.findMany({
+    where: {
+      inProgress: true,
+      progressFinishAt: {
+        lte: new Date(),
+      },
+    },
+  });
+  for (const stone of stones) {
+    console.log(stone.id, `${stone.resource} resource`, "stone completed");
+
+    // Get command
+    const command = await db.command.findFirst({
+      where: { target: stone.id },
+      orderBy: { createdAt: "desc" },
+    });
+    if (command) {
+      await checkAndAddInventoryItem(command.playerId, "STONE", stone.resource);
+      // Player is free now
+      await setPlayerNotBusy(command.playerId);
+
+      const minusDurability = getRandomInRange(8, 16);
+      await checkAndBreakInventoryItem(
+        command.playerId,
+        "PICKAXE",
+        minusDurability,
+      );
+    }
+
+    const resource = getRandomInRange(1, 4);
+
+    await db.stone.update({
+      where: { id: stone.id },
+      data: {
+        isReserved: false,
+        inProgress: false,
+        resource,
+      },
+    });
+  }
+}
+
+export async function setStoneInProgress(id: string, seconds: number) {
+  const stone = await findStone(id);
+  if (!stone) {
+    return null;
+  }
+
+  const time = new Date();
+  const milliseconds = seconds * 1000;
+  const progressFinishAt = new Date(time.getTime() + milliseconds);
+
+  return db.stone.update({
+    where: { id },
+    data: {
+      progressFinishAt,
+      inProgress: true,
+    },
   });
 }

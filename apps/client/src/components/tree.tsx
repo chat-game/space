@@ -3,7 +3,6 @@ import { useEffect, useMemo } from "react";
 import type { Tree } from "../../../../packages/api-sdk/src";
 
 export const TreeBlock = ({ tree }: { tree: Tree }) => {
-  const type = tree.type;
   const size = tree.size;
   const height = (size * 128) / 100;
 
@@ -36,7 +35,7 @@ export const TreeBlock = ({ tree }: { tree: Tree }) => {
     >
       <div style={{ marginTop: -height, marginLeft: -height / 2 }}>
         <img
-          src={`tree/tree${type}_128.png`}
+          src={`tree/tree${tree.type}_128.png`}
           alt=""
           className="w-fit"
           style={{ height: height }}

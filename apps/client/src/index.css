@@ -66,6 +66,21 @@
     animation: animation-tree-chopping 2.6s infinite;
 }
 
+@keyframes animation-stone-little-shake {
+    0% { transform: skewY(0deg); }
+    10% { transform: skewY(-1deg); }
+    15% { transform: skewY(0); }
+    50% { transform: skewY(0); }
+    57% { transform: skewY(1deg); }
+    65% { transform: skewY(-1deg); }
+    73% { transform: skewY(0); }
+    100% { transform: skewY(0deg); }
+}
+
+.animation-stone-little-shake {
+    animation: animation-stone-little-shake 10s infinite;
+}
+
 @keyframes animation-rabbit-hop {
     0% {
         transform: translate(0, 0) rotate(0deg);

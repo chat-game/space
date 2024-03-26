@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  type InventoryItem,
   type Player,
   setPlayerIsOnTarget,
 } from "../../../../packages/api-sdk/src";
@@ -11,7 +12,10 @@ import { ToolBlock } from "./tool.tsx";
 
 export const PlayerBlock = ({ player }: { player: Player }) => {
   const items = useInventory(player.id);
-  const itemsWood = items[0] ?? null;
+  const wood = items.find((item) => item.type === "WOOD") ?? null;
+  const stone = items.find((item) => item.type === "STONE") ?? null;
+  const axe = items.find((item) => item.type === "AXE") ?? null;
+  const pickaxe = items.find((item) => item.type === "PICKAXE") ?? null;
 
   const size = 100;
   const height = (size * 64) / 100;
@@ -67,19 +71,32 @@ export const PlayerBlock = ({ player }: { player: Player }) => {
     needToMoveY,
   ]);
 
-  const isChopping = player.isBusy && !needToMove;
+  const isChopping = player.businessType === "CHOPPING" && !needToMove;
+  const isMining = player.businessType === "MINING" && !needToMove;
+  const isWorking = isChopping || isMining;
+
+  const [showInHand, setShowInHand] = useState<InventoryItem | null>(null);
+
+  useEffect(() => {
+    if (isChopping) {
+      setShowInHand(wood);
+    }
+    if (isMining) {
+      setShowInHand(stone);
+    }
+  }, [isChopping, wood, isMining, stone]);
 
   const [handVisibleSeconds, setHandVisibleSeconds] = useState(0);
 
   useEffect(() => {
-    isChopping && setHandVisibleSeconds(50);
+    isWorking && setHandVisibleSeconds(50);
 
     const timer = setInterval(() => {
       setHandVisibleSeconds((prevState) => (prevState > 0 ? prevState - 1 : 0));
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isChopping]);
+  }, [isWorking]);
 
   return (
     <div className="fixed" style={{ zIndex: y + height, top: y, left: x }}>
@@ -89,24 +106,21 @@ export const PlayerBlock = ({ player }: { player: Player }) => {
             src={"hero/hero_empty_64.png"}
             alt=""
             className="w-fit"
-            style={{ height: height }}
+            style={{ height }}
           />
           <PlayerTopBlock top="BASIC" colorIndex={player.colorIndex} />
-          {isChopping && <ToolBlock tool="AXE" isWorking />}
+
+          {isChopping && !!axe && <ToolBlock tool="AXE" isWorking />}
+          {isMining && !!pickaxe && <ToolBlock tool="PICKAXE" isWorking />}
+
           <PlayerHandsBlock
-            item={itemsWood}
+            item={showInHand}
             isVisible={handVisibleSeconds > 0}
           />
         </div>
 
         <div className="absolute -top-14 left-10">
-          <PlayerSkillBlock
-            playerId={player.id}
-            isGrowing={isChopping}
-            skill={player.skillWood}
-            skillLvl={player.skillWoodLvl}
-            skillNextLvl={player.skillWoodNextLvl}
-          />
+          <PlayerSkillBlock player={player} isGrowing={isWorking} />
         </div>
 
         <div className="w-fit text-center">

@@ -1,9 +1,12 @@
-import type { InventoryItem, Player } from "packages/api-sdk/src";
+import type { InventoryItem, ItemType } from "packages/api-sdk/src";
 
 export const PlayerHandsBlock = ({
   item,
   isVisible,
-}: { item: InventoryItem; isVisible: boolean }) => {
+}: {
+  item: InventoryItem | null;
+  isVisible: boolean;
+}) => {
   if (!item || !item.amount || item.amount === 0) {
     return null;
   }
@@ -20,8 +23,11 @@ export const PlayerHandsBlock = ({
   );
 };
 
-const ResourceIcon = ({ type }: { type: Player["handsItemType"] }) => {
+const ResourceIcon = ({ type }: { type: ItemType }) => {
   if (type === "WOOD") {
     return <img src={"wood/wood1_64.png"} alt="" />;
+  }
+  if (type === "STONE") {
+    return <img src={"stone/stone_res1_64.png"} alt="" />;
   }
 };

@@ -9,5 +9,5 @@ export async function serveTree() {
   // Check for completed
   setInterval(() => {
     void findCompletedTrees();
-  }, 10000);
+  }, 5000);
 }

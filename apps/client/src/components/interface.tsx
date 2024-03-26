@@ -1,10 +1,11 @@
 import { usePlayers } from "../hooks/usePlayers.ts";
+import { useStones } from "../hooks/useStones.ts";
 import { useTrees } from "../hooks/useTrees.ts";
 import { Background } from "./background.tsx";
 import { DealerBlock } from "./dealer.tsx";
 import { PlayerBlock } from "./player.tsx";
 import { RabbitBlock } from "./rabbit.tsx";
-import { Stone } from "./stone.tsx";
+import { StoneBlock } from "./stone.tsx";
 import { TopBlock } from "./top.tsx";
 import { TreeBlock } from "./tree.tsx";
 import { Village } from "./village.tsx";
@@ -13,6 +14,7 @@ import { WolfBlock } from "./wolf.tsx";
 export const Interface = () => {
   const players = usePlayers();
   const trees = useTrees();
+  const stones = useStones();
 
   const showPlayers = players.map((player) => (
     <PlayerBlock key={player.id} player={player} />
@@ -22,6 +24,10 @@ export const Interface = () => {
     <TreeBlock key={tree.id} tree={tree} />
   ));
 
+  const showStones = stones?.map((stone) => (
+    <StoneBlock key={stone.id} stone={stone} />
+  ));
+
   return (
     <>
       <Background />
@@ -29,8 +35,8 @@ export const Interface = () => {
       <div className="z-10 absolute top-0 left-0">
         {showPlayers}
         {showTrees}
+        {showStones}
 
-        <Stone />
         <Village />
 
         <RabbitBlock start={{ x: 200, y: 250 }} />

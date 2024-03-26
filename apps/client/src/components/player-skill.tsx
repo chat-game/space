@@ -1,38 +1,42 @@
 import { useEffect, useState } from "react";
-import { setPlayerWoodSkillUp } from "../../../../packages/api-sdk/src";
+import {
+  type Player,
+  type PlayerBusinessType,
+  type SkillType,
+  setPlayerSkillUp,
+} from "../../../../packages/api-sdk/src";
 
 export const PlayerSkillBlock = ({
-  playerId,
+  player,
   isGrowing,
-  skill,
-  skillLvl,
-  skillNextLvl,
 }: {
-  playerId: string;
+  player: Player;
   isGrowing: boolean;
-  skill: number;
-  skillLvl: number;
-  skillNextLvl: number;
 }) => {
+  const skillType = getSkillTypeByBusinessType(player.businessType);
+  const skill = getSkill(player, skillType) ?? 0;
+  const skillLvl = getSkillLvl(player, skillType) ?? 0;
+  const skillNextLvl = getSkillNextLvl(player, skillType) ?? 0;
+
   const [visibleSeconds, setVisibleSeconds] = useState(0);
-  const isHidden = visibleSeconds <= 0;
+  const isHidden = visibleSeconds <= 0 || !skillType;
 
   const [width, setWidth] = useState(skill / (skillNextLvl / 100));
 
   useEffect(() => {
-    if (!isGrowing) {
+    if (!isGrowing || !skillType) {
       return;
     }
 
     // Up every 5 seconds
     const reload = setInterval(() => {
-      void setPlayerWoodSkillUp(playerId);
+      void setPlayerSkillUp(player.id, skillType);
       setWidth(skill / (skillNextLvl / 100));
       setVisibleSeconds((prevState) => prevState + 7);
     }, 5000);
 
     return () => clearInterval(reload);
-  }, [isGrowing, playerId, skill, skillNextLvl]);
+  }, [isGrowing, skill, skillNextLvl, skillType, player.id]);
 
   // -1 every sec
   useEffect(() => {
@@ -42,6 +46,8 @@ export const PlayerSkillBlock = ({
 
     return () => clearInterval(timer);
   }, []);
+
+  const description = getSkillTypeDescription(skillType);
 
   return (
     <div className={`text-center ${isHidden && "hidden"}`}>
@@ -53,8 +59,56 @@ export const PlayerSkillBlock = ({
         />
       </div>
       <div className="-mt-1 text-emerald-300 font-semibold text-sm">
-        лесоруб
+        {description}
       </div>
     </div>
   );
 };
+
+function getSkillTypeDescription(type: SkillType | null) {
+  if (!type) return "";
+
+  if (type === "WOOD") return "лесоруб";
+  if (type === "MINING") return "шахтер";
+}
+
+function getSkillTypeByBusinessType(
+  type: PlayerBusinessType,
+): SkillType | null {
+  if (type === "CHOPPING") return "WOOD";
+  if (type === "MINING") return "MINING";
+  return null;
+}
+
+function getSkill(player: Player, type: SkillType | null) {
+  if (!type) return;
+
+  if (type === "WOOD") {
+    return player.skillWood;
+  }
+  if (type === "MINING") {
+    return player.skillMining;
+  }
+}
+
+function getSkillLvl(player: Player, type: SkillType | null) {
+  if (!type) return;
+
+  if (type === "WOOD") {
+    return player.skillWoodLvl;
+  }
+  if (type === "MINING") {
+    return player.skillMiningLvl;
+  }
+}
+
+function getSkillNextLvl(player: Player, type: SkillType | null) {
+  if (!type) return;
+
+  if (type === "WOOD") {
+    return player.skillWoodNextLvl;
+  }
+  if (type === "MINING") {
+    return player.skillMiningNextLvl;
+  }
+}

@@ -16,6 +16,8 @@ export interface Command {
   player?: Player;
 }
 
+export type TargetType = "TREE" | "STONE";
+
 export interface Player {
   id: string;
   createdAt: Date;
@@ -29,6 +31,7 @@ export interface Player {
   userName: string;
   twitchId: string;
   isBusy: boolean;
+  businessType: PlayerBusinessType;
   colorIndex: number;
   handsItemType: null | ItemType;
   handsItemAmount: number;
@@ -37,7 +40,14 @@ export interface Player {
   skillWoodLvl: number;
   skillWoodNextLvl: number;
   skillWood: number;
+  skillMiningLvl: number;
+  skillMiningNextLvl: number;
+  skillMining: number;
 }
+
+export type PlayerBusinessType = null | "RUNNING" | "CHOPPING" | "MINING";
+
+export type SkillType = "WOOD" | "MINING";
 
 export type ItemType = "WOOD" | "STONE" | "AXE" | "PICKAXE";
 
@@ -62,5 +72,19 @@ export interface Tree {
   isReserved: boolean;
   inProgress: boolean;
   progressFinishAt: Date;
-  type: string;
+  type: "1" | "2" | "3";
+}
+
+export interface Stone {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  x: number;
+  y: number;
+  size: number;
+  resource: number;
+  isReserved: boolean;
+  inProgress: boolean;
+  progressFinishAt: Date;
+  type: "1";
 }

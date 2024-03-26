@@ -1,11 +1,13 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
+import type { SkillType } from "../../../packages/api-sdk/src";
 import { serveBot } from "./bot";
 import {
   findActivePlayers,
   findCommands,
   findOrCreatePlayer,
+  findStones,
   findTopByReputationPlayers,
   findTreeToChop,
   findTrees,
@@ -17,6 +19,7 @@ import {
   updateTree,
 } from "./db.repository.ts";
 import { servePlayer } from "./player.ts";
+import { serveStone } from "./stone.ts";
 import { serveTree } from "./tree.ts";
 
 const app = new Hono();
@@ -69,11 +72,11 @@ app.get("/players/:id/inventory", async (c) => {
 
   return c.json(items);
 });
-app.post("players/:id/skill/wood", async (c) => {
+app.post("players/:id/skill", async (c) => {
   const id = c.req.param("id");
+  const body = await c.req.json<{ type: SkillType }>();
 
-  // +1
-  await setPlayerSkillUp(id, "WOOD");
+  await setPlayerSkillUp(id, body.type);
 
   return c.json({
     ok: true,
@@ -106,6 +109,12 @@ app.patch("trees/:id", async (c) => {
   });
 });
 
+app.get("/stones", async (c) => {
+  const stones = await findStones();
+
+  return c.json(stones);
+});
+
 app.get("/village", async (c) => {
   const village = await findVillage();
 
@@ -118,6 +127,7 @@ console.log(`Server is running on port ${port}`);
 void serveBot();
 void servePlayer();
 void serveTree();
+void serveStone();
 
 serve({
   fetch: app.fetch,
