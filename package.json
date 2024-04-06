@@ -4,11 +4,15 @@
   "description": "Royal Madness: Twitch Chat Game",
   "scripts": {
     "lint": "npx @biomejs/biome check --apply ./apps",
-    "api:start": "tsx watch --env-file=.env apps/api/src/index.ts",
     "db:start": "docker compose up",
-    "db:edit": "prisma studio"
+    "db:edit": "prisma studio",
+    "api:start": "bun run --hot apps/api/src/index.ts"
   },
-  "keywords": ["game", "online", "twitch"],
+  "keywords": [
+    "game",
+    "online",
+    "twitch"
+  ],
   "author": "Nick Kosarev <hmbanan666@hotmail.com>",
   "license": "MIT",
   "repository": {
@@ -20,28 +24,29 @@
   },
   "homepage": "https://github.com/hmbanan666/royal-madness-twitch-game#readme",
   "dependencies": {
-    "@hono/node-server": "1.9.0",
     "@paralleldrive/cuid2": "2.2.2",
-    "@prisma/client": "5.11.0",
+    "@prisma/client": "5.12.0",
     "@twurple/auth": "7.1.0",
     "@twurple/chat": "7.1.0",
     "@twurple/easy-bot": "7.1.0",
     "hono": "4.1.4",
     "howler": "2.2.4",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-use-websocket": "4.8.1",
+    "zustand": "4.5.2"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.6.3",
-    "@tailwindcss/vite": "4.0.0-alpha.10",
+    "@biomejs/biome": "1.6.4",
+    "@tailwindcss/vite": "4.0.0-alpha.13",
+    "@types/bun": "1.0.12",
     "@types/howler": "2.2.11",
-    "@types/react": "18.2.71",
-    "@types/react-dom": "18.2.22",
+    "@types/react": "18.2.74",
+    "@types/react-dom": "18.2.23",
     "@vitejs/plugin-react": "4.2.1",
-    "prisma": "5.11.0",
-    "tailwindcss": "4.0.0-alpha.10",
-    "tsx": "4.7.1",
+    "prisma": "5.12.0",
+    "tailwindcss": "4.0.0-alpha.13",
     "typescript": "5.4.3",
-    "vite": "5.2.6"
+    "vite": "5.2.8"
   }
 }

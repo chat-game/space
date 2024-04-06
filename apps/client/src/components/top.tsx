@@ -1,5 +1,5 @@
-import { useTopPlayers } from "../hooks/useTopPlayers.ts";
-import { PlayerFullBody } from "./player-full-body.tsx";
+import { useTopPlayers } from "../hooks/useTopPlayers";
+import { PlayerFullBody } from "./player-full-body";
 
 export const TopBlock = () => {
   const players = useTopPlayers();
@@ -23,7 +23,7 @@ export const TopBlock = () => {
 
   return (
     <div className="-z-50 fixed bottom-4 left-4">
-      <div className="flex flex-row flex-wrap gap-4 items-end">
+      <div className="flex flex-row flex-nowrap gap-4 items-end">
         <div className="w-48 px-3 py-2 font-semibold text-xl tracking-tight leading-tight text-amber-900 bg-amber-100/90 border-b-4 rounded-2xl">
           Топ поддержавших деревню
         </div>

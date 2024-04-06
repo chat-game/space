@@ -6,6 +6,7 @@ interface Dealer {
 }
 
 interface Deal {
+  command: string;
   type: "SELL" | "BUY";
   item: ItemType;
   amount: number;
@@ -16,38 +17,58 @@ interface Deal {
 export const DealerBlock = ({ dealer }: { dealer: Dealer }) => {
   const size = 100;
   const height = (size * 64) / 100;
+  const width = height;
 
   return (
     <div
-      className="fixed"
-      style={{ zIndex: dealer.y + height, top: dealer.y, left: dealer.x }}
+      className="fixed h-1 w-8 bg-zinc-800/10 rounded-full"
+      style={{ zIndex: dealer.y, top: dealer.y, left: dealer.x }}
     >
-      <div style={{ marginTop: -height + 16, marginLeft: -height / 2 }}>
+      <div style={{ width, marginTop: -height, marginLeft: -width / 4 }}>
         <div className="relative">
           <img
             src={"dealer/dealer1_64.png"}
             alt=""
             className="w-fit"
-            style={{ height: height }}
+            style={{ height }}
           />
 
-          <div className="absolute -top-6 left-12">
-            <div className="w-40 px-2 py-1 bg-amber-100/90 text-amber-900 rounded-2xl font-semibold text-sm tracking-tight leading-tight">
-              Приветствую, герои!
-            </div>
-          </div>
-
-          <div className="absolute top-6 left-20">
+          <div className="-z-10 absolute top-2 left-20">
             <div className="flex flex-row gap-2">
               <DealBlock
-                deal={{ price: 1, amount: 1, item: "WOOD", type: "BUY" }}
+                deal={{
+                  price: 1,
+                  amount: 1,
+                  item: "WOOD",
+                  type: "BUY",
+                  command: "!продать древесину",
+                }}
               />
               <DealBlock
                 deal={{
-                  price: 20,
+                  price: 1,
+                  amount: 1,
+                  item: "STONE",
+                  type: "BUY",
+                  command: "!продать камень",
+                }}
+              />
+              <DealBlock
+                deal={{
+                  price: 10,
                   amount: 1,
                   item: "AXE",
                   type: "SELL",
+                  command: "!купить топор",
+                }}
+              />
+              <DealBlock
+                deal={{
+                  price: 10,
+                  amount: 1,
+                  item: "PICKAXE",
+                  type: "SELL",
+                  command: "!купить кирку",
                 }}
               />
             </div>
@@ -69,12 +90,11 @@ const DealBlock = ({
 }: {
   deal: Deal;
 }) => {
-  const message = getDealMessage(deal.type);
   const item = getDealItem(deal.item, deal.amount);
 
   return (
     <div
-      className={`w-24 pb-2 bg-amber-100/90 text-amber-900 rounded-2xl ${
+      className={`w-[85px] pb-2 bg-amber-100/90 text-amber-900 rounded-2xl ${
         deal.isOver && "opacity-60"
       }`}
     >
@@ -84,8 +104,8 @@ const DealBlock = ({
         </div>
       )}
       {item}
-      <div className="px-2 py-1 text-amber-900 rounded-2xl font-semibold text-sm text-center tracking-tight leading-tight">
-        {message}
+      <div className="px-2 py-1 font-bold text-amber-900 text-sm text-center tracking-tight leading-4">
+        {deal.command}
       </div>
 
       <div className="flex flex-row gap-1 items-center justify-center">
@@ -96,21 +116,26 @@ const DealBlock = ({
   );
 };
 
-function getDealMessage(type: "BUY" | "SELL") {
-  if (type === "BUY") {
-    return <span className="font-bold">!продать древесину</span>;
-  }
-  if (type === "SELL") {
-    return <span className="font-bold">!купить топор</span>;
-  }
-}
-
 function getDealItem(type: ItemType, amount: number) {
   if (type === "WOOD") {
     return (
       <div className="-mt-4 relative text-center">
         <img src={"wood/wood1_64.png"} alt="" className="mx-auto w-12 h-auto" />
-        <div className="w-full absolute top-6 left-0 text-amber-100 text-base font-semibold">
+        <div className="w-full absolute top-6 left-0 text-amber-50 text-base font-semibold">
+          {amount}
+        </div>
+      </div>
+    );
+  }
+  if (type === "STONE") {
+    return (
+      <div className="-mt-4 relative text-center">
+        <img
+          src={"stone/stone_res1_64.png"}
+          alt=""
+          className="mx-auto w-12 h-auto"
+        />
+        <div className="w-full absolute top-6 left-0 text-amber-50 text-base font-semibold">
           {amount}
         </div>
       </div>
@@ -119,7 +144,7 @@ function getDealItem(type: ItemType, amount: number) {
   if (type === "AXE") {
     return (
       <div className="-mt-6 -mb-2 relative text-center">
-        <img src={"tools/axe1_64.png"} alt="" className="-ml-1 w-18 h-auto" />
+        <img src={"tools/axe1_64.png"} alt="" className="-ml-2 w-18 h-auto" />
       </div>
     );
   }
@@ -129,7 +154,7 @@ function getDealItem(type: ItemType, amount: number) {
         <img
           src={"tools/pickaxe1_64.png"}
           alt=""
-          className="-ml-1 w-18 h-auto"
+          className="-ml-2 w-18 h-auto"
         />
       </div>
     );

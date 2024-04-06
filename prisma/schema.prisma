@@ -42,16 +42,35 @@ model Player {
   skillMiningLvl     Int             @default(0)
   skillMiningNextLvl Int             @default(20)
   skillMining        Int             @default(0)
+  inventoryId     String
   commands           Command[]
-  items              InventoryItem[]
+}
+
+model Skill {
+  id                 String          @id
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @default(now())
+  type String
+  lvl Int @default(0)
+  xp  Int @default(0)
+  xpNextLvl Int @default(20)
+  objectId String
+}
+
+model Inventory {
+  id         String   @id
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+  objectId   String
+  items  InventoryItem[]
 }
 
 model InventoryItem {
   id         String   @id
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now())
-  playerId   String
-  player     Player   @relation(fields: [playerId], references: [id])
+  inventoryId   String
+  inventory  Inventory @relation(fields: [inventoryId], references: [id])
   type       String
   amount     Int      @default(1)
   durability Int      @default(100)

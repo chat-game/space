@@ -1,5 +1,5 @@
-import type { Player } from "packages/api-sdk/src/index.ts";
-import { PlayerTopBlock } from "./player-top.tsx";
+import type { Player } from "packages/api-sdk/src/index";
+import { PlayerTopBlock } from "./player-top";
 
 export const PlayerFullBody = ({ player }: { player: Player }) => {
   const size = 100;

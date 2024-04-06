@@ -3,9 +3,6 @@ import { useVillage } from "../hooks/useVillage.ts";
 export const Village = () => {
   const village = useVillage();
 
-  // const size = village?.wood ? village?.wood / 2 : 1;
-  // const height = (size * 128) / 100;
-
   const targetWidth =
     village?.globalTarget &&
     village?.globalTargetSuccess &&
@@ -27,28 +24,35 @@ export const Village = () => {
         </div>
 
         <div className="w-fit h-auto mx-auto -mt-2 px-3 py-2 text-xl text-amber-900 bg-amber-300 border-b-4 rounded-2xl">
-          <p className="font-semibold text-base">Фаза Альфа-2: ???</p>
+          <p className="font-semibold text-base">
+            Фаза Альфа-2: Добываем и складываем камни
+          </p>
         </div>
       </div>
 
       <div className="fixed" style={{ top: 450, left: 450 }}>
         <div style={{ marginTop: 0, marginLeft: 0 }}>
-          <div className="ml-20 -mt-0 px-3 py-1 w-fit text-center bg-amber-100/90 text-amber-900 rounded-2xl font-bold text-sm">
-            Строим деревню тут?
-          </div>
+          <div className="flex flex-row gap-4">
+            <div className="relative">
+              <img
+                src={"wood/wood1_64.png"}
+                alt=""
+                className="ml-0 w-fit h-auto"
+              />
+              <div className="w-12 absolute top-9 left-2 text-base text-center font-bold text-amber-50">
+                {village?.wood}
+              </div>
+            </div>
 
-          <div className="-ml-40 mt-8 px-3 py-1 w-fit text-center bg-amber-100/90 text-amber-900 rounded-2xl font-bold text-sm">
-            Камень будем складывать тут?
-          </div>
-
-          <div className="relative">
-            <img
-              src={"wood/wood1_64.png"}
-              alt=""
-              className="ml-0 w-fit h-auto"
-            />
-            <div className="absolute top-9 left-3 text-base text-center font-bold text-amber-100">
-              {village?.wood}
+            <div className="relative">
+              <img
+                src={"stone/stone_res1_64.png"}
+                alt=""
+                className="ml-0 w-fit h-auto"
+              />
+              <div className="w-12 absolute top-9 left-2 text-base text-center font-bold text-amber-50">
+                {village?.stone}
+              </div>
             </div>
           </div>
         </div>
