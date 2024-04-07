@@ -41,6 +41,10 @@ export class BotController {
       this.service.commandGift(),
       this.service.commandSell(),
       this.service.commandBuy(),
+      this.service.commandHelp(),
+      this.service.commandHelpEn(),
+      this.service.commandDonate(),
+      this.service.commandDonateEn(),
     ];
   }
 

@@ -1,4 +1,5 @@
 import { createBotCommand } from "@twurple/easy-bot";
+import { DISCORD_SERVER_INVITE_URL, DONATE_URL } from "../config";
 import {
   addStoneToVillage,
   addWoodToVillage,
@@ -226,6 +227,52 @@ export class BotService {
         }
 
         void reply(`${userName}, укажи конкретнее, например: !купить топор`);
+      },
+    );
+  }
+
+  public commandHelp() {
+    return createBotCommand(
+      "помощь",
+      async (_, { userId, userName, reply }) => {
+        await this.game.findOrCreatePlayer(userId, userName);
+
+        void reply(
+          `${userName}, это интерактивная игра-чат, в которой может участвовать любой зритель! Пиши команды (примеры на экране) для управления своим героем. Вступай в наше комьюнити: ${DISCORD_SERVER_INVITE_URL}`,
+        );
+        return;
+      },
+    );
+  }
+
+  public commandHelpEn() {
+    return createBotCommand("help", async (_, { userId, userName, reply }) => {
+      await this.game.findOrCreatePlayer(userId, userName);
+
+      void reply(
+        `${userName}, this is an interactive chat game that any viewer can participate in! Write commands (examples on the screen) to control your hero. Join our community: ${DISCORD_SERVER_INVITE_URL}`,
+      );
+      return;
+    });
+  }
+
+  public commandDonate() {
+    return createBotCommand("донат", async (_, { userId, userName, reply }) => {
+      await this.game.findOrCreatePlayer(userId, userName);
+
+      void reply(`${userName}, поддержи игру: ${DONATE_URL}`);
+      return;
+    });
+  }
+
+  public commandDonateEn() {
+    return createBotCommand(
+      "donate",
+      async (_, { userId, userName, reply }) => {
+        await this.game.findOrCreatePlayer(userId, userName);
+
+        void reply(`${userName}, support the game: ${DONATE_URL}`);
+        return;
       },
     );
   }
