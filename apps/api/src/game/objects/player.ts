@@ -36,12 +36,6 @@ export class Player extends GameObject implements GameObjectPlayer {
 
   live() {
     if (this.state === "IDLE") {
-      // const random = getRandomInRange(1, 50);
-      // if (random <= 1) {
-      //     this.setRandomTarget(200);
-      //     this.state = "MOVING";
-      // }
-
       this.sendMessage();
       return;
     }
@@ -51,11 +45,11 @@ export class Player extends GameObject implements GameObjectPlayer {
 
       if (!isMoving && this.target) {
         if (this.target instanceof Tree) {
-          void this.startChopping(this.target);
+          void this.startChopping();
           return;
         }
         if (this.target instanceof Stone) {
-          void this.startMining(this.target);
+          void this.startMining();
           return;
         }
       }
@@ -84,6 +78,8 @@ export class Player extends GameObject implements GameObjectPlayer {
             void this.inventory?.checkAndBreakItem(axe, 1);
           }
         }
+
+        this.target.chop();
 
         if (this.target.health <= 0) {
           this.stopChopping(this.target);
@@ -117,6 +113,8 @@ export class Player extends GameObject implements GameObjectPlayer {
           }
         }
 
+        this.target.mine();
+
         if (this.target.health <= 0) {
           this.stopMining(this.target);
         }
@@ -127,17 +125,17 @@ export class Player extends GameObject implements GameObjectPlayer {
     }
   }
 
-  async startChopping(tree: Tree) {
+  async startChopping() {
     this.state = "CHOPPING";
     this.direction = "RIGHT";
-    tree.state = "CHOPPING";
 
     const skill = this.skills.find((skill) => skill.type === "WOODSMAN");
     if (!skill) {
-      // Create
       await Skill.createInDB(this.id, "WOODSMAN");
       await this.initSkills();
     }
+
+    await this.updateInDB();
   }
 
   stopChopping(tree: Tree) {
@@ -148,17 +146,17 @@ export class Player extends GameObject implements GameObjectPlayer {
     }
   }
 
-  async startMining(stone: Stone) {
+  async startMining() {
     this.state = "MINING";
     this.direction = "RIGHT";
-    stone.state = "MINING";
 
     const skill = this.skills.find((skill) => skill.type === "MINER");
     if (!skill) {
-      // Create
       await Skill.createInDB(this.id, "MINER");
       await this.initSkills();
     }
+
+    await this.updateInDB();
   }
 
   stopMining(stone: Stone) {
@@ -217,6 +215,17 @@ export class Player extends GameObject implements GameObjectPlayer {
     this.reputation = player.reputation;
     this.colorIndex = player.colorIndex;
     this.inventoryId = player.inventoryId;
+  }
+
+  public updateInDB() {
+    return db.player.update({
+      where: { id: this.id },
+      data: {
+        x: this.x,
+        y: this.y,
+        lastActionAt: new Date(),
+      },
+    });
   }
 
   public static createInDB({

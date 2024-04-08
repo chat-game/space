@@ -4,6 +4,7 @@
   "description": "Royal Madness: Twitch Chat Game",
   "scripts": {
     "lint": "npx @biomejs/biome check --apply ./apps",
+    "lint:deps": "npx depcruise apps",
     "db:start": "docker compose up",
     "db:edit": "prisma studio",
     "api:start": "bun run --hot apps/api/src/index.ts"
@@ -25,11 +26,11 @@
   "homepage": "https://github.com/hmbanan666/royal-madness-twitch-game#readme",
   "dependencies": {
     "@paralleldrive/cuid2": "2.2.2",
-    "@prisma/client": "5.12.0",
+    "@prisma/client": "5.12.1",
     "@twurple/auth": "7.1.0",
     "@twurple/chat": "7.1.0",
     "@twurple/easy-bot": "7.1.0",
-    "hono": "4.1.4",
+    "hono": "4.2.2",
     "howler": "2.2.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -44,9 +45,10 @@
     "@types/react": "18.2.74",
     "@types/react-dom": "18.2.23",
     "@vitejs/plugin-react": "4.2.1",
-    "prisma": "5.12.0",
+    "dependency-cruiser": "16.3.0",
+    "prisma": "5.12.1",
     "tailwindcss": "4.0.0-alpha.13",
-    "typescript": "5.4.3",
+    "typescript": "5.4.4",
     "vite": "5.2.8"
   }
 }

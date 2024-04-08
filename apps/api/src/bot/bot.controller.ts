@@ -55,8 +55,9 @@ export class BotController {
       commands: this.prepareBotCommands(),
     });
 
-    bot.onRaid(({ broadcasterName, userName }) => {
+    bot.onRaid(({ broadcasterName, userName, userId, viewerCount }) => {
       void bot.say(broadcasterName, `@${userName} устроил рейд!`);
+      void this.service.reactOnRaid({ userName, userId, viewerCount });
     });
     bot.onSub(({ broadcasterName, userName }) => {
       void bot.say(

@@ -9,6 +9,13 @@ export function findTopByReputationPlayers() {
   });
 }
 
+export function findTopByCoinsPlayers() {
+  return db.player.findMany({
+    orderBy: { coins: "desc" },
+    take: 10,
+  });
+}
+
 export function createCommand(dto: {
   playerId: string;
   command: string;

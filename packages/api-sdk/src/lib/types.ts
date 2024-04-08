@@ -103,7 +103,7 @@ export interface GameObject {
   id: string;
   x: number;
   y: number;
-  state: "MOVING" | "IDLE" | "CHOPPING" | "MINING";
+  state: "MOVING" | "IDLE" | "CHOPPING" | "MINING" | "DESTROYED";
   direction: "LEFT" | "RIGHT";
   entity: GameObjectEntity;
 }

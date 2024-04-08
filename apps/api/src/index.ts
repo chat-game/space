@@ -1,7 +1,11 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { BotController } from "./bot/bot.controller";
-import { findTopByReputationPlayers, findVillage } from "./db.repository";
+import {
+  findTopByCoinsPlayers,
+  findTopByReputationPlayers,
+  findVillage,
+} from "./db.repository";
 import { Game } from "./game/game";
 
 const app = new Hono();
@@ -10,6 +14,12 @@ app.use("/*", cors());
 
 app.get("/players/top", async (c) => {
   const players = await findTopByReputationPlayers();
+
+  return c.json(players);
+});
+
+app.get("/players/coins", async (c) => {
+  const players = await findTopByCoinsPlayers();
 
   return c.json(players);
 });

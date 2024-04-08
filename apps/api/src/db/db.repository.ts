@@ -15,7 +15,14 @@ export class DBRepository {
     return this.db.stone.findMany();
   }
 
-  findPlayers() {
-    return this.db.player.findMany();
+  findActivePlayers() {
+    const milliseconds = 20 * 60 * 1000;
+    const gte = new Date(new Date().getTime() - milliseconds);
+
+    return this.db.player.findMany({
+      where: {
+        lastActionAt: { gte },
+      },
+    });
   }
 }

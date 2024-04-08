@@ -21,7 +21,7 @@ export class BotService {
         console.log("рубить", userId, userName, params);
 
         const player = await this.game.findOrCreatePlayer(userId, userName);
-        if (player.state !== "IDLE") {
+        if (player.state === "CHOPPING") {
           void reply(`${userName}, ты пока занят(а).`);
           return;
         }
@@ -42,7 +42,7 @@ export class BotService {
         console.log("добывать", userId, userName, params);
 
         const player = await this.game.findOrCreatePlayer(userId, userName);
-        if (player.state !== "IDLE") {
+        if (player.state === "MINING") {
           void reply(`${userName}, ты пока занят(а).`);
           return;
         }
@@ -275,5 +275,15 @@ export class BotService {
         return;
       },
     );
+  }
+
+  public async reactOnRaid({
+    userName,
+    userId,
+    viewerCount,
+  }: { userName: string; userId: string; viewerCount: number }) {
+    console.log("raid!", userName, userId, viewerCount);
+
+    await this.game.findOrCreatePlayer(userId, userName);
   }
 }

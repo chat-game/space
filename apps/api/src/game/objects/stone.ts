@@ -9,8 +9,9 @@ export class Stone extends GameObject implements GameObjectStone {
   public readonly entity = "STONE";
   public type: GameObjectStone["type"] = "1";
   public resource = 0;
-  public size = 0;
+  public size = 100;
   public health = 100;
+  public isReserved = false;
 
   constructor(id?: string) {
     const objectId = id ?? createId();
@@ -21,6 +22,7 @@ export class Stone extends GameObject implements GameObjectStone {
     super(objectId, x, y);
 
     this.state = "IDLE";
+    this.resource = getRandomInRange(1, 5);
 
     console.log(`Created stone ${objectId}!`);
   }
@@ -32,26 +34,36 @@ export class Stone extends GameObject implements GameObjectStone {
     }
 
     if (this.state === "MINING") {
-      this.mining();
+      if (this.health <= 0) {
+        this.setAsMined();
+      }
+
+      const random = getRandomInRange(1, 20);
+      if (random <= 1 && this.health > 0) {
+        this.state = "IDLE";
+        this.isReserved = false;
+      }
+
+      this.sendMessage();
+      return;
+    }
+
+    if (this.state === "DESTROYED") {
       this.sendMessage();
       return;
     }
   }
 
-  mining() {
-    if (this.health <= 0) {
-      this.setAsMined();
-      return;
-    }
+  mine() {
+    this.state = "MINING";
+    this.isReserved = true;
     this.health -= 0.08;
   }
 
   setAsMined() {
-    this.resource = getRandomInRange(1, 5);
-    this.size = 100;
-    this.health = 100;
-    this.state = "IDLE";
-    void this.updateInDB();
+    this.size = 0;
+    this.health = 0;
+    this.state = "DESTROYED";
   }
 
   public async readFromDB() {

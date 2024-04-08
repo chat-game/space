@@ -12,7 +12,7 @@ export class Tree extends GameObject implements GameObjectTree {
   public readonly entity = "TREE";
   public type: GameObjectTree["type"] = "1";
   public resource = 0;
-  public size = 0;
+  public size = 100;
   public health = 100;
   public isReadyToChop = false;
   public isReserved = false;
@@ -26,19 +26,35 @@ export class Tree extends GameObject implements GameObjectTree {
     super(objectId, x, y);
 
     this.state = "IDLE";
+    this.resource = getRandomInRange(1, 5);
+    this.type = this.getNewTreeType();
 
     console.log(`Created tree ${objectId}!`);
   }
 
   live() {
     if (this.state === "IDLE") {
-      this.grow();
+      // this.grow();
       this.sendMessage();
       return;
     }
 
     if (this.state === "CHOPPING") {
-      this.chopping();
+      if (this.health <= 0) {
+        this.setAsChopped();
+      }
+
+      const random = getRandomInRange(1, 20);
+      if (random <= 1 && this.health > 0) {
+        this.state = "IDLE";
+        this.isReserved = false;
+      }
+
+      this.sendMessage();
+      return;
+    }
+
+    if (this.state === "DESTROYED") {
       this.sendMessage();
       return;
     }
@@ -55,32 +71,22 @@ export class Tree extends GameObject implements GameObjectTree {
     this.size += 0.01;
   }
 
-  chopping() {
-    if (this.health <= 0) {
-      this.setAsChopped();
-      return;
-    }
+  public chop() {
+    this.state = "CHOPPING";
+    this.isReserved = true;
     this.health -= 0.08;
   }
 
   setAsChopped() {
-    this.resource = getRandomInRange(1, 5);
     this.size = 0;
-    this.health = 100;
-    this.isReadyToChop = false;
-    this.isReserved = false;
-    this.state = "IDLE";
-    this.type = this.getNewTreeType(this.type);
-    void this.updateInDB();
+    this.health = 0;
+    this.state = "DESTROYED";
   }
 
-  getNewTreeType(typeNow: GameObjectTreeType): GameObjectTreeType {
-    const typeAsNumber = Number(typeNow);
-    // 1, 2 or 3
-    if (typeAsNumber === 3) {
-      return "1";
-    }
-    return String(typeAsNumber + 1) as GameObjectTreeType;
+  getNewTreeType(): GameObjectTreeType {
+    const types: GameObjectTreeType[] = ["1", "2", "3"];
+    const index = getRandomInRange(0, types.length - 1);
+    return types[index];
   }
 
   public async readFromDB() {

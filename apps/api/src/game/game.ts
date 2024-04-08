@@ -13,17 +13,15 @@ export class Game {
   public flags: Flag[] = [];
 
   public async init() {
-    // this.players = await this.initPlayers();
-    this.trees = await this.initTrees();
-    this.stones = await this.initStones();
-    this.rabbits = this.initRabbits(4);
-    this.wolfs = this.initWolfs(2);
-    this.flags = this.initFlags(8);
+    this.players = await this.initPlayers();
+    this.trees = await this.initTrees(20);
+    this.stones = this.initStones(10);
+    this.rabbits = this.initRabbits(10);
+    this.wolfs = this.initWolfs(10);
+    this.flags = this.initFlags(10);
   }
 
   public async play() {
-    // const activePlayers = [this.players[0], this.players[1]];
-
     return setInterval(() => {
       for (const tree of this.trees) {
         tree.live();
@@ -31,6 +29,13 @@ export class Game {
 
       for (const stone of this.stones) {
         stone.live();
+        if (stone.state === "DESTROYED") {
+          const random = getRandomInRange(1, 1000);
+          if (random <= 1) {
+            const index = this.stones.findIndex((s) => s.id === stone.id);
+            this.stones.splice(index, 1);
+          }
+        }
       }
 
       for (const rabbit of this.rabbits) {
@@ -62,40 +67,33 @@ export class Game {
       }
 
       for (const player of this.players) {
-        // if (player.state === "IDLE") {
-        //   const random = getRandomInRange(1, 100);
-        //   if (random <= 1) {
-        //     const randObj = this.getRandomTree();
-        //     if (!randObj) {
-        //       return;
-        //     }
-        //     randObj.isReserved = true;
-        //     player.setTarget(randObj);
-        //   }
-        // }
+        if (player.state === "IDLE") {
+          const random = getRandomInRange(1, 1000);
+          if (random <= 1) {
+            const randObj = this.getRandomFlag();
+            if (!randObj) {
+              return;
+            }
+            player.setTarget(randObj);
+          }
+        }
         player.live();
       }
     }, 25);
   }
 
-  private async initTrees() {
+  private async initTrees(count: number) {
     const trees = [];
-    const treesFromDb = await repository.findTrees();
-    for (const tree of treesFromDb) {
-      const treeInstance = new Tree(tree.id);
-      await treeInstance.readFromDB();
-      trees.push(treeInstance);
+    for (let i = 0; i < count; i++) {
+      trees.push(new Tree());
     }
     return trees;
   }
 
-  private async initStones() {
+  private initStones(count: number) {
     const stones = [];
-    const stonesFromDb = await repository.findStones();
-    for (const stone of stonesFromDb) {
-      const instance = new Stone(stone.id);
-      await instance.readFromDB();
-      stones.push(instance);
+    for (let i = 0; i < count; i++) {
+      stones.push(new Stone());
     }
     return stones;
   }
@@ -110,7 +108,7 @@ export class Game {
 
   private async initPlayers() {
     const players = [];
-    const playersFromDb = await repository.findPlayers();
+    const playersFromDb = await repository.findActivePlayers();
     for (const player of playersFromDb) {
       const instance = await this.initPlayer(player.id);
       players.push(instance);
@@ -135,7 +133,8 @@ export class Game {
   }
 
   private initFlags(count: number) {
-    const flags = [];
+    const outsideFlag = new Flag(-100, 600);
+    const flags = [outsideFlag];
     for (let i = 0; i < count; i++) {
       flags.push(new Flag());
     }
@@ -144,7 +143,7 @@ export class Game {
 
   getRandomTree() {
     const onlyReadyToChop = this.trees.filter(
-      (tree) => tree.isReadyToChop && !tree.isReserved,
+      (tree) => !tree.isReserved && tree.state !== "DESTROYED",
     );
     return onlyReadyToChop.length
       ? onlyReadyToChop[getRandomInRange(0, onlyReadyToChop.length - 1)]
@@ -152,8 +151,11 @@ export class Game {
   }
 
   getRandomStone() {
-    return this.stones.length
-      ? this.stones[getRandomInRange(0, this.stones.length - 1)]
+    const onlyAvailable = this.stones.filter(
+      (stone) => stone.state !== "DESTROYED" && !stone.isReserved,
+    );
+    return onlyAvailable.length
+      ? onlyAvailable[getRandomInRange(0, onlyAvailable.length - 1)]
       : undefined;
   }
 
@@ -182,7 +184,6 @@ export class Game {
     if (!randObj) {
       return false;
     }
-    randObj.isReserved = true;
     player.setTarget(randObj);
     return true;
   }

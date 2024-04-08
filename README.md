@@ -1,6 +1,7 @@
 # [Twitch Chat Game] Royal Madness 👑
 
 👉 Building and playing it live: https://www.twitch.tv/hmbanan666
+👉 Our community: https://discord.gg/B6etUajrGZ
 
 🤔 Imagine an open world where your Hero can:
 
@@ -17,9 +18,8 @@ Let's build a similar world together!
 
 - [Front] Web client for the game made with **Typescript**, **React**
     - simple graphics, top view camera
-    - movements with mouse clicks (or finger taps)
-    - some interface, menu, inventory slots...
-- [Back] Server on **Node.js**, where will be a storage for progress of all Heroes
+    - interface, menu, inventory slots...
+- [Back] Server on **Bun**, where will be a storage for progress of all Heroes
 
 ## Why?
 

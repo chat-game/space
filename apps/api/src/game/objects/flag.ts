@@ -6,12 +6,12 @@ import { GameObject } from "./game-object";
 export class Flag extends GameObject {
   public readonly entity = "FLAG";
 
-  constructor() {
+  constructor(x?: number, y?: number) {
     const id = createId();
-    const x = getRandomInRange(MIN_X, MAX_X);
-    const y = getRandomInRange(MIN_Y, MAX_Y);
+    const finalX = x ?? getRandomInRange(MIN_X, MAX_X);
+    const finalY = y ?? getRandomInRange(MIN_Y, MAX_Y);
 
-    super(id, x, y);
+    super(id, finalX, finalY);
 
     console.log("Creating new flag!");
   }

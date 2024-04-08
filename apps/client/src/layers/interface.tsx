@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Background } from "../components/background";
 import { DealerBlock } from "../components/dealer";
-import { Tip } from "../components/tip";
 import { TopBlock } from "../components/top";
 import { Village } from "../components/village";
 
@@ -27,21 +26,17 @@ export const InterfaceLayer = () => {
       <div className="relative">
         <Village />
 
-        <Tip x={1020} y={150} message="!добывать" />
-        <Tip x={160} y={800} message="!рубить" />
-
         <DealerBlock dealer={{ x: 520, y: 720 }} />
 
         <div className="fixed top-4 left-4" style={{ zIndex: 1000 }}>
           <div className="w-72 h-auto px-4 py-4 text-amber-900 bg-amber-100/90 border-b-4 rounded-2xl">
             <p className="font-semibold leading-tight">
-              Есть идеи? Наше комьюнити:
+              Есть идеи? Наш Discord сервер:
             </p>
-            <p className="font-bold text-2xl text-violet-600">
-              discord.gg/B6etUajrGZ
-            </p>
+            <img src={"/discord.png"} alt="" className="mt-2 w-32 h-32 rounded-xl" />
 
             <p className="mt-4 font-semibold">Пиши команды в чат:</p>
+            <p className="font-bold text-xl">!помощь</p>
             <p className="font-bold text-xl">!рубить</p>
             <p className="font-bold text-xl">!добывать</p>
             <p className="font-bold text-xl">
@@ -50,8 +45,7 @@ export const InterfaceLayer = () => {
             <p className="font-bold text-xl">
               !продать <i className="opacity-70">&lt;название&gt;</i>
             </p>
-
-            <p className="hidden mt-4 font-semibold">В разработке:</p>
+            <p className="font-bold text-xl">!донат</p>
           </div>
 
           <div className="text-sm text-amber-950">
