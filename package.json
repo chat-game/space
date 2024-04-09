@@ -30,7 +30,7 @@
     "@twurple/auth": "7.1.0",
     "@twurple/chat": "7.1.0",
     "@twurple/easy-bot": "7.1.0",
-    "hono": "4.2.2",
+    "hono": "4.2.3",
     "howler": "2.2.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
