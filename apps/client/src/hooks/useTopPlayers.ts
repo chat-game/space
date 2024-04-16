@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
 import {
-  type Player,
-  getTopByReputationPlayers,
+  type TopPlayersResponse,
+  getTopPlayers,
 } from "../../../../packages/api-sdk/src";
 
 export const useTopPlayers = () => {
-  const [players, setPlayers] = useState<Player[]>([]);
+  const [players, setPlayers] = useState<TopPlayersResponse>();
 
   useEffect(() => {
-    getTopByReputationPlayers().then((res) => {
+    getTopPlayers().then((res) => {
       if (!res) return;
 
       setPlayers(res);
     });
 
     const reload = setInterval(() => {
-      getTopByReputationPlayers().then((res) => {
+      getTopPlayers().then((res) => {
         if (!res) return;
 
         setPlayers(res);

@@ -3,11 +3,11 @@ import type {
   GameObjectPlayer,
   ItemType,
 } from "../../../../../packages/api-sdk/src";
-import { getRandomInRange } from "../../../../../packages/api-sdk/src/lib/random";
+import { getRandomInRange } from "../../../../../packages/api-sdk/src";
 import { MAX_X, MAX_Y, MIN_X, MIN_Y } from "../../config";
 import { db } from "../../db/db.client";
 import { Inventory, Skill } from "../common";
-import { GameObject } from "./game-object";
+import { GameObject } from "./gameObject";
 import { Stone } from "./stone";
 import { Tree } from "./tree";
 
@@ -17,6 +17,7 @@ export class Player extends GameObject implements GameObjectPlayer {
   public reputation = 0;
   public userName = "NPC";
   public colorIndex = 0;
+  public health = 100;
 
   public inventoryId: string | null = null;
   public inventory: Inventory | null = null;
@@ -36,12 +37,13 @@ export class Player extends GameObject implements GameObjectPlayer {
 
   live() {
     if (this.state === "IDLE") {
-      this.sendMessage();
+      this.handleChange();
       return;
     }
 
     if (this.state === "MOVING") {
       const isMoving = this.move(1);
+      this.handleChange();
 
       if (!isMoving && this.target) {
         if (this.target instanceof Tree) {
@@ -54,7 +56,6 @@ export class Player extends GameObject implements GameObjectPlayer {
         }
       }
 
-      this.sendMessage();
       return;
     }
 
@@ -80,13 +81,13 @@ export class Player extends GameObject implements GameObjectPlayer {
         }
 
         this.target.chop();
+        this.handleChange();
 
         if (this.target.health <= 0) {
-          this.stopChopping(this.target);
+          void this.stopChopping(this.target);
         }
       }
 
-      this.sendMessage();
       return;
     }
 
@@ -114,15 +115,19 @@ export class Player extends GameObject implements GameObjectPlayer {
         }
 
         this.target.mine();
+        this.handleChange();
 
         if (this.target.health <= 0) {
-          this.stopMining(this.target);
+          void this.stopMining(this.target);
         }
       }
 
-      this.sendMessage();
       return;
     }
+  }
+
+  handleChange() {
+    this.sendMessageObjectUpdated();
   }
 
   async startChopping() {
@@ -136,14 +141,16 @@ export class Player extends GameObject implements GameObjectPlayer {
     }
 
     await this.updateInDB();
+    this.handleChange();
   }
 
-  stopChopping(tree: Tree) {
+  async stopChopping(tree: Tree) {
     this.state = "IDLE";
     // Reward
     if (this.inventory) {
-      void this.inventory.addOrCreateItem("WOOD", tree.resource);
+      await this.inventory.addOrCreateItem("WOOD", tree.resource);
     }
+    this.handleChange();
   }
 
   async startMining() {
@@ -157,18 +164,22 @@ export class Player extends GameObject implements GameObjectPlayer {
     }
 
     await this.updateInDB();
+    this.handleChange();
   }
 
-  stopMining(stone: Stone) {
+  async stopMining(stone: Stone) {
     this.state = "IDLE";
     // Reward
     if (this.inventory) {
-      void this.inventory.addOrCreateItem("STONE", stone.resource);
+      await this.inventory.addOrCreateItem("STONE", stone.resource);
     }
+    this.handleChange();
   }
 
   updateCoins(amount: number) {
     this.coins = this.coins + amount;
+    this.handleChange();
+
     return db.player.update({
       where: { id: this.id },
       data: {
@@ -179,10 +190,21 @@ export class Player extends GameObject implements GameObjectPlayer {
 
   addReputation(amount: number) {
     this.reputation += amount;
+    this.handleChange();
+
     return db.player.update({
       where: { id: this.id },
       data: {
         reputation: this.reputation,
+      },
+    });
+  }
+
+  addViewerPoints(increment: number) {
+    return db.player.update({
+      where: { id: this.id },
+      data: {
+        viewerPoints: { increment },
       },
     });
   }
@@ -199,6 +221,8 @@ export class Player extends GameObject implements GameObjectPlayer {
 
     await this.updateCoins(-price);
     await this.inventory?.addOrCreateItem(type, amount);
+    this.handleChange();
+
     return true;
   }
 
@@ -234,7 +258,7 @@ export class Player extends GameObject implements GameObjectPlayer {
     inventoryId,
     id,
   }: { twitchId: string; userName: string; inventoryId: string; id: string }) {
-    const colorIndex = getRandomInRange(0, 100);
+    const colorIndex = getRandomInRange(0, 360);
     return db.player.create({
       data: {
         id,

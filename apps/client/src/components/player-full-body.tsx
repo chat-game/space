@@ -1,4 +1,4 @@
-import type { Player } from "packages/api-sdk/src/index";
+import type { Player } from "packages/api-sdk/src";
 import { PlayerTopBlock } from "./player-top";
 
 export const PlayerFullBody = ({ player }: { player: Player }) => {

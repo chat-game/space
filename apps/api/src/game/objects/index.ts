@@ -1,4 +1,4 @@
-export { GameObject } from "./game-object";
+export { GameObject } from "./gameObject";
 export { Player } from "./player";
 export { Rabbit } from "./rabbit";
 export { Wolf } from "./wolf";

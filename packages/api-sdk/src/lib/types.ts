@@ -1,3 +1,5 @@
+import {Group} from "../../../../apps/api/src/game/common";
+
 export interface Village {
   id: string;
   createdAt: Date;
@@ -19,6 +21,8 @@ export interface Command {
 
 export type TargetType = "TREE" | "STONE";
 
+export type ChatAction = "HELP" | "GIFT" | "SELL" | "DONATE" | "CHOP" | "MINE" | "START_GROUP_BUILD" | "DISBAND_GROUP" | "JOIN_GROUP" | "START_RAID";
+
 export interface Player {
   id: string;
   createdAt: Date;
@@ -38,6 +42,8 @@ export interface Player {
   handsItemAmount: number;
   coins: number;
   reputation: number;
+  viewerPoints: number;
+  health: number;
 }
 
 export type PlayerBusinessType = null | "RUNNING" | "CHOPPING" | "MINING";
@@ -103,18 +109,19 @@ export interface GameObject {
   id: string;
   x: number;
   y: number;
-  state: "MOVING" | "IDLE" | "CHOPPING" | "MINING" | "DESTROYED";
-  direction: "LEFT" | "RIGHT";
+  state: GameObjectState;
+  direction: GameObjectDirection;
   entity: GameObjectEntity;
 }
 
-export type GameObjectEntity = undefined | "RABBIT" | "WOLF" | "PLAYER" | "TREE" | "STONE" | "FLAG";
+export type GameObjectState = "MOVING" | "IDLE" | "CHOPPING" | "MINING" | "DESTROYED";
+export type GameObjectEntity = undefined | "RABBIT" | "WOLF" | "PLAYER" | "RAIDER"| "TREE" | "STONE" | "FLAG";
+export type GameObjectDirection = "LEFT" | "RIGHT";
 
 export interface WebSocketMessage {
   id: string;
-  type: "object",
-  action?: "isOnTarget",
-  object?: GameObject
+  event: "OBJECT_UPDATED" | "RAID_STARTED" | "GROUP_FORM_STARTED" | "SCENE_CHANGED",
+  object?: GameObject,
 }
 
 export interface GameObjectTree extends GameObject {
@@ -141,4 +148,38 @@ export interface GameObjectPlayer extends GameObject {
   colorIndex: number;
   inventory: Inventory | null;
   skills: Skill[];
+}
+
+export interface GameObjectRaider extends GameObject {
+  userName: string;
+  colorIndex: number;
+}
+
+export interface GameEvent {
+  type: EventType;
+  status: EventStatus;
+  endsAt: Date;
+}
+
+export type EventType = "FORMING_GROUP";
+export type EventStatus = "STARTED" | "STOPPED";
+
+export type GameSceneType = "VILLAGE" | "DEFENCE";
+
+export interface GetSceneResponse {
+  id: string;
+  commands: string[];
+  events: GameEvent[];
+  group: Group | undefined;
+}
+
+export interface GameGroup {
+  id: string;
+  target: GameSceneType;
+  players: Player[];
+}
+
+export interface PlayerTitle {
+  title: string;
+  type: "RICH" | "FAMOUS" | "VIEWER" | "WOODSMAN" | "MINER";
 }

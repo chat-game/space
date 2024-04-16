@@ -1,9 +1,9 @@
 import { createId } from "@paralleldrive/cuid2";
 import type { GameObjectStone } from "../../../../../packages/api-sdk/src";
-import { getRandomInRange } from "../../../../../packages/api-sdk/src/lib/random";
+import { getRandomInRange } from "../../../../../packages/api-sdk/src";
 import { MAX_X, MAX_Y, MIN_X, MIN_Y } from "../../config";
 import { db } from "../../db/db.client";
-import { GameObject } from "./game-object";
+import { GameObject } from "./gameObject";
 
 export class Stone extends GameObject implements GameObjectStone {
   public readonly entity = "STONE";
@@ -29,7 +29,10 @@ export class Stone extends GameObject implements GameObjectStone {
 
   live() {
     if (this.state === "IDLE") {
-      this.sendMessage();
+      const random = getRandomInRange(1, 80);
+      if (random <= 1) {
+        this.handleChange();
+      }
       return;
     }
 
@@ -42,28 +45,33 @@ export class Stone extends GameObject implements GameObjectStone {
       if (random <= 1 && this.health > 0) {
         this.state = "IDLE";
         this.isReserved = false;
+        this.handleChange();
       }
 
-      this.sendMessage();
       return;
     }
 
     if (this.state === "DESTROYED") {
-      this.sendMessage();
       return;
     }
+  }
+
+  handleChange() {
+    this.sendMessageObjectUpdated();
   }
 
   mine() {
     this.state = "MINING";
     this.isReserved = true;
     this.health -= 0.08;
+    this.handleChange();
   }
 
   setAsMined() {
     this.size = 0;
     this.health = 0;
     this.state = "DESTROYED";
+    this.handleChange();
   }
 
   public async readFromDB() {

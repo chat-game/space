@@ -1,19 +1,71 @@
 import { createId } from "@paralleldrive/cuid2";
 import { db } from "./db/db.client";
 
-export function findTopByReputationPlayers() {
-  return db.player.findMany({
-    where: { reputation: { gt: 0 } },
+export async function findTopPlayers() {
+  const famous = await db.player.findFirst({
     orderBy: { reputation: "desc" },
-    take: 10,
   });
+  const rich = await db.player.findFirst({
+    orderBy: { coins: "desc" },
+  });
+  const viewer = await db.player.findFirst({
+    orderBy: { viewerPoints: "desc" },
+  });
+  const woodsman = await findTopWoodsmanPlayer();
+  const miner = await findTopMinerPlayer();
+
+  return {
+    famous: {
+      player: famous,
+      points: famous?.reputation,
+    },
+    rich: {
+      player: rich,
+      points: rich?.coins,
+    },
+    viewer: {
+      player: viewer,
+      points: viewer?.viewerPoints,
+    },
+    woodsman,
+    miner,
+  };
 }
 
-export function findTopByCoinsPlayers() {
-  return db.player.findMany({
-    orderBy: { coins: "desc" },
-    take: 10,
+export async function findTopWoodsmanPlayer() {
+  const topSkill = await db.skill.findFirst({
+    where: { type: "WOODSMAN" },
+    orderBy: { lvl: "desc" },
   });
+  if (!topSkill) {
+    return null;
+  }
+  const player = await db.player.findUnique({
+    where: { id: topSkill.objectId },
+  });
+
+  return {
+    player,
+    points: topSkill.lvl,
+  };
+}
+
+export async function findTopMinerPlayer() {
+  const topSkill = await db.skill.findFirst({
+    where: { type: "MINER" },
+    orderBy: { lvl: "desc" },
+  });
+  if (!topSkill) {
+    return null;
+  }
+  const player = await db.player.findUnique({
+    where: { id: topSkill.objectId },
+  });
+
+  return {
+    player,
+    points: topSkill.lvl,
+  };
 }
 
 export function createCommand(dto: {

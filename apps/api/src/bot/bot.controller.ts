@@ -1,5 +1,6 @@
 import { RefreshingAuthProvider } from "@twurple/auth";
 import { Bot } from "@twurple/easy-bot";
+import { PubSubClient } from "@twurple/pubsub";
 import type { Game } from "../game/game";
 import { BotService } from "./bot.service";
 
@@ -29,36 +30,73 @@ export class BotController {
       await Bun.write(tokenFile, data);
     });
 
-    await authProvider.addUserForToken(tokenData, ["chat"]);
+    await authProvider.addUserForToken(tokenData, ["chat", "channel"]);
 
     return authProvider;
   }
 
   prepareBotCommands() {
     return [
+      this.service.commandStartGroupBuild(),
+      this.service.commandJoinGroup(),
+      this.service.commandDisbandGroup(),
       this.service.commandChop(),
       this.service.commandMine(),
-      this.service.commandGift(),
-      this.service.commandSell(),
-      this.service.commandBuy(),
+      // this.service.commandGift(),
+      // this.service.commandSell(),
+      // this.service.commandBuy(),
       this.service.commandHelp(),
-      this.service.commandHelpEn(),
+      //this.service.commandHelpEn(),
       this.service.commandDonate(),
-      this.service.commandDonateEn(),
+      //this.service.commandDonateEn(),
     ];
   }
 
   public async serve() {
+    const authProvider = await this.prepareAuthProvider();
+
+    const pubSubClient = new PubSubClient({ authProvider });
+
+    pubSubClient.onRedemption(this.userId, ({ userId, userName, rewardId }) => {
+      this.service.reactOnChannelRewardRedemption({
+        userId,
+        userName,
+        rewardId,
+      });
+    });
+
     const bot = new Bot({
-      authProvider: await this.prepareAuthProvider(),
+      authProvider,
       channels: [this.channel],
       commands: this.prepareBotCommands(),
+      chatClientOptions: {
+        requestMembershipEvents: true,
+      },
     });
 
     bot.onRaid(({ broadcasterName, userName, userId, viewerCount }) => {
-      void bot.say(broadcasterName, `@${userName} устроил рейд!`);
+      void bot.say(broadcasterName, `@${userName} устроил(а) рейд! Готовимся!`);
       void this.service.reactOnRaid({ userName, userId, viewerCount });
     });
+    bot.onRaidCancel((event) => {
+      console.log("raid canceled!", event);
+    });
+
+    bot.onMessage(({ userId, isAction, text }) => {
+      console.log("message", userId, isAction, text);
+    });
+
+    bot.onAction(({ userId, userName, isAction, text }) => {
+      console.log("action!", userId, userName, isAction, text);
+    });
+
+    bot.onJoin(({ userName }) => {
+      console.log(new Date().toLocaleTimeString(), "joined!", userName);
+    });
+    bot.onLeave(({ userName }) => {
+      console.log("left!", userName);
+    });
+
     bot.onSub(({ broadcasterName, userName }) => {
       void bot.say(
         broadcasterName,

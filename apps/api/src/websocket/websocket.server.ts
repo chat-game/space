@@ -1,3 +1,6 @@
+import { createId } from "@paralleldrive/cuid2";
+import type { WebSocketMessage } from "../../../../packages/api-sdk/src";
+
 export const server = Bun.serve({
   port: 4002,
   fetch(req, server) {
@@ -11,6 +14,7 @@ export const server = Bun.serve({
   websocket: {
     open(ws) {
       ws.subscribe("game");
+      console.log("smb connected");
     },
     message() {
       //const action = MessageController.parseMessage(message.toString());
@@ -25,5 +29,12 @@ export const server = Bun.serve({
     },
   },
 });
+
+export function sendMessage(
+  event: WebSocketMessage["event"],
+  object?: WebSocketMessage["object"],
+) {
+  server.publish("game", JSON.stringify({ id: createId(), event, object }));
+}
 
 console.log(`WebSocket server: listening on ${server.hostname}:${server.port}`);

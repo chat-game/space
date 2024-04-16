@@ -1,7 +1,21 @@
-import type {
+import {
+  GetSceneResponse,
   Player,
   Village,
 } from "./types";
+
+interface PlayerWithPoints {
+  player: Player;
+  points: number;
+}
+
+export interface TopPlayersResponse {
+  famous: PlayerWithPoints | null,
+  rich: PlayerWithPoints | null,
+  viewer: PlayerWithPoints | null,
+  woodsman: PlayerWithPoints | null,
+  miner: PlayerWithPoints | null
+}
 
 export async function getVillage() {
   try {
@@ -12,19 +26,19 @@ export async function getVillage() {
   }
 }
 
-export async function getTopByReputationPlayers() {
+export async function getTopPlayers() {
   try {
     const res = await fetch("http://localhost:4001/players/top");
-    return (await res.json()) as Player[];
+    return (await res.json()) as TopPlayersResponse;
   } catch (err) {
     return null;
   }
 }
 
-export async function getTopByCoinsPlayers() {
+export async function getSceneInfo() {
   try {
-    const res = await fetch("http://localhost:4001/players/coins");
-    return (await res.json()) as Player[];
+    const res = await fetch("http://localhost:4001/scene");
+    return (await res.json()) as GetSceneResponse;
   } catch (err) {
     return null;
   }

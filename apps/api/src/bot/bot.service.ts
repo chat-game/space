@@ -1,5 +1,5 @@
 import { createBotCommand } from "@twurple/easy-bot";
-import { DISCORD_SERVER_INVITE_URL, DONATE_URL } from "../config";
+import { TWITCH_CHANNEL_REWARDS } from "../config";
 import {
   addStoneToVillage,
   addWoodToVillage,
@@ -14,22 +14,63 @@ export class BotService {
     this.game = game;
   }
 
+  public commandStartGroupBuild() {
+    return createBotCommand(
+      "собрать",
+      async (params, { userId, userName, reply }) => {
+        const result = await this.game.handleChatCommand({
+          action: "START_GROUP_BUILD",
+          userId,
+          userName,
+          params,
+        });
+        if (result.message) {
+          void reply(result.message);
+        }
+      },
+    );
+  }
+
+  public commandJoinGroup() {
+    return createBotCommand("го", async (_, { userId, userName, reply }) => {
+      const result = await this.game.handleChatCommand({
+        action: "JOIN_GROUP",
+        userId,
+        userName,
+      });
+      if (result.message) {
+        void reply(result.message);
+      }
+    });
+  }
+
+  public commandDisbandGroup() {
+    return createBotCommand(
+      "расформировать",
+      async (_, { userId, userName, reply }) => {
+        const result = await this.game.handleChatCommand({
+          action: "DISBAND_GROUP",
+          userId,
+          userName,
+        });
+        if (result.message) {
+          void reply(result.message);
+        }
+      },
+    );
+  }
+
   public commandChop() {
     return createBotCommand(
       "рубить",
-      async (params, { userId, userName, reply }) => {
-        console.log("рубить", userId, userName, params);
-
-        const player = await this.game.findOrCreatePlayer(userId, userName);
-        if (player.state === "CHOPPING") {
-          void reply(`${userName}, ты пока занят(а).`);
-          return;
-        }
-
-        const sent = this.game.sendPlayerToChopATree(player);
-        if (!sent) {
-          void reply(`${userName}, нет доступного дерева.`);
-          return;
+      async (_, { userId, userName, reply }) => {
+        const result = await this.game.handleChatCommand({
+          action: "CHOP",
+          userId,
+          userName,
+        });
+        if (result.message) {
+          void reply(result.message);
         }
       },
     );
@@ -37,20 +78,15 @@ export class BotService {
 
   public commandMine() {
     return createBotCommand(
-      "добывать",
-      async (params, { userId, userName, reply }) => {
-        console.log("добывать", userId, userName, params);
-
-        const player = await this.game.findOrCreatePlayer(userId, userName);
-        if (player.state === "MINING") {
-          void reply(`${userName}, ты пока занят(а).`);
-          return;
-        }
-
-        const sent = this.game.sendPlayerToMineStone(player);
-        if (!sent) {
-          void reply(`${userName}, нет доступного камня.`);
-          return;
+      "добыть",
+      async (_, { userId, userName, reply }) => {
+        const result = await this.game.handleChatCommand({
+          action: "MINE",
+          userId,
+          userName,
+        });
+        if (result.message) {
+          void reply(result.message);
         }
       },
     );
@@ -62,7 +98,10 @@ export class BotService {
       async (params, { userId, userName, reply }) => {
         console.log("подарить", userId, userName, params);
 
-        const player = await this.game.findOrCreatePlayer(userId, userName);
+        const player = await this.game.repository.findOrCreatePlayer(
+          userId,
+          userName,
+        );
         const items = player.inventory?.items ?? [];
 
         if (params[0] === "древесину" || params[0] === "древесина") {
@@ -123,7 +162,10 @@ export class BotService {
       async (params, { userId, userName, reply }) => {
         console.log("продать", userId, userName, params);
 
-        const player = await this.game.findOrCreatePlayer(userId, userName);
+        const player = await this.game.repository.findOrCreatePlayer(
+          userId,
+          userName,
+        );
         const items = player.inventory?.items ?? [];
 
         if (params[0] === "древесину" || params[0] === "древесина") {
@@ -178,7 +220,10 @@ export class BotService {
       async (params, { userId, userName, reply }) => {
         console.log("купить", userId, userName, params);
 
-        const player = await this.game.findOrCreatePlayer(userId, userName);
+        const player = await this.game.repository.findOrCreatePlayer(
+          userId,
+          userName,
+        );
         const items = player.inventory?.items ?? [];
 
         if (params[0] === "топор") {
@@ -235,55 +280,80 @@ export class BotService {
     return createBotCommand(
       "помощь",
       async (_, { userId, userName, reply }) => {
-        await this.game.findOrCreatePlayer(userId, userName);
-
-        void reply(
-          `${userName}, это интерактивная игра-чат, в которой может участвовать любой зритель! Пиши команды (примеры на экране) для управления своим героем. Вступай в наше комьюнити: ${DISCORD_SERVER_INVITE_URL}`,
-        );
-        return;
+        const result = await this.game.handleChatCommand({
+          action: "HELP",
+          userId,
+          userName,
+        });
+        if (result.message) {
+          void reply(result.message);
+        }
       },
     );
   }
 
-  public commandHelpEn() {
-    return createBotCommand("help", async (_, { userId, userName, reply }) => {
-      await this.game.findOrCreatePlayer(userId, userName);
-
-      void reply(
-        `${userName}, this is an interactive chat game that any viewer can participate in! Write commands (examples on the screen) to control your hero. Join our community: ${DISCORD_SERVER_INVITE_URL}`,
-      );
-      return;
-    });
-  }
+  // public commandHelpEn() {
+  //   return createBotCommand("help", async (_, { userId, userName, reply }) => {
+  //     await this.game.repository.findOrCreatePlayer(userId, userName);
+  //
+  //     void reply(
+  //       `${userName}, this is an interactive chat game that any viewer can participate in! Write commands (examples on the screen) to control your hero. Join our community: ${DISCORD_SERVER_INVITE_URL}`,
+  //     );
+  //     return;
+  //   });
+  // }
 
   public commandDonate() {
     return createBotCommand("донат", async (_, { userId, userName, reply }) => {
-      await this.game.findOrCreatePlayer(userId, userName);
-
-      void reply(`${userName}, поддержи игру: ${DONATE_URL}`);
-      return;
+      const result = await this.game.handleChatCommand({
+        action: "DONATE",
+        userId,
+        userName,
+      });
+      if (result.message) {
+        void reply(result.message);
+      }
     });
   }
 
-  public commandDonateEn() {
-    return createBotCommand(
-      "donate",
-      async (_, { userId, userName, reply }) => {
-        await this.game.findOrCreatePlayer(userId, userName);
-
-        void reply(`${userName}, support the game: ${DONATE_URL}`);
-        return;
-      },
-    );
-  }
+  // public commandDonateEn() {
+  //   return createBotCommand(
+  //     "donate",
+  //     async (_, { userId, userName, reply }) => {
+  //       await this.game.repository.findOrCreatePlayer(userId, userName);
+  //
+  //       void reply(`${userName}, support the game: ${DONATE_URL}`);
+  //       return;
+  //     },
+  //   );
+  // }
 
   public async reactOnRaid({
     userName,
     userId,
     viewerCount,
   }: { userName: string; userId: string; viewerCount: number }) {
-    console.log("raid!", userName, userId, viewerCount);
+    return this.game.handleChatCommand({
+      action: "START_RAID",
+      userId,
+      userName,
+      viewerCount,
+    });
+  }
 
-    await this.game.findOrCreatePlayer(userId, userName);
+  public async reactOnChannelRewardRedemption({
+    userId,
+    userName,
+    rewardId,
+  }: { userId: string; userName: string; rewardId: string }) {
+    console.log("reactOnChannelRewardRedemption", userId, userName, rewardId);
+    const player = await this.game.repository.findOrCreatePlayer(
+      userId,
+      userName,
+    );
+    if (rewardId === TWITCH_CHANNEL_REWARDS["150viewerPoints"].id) {
+      await this.game.repository.addPlayerViewerPoints(player.id, 150);
+      return;
+    }
   }
 }

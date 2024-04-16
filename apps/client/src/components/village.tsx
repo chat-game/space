@@ -1,4 +1,4 @@
-import { useVillage } from "../hooks/useVillage.ts";
+import { useVillage } from "../hooks/useVillage";
 
 export const Village = () => {
   const village = useVillage();
@@ -30,7 +30,7 @@ export const Village = () => {
         </div>
       </div>
 
-      <div className="fixed" style={{ top: 450, left: 450 }}>
+      <div className="hidden fixed" style={{ top: 450, left: 450 }}>
         <div style={{ marginTop: 0, marginLeft: 0 }}>
           <div className="flex flex-row gap-4">
             <div className="relative">

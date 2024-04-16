@@ -1,12 +1,12 @@
 import { createId } from "@paralleldrive/cuid2";
-import type {
-  GameObjectTree,
-  GameObjectTreeType,
+import {
+  type GameObjectTree,
+  type GameObjectTreeType,
+  getRandomInRange,
 } from "../../../../../packages/api-sdk/src";
-import { getRandomInRange } from "../../../../../packages/api-sdk/src/lib/random";
 import { MAX_X, MAX_Y, MIN_X, MIN_Y } from "../../config";
 import { db } from "../../db/db.client";
-import { GameObject } from "./game-object";
+import { GameObject } from "./gameObject";
 
 export class Tree extends GameObject implements GameObjectTree {
   public readonly entity = "TREE";
@@ -28,35 +28,41 @@ export class Tree extends GameObject implements GameObjectTree {
     this.state = "IDLE";
     this.resource = getRandomInRange(1, 5);
     this.type = this.getNewTreeType();
-
-    console.log(`Created tree ${objectId}!`);
   }
 
   live() {
-    if (this.state === "IDLE") {
-      // this.grow();
-      this.sendMessage();
-      return;
+    switch (this.state) {
+      case "IDLE":
+        this.handleIdleState();
+        break;
+      case "CHOPPING":
+        this.handleChoppingState();
+        break;
+      case "DESTROYED":
+        break;
     }
+  }
 
-    if (this.state === "CHOPPING") {
-      if (this.health <= 0) {
-        this.setAsChopped();
-      }
+  handleChange() {
+    this.sendMessageObjectUpdated();
+  }
 
-      const random = getRandomInRange(1, 20);
-      if (random <= 1 && this.health > 0) {
-        this.state = "IDLE";
-        this.isReserved = false;
-      }
-
-      this.sendMessage();
-      return;
+  handleIdleState() {
+    // this.grow();
+    const random = getRandomInRange(1, 80);
+    if (random <= 1) {
+      this.handleChange();
     }
+  }
 
-    if (this.state === "DESTROYED") {
-      this.sendMessage();
-      return;
+  handleChoppingState() {
+    if (this.health <= 0) {
+      this.setAsChopped();
+    }
+    const random = getRandomInRange(1, 20);
+    if (random <= 1 && this.health > 0) {
+      this.state = "IDLE";
+      this.isReserved = false;
     }
   }
 
@@ -69,18 +75,21 @@ export class Tree extends GameObject implements GameObjectTree {
     }
 
     this.size += 0.01;
+    this.handleChange();
   }
 
   public chop() {
     this.state = "CHOPPING";
     this.isReserved = true;
     this.health -= 0.08;
+    this.handleChange();
   }
 
   setAsChopped() {
     this.size = 0;
     this.health = 0;
     this.state = "DESTROYED";
+    this.handleChange();
   }
 
   getNewTreeType(): GameObjectTreeType {

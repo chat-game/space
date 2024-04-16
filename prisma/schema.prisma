@@ -36,12 +36,7 @@ model Player {
   handsItemAmount    Int             @default(0)
   coins              Int             @default(0)
   reputation         Int             @default(0)
-  skillWoodLvl       Int             @default(0)
-  skillWoodNextLvl   Int             @default(20)
-  skillWood          Int             @default(0)
-  skillMiningLvl     Int             @default(0)
-  skillMiningNextLvl Int             @default(20)
-  skillMining        Int             @default(0)
+  viewerPoints         Int @default(0)
   inventoryId     String
   commands           Command[]
 }
