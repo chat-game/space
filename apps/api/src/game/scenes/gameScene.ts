@@ -391,7 +391,7 @@ export class GameScene {
       };
     }
 
-    this.group = new Group(player, target);
+    this.group = new Group({ creator: player, target });
 
     this.initEvent("FORMING_GROUP", 60);
     sendMessage("GROUP_FORM_STARTED");
@@ -470,7 +470,7 @@ export class GameScene {
   }
 
   public startRaidAction(raidersCount = 0) {
-    const raid = new Raid(raidersCount);
+    const raid = new Raid({ raidersCount });
     this.raids.push(raid);
     sendMessage("RAID_STARTED");
     return {

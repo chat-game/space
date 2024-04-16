@@ -1,5 +1,3 @@
-import type { Group } from "../../../../apps/api/src/game/common";
-
 export interface Village {
   id: string;
   createdAt: Date;
@@ -9,17 +7,6 @@ export interface Village {
   globalTarget: number | null;
   globalTargetSuccess: number | null;
 }
-
-export interface Command {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  playerId: string;
-  command: string;
-  player?: Player;
-}
-
-export type TargetType = "TREE" | "STONE";
 
 export type ChatAction =
   | "HELP"
@@ -33,34 +20,13 @@ export type ChatAction =
   | "JOIN_GROUP"
   | "START_RAID";
 
-export interface Player {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  lastActionAt: Date;
-  x: number;
-  y: number;
-  targetX: number | null;
-  targetY: number | null;
-  targetId: string | null;
-  userName: string;
-  twitchId: string;
-  isBusy: boolean;
-  businessType: PlayerBusinessType;
-  colorIndex: number;
-  handsItemType: null | ItemType;
-  handsItemAmount: number;
-  coins: number;
-  reputation: number;
-  viewerPoints: number;
-  health: number;
-}
-
-export type PlayerBusinessType = null | "RUNNING" | "CHOPPING" | "MINING";
-
 export type ItemType = "WOOD" | "STONE" | "AXE" | "PICKAXE";
 
-export interface Inventory {
+export interface IGameRaid {
+  raiders: IGameObjectRaider[];
+}
+
+export interface IGameInventory {
   id: string;
   objectId: string;
   items: InventoryItem[];
@@ -76,61 +42,33 @@ export interface InventoryItem {
   durability: number;
 }
 
-export interface Tree {
+export interface IGameSkill {
   id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  x: number;
-  y: number;
-  size: number;
-  resource: number;
-  isReserved: boolean;
-  inProgress: boolean;
-  progressFinishAt: Date;
-  type: "1" | "2" | "3";
-}
-
-export interface Stone {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  x: number;
-  y: number;
-  size: number;
-  resource: number;
-  isReserved: boolean;
-  inProgress: boolean;
-  progressFinishAt: Date;
-  type: "1";
-}
-
-export interface Skill {
-  id: string;
-  type: SkillType | null;
+  type: "WOODSMAN" | "MINER";
   objectId: string | null;
   lvl: number;
   xp: number;
   xpNextLvl: number;
 }
 
-export type SkillType = "WOODSMAN" | "MINER";
-
-export interface GameObject {
+export interface IGameObject {
   id: string;
   x: number;
   y: number;
-  state: GameObjectState;
-  direction: GameObjectDirection;
-  entity: GameObjectEntity;
+  state: IGameObjectState;
+  direction: IGameObjectDirection;
+  entity: IGameObjectEntity;
+  target: IGameObject | undefined;
+  health: number;
 }
 
-export type GameObjectState =
+export type IGameObjectState =
   | "MOVING"
   | "IDLE"
   | "CHOPPING"
   | "MINING"
   | "DESTROYED";
-export type GameObjectEntity =
+export type IGameObjectEntity =
   | undefined
   | "RABBIT"
   | "WOLF"
@@ -139,7 +77,7 @@ export type GameObjectEntity =
   | "TREE"
   | "STONE"
   | "FLAG";
-export type GameObjectDirection = "LEFT" | "RIGHT";
+export type IGameObjectDirection = "LEFT" | "RIGHT";
 
 export interface WebSocketMessage {
   id: string;
@@ -148,41 +86,45 @@ export interface WebSocketMessage {
     | "RAID_STARTED"
     | "GROUP_FORM_STARTED"
     | "SCENE_CHANGED";
-  object?: GameObject;
+  object?: IGameObject;
 }
 
-export interface GameObjectTree extends GameObject {
-  type: GameObjectTreeType;
+export interface IGameObjectFlag extends IGameObject {
+  isOnScreen: boolean;
+}
+
+export interface IGameObjectTree extends IGameObject {
+  type: "1" | "2" | "3";
   resource: number;
   size: number;
-  health: number;
   isReadyToChop: boolean;
 }
 
-export type GameObjectTreeType = "1" | "2" | "3";
-
-export interface GameObjectStone extends GameObject {
+export interface IGameObjectStone extends IGameObject {
   type: "1";
   resource: number;
   size: number;
-  health: number;
 }
 
-export interface GameObjectPlayer extends GameObject {
+export interface IGameObjectPlayer extends IGameObject {
   coins: number;
   reputation: number;
   userName: string;
   colorIndex: number;
-  inventory: Inventory | null;
-  skills: Skill[];
+  inventory: IGameInventory | null;
+  skills: IGameSkill[];
 }
 
-export interface GameObjectRaider extends GameObject {
+export interface IGameObjectRaider extends IGameObject {
   userName: string;
   colorIndex: number;
 }
 
-export interface GameEvent {
+export interface IGameObjectRabbit extends IGameObject {}
+
+export interface IGameObjectWolf extends IGameObject {}
+
+export interface IGameEvent {
   type: EventType;
   status: EventStatus;
   endsAt: Date;
@@ -196,14 +138,14 @@ export type GameSceneType = "VILLAGE" | "DEFENCE";
 export interface GetSceneResponse {
   id: string;
   commands: string[];
-  events: GameEvent[];
-  group: Group | undefined;
+  events: IGameEvent[];
+  group: IGameGroup | undefined;
 }
 
-export interface GameGroup {
+export interface IGameGroup {
   id: string;
   target: GameSceneType;
-  players: Player[];
+  players: IGameObjectPlayer[];
 }
 
 export interface PlayerTitle {

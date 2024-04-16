@@ -1,9 +1,9 @@
 import { create } from "zustand";
-import type { GameObjectTree } from "../../../../packages/api-sdk/src";
+import type { IGameObjectTree } from "../../../../packages/api-sdk/src";
 
 type TreesState = {
-  objects: GameObjectTree[];
-  update: (obj: GameObjectTree) => void;
+  objects: IGameObjectTree[];
+  update: (obj: IGameObjectTree) => void;
 };
 
 export const useTreesStore = create<TreesState>((set) => ({

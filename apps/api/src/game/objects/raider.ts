@@ -1,6 +1,6 @@
 import { createId } from "@paralleldrive/cuid2";
 import {
-  type GameObjectRaider,
+  type IGameObjectRaider,
   getRandomInRange,
 } from "../../../../../packages/api-sdk/src";
 import {
@@ -11,7 +11,7 @@ import {
 } from "../../config";
 import { GameObject } from "./gameObject";
 
-export class Raider extends GameObject implements GameObjectRaider {
+export class Raider extends GameObject implements IGameObjectRaider {
   public readonly entity = "RAIDER";
   public userName = "рейдер";
   public colorIndex = 0;
@@ -22,9 +22,7 @@ export class Raider extends GameObject implements GameObjectRaider {
     const finalX = getRandomInRange(RAIDER_CAMP_MIN_X, RAIDER_CAMP_MAX_X);
     const finalY = getRandomInRange(RAIDER_CAMP_MIN_Y, RAIDER_CAMP_MAX_Y);
 
-    super(objectId, finalX, finalY);
-
-    console.log(`Creating raider ${objectId}!`);
+    super({ id: objectId, x: finalX, y: finalY });
   }
 
   live() {

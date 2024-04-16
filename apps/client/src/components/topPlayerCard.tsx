@@ -1,4 +1,7 @@
-import type { Player, PlayerTitle } from "../../../../packages/api-sdk/src";
+import type {
+  IGameObjectPlayer,
+  PlayerTitle,
+} from "../../../../packages/api-sdk/src";
 import { PlayerFullBody } from "./player-full-body";
 
 export const TopPlayerCard = ({
@@ -6,7 +9,7 @@ export const TopPlayerCard = ({
   title,
   points,
 }: {
-  player: Player | null | undefined;
+  player: IGameObjectPlayer | undefined;
   title: PlayerTitle;
   points: string;
 }) => {

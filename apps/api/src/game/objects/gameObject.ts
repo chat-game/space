@@ -1,25 +1,32 @@
-import type {
-  GameObjectEntity,
-  GameObjectTree,
-  GameObject as IGameObject,
+import {
+  type IGameObject,
+  type IGameObjectDirection,
+  type IGameObjectEntity,
+  type IGameObjectState,
+  getRandomInRange,
 } from "../../../../../packages/api-sdk/src";
-import { getRandomInRange } from "../../../../../packages/api-sdk/src";
 import { MAX_X, MAX_Y, MIN_X, MIN_Y } from "../../config";
 import { sendMessage } from "../../websocket/websocket.server";
+
+interface IGameObjectOptions {
+  id: string;
+  x: number;
+  y: number;
+}
 
 export class GameObject implements IGameObject {
   public id: string;
   public x: number;
   public y: number;
-  public entity: GameObjectEntity;
   public health = 100;
 
-  public direction: IGameObject["direction"] = "RIGHT";
-  public state: IGameObject["state"] = "IDLE";
+  public entity: IGameObjectEntity;
+  public direction: IGameObjectDirection = "RIGHT";
+  public state: IGameObjectState = "IDLE";
 
-  public target: GameObject | GameObjectTree | undefined;
+  public target: IGameObject | undefined;
 
-  constructor(id: string, x: number, y: number) {
+  constructor({ id, x, y }: IGameObjectOptions) {
     this.id = id;
     this.x = x;
     this.y = y;
@@ -101,7 +108,7 @@ export class GameObject implements IGameObject {
     return Math.abs(this.target.y - this.y);
   }
 
-  public setTarget(target: GameObject | GameObjectTree) {
+  public setTarget(target: IGameObject) {
     this.target = target;
     this.state = "MOVING";
   }

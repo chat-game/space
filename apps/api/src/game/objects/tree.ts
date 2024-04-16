@@ -1,16 +1,14 @@
 import { createId } from "@paralleldrive/cuid2";
 import {
-  type GameObjectTree,
-  type GameObjectTreeType,
+  type IGameObjectTree,
   getRandomInRange,
 } from "../../../../../packages/api-sdk/src";
 import { MAX_X, MAX_Y, MIN_X, MIN_Y } from "../../config";
-import { db } from "../../db/db.client";
 import { GameObject } from "./gameObject";
 
-export class Tree extends GameObject implements GameObjectTree {
+export class Tree extends GameObject implements IGameObjectTree {
   public readonly entity = "TREE";
-  public type: GameObjectTree["type"] = "1";
+  public type: IGameObjectTree["type"] = "1";
   public resource = 0;
   public size = 100;
   public health = 100;
@@ -23,7 +21,7 @@ export class Tree extends GameObject implements GameObjectTree {
     const x = getRandomInRange(MIN_X, MAX_X);
     const y = getRandomInRange(MIN_Y, MAX_Y);
 
-    super(objectId, x, y);
+    super({ id: objectId, x, y });
 
     this.state = "IDLE";
     this.resource = getRandomInRange(1, 5);
@@ -92,35 +90,9 @@ export class Tree extends GameObject implements GameObjectTree {
     this.handleChange();
   }
 
-  getNewTreeType(): GameObjectTreeType {
-    const types: GameObjectTreeType[] = ["1", "2", "3"];
+  getNewTreeType(): IGameObjectTree["type"] {
+    const types: IGameObjectTree["type"][] = ["1", "2", "3"];
     const index = getRandomInRange(0, types.length - 1);
     return types[index];
-  }
-
-  public async readFromDB() {
-    const tree = await db.tree.findUnique({ where: { id: this.id } });
-    if (!tree) {
-      return;
-    }
-
-    this.x = tree.x;
-    this.y = tree.y;
-    this.type = tree.type as GameObjectTree["type"];
-    this.size = tree.size;
-    this.resource = tree.resource;
-  }
-
-  public async updateInDB() {
-    await db.tree.update({
-      where: { id: this.id },
-      data: {
-        x: this.x,
-        y: this.y,
-        size: this.size,
-        type: this.type,
-        resource: this.resource,
-      },
-    });
   }
 }

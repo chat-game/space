@@ -1,29 +1,25 @@
 import { Sprite } from "pixi.js";
-import type {
-  GameObjectDirection,
-  GameObjectEntity,
-  GameObjectState,
-  GameObjectTree,
-} from "../../../../../packages/api-sdk/src";
+import type { IGameObjectTree } from "../../../../../packages/api-sdk/src";
 import type { Game } from "../game";
-import { GameContainer } from "./gameContainer";
+import { GameObjectContainer } from "./gameObjectContainer";
 
-export class Tree extends GameContainer implements GameObjectTree {
-  entity: GameObjectEntity;
-  state!: GameObjectState;
-  direction!: GameObjectDirection;
-  health!: number;
-  isReadyToChop!: boolean;
-  resource!: number;
-  size!: number;
-  public type!: GameObjectTree["type"];
+interface ITreeOptions {
+  game: Game;
+  object: IGameObjectTree;
+}
+
+export class Tree extends GameObjectContainer implements IGameObjectTree {
+  public type!: IGameObjectTree["type"];
+  public resource!: number;
+  public size!: number;
+  public isReadyToChop!: boolean;
 
   public animationAngle = 0;
   public animationSlowSpeed = 0.04;
   public animationHighSpeed = 0.15;
 
-  constructor(game: Game, object: GameObjectTree) {
-    super(game, object.id);
+  constructor({ game, object }: ITreeOptions) {
+    super({ game, ...object });
 
     this.update(object);
     this.init();
@@ -80,7 +76,7 @@ export class Tree extends GameContainer implements GameObjectTree {
     this.angle = this.animationAngle;
   }
 
-  update(object: GameObjectTree) {
+  update(object: IGameObjectTree) {
     this.x = object.x;
     this.y = object.y;
     this.zIndex = Math.round(object.y);

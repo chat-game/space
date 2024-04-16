@@ -1,15 +1,11 @@
-import type { Player } from "../../../../packages/api-sdk/src";
+import type { IGameObjectPlayer } from "../../../../packages/api-sdk/src";
 import { PlayerFullBody } from "./player-full-body";
 
 export const GroupPlayerCard = ({
   player,
 }: {
-  player: Player | null | undefined;
+  player: IGameObjectPlayer;
 }) => {
-  if (!player) {
-    return null;
-  }
-
   return (
     <div
       key={player.id}

@@ -1,22 +1,18 @@
 import { Sprite } from "pixi.js";
-import type {
-  GameObject,
-  GameObjectDirection,
-  GameObjectEntity,
-  GameObjectState,
-} from "../../../../../packages/api-sdk/src";
+import type { IGameObjectRabbit } from "../../../../../packages/api-sdk/src";
 import type { Game } from "../game";
-import { GameContainer } from "./gameContainer";
+import { GameObjectContainer } from "./gameObjectContainer";
 
-export class Rabbit extends GameContainer implements GameObject {
-  entity: GameObjectEntity;
-  state!: GameObjectState;
-  direction!: GameObjectDirection;
+interface IRabbitOptions {
+  game: Game;
+  object: IGameObjectRabbit;
+}
 
+export class Rabbit extends GameObjectContainer implements IGameObjectRabbit {
   public animationAngle = 0;
 
-  constructor(game: Game, object: GameObject) {
-    super(game, object.id);
+  constructor({ game, object }: IRabbitOptions) {
+    super({ game, ...object });
 
     this.update(object);
     this.init();
@@ -61,7 +57,7 @@ export class Rabbit extends GameContainer implements GameObject {
     this.animationAngle += 0.08;
   }
 
-  update(object: GameObject) {
+  update(object: IGameObjectRabbit) {
     this.x = object.x;
     this.y = object.y;
     this.zIndex = Math.round(object.y);
@@ -69,5 +65,6 @@ export class Rabbit extends GameContainer implements GameObject {
     this.entity = object.entity;
     this.state = object.state;
     this.direction = object.direction;
+    this.health = object.health;
   }
 }

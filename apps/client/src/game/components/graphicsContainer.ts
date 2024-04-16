@@ -1,5 +1,5 @@
 import { ColorMatrixFilter, Container, Sprite } from "pixi.js";
-import type { GameObjectDirection } from "../../../../../packages/api-sdk/src";
+import type { IGameObjectDirection } from "../../../../../packages/api-sdk/src";
 
 type GraphicsContainerType =
   | "INTERFACE"
@@ -17,9 +17,9 @@ type GraphicsContainerType =
 
 export class GraphicsContainer extends Container {
   public type: GraphicsContainerType;
-  public direction: GameObjectDirection = "RIGHT";
+  public direction: IGameObjectDirection = "RIGHT";
 
-  constructor(type: GraphicsContainerType, direction?: GameObjectDirection) {
+  constructor(type: GraphicsContainerType, direction?: IGameObjectDirection) {
     super();
     this.type = type;
 
@@ -30,7 +30,7 @@ export class GraphicsContainer extends Container {
 
   static createWithSprite(
     spriteIndex: string,
-    direction: GameObjectDirection,
+    direction: IGameObjectDirection,
     type: GraphicsContainerType,
   ) {
     const sprite = Sprite.from(spriteIndex);

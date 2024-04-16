@@ -1,7 +1,7 @@
-import type { Player } from "packages/api-sdk/src";
+import type { IGameObjectPlayer } from "packages/api-sdk/src";
 import { PlayerTopBlock } from "./player-top";
 
-export const PlayerFullBody = ({ player }: { player: Player }) => {
+export const PlayerFullBody = ({ player }: { player: IGameObjectPlayer }) => {
   const size = 100;
   const height = (size * 64) / 100;
 

@@ -1,10 +1,10 @@
-import type { Skill, SkillType } from "../../../../packages/api-sdk/src";
+import type { IGameSkill } from "../../../../packages/api-sdk/src";
 
 export const PlayerSkillBlock = ({
   skill,
   isVisible,
 }: {
-  skill: Skill | undefined;
+  skill: IGameSkill | undefined;
   isVisible: boolean;
 }) => {
   if (!skill) {
@@ -32,7 +32,7 @@ export const PlayerSkillBlock = ({
   );
 };
 
-function getSkillTypeDescription(type: SkillType | null) {
+function getSkillTypeDescription(type: IGameSkill["type"] | null) {
   if (type === "WOODSMAN") return "лесоруб";
   if (type === "MINER") return "шахтер";
 }

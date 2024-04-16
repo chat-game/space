@@ -1,23 +1,19 @@
 import { Sprite } from "pixi.js";
-import type {
-  GameObject,
-  GameObjectDirection,
-  GameObjectEntity,
-  GameObjectState,
-} from "../../../../../packages/api-sdk/src";
+import type { IGameObjectWolf } from "../../../../../packages/api-sdk/src";
 import type { Game } from "../game";
-import { GameContainer } from "./gameContainer";
+import { GameObjectContainer } from "./gameObjectContainer";
 
-export class Wolf extends GameContainer implements GameObject {
-  entity: GameObjectEntity;
-  state!: GameObjectState;
-  direction!: GameObjectDirection;
+interface IWolfOptions {
+  game: Game;
+  object: IGameObjectWolf;
+}
 
+export class Wolf extends GameObjectContainer implements IGameObjectWolf {
   public animationAngle = 0;
   public animationSlowSpeed = 0.1;
 
-  constructor(game: Game, object: GameObject) {
-    super(game, object.id);
+  constructor({ game, object }: IWolfOptions) {
+    super({ game, ...object });
 
     this.update(object);
     this.init();
@@ -62,7 +58,7 @@ export class Wolf extends GameContainer implements GameObject {
     this.angle = this.animationAngle;
   }
 
-  update(object: GameObject) {
+  update(object: IGameObjectWolf) {
     this.x = object.x;
     this.y = object.y;
     this.zIndex = Math.round(object.y);
@@ -70,5 +66,6 @@ export class Wolf extends GameContainer implements GameObject {
     this.entity = object.entity;
     this.state = object.state;
     this.direction = object.direction;
+    this.health = object.health;
   }
 }

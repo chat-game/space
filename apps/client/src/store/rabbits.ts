@@ -1,9 +1,9 @@
 import { create } from "zustand";
-import type { GameObject } from "../../../../packages/api-sdk/src";
+import type { IGameObject } from "../../../../packages/api-sdk/src";
 
 type RabbitsState = {
-  objects: GameObject[];
-  update: (obj: GameObject) => void;
+  objects: IGameObject[];
+  update: (obj: IGameObject) => void;
 };
 
 export const useRabbitsStore = create<RabbitsState>((set) => ({

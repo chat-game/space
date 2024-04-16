@@ -1,9 +1,9 @@
 import { createId } from "@paralleldrive/cuid2";
-import type {
-  GameObjectPlayer,
-  ItemType,
+import {
+  type IGameObjectPlayer,
+  type ItemType,
+  getRandomInRange,
 } from "../../../../../packages/api-sdk/src";
-import { getRandomInRange } from "../../../../../packages/api-sdk/src";
 import { MAX_X, MAX_Y, MIN_X, MIN_Y } from "../../config";
 import { db } from "../../db/db.client";
 import { Inventory, Skill } from "../common";
@@ -11,7 +11,7 @@ import { GameObject } from "./gameObject";
 import { Stone } from "./stone";
 import { Tree } from "./tree";
 
-export class Player extends GameObject implements GameObjectPlayer {
+export class Player extends GameObject implements IGameObjectPlayer {
   public readonly entity = "PLAYER";
   public coins = 0;
   public reputation = 0;
@@ -30,7 +30,7 @@ export class Player extends GameObject implements GameObjectPlayer {
     const x = getRandomInRange(MIN_X, MAX_X);
     const y = getRandomInRange(MIN_Y, MAX_Y);
 
-    super(objectId, x, y);
+    super({ id: objectId, x, y });
 
     console.log(`Creating player ${objectId}!`);
   }
@@ -299,7 +299,10 @@ export class Player extends GameObject implements GameObjectPlayer {
       return;
     }
 
-    const inventory = new Inventory(this.id, this.inventoryId);
+    const inventory = new Inventory({
+      objectId: this.id,
+      id: this.inventoryId,
+    });
     await inventory.init();
     this.inventory = inventory;
   }
@@ -308,7 +311,7 @@ export class Player extends GameObject implements GameObjectPlayer {
     this.skills = [];
     const skills = await Skill.findAllInDB(this.id);
     for (const skill of skills) {
-      const instance = new Skill(skill.id);
+      const instance = new Skill({ id: skill.id });
       await instance.init();
       this.skills.push(instance);
     }

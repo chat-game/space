@@ -1,7 +1,7 @@
-import type { GetSceneResponse, Player, Village } from "./types";
+import type { GetSceneResponse, IGameObjectPlayer, Village } from "./types";
 
 interface PlayerWithPoints {
-  player: Player;
+  player: IGameObjectPlayer;
   points: number;
 }
 

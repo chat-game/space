@@ -1,23 +1,28 @@
 import { createId } from "@paralleldrive/cuid2";
 import type {
-  GameGroup,
   GameSceneType,
-  Player,
+  IGameGroup,
+  IGameObjectPlayer,
 } from "../../../../../packages/api-sdk/src";
 
-export class Group implements GameGroup {
+interface IGroupOptions {
+  creator: IGameObjectPlayer;
+  target: GameSceneType;
+}
+
+export class Group implements IGameGroup {
   id: string;
-  players: Player[] = [];
+  players: IGameObjectPlayer[] = [];
   target: GameSceneType;
 
-  constructor(creator: Player, target: GameSceneType) {
+  constructor({ creator, target }: IGroupOptions) {
     this.id = createId();
 
     this.join(creator);
     this.target = target;
   }
 
-  join(player: Player): boolean {
+  join(player: IGameObjectPlayer): boolean {
     const check = this.findPlayer(player.id);
     if (check) {
       return false;

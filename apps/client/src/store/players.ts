@@ -1,9 +1,9 @@
 import { create } from "zustand";
-import type { GameObjectPlayer } from "../../../../packages/api-sdk/src";
+import type { IGameObjectPlayer } from "../../../../packages/api-sdk/src";
 
 type PlayersState = {
-  players: GameObjectPlayer[];
-  update: (obj: GameObjectPlayer) => void;
+  players: IGameObjectPlayer[];
+  update: (obj: IGameObjectPlayer) => void;
 };
 
 export const usePlayersStore = create<PlayersState>((set) => ({

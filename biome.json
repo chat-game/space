@@ -8,7 +8,7 @@
     "rules": {
       "recommended": true,
       "complexity": {
-        "noStaticOnlyClass": "warn"
+        "noStaticOnlyClass": "off"
       }
     },
     "ignore": ["node_modules", "tmp"]

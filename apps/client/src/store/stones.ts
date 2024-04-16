@@ -1,9 +1,9 @@
 import { create } from "zustand";
-import type { GameObjectStone } from "../../../../packages/api-sdk/src";
+import type { IGameObjectStone } from "../../../../packages/api-sdk/src";
 
 type StonesState = {
-  objects: GameObjectStone[];
-  update: (obj: GameObjectStone) => void;
+  objects: IGameObjectStone[];
+  update: (obj: IGameObjectStone) => void;
 };
 
 export const useStonesStore = create<StonesState>((set) => ({

@@ -1,20 +1,21 @@
 import { createId } from "@paralleldrive/cuid2";
-import type {
-  Skill as ISkill,
-  SkillType,
-} from "../../../../../packages/api-sdk/src";
+import type { IGameSkill } from "../../../../../packages/api-sdk/src";
 import { db } from "../../db/db.client";
 
-export class Skill implements ISkill {
+interface ISkillOptions {
+  id: string;
+}
+
+export class Skill implements IGameSkill {
   public id: string;
   public objectId: string | null = null;
-  public type: SkillType | null = null;
+  public type!: IGameSkill["type"];
 
   public lvl = 0;
   public xp = 0;
   public xpNextLvl = 0;
 
-  constructor(id: string) {
+  constructor({ id }: ISkillOptions) {
     this.id = id;
   }
 
@@ -58,7 +59,7 @@ export class Skill implements ISkill {
     }
 
     this.objectId = skill.objectId;
-    this.type = skill.type as SkillType;
+    this.type = skill.type as IGameSkill["type"];
     this.lvl = skill.lvl;
     this.xp = skill.xp;
     this.xpNextLvl = skill.xpNextLvl;
@@ -70,7 +71,7 @@ export class Skill implements ISkill {
     });
   }
 
-  public static createInDB(objectId: string, type: SkillType) {
+  public static createInDB(objectId: string, type: IGameSkill["type"]) {
     return db.skill.create({
       data: {
         id: createId(),

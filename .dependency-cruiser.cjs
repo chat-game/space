@@ -327,11 +327,7 @@ module.exports = {
        */
       // extensions: [".js", ".jsx", ".ts", ".tsx", ".d.ts"],
       /* What to consider a 'main' field in package.json */
-      
-      // if you migrate to ESM (or are in an ESM environment already) you will want to
-      // have "module" in the list of mainFields, like so:
-      // mainFields: ["module", "main", "types", "typings"],
-      mainFields: ["main", "types", "typings"],
+      mainFields: ["module", "main", "types", "typings"],
       /*
          A list of alias fields in package.jsons
          See [this specification](https://github.com/defunctzombie/package-browser-field-spec) and
@@ -390,4 +386,4 @@ module.exports = {
     }
   }
 };
-// generated: dependency-cruiser@16.3.0 on 2024-04-08T09:50:19.700Z
+// generated: dependency-cruiser@16.3.1 on 2024-04-16T10:36:05.632Z

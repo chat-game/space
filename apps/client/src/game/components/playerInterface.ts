@@ -1,10 +1,10 @@
 import { Graphics, Sprite, Text } from "pixi.js";
-import type { Player } from "../objects";
+import type { IGameObjectPlayer } from "../../../../../packages/api-sdk/src";
 import { GraphicsContainer } from "./graphicsContainer";
 
 export class PlayerInterface extends GraphicsContainer {
   public children: GraphicsContainer[] = [];
-  public player: Player;
+  public player: IGameObjectPlayer;
 
   public coins = 0;
   public wood = 0;
@@ -21,7 +21,7 @@ export class PlayerInterface extends GraphicsContainer {
   public havePickaxe = false;
   public showPickaxe = false;
 
-  constructor(player: Player) {
+  constructor(player: IGameObjectPlayer) {
     super("INTERFACE");
 
     this.x = -15;

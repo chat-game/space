@@ -2,22 +2,23 @@ import { createId } from "@paralleldrive/cuid2";
 import {
   type EventStatus,
   type EventType,
+  type IGameEvent,
   getDatePlusSeconds,
 } from "../../../../../packages/api-sdk/src";
 
-interface EventOptions {
+interface IEventOptions {
   type: EventType;
   secondsToEnd: number;
 }
 
-export class Event {
+export class Event implements IGameEvent {
   public id: string;
   public type: EventType;
   public status: EventStatus;
   public endsAt: Date;
   public deletesAt: Date;
 
-  constructor({ type, secondsToEnd }: EventOptions) {
+  constructor({ type, secondsToEnd }: IEventOptions) {
     this.id = createId();
     this.type = type;
     this.endsAt = getDatePlusSeconds(secondsToEnd);

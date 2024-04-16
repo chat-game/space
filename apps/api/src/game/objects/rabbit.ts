@@ -1,9 +1,12 @@
 import { createId } from "@paralleldrive/cuid2";
-import { getRandomInRange } from "../../../../../packages/api-sdk/src";
+import {
+  type IGameObjectRabbit,
+  getRandomInRange,
+} from "../../../../../packages/api-sdk/src";
 import { MAX_X, MAX_Y, MIN_X, MIN_Y } from "../../config";
 import { GameObject } from "./gameObject";
 
-export class Rabbit extends GameObject {
+export class Rabbit extends GameObject implements IGameObjectRabbit {
   public readonly entity = "RABBIT";
 
   constructor() {
@@ -11,9 +14,7 @@ export class Rabbit extends GameObject {
     const x = getRandomInRange(MIN_X, MAX_X);
     const y = getRandomInRange(MIN_Y, MAX_Y);
 
-    super(id, x, y);
-
-    console.log("Creating new rabbit!");
+    super({ id, x, y });
   }
 
   live() {

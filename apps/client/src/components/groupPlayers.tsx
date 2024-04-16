@@ -1,9 +1,9 @@
-import type { GameGroup } from "../../../../packages/api-sdk/src";
+import type { IGameGroup } from "../../../../packages/api-sdk/src";
 import { GroupPlayerCard } from "./groupPlayerCard";
 
 export const GroupPlayersBlock = ({
   group,
-}: { group: GameGroup | undefined }) => {
+}: { group: IGameGroup | undefined }) => {
   if (!group) {
     return null;
   }

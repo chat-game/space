@@ -1,13 +1,20 @@
-import { getDatePlusMinutes } from "../../../../../packages/api-sdk/src";
-import type { Flag } from "../objects";
-import { Raider } from "../objects/raider";
+import {
+  type IGameObjectFlag,
+  type IGameRaid,
+  getDatePlusMinutes,
+} from "../../../../../packages/api-sdk/src";
+import { Raider } from "../objects";
 
-export class Raid {
+interface IRaidOptions {
+  raidersCount: number;
+}
+
+export class Raid implements IGameRaid {
   public raiders: Raider[] = [];
   public raidEndsAt!: Date;
   public raidDeletesAt!: Date;
 
-  constructor(raidersCount: number) {
+  constructor({ raidersCount }: IRaidOptions) {
     this.init(raidersCount);
   }
 
@@ -25,7 +32,7 @@ export class Raid {
     return raiders;
   }
 
-  moveAllRaidersBackToCamp(flag: Flag) {
+  moveAllRaidersBackToCamp(flag: IGameObjectFlag) {
     for (const raider of this.raiders) {
       raider.target = flag;
       raider.state = "MOVING";

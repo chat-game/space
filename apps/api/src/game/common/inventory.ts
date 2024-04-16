@@ -1,17 +1,22 @@
 import { createId } from "@paralleldrive/cuid2";
 import type {
-  Inventory as IInventory,
+  IGameInventory,
   InventoryItem,
   ItemType,
 } from "../../../../../packages/api-sdk/src";
 import { db } from "../../db/db.client";
 
-export class Inventory implements IInventory {
+interface IInventoryOptions {
+  objectId: string;
+  id: string;
+}
+
+export class Inventory implements IGameInventory {
   public id: string;
   public objectId: string;
   public items: InventoryItem[] = [];
 
-  constructor(objectId: string, id: string) {
+  constructor({ id, objectId }: IInventoryOptions) {
     this.id = id;
     this.objectId = objectId;
   }

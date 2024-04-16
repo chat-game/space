@@ -57,11 +57,21 @@ export class VillageScene extends GameScene {
   }
 
   private initFlags(count: number) {
-    const outsideFlag = new Flag(-100, 600, "outside", false);
-    const outsideRaidersCampFlag = new Flag(4000, 650, "raiders-camp", false);
+    const outsideFlag = new Flag({
+      x: -100,
+      y: 600,
+      id: "outside",
+      isOnScreen: false,
+    });
+    const outsideRaidersCampFlag = new Flag({
+      x: 4000,
+      y: 650,
+      id: "raiders-camp",
+      isOnScreen: false,
+    });
     this.objects.push(outsideFlag, outsideRaidersCampFlag);
     for (let i = 0; i < count; i++) {
-      this.objects.push(new Flag());
+      this.objects.push(new Flag({}));
     }
   }
 }

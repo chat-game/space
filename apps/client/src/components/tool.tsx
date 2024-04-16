@@ -1,11 +1,11 @@
 import { Howl } from "howler";
 import { useEffect, useMemo } from "react";
-import type { GameObjectPlayer } from "../../../../packages/api-sdk/src";
+import type { IGameObjectPlayer } from "../../../../packages/api-sdk/src";
 
 export const ToolBlock = ({
   object,
 }: {
-  object: GameObjectPlayer;
+  object: IGameObjectPlayer;
 }) => {
   const axe = object.inventory?.items.find((item) => item.type === "AXE");
   const pickaxe = object.inventory?.items.find(

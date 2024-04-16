@@ -1,22 +1,19 @@
 import { ColorMatrixFilter, Container, Graphics, Sprite, Text } from "pixi.js";
-import type {
-  GameObjectDirection,
-  GameObjectEntity,
-  GameObjectRaider,
-  GameObjectState,
-} from "../../../../../packages/api-sdk/src";
+import type { IGameObjectRaider } from "../../../../../packages/api-sdk/src";
 import type { Game } from "../game";
-import { GameContainer } from "./gameContainer";
+import { GameObjectContainer } from "./gameObjectContainer";
 
-export class Raider extends GameContainer implements GameObjectRaider {
-  entity: GameObjectEntity;
-  state!: GameObjectState;
-  direction!: GameObjectDirection;
+interface IRaiderOptions {
+  game: Game;
+  object: IGameObjectRaider;
+}
+
+export class Raider extends GameObjectContainer implements IGameObjectRaider {
   userName!: string;
   colorIndex!: number;
 
-  constructor(game: Game, object: GameObjectRaider) {
-    super(game, object.id);
+  constructor({ game, object }: IRaiderOptions) {
+    super({ game, ...object });
 
     this.update(object);
     this.init();
@@ -91,7 +88,7 @@ export class Raider extends GameContainer implements GameObjectRaider {
     }
   }
 
-  update(object: GameObjectRaider) {
+  update(object: IGameObjectRaider) {
     this.x = object.x;
     this.y = object.y;
     this.zIndex = Math.round(object.y + 1);
@@ -102,5 +99,6 @@ export class Raider extends GameContainer implements GameObjectRaider {
 
     this.userName = object.userName;
     this.colorIndex = object.colorIndex;
+    this.health = object.health;
   }
 }

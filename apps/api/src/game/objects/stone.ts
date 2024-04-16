@@ -1,13 +1,14 @@
 import { createId } from "@paralleldrive/cuid2";
-import type { GameObjectStone } from "../../../../../packages/api-sdk/src";
-import { getRandomInRange } from "../../../../../packages/api-sdk/src";
+import {
+  type IGameObjectStone,
+  getRandomInRange,
+} from "../../../../../packages/api-sdk/src";
 import { MAX_X, MAX_Y, MIN_X, MIN_Y } from "../../config";
-import { db } from "../../db/db.client";
 import { GameObject } from "./gameObject";
 
-export class Stone extends GameObject implements GameObjectStone {
+export class Stone extends GameObject implements IGameObjectStone {
   public readonly entity = "STONE";
-  public type: GameObjectStone["type"] = "1";
+  public type: IGameObjectStone["type"] = "1";
   public resource = 0;
   public size = 100;
   public health = 100;
@@ -19,12 +20,10 @@ export class Stone extends GameObject implements GameObjectStone {
     const x = getRandomInRange(MIN_X, MAX_X);
     const y = getRandomInRange(MIN_Y, MAX_Y);
 
-    super(objectId, x, y);
+    super({ id: objectId, x, y });
 
     this.state = "IDLE";
     this.resource = getRandomInRange(1, 5);
-
-    console.log(`Created stone ${objectId}!`);
   }
 
   live() {
@@ -72,31 +71,5 @@ export class Stone extends GameObject implements GameObjectStone {
     this.health = 0;
     this.state = "DESTROYED";
     this.handleChange();
-  }
-
-  public async readFromDB() {
-    const stone = await db.stone.findUnique({ where: { id: this.id } });
-    if (!stone) {
-      return;
-    }
-
-    this.x = stone.x;
-    this.y = stone.y;
-    this.type = stone.type as GameObjectStone["type"];
-    this.size = stone.size;
-    this.resource = stone.resource;
-  }
-
-  public async updateInDB() {
-    await db.stone.update({
-      where: { id: this.id },
-      data: {
-        x: this.x,
-        y: this.y,
-        size: this.size,
-        type: this.type,
-        resource: this.resource,
-      },
-    });
   }
 }

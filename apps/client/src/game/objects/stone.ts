@@ -1,27 +1,23 @@
 import { Sprite } from "pixi.js";
-import type {
-  GameObjectDirection,
-  GameObjectEntity,
-  GameObjectState,
-  GameObjectStone,
-} from "../../../../../packages/api-sdk/src";
+import type { IGameObjectStone } from "../../../../../packages/api-sdk/src";
 import type { Game } from "../game";
-import { GameContainer } from "./gameContainer";
+import { GameObjectContainer } from "./gameObjectContainer";
 
-export class Stone extends GameContainer implements GameObjectStone {
-  entity: GameObjectEntity;
-  state!: GameObjectState;
-  direction!: GameObjectDirection;
-  health!: number;
-  resource!: number;
-  size!: number;
-  public type!: GameObjectStone["type"];
+interface IStoneOptions {
+  game: Game;
+  object: IGameObjectStone;
+}
+
+export class Stone extends GameObjectContainer implements IGameObjectStone {
+  public type!: IGameObjectStone["type"];
+  public resource!: number;
+  public size!: number;
 
   public animationAngle = 0;
   public animationHighSpeed = 0.05;
 
-  constructor(game: Game, object: GameObjectStone) {
-    super(game, object.id);
+  constructor({ game, object }: IStoneOptions) {
+    super({ game, ...object });
 
     this.update(object);
     this.init();
@@ -60,7 +56,7 @@ export class Stone extends GameContainer implements GameObjectStone {
     this.angle = this.animationAngle;
   }
 
-  update(object: GameObjectStone) {
+  update(object: IGameObjectStone) {
     this.x = object.x;
     this.y = object.y;
     this.zIndex = Math.round(object.y);

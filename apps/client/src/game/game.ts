@@ -1,15 +1,17 @@
 import { Container } from "pixi.js";
 import type {
-  GameObject,
-  GameObjectPlayer,
-  GameObjectRaider,
-  GameObjectStone,
-  GameObjectTree,
+  IGameObject,
+  IGameObjectPlayer,
+  IGameObjectRabbit,
+  IGameObjectRaider,
+  IGameObjectStone,
+  IGameObjectTree,
+  IGameObjectWolf,
   WebSocketMessage,
 } from "../../../../packages/api-sdk/src";
 import { addBackground } from "./addBackground";
 import {
-  type GameContainer,
+  type GameObjectContainer,
   Player,
   Rabbit,
   Raider,
@@ -30,7 +32,7 @@ export interface GameOptions {
 }
 
 export class Game extends Container {
-  public children: GameContainer[] = [];
+  public children: GameObjectContainer[] = [];
   public audio: AudioManager;
   public scene: SceneManager;
 
@@ -81,72 +83,72 @@ export class Game extends Container {
     return this.children.find((obj) => obj.id === id);
   }
 
-  initTree(object: GameObjectTree) {
-    const tree = new Tree(this, object);
+  initTree(object: IGameObjectTree) {
+    const tree = new Tree({ game: this, object });
     this.addChild(tree);
   }
 
-  updateTree(object: GameObjectTree) {
+  updateTree(object: IGameObjectTree) {
     const tree = this.findObject(object.id);
     if (tree instanceof Tree) {
       tree.update(object);
     }
   }
 
-  initStone(object: GameObjectStone) {
-    const stone = new Stone(this, object);
+  initStone(object: IGameObjectStone) {
+    const stone = new Stone({ game: this, object });
     this.addChild(stone);
   }
 
-  updateStone(object: GameObjectStone) {
+  updateStone(object: IGameObjectStone) {
     const stone = this.findObject(object.id);
     if (stone instanceof Stone) {
       stone.update(object);
     }
   }
 
-  initPlayer(object: GameObjectPlayer) {
-    const player = new Player(this, object);
+  initPlayer(object: IGameObjectPlayer) {
+    const player = new Player({ game: this, object });
     this.addChild(player);
   }
 
-  updatePlayer(object: GameObjectPlayer) {
+  updatePlayer(object: IGameObjectPlayer) {
     const player = this.findObject(object.id);
     if (player instanceof Player) {
       player.update(object);
     }
   }
 
-  initRaider(object: GameObjectRaider) {
-    const raider = new Raider(this, object);
+  initRaider(object: IGameObjectRaider) {
+    const raider = new Raider({ game: this, object });
     this.addChild(raider);
   }
 
-  updateRaider(object: GameObjectRaider) {
+  updateRaider(object: IGameObjectRaider) {
     const raider = this.findObject(object.id);
     if (raider instanceof Raider) {
       raider.update(object);
     }
   }
 
-  initRabbit(object: GameObject) {
-    const rabbit = new Rabbit(this, object);
+  initRabbit(object: IGameObjectRabbit) {
+    const rabbit = new Rabbit({ game: this, object });
     this.addChild(rabbit);
   }
 
-  updateRabbit(object: GameObject) {
+  updateRabbit(object: IGameObjectRabbit) {
     const rabbit = this.findObject(object.id);
     if (rabbit instanceof Rabbit) {
       rabbit.update(object);
     }
   }
 
-  initWolf(object: GameObject) {
-    const wolf = new Wolf(this, object);
+  initWolf(object: IGameObjectWolf) {
+    const wolf = new Wolf({ game: this, object });
     this.addChild(wolf);
   }
 
-  updateWolf(object: GameObject) {
+  updateWolf(object: IGameObjectWolf) {
     const wolf = this.findObject(object.id);
     if (wolf instanceof Wolf) {
       wolf.update(object);
@@ -168,58 +170,58 @@ export class Game extends Container {
     }
   }
 
-  handleMessageObject(object: GameObject) {
+  handleMessageObject(object: IGameObject) {
     const obj = this.findObject(object.id);
     if (!obj) {
       if (object.entity === "TREE") {
-        this.initTree(object as GameObjectTree);
+        this.initTree(object as IGameObjectTree);
         return;
       }
       if (object.entity === "STONE") {
-        this.initStone(object as GameObjectStone);
+        this.initStone(object as IGameObjectStone);
         return;
       }
       if (object.entity === "PLAYER") {
-        this.initPlayer(object as GameObjectPlayer);
+        this.initPlayer(object as IGameObjectPlayer);
         return;
       }
       if (object.entity === "RAIDER") {
-        this.initRaider(object as GameObjectRaider);
+        this.initRaider(object as IGameObjectRaider);
         return;
       }
       if (object.entity === "RABBIT") {
-        this.initRabbit(object as GameObject);
+        this.initRabbit(object as IGameObjectRabbit);
         return;
       }
       if (object.entity === "WOLF") {
-        this.initWolf(object as GameObject);
+        this.initWolf(object as IGameObjectWolf);
         return;
       }
       return;
     }
 
     if (object.entity === "TREE") {
-      this.updateTree(object as GameObjectTree);
+      this.updateTree(object as IGameObjectTree);
       return;
     }
     if (object.entity === "STONE") {
-      this.updateStone(object as GameObjectStone);
+      this.updateStone(object as IGameObjectStone);
       return;
     }
     if (object.entity === "PLAYER") {
-      this.updatePlayer(object as GameObjectPlayer);
+      this.updatePlayer(object as IGameObjectPlayer);
       return;
     }
     if (object.entity === "RAIDER") {
-      this.updateRaider(object as GameObjectRaider);
+      this.updateRaider(object as IGameObjectRaider);
       return;
     }
     if (object.entity === "RABBIT") {
-      this.updateRabbit(object as GameObject);
+      this.updateRabbit(object as IGameObjectRabbit);
       return;
     }
     if (object.entity === "WOLF") {
-      this.updateWolf(object as GameObject);
+      this.updateWolf(object as IGameObjectWolf);
       return;
     }
   }

@@ -1,37 +1,35 @@
 import type { AnimatedSprite } from "pixi.js";
 import type {
-  GameObjectDirection,
-  GameObjectEntity,
-  GameObjectPlayer,
-  GameObjectState,
-  Inventory,
-  Skill,
+  IGameInventory,
+  IGameObjectPlayer,
+  IGameSkill,
 } from "../../../../../packages/api-sdk/src";
 import { GraphicsContainer } from "../components/graphicsContainer";
 import { PlayerInterface } from "../components/playerInterface";
 import type { Game } from "../game";
 import { AssetsManager } from "../utils";
-import { GameContainer } from "./gameContainer";
+import { GameObjectContainer } from "./gameObjectContainer";
 
-export class Player extends GameContainer implements GameObjectPlayer {
-  children: GraphicsContainer[] = [];
+interface IPlayerOptions {
+  game: Game;
+  object: IGameObjectPlayer;
+}
 
-  entity: GameObjectEntity;
-  state!: GameObjectState;
-  direction!: GameObjectDirection;
+export class Player extends GameObjectContainer implements IGameObjectPlayer {
   coins!: number;
   reputation!: number;
   userName!: string;
   colorIndex!: number;
-  inventory!: Inventory | null;
-  skills!: Skill[];
+  inventory!: IGameInventory | null;
+  skills!: IGameSkill[];
 
+  children: GraphicsContainer[] = [];
   interface!: PlayerInterface;
   animationMovingLeft!: AnimatedSprite;
   animationMovingRight!: AnimatedSprite;
 
-  constructor(game: Game, object: GameObjectPlayer) {
-    super(game, object.id);
+  constructor({ game, object }: IPlayerOptions) {
+    super({ game, ...object });
     this.update(object);
 
     this.animationMovingLeft = AssetsManager.getAnimatedSpriteHeroLeft();
@@ -183,7 +181,7 @@ export class Player extends GameContainer implements GameObjectPlayer {
     }
   }
 
-  update(object: GameObjectPlayer) {
+  update(object: IGameObjectPlayer) {
     this.x = object.x;
     this.y = object.y;
     this.zIndex = Math.round(object.y + 1);
@@ -198,5 +196,7 @@ export class Player extends GameContainer implements GameObjectPlayer {
     this.colorIndex = object.colorIndex;
     this.inventory = object.inventory;
     this.skills = object.skills;
+
+    this.health = object.health;
   }
 }
