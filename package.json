@@ -3,12 +3,14 @@
   "version": "0.0.1",
   "description": "Royal Madness: Twitch Chat Game",
   "scripts": {
-    "lint": "npx @biomejs/biome check --apply ./apps",
+    "lint": "npx @biomejs/biome check --apply ./apps && npx @biomejs/biome check --apply ./packages",
     "lint:deps": "npx depcruise apps",
     "db:start": "docker compose up",
     "db:edit": "prisma studio",
-    "api:start": "bun run --hot apps/api/src/index.ts"
+    "api:start": "bun run --hot apps/api/src/index.ts",
+    "client:start": "vite apps/client"
   },
+  "type": "module",
   "keywords": [
     "game",
     "online",
@@ -33,7 +35,7 @@
     "@twurple/easy-bot": "7.1.0",
     "@twurple/eventsub-http": "7.1.0",
     "@twurple/pubsub": "7.1.0",
-    "hono": "4.2.3",
+    "hono": "4.2.4",
     "howler": "2.2.4",
     "pixi.js": "8.1.0",
     "react": "18.2.0",
@@ -42,17 +44,17 @@
     "zustand": "4.5.2"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.6.4",
+    "@biomejs/biome": "1.7.0",
     "@tailwindcss/vite": "4.0.0-alpha.14",
-    "@types/bun": "1.0.12",
+    "@types/bun": "1.1.0",
     "@types/howler": "2.2.11",
-    "@types/react": "18.2.75",
-    "@types/react-dom": "18.2.24",
+    "@types/react": "18.2.79",
+    "@types/react-dom": "18.2.25",
     "@vitejs/plugin-react": "4.2.1",
-    "dependency-cruiser": "16.3.0",
+    "dependency-cruiser": "16.3.1",
     "prisma": "5.12.1",
     "tailwindcss": "4.0.0-alpha.14",
-    "typescript": "5.4.4",
-    "vite": "5.2.8"
+    "typescript": "5.4.5",
+    "vite": "5.2.9"
   }
 }

@@ -27,15 +27,13 @@ export const InterfaceLayer = () => {
     </p>
   ));
 
-  const [sceneId, setSceneId] = useState<string>();
   const [showLoader, setShowLoader] = useState(false);
 
   useEffect(() => {
-    if (sceneId === scene?.id) {
+    if (!scene?.id) {
       return;
     }
 
-    setSceneId(scene?.id);
     setShowLoader(true);
 
     const timer = setTimeout(() => {
@@ -43,7 +41,7 @@ export const InterfaceLayer = () => {
     }, 5000);
 
     return () => clearInterval(timer);
-  }, [scene?.id, sceneId]);
+  }, [scene?.id]);
 
   const [showPlayersGroup, setShowPlayersGroup] = useState(false);
 

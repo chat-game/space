@@ -1,8 +1,4 @@
-import {
-  GetSceneResponse,
-  Player,
-  Village,
-} from "./types";
+import type { GetSceneResponse, Player, Village } from "./types";
 
 interface PlayerWithPoints {
   player: Player;
@@ -10,11 +6,11 @@ interface PlayerWithPoints {
 }
 
 export interface TopPlayersResponse {
-  famous: PlayerWithPoints | null,
-  rich: PlayerWithPoints | null,
-  viewer: PlayerWithPoints | null,
-  woodsman: PlayerWithPoints | null,
-  miner: PlayerWithPoints | null
+  famous: PlayerWithPoints | null;
+  rich: PlayerWithPoints | null;
+  viewer: PlayerWithPoints | null;
+  woodsman: PlayerWithPoints | null;
+  miner: PlayerWithPoints | null;
 }
 
 export async function getVillage() {

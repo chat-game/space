@@ -1,4 +1,4 @@
-import {Group} from "../../../../apps/api/src/game/common";
+import type { Group } from "../../../../apps/api/src/game/common";
 
 export interface Village {
   id: string;
@@ -21,7 +21,17 @@ export interface Command {
 
 export type TargetType = "TREE" | "STONE";
 
-export type ChatAction = "HELP" | "GIFT" | "SELL" | "DONATE" | "CHOP" | "MINE" | "START_GROUP_BUILD" | "DISBAND_GROUP" | "JOIN_GROUP" | "START_RAID";
+export type ChatAction =
+  | "HELP"
+  | "GIFT"
+  | "SELL"
+  | "DONATE"
+  | "CHOP"
+  | "MINE"
+  | "START_GROUP_BUILD"
+  | "DISBAND_GROUP"
+  | "JOIN_GROUP"
+  | "START_RAID";
 
 export interface Player {
   id: string;
@@ -114,14 +124,31 @@ export interface GameObject {
   entity: GameObjectEntity;
 }
 
-export type GameObjectState = "MOVING" | "IDLE" | "CHOPPING" | "MINING" | "DESTROYED";
-export type GameObjectEntity = undefined | "RABBIT" | "WOLF" | "PLAYER" | "RAIDER"| "TREE" | "STONE" | "FLAG";
+export type GameObjectState =
+  | "MOVING"
+  | "IDLE"
+  | "CHOPPING"
+  | "MINING"
+  | "DESTROYED";
+export type GameObjectEntity =
+  | undefined
+  | "RABBIT"
+  | "WOLF"
+  | "PLAYER"
+  | "RAIDER"
+  | "TREE"
+  | "STONE"
+  | "FLAG";
 export type GameObjectDirection = "LEFT" | "RIGHT";
 
 export interface WebSocketMessage {
   id: string;
-  event: "OBJECT_UPDATED" | "RAID_STARTED" | "GROUP_FORM_STARTED" | "SCENE_CHANGED",
-  object?: GameObject,
+  event:
+    | "OBJECT_UPDATED"
+    | "RAID_STARTED"
+    | "GROUP_FORM_STARTED"
+    | "SCENE_CHANGED";
+  object?: GameObject;
 }
 
 export interface GameObjectTree extends GameObject {
