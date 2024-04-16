@@ -46,7 +46,7 @@
     "@tailwindcss/vite": "4.0.0-alpha.14",
     "@types/bun": "1.0.12",
     "@types/howler": "2.2.11",
-    "@types/react": "18.2.75",
+    "@types/react": "18.2.79",
     "@types/react-dom": "18.2.24",
     "@vitejs/plugin-react": "4.2.1",
     "dependency-cruiser": "16.3.0",
