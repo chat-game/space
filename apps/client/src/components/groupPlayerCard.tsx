@@ -7,10 +7,7 @@ export const GroupPlayerCard = ({
   player: IGameObjectPlayer;
 }) => {
   return (
-    <div
-      key={player.id}
-      className="w-fit min-w-48 h-auto px-4 pt-4 pb-2 text-xl text-amber-900 bg-amber-100 border-b-4 rounded-2xl"
-    >
+    <div className="w-fit min-w-48 h-auto px-4 pt-4 pb-2 text-xl text-amber-900 bg-amber-100 border-b-4 rounded-2xl">
       <div className="-mt-16 -mb-2">
         <PlayerFullBody player={player} />
       </div>

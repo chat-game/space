@@ -1,6 +1,5 @@
 import { createId } from "@paralleldrive/cuid2";
 import { getRandomInRange } from "../../../../packages/api-sdk/src";
-import { Inventory } from "../game/common";
 import { db } from "./db.client";
 
 export class DBRepository {
@@ -18,6 +17,10 @@ export class DBRepository {
     return this.db.stone.findMany();
   }
 
+  findVillage() {
+    return db.village.findFirst();
+  }
+
   findActivePlayers() {
     const milliseconds = 20 * 60 * 1000;
     const gte = new Date(new Date().getTime() - milliseconds);
@@ -27,6 +30,73 @@ export class DBRepository {
         lastActionAt: { gte },
       },
     });
+  }
+
+  async findTopPlayers() {
+    const famous = await db.player.findFirst({
+      orderBy: { reputation: "desc" },
+    });
+    const rich = await db.player.findFirst({
+      orderBy: { coins: "desc" },
+    });
+    const viewer = await db.player.findFirst({
+      orderBy: { viewerPoints: "desc" },
+    });
+    const woodsman = await this.findTopWoodsmanPlayer();
+    const miner = await this.findTopMinerPlayer();
+
+    return {
+      famous: {
+        player: famous,
+        points: famous?.reputation,
+      },
+      rich: {
+        player: rich,
+        points: rich?.coins,
+      },
+      viewer: {
+        player: viewer,
+        points: viewer?.viewerPoints,
+      },
+      woodsman,
+      miner,
+    };
+  }
+
+  async findTopWoodsmanPlayer() {
+    const topSkill = await db.skill.findFirst({
+      where: { type: "WOODSMAN" },
+      orderBy: { lvl: "desc" },
+    });
+    if (!topSkill) {
+      return null;
+    }
+    const player = await db.player.findUnique({
+      where: { id: topSkill.objectId },
+    });
+
+    return {
+      player,
+      points: topSkill.lvl,
+    };
+  }
+
+  async findTopMinerPlayer() {
+    const topSkill = await db.skill.findFirst({
+      where: { type: "MINER" },
+      orderBy: { lvl: "desc" },
+    });
+    if (!topSkill) {
+      return null;
+    }
+    const player = await db.player.findUnique({
+      where: { id: topSkill.objectId },
+    });
+
+    return {
+      player,
+      points: topSkill.lvl,
+    };
   }
 
   findPlayerByTwitchId(twitchId: string) {
@@ -40,7 +110,12 @@ export class DBRepository {
     userName,
     inventoryId,
     id,
-  }: { twitchId: string; userName: string; inventoryId: string; id: string }) {
+  }: {
+    twitchId: string;
+    userName: string;
+    inventoryId: string;
+    id: string;
+  }) {
     const colorIndex = getRandomInRange(0, 360);
     return db.player.create({
       data: {
@@ -87,5 +162,40 @@ export class DBRepository {
         viewerPoints: { increment },
       },
     });
+  }
+
+  addWoodToVillage(increment: number) {
+    return db.village.updateMany({
+      data: {
+        wood: { increment },
+      },
+    });
+  }
+
+  async addStoneToVillage(amount: number) {
+    await db.village.updateMany({
+      data: {
+        stone: {
+          increment: amount,
+        },
+      },
+    });
+
+    // Global target
+    const village = await this.findVillage();
+    if (village?.globalTargetSuccess && village?.globalTarget) {
+      const plusToTarget =
+        village.globalTargetSuccess >= village.globalTarget + amount
+          ? amount
+          : 0;
+
+      await db.village.updateMany({
+        data: {
+          globalTarget: {
+            increment: plusToTarget,
+          },
+        },
+      });
+    }
   }
 }

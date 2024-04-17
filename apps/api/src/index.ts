@@ -1,7 +1,6 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { BotController } from "./bot/bot.controller";
-import { findTopPlayers, findVillage } from "./db.repository";
 import { Game } from "./game/game";
 
 // Go-go!
@@ -12,12 +11,12 @@ const app = new Hono();
 app.use("/*", cors());
 
 app.get("/players/top", async (c) => {
-  const players = await findTopPlayers();
+  const players = await game.repository.findTopPlayers();
   return c.json(players);
 });
 
 app.get("/village", async (c) => {
-  const village = await findVillage();
+  const village = await game.repository.findVillage();
   return c.json(village);
 });
 

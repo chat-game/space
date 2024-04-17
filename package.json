@@ -5,8 +5,8 @@
   "scripts": {
     "lint": "npx @biomejs/biome check --apply ./apps && npx @biomejs/biome check --apply ./packages",
     "lint:deps": "npx depcruise apps",
+    "db:show": "prisma studio",
     "db:start": "docker compose up",
-    "db:edit": "prisma studio",
     "api:start": "bun run --hot apps/api/src/index.ts",
     "client:start": "vite apps/client"
   },

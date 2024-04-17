@@ -12,12 +12,14 @@ export type ChatAction =
   | "HELP"
   | "GIFT"
   | "SELL"
+  | "BUY"
   | "DONATE"
   | "CHOP"
   | "MINE"
   | "START_GROUP_BUILD"
   | "DISBAND_GROUP"
   | "JOIN_GROUP"
+  | "START_CHANGING_SCENE"
   | "START_RAID";
 
 export type ItemType = "WOOD" | "STONE" | "AXE" | "PICKAXE";
@@ -85,6 +87,8 @@ export interface WebSocketMessage {
     | "OBJECT_UPDATED"
     | "RAID_STARTED"
     | "GROUP_FORM_STARTED"
+    | "SCENE_CHANGING_STARTED"
+    | "COUNTDOWN_NEXT_WAVE_STARTED"
     | "SCENE_CHANGED";
   object?: IGameObject;
 }
@@ -125,13 +129,12 @@ export interface IGameObjectRabbit extends IGameObject {}
 export interface IGameObjectWolf extends IGameObject {}
 
 export interface IGameEvent {
-  type: EventType;
-  status: EventStatus;
+  id: string;
+  title: string;
+  type: WebSocketMessage["event"];
+  status: "STARTED" | "STOPPED";
   endsAt: Date;
 }
-
-export type EventType = "FORMING_GROUP";
-export type EventStatus = "STARTED" | "STOPPED";
 
 export type GameSceneType = "VILLAGE" | "DEFENCE";
 

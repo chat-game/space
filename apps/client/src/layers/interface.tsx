@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { EventsBlock } from "../components/eventsBlock";
 import { GroupPlayersBlock } from "../components/groupPlayers";
 import { Loader } from "../components/loader";
 import { TopPlayersBlock } from "../components/topPlayers";
@@ -90,10 +91,8 @@ export const InterfaceLayer = () => {
         </div>
       </div>
 
-      <div className="fixed top-4 right-4" style={{ zIndex: 1000 }}>
-        <pre className="text-white text-sm">
-          {JSON.stringify(scene, undefined, 2)}
-        </pre>
+      <div className="absolute top-0 right-0" style={{ zIndex: 1000 }}>
+        <EventsBlock events={scene?.events} />
       </div>
     </>
   );

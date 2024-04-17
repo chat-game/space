@@ -13,10 +13,14 @@ export class VillageScene extends GameScene {
         "HELP",
         "CHOP",
         "MINE",
+        "GIFT",
+        "SELL",
+        "BUY",
         "DONATE",
         "START_GROUP_BUILD",
         "DISBAND_GROUP",
         "JOIN_GROUP",
+        "START_CHANGING_SCENE",
       ],
     });
 
@@ -59,7 +63,7 @@ export class VillageScene extends GameScene {
   private initFlags(count: number) {
     const outsideFlag = new Flag({
       x: -100,
-      y: 600,
+      y: 620,
       id: "outside",
       isOnScreen: false,
     });

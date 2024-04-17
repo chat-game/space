@@ -1,10 +1,5 @@
 import { createBotCommand } from "@twurple/easy-bot";
 import { TWITCH_CHANNEL_REWARDS } from "../config";
-import {
-  addStoneToVillage,
-  addWoodToVillage,
-  createCommand,
-} from "../db.repository";
 import type { Game } from "../game/game";
 
 export class BotService {
@@ -12,6 +7,23 @@ export class BotService {
 
   constructor(game: Game) {
     this.game = game;
+  }
+
+  public commandStartChangingScene() {
+    return createBotCommand(
+      "вернуться",
+      async (params, { userId, userName, reply }) => {
+        const result = await this.game.handleChatCommand({
+          action: "START_CHANGING_SCENE",
+          userId,
+          userName,
+          params,
+        });
+        if (result.message) {
+          void reply(result.message);
+        }
+      },
+    );
   }
 
   public commandStartGroupBuild() {
@@ -96,62 +108,15 @@ export class BotService {
     return createBotCommand(
       "подарить",
       async (params, { userId, userName, reply }) => {
-        console.log("подарить", userId, userName, params);
-
-        const player = await this.game.repository.findOrCreatePlayer(
+        const result = await this.game.handleChatCommand({
+          action: "GIFT",
           userId,
           userName,
-        );
-        const items = player.inventory?.items ?? [];
-
-        if (params[0] === "древесину" || params[0] === "древесина") {
-          // Find Wood
-          const wood = items.find((item) => item.type === "WOOD");
-          if (!wood) {
-            void reply(`${userName}, у тебя нет древесины.`);
-            return;
-          }
-
-          await addWoodToVillage(wood.amount);
-          await player.addReputation(wood.amount);
-          await player.inventory?.destroyItemInDB(wood.id);
-
-          await createCommand({
-            playerId: player.id,
-            command: "!подарить",
-          });
-
-          void reply(
-            `${userName}, ты подарил(а) деревне всю древесину! Твоя репутация возросла.`,
-          );
-          return;
+          params,
+        });
+        if (result.message) {
+          void reply(result.message);
         }
-
-        if (params[0] === "камень" || params[0] === "камни") {
-          const item = items.find((item) => item.type === "STONE");
-          if (!item) {
-            void reply(`${userName}, у тебя нет камня.`);
-            return;
-          }
-
-          await addStoneToVillage(item.amount);
-          await player.addReputation(item.amount);
-          await player.inventory?.destroyItemInDB(item.id);
-
-          await createCommand({
-            playerId: player.id,
-            command: "!подарить",
-          });
-
-          void reply(
-            `${userName}, ты подарил(а) деревне все камни! Твоя репутация возросла.`,
-          );
-          return;
-        }
-
-        void reply(
-          `${userName}, укажи конкретнее, например: !подарить древесину`,
-        );
       },
     );
   }
@@ -160,56 +125,15 @@ export class BotService {
     return createBotCommand(
       "продать",
       async (params, { userId, userName, reply }) => {
-        console.log("продать", userId, userName, params);
-
-        const player = await this.game.repository.findOrCreatePlayer(
+        const result = await this.game.handleChatCommand({
+          action: "SELL",
           userId,
           userName,
-        );
-        const items = player.inventory?.items ?? [];
-
-        if (params[0] === "древесину" || params[0] === "древесина") {
-          // Find Wood
-          const wood = items.find((item) => item.type === "WOOD");
-          if (!wood) {
-            void reply(`${userName}, у тебя нет древесины.`);
-            return;
-          }
-
-          await player.updateCoins(wood.amount);
-          await player.inventory?.destroyItemInDB(wood.id);
-
-          await createCommand({
-            playerId: player.id,
-            command: "!продать",
-          });
-
-          void reply(`${userName}, ты продал(а) всю древесину торговцу!`);
-          return;
+          params,
+        });
+        if (result.message) {
+          void reply(result.message);
         }
-
-        if (params[0] === "камень" || params[0] === "камни") {
-          const item = items.find((item) => item.type === "STONE");
-          if (!item) {
-            void reply(`${userName}, у тебя нет камня.`);
-            return;
-          }
-
-          await player.updateCoins(item.amount);
-          await player.inventory?.destroyItemInDB(item.id);
-
-          await createCommand({
-            playerId: player.id,
-            command: "!продать",
-          });
-
-          void reply(`${userName}, ты продал(а) все камни торговцу!`);
-          return;
-        }
-
-        void reply(
-          `${userName}, укажи конкретнее, например: !продать древесину`,
-        );
       },
     );
   }
@@ -218,60 +142,15 @@ export class BotService {
     return createBotCommand(
       "купить",
       async (params, { userId, userName, reply }) => {
-        console.log("купить", userId, userName, params);
-
-        const player = await this.game.repository.findOrCreatePlayer(
+        const result = await this.game.handleChatCommand({
+          action: "BUY",
           userId,
           userName,
-        );
-        const items = player.inventory?.items ?? [];
-
-        if (params[0] === "топор") {
-          // Find if already have some
-          const axe = items.find((item) => item.type === "AXE");
-          if (axe) {
-            void reply(`${userName}, у тебя уже есть топор.`);
-            return;
-          }
-
-          const result = await player.buyItemFromDealer("AXE", 10, 1);
-          if (!result) {
-            void reply(`${userName}, неа.`);
-            return;
-          }
-
-          await createCommand({
-            playerId: player.id,
-            command: "!купить",
-          });
-
-          void reply(`${userName}, ты купил(а) топор у торговца!`);
-          return;
+          params,
+        });
+        if (result.message) {
+          void reply(result.message);
         }
-
-        if (params[0] === "кирку" || params[0] === "кирка") {
-          const pickaxe = items.find((item) => item.type === "PICKAXE");
-          if (pickaxe) {
-            void reply(`${userName}, у тебя уже есть кирка.`);
-            return;
-          }
-
-          const result = await player.buyItemFromDealer("PICKAXE", 10, 1);
-          if (!result) {
-            void reply(`${userName}, неа.`);
-            return;
-          }
-
-          await createCommand({
-            playerId: player.id,
-            command: "!купить",
-          });
-
-          void reply(`${userName}, ты купил(а) кирку у торговца!`);
-          return;
-        }
-
-        void reply(`${userName}, укажи конкретнее, например: !купить топор`);
       },
     );
   }

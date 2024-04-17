@@ -1,9 +1,10 @@
 import { createId } from "@paralleldrive/cuid2";
 import {
   type ChatAction,
-  type EventType,
   type GameSceneType,
   type GetSceneResponse,
+  type IGameEvent,
+  type ItemType,
   getRandomInRange,
 } from "../../../../../packages/api-sdk/src";
 import {
@@ -53,6 +54,9 @@ export class GameScene {
     this.group = group;
     this.possibleActions = possibleActions;
     this.canAddNewPlayer = canAddNewPlayer;
+
+    this.initSpawnFlags();
+    this.initStaticFlags();
 
     void this.play();
   }
@@ -145,6 +149,16 @@ export class GameScene {
     if (action === "MINE") {
       return this.mineAction(player);
     }
+    if (action === "START_CHANGING_SCENE") {
+      // Admin only
+      if (player.id !== ADMIN_PLAYER_ID) {
+        return {
+          ok: false,
+          message: null,
+        };
+      }
+      return this.startChangingSceneAction(player, params);
+    }
     if (action === "START_GROUP_BUILD") {
       // Admin only
       if (player.id !== ADMIN_PLAYER_ID) {
@@ -174,6 +188,15 @@ export class GameScene {
     if (action === "DONATE") {
       return this.donateAction(player);
     }
+    if (action === "GIFT") {
+      return this.giftAction(player, params);
+    }
+    if (action === "SELL") {
+      return this.sellAction(player, params);
+    }
+    if (action === "BUY") {
+      return this.buyAction(player, params);
+    }
 
     return {
       ok: false,
@@ -185,12 +208,32 @@ export class GameScene {
     return this.possibleActions.find((a) => a === action);
   }
 
-  initEvent(type: EventType, secondsToEnd: number) {
-    this.events.push(new Event({ type, secondsToEnd }));
+  initEvent({
+    title,
+    type,
+    secondsToEnd,
+    scene,
+  }: {
+    title: string;
+    type: IGameEvent["type"];
+    secondsToEnd: number;
+    scene?: GameSceneType;
+  }) {
+    this.events.push(
+      new Event({ game: this.game, title, type, secondsToEnd, scene }),
+    );
   }
 
-  getEvents() {
-    return this.events;
+  getEvents(): IGameEvent[] {
+    return this.events.map((event) => {
+      return {
+        id: event.id,
+        title: event.title,
+        type: event.type,
+        status: event.status,
+        endsAt: event.endsAt,
+      };
+    });
   }
 
   getInfo(): GetSceneResponse {
@@ -207,8 +250,7 @@ export class GameScene {
       const status = event.checkStatus();
 
       if (status === "STOPPED") {
-        // Stop
-        this.game.initScene("VILLAGE");
+        event.handleEnding();
 
         const index = this.events.indexOf(event);
         this.events.splice(index, 1);
@@ -227,6 +269,15 @@ export class GameScene {
       }
       if (action === "MINE") {
         commands.push("!добыть");
+      }
+      if (action === "BUY") {
+        commands.push("!купить [название]");
+      }
+      if (action === "SELL") {
+        commands.push("!продать [название]");
+      }
+      if (action === "GIFT") {
+        commands.push("!подарить [название]");
       }
       if (action === "DONATE") {
         commands.push("!донат");
@@ -259,16 +310,29 @@ export class GameScene {
     await instance.readFromDB();
     await instance.initInventory();
     await instance.initSkills();
+
+    const spawnFlag = this.findSpawnFlag("SPAWN_LEFT");
+    if (spawnFlag) {
+      instance.x = spawnFlag.x;
+      instance.y = spawnFlag.y;
+    }
+
+    const centerFlag = this.findStaticFlag("CENTER_FLAG");
+    if (centerFlag) {
+      instance.target = centerFlag;
+      instance.state = "MOVING";
+    }
+
     return instance;
   }
 
-  async initActivePlayers() {
-    const playersFromDb = await this.game.repository.findActivePlayers();
-    for (const player of playersFromDb) {
-      const instance = await this.initPlayer(player.id);
-      this.objects.push(instance);
-    }
-  }
+  // async initActivePlayers() {
+  //   const playersFromDb = await this.game.repository.findActivePlayers();
+  //   for (const player of playersFromDb) {
+  //     const instance = await this.initPlayer(player.id);
+  //     this.objects.push(instance);
+  //   }
+  // }
 
   async initGroupPlayers() {
     if (!this.group) {
@@ -368,6 +432,42 @@ export class GameScene {
     };
   }
 
+  startChangingSceneAction(_: Player, params?: string[]) {
+    if (!this.checkIfActionIsPossible("START_CHANGING_SCENE")) {
+      return {
+        ok: false,
+        message: "Сейчас этого сделать нельзя.",
+      };
+    }
+
+    if (!params) {
+      return {
+        ok: false,
+        message: "Не указана цель.",
+      };
+    }
+
+    const scene = this.getSceneTypeFromChatCommand(params[1]);
+    if (!scene) {
+      return {
+        ok: false,
+        message: "Неверно указана цель. В деревню, на защиту.",
+      };
+    }
+
+    this.initEvent({
+      type: "SCENE_CHANGING_STARTED",
+      title: "Меняем локацию",
+      scene,
+      secondsToEnd: 10,
+    });
+
+    return {
+      ok: true,
+      message: "Переходим в другую локацию...",
+    };
+  }
+
   startGroupBuildAction(player: Player, params?: string[]) {
     if (!this.checkIfActionIsPossible("START_GROUP_BUILD")) {
       return {
@@ -383,18 +483,22 @@ export class GameScene {
       };
     }
 
-    const target = this.getSceneTypeFromChatCommand(params[1]);
-    if (!target) {
+    const scene = this.getSceneTypeFromChatCommand(params[1]);
+    if (!scene) {
       return {
         ok: false,
         message: "Неверно указана цель. В деревню, на защиту.",
       };
     }
 
-    this.group = new Group({ creator: player, target });
+    this.group = new Group({ creator: player, target: scene });
 
-    this.initEvent("FORMING_GROUP", 60);
-    sendMessage("GROUP_FORM_STARTED");
+    this.initEvent({
+      type: "GROUP_FORM_STARTED",
+      title: "Идет набор в группу!",
+      scene,
+      secondsToEnd: 120,
+    });
 
     return {
       ok: true,
@@ -519,5 +623,266 @@ export class GameScene {
       ok: true,
       message: `${player.userName}, поддержи игру: ${DONATE_URL}`,
     };
+  }
+
+  public async giftAction(player: Player, params: string[] | undefined) {
+    if (!this.checkIfActionIsPossible("GIFT")) {
+      return {
+        ok: false,
+        message: null,
+      };
+    }
+
+    if (!params) {
+      return {
+        ok: false,
+        message: `${player.userName}, укажи конкретнее, например: !подарить древесину`,
+      };
+    }
+
+    const item = this.getItemTypeFromChatCommand(params[0]);
+    if (!item) {
+      return {
+        ok: false,
+        message: `${player.userName}, укажи конкретнее, например: !подарить древесину`,
+      };
+    }
+
+    const items = player.inventory?.items ?? [];
+
+    if (item === "WOOD") {
+      const itemExist = items.find((item) => item.type === "WOOD");
+      if (!itemExist) {
+        return {
+          ok: false,
+          message: `${player.userName}, у тебя нет древесины.`,
+        };
+      }
+
+      await this.game.repository.addWoodToVillage(itemExist.amount);
+      await player.addReputation(itemExist.amount);
+      await player.inventory?.destroyItemInDB(itemExist.id);
+
+      return {
+        ok: true,
+        message: `${player.userName}, ты подарил(а) деревне всю древесину! Твоя репутация возросла.`,
+      };
+    }
+    if (item === "STONE") {
+      const itemExist = items.find((item) => item.type === "STONE");
+      if (!itemExist) {
+        return {
+          ok: false,
+          message: `${player.userName}, у тебя нет камня.`,
+        };
+      }
+
+      await this.game.repository.addStoneToVillage(itemExist.amount);
+      await player.addReputation(itemExist.amount);
+      await player.inventory?.destroyItemInDB(itemExist.id);
+
+      return {
+        ok: true,
+        message: `${player.userName}, ты подарил(а) деревне все камни! Твоя репутация возросла.`,
+      };
+    }
+
+    return {
+      ok: false,
+      message: `${player.userName}, укажи конкретнее, например: !подарить древесину`,
+    };
+  }
+
+  async sellAction(player: Player, params: string[] | undefined) {
+    if (!this.checkIfActionIsPossible("SELL")) {
+      return {
+        ok: false,
+        message: null,
+      };
+    }
+
+    if (!params) {
+      return {
+        ok: false,
+        message: `${player.userName}, укажи конкретнее, например: !продать древесину`,
+      };
+    }
+
+    const item = this.getItemTypeFromChatCommand(params[0]);
+    if (!item) {
+      return {
+        ok: false,
+        message: `${player.userName}, укажи конкретнее, например: !продать древесину`,
+      };
+    }
+
+    const items = player.inventory?.items ?? [];
+
+    if (item === "WOOD") {
+      const itemExist = items.find((item) => item.type === "WOOD");
+      if (!itemExist) {
+        return {
+          ok: false,
+          message: `${player.userName}, у тебя нет древесины.`,
+        };
+      }
+
+      await player.updateCoins(itemExist.amount);
+      await player.inventory?.destroyItemInDB(itemExist.id);
+
+      return {
+        ok: true,
+        message: `${player.userName}, ты продал(а) всю древесину торговцу!`,
+      };
+    }
+    if (item === "STONE") {
+      const itemExist = items.find((item) => item.type === "STONE");
+      if (!itemExist) {
+        return {
+          ok: false,
+          message: `${player.userName}, у тебя нет камня.`,
+        };
+      }
+
+      await player.updateCoins(itemExist.amount);
+      await player.inventory?.destroyItemInDB(itemExist.id);
+
+      return {
+        ok: true,
+        message: `${player.userName}, ты продал(а) все камни торговцу!`,
+      };
+    }
+
+    return {
+      ok: false,
+      message: `${player.userName}, укажи конкретнее, например: !продать древесину`,
+    };
+  }
+
+  async buyAction(player: Player, params: string[] | undefined) {
+    if (!this.checkIfActionIsPossible("BUY")) {
+      return {
+        ok: false,
+        message: null,
+      };
+    }
+
+    if (!params) {
+      return {
+        ok: false,
+        message: `${player.userName}, укажи конкретнее, например: !купить топор`,
+      };
+    }
+
+    const item = this.getItemTypeFromChatCommand(params[0]);
+    if (!item) {
+      return {
+        ok: false,
+        message: `${player.userName}, укажи конкретнее, например: !купить топор`,
+      };
+    }
+
+    const items = player.inventory?.items ?? [];
+
+    if (item === "AXE") {
+      const itemExist = items.find((item) => item.type === "AXE");
+      if (itemExist) {
+        return {
+          ok: false,
+          message: `${player.userName}, у тебя уже есть топор.`,
+        };
+      }
+
+      const result = await player.buyItemFromDealer("AXE", 10, 1);
+      if (!result) {
+        return {
+          ok: false,
+          message: `${player.userName}, неа.`,
+        };
+      }
+
+      return {
+        ok: true,
+        message: `${player.userName}, ты купил(а) топор у торговца!`,
+      };
+    }
+    if (item === "PICKAXE") {
+      const itemExist = items.find((item) => item.type === "PICKAXE");
+      if (itemExist) {
+        return {
+          ok: false,
+          message: `${player.userName}, у тебя уже есть кирка.`,
+        };
+      }
+
+      const result = await player.buyItemFromDealer("PICKAXE", 10, 1);
+      if (!result) {
+        return {
+          ok: false,
+          message: `${player.userName}, неа.`,
+        };
+      }
+
+      return {
+        ok: true,
+        message: `${player.userName}, ты купил(а) кирку у торговца!`,
+      };
+    }
+
+    return {
+      ok: false,
+      message: `${player.userName}, укажи конкретнее, например: !купить топор`,
+    };
+  }
+
+  getItemTypeFromChatCommand(text: string): ItemType | null {
+    if (text === "древесину" || text === "древесина") {
+      return "WOOD";
+    }
+    if (text === "камень" || text === "камни") {
+      return "STONE";
+    }
+    if (text === "топор") {
+      return "AXE";
+    }
+    if (text === "кирка" || text === "кирку") {
+      return "PICKAXE";
+    }
+
+    return null;
+  }
+
+  initSpawnFlags() {
+    const spawnLeftFlag = new Flag({
+      x: -100,
+      y: 620,
+      id: "SPAWN_LEFT",
+      isOnScreen: false,
+    });
+    const spawnRightFlag = new Flag({
+      x: 2700,
+      y: 620,
+      id: "SPAWN_RIGHT",
+      isOnScreen: false,
+    });
+    this.objects.push(spawnLeftFlag, spawnRightFlag);
+  }
+
+  findSpawnFlag(id: "SPAWN_LEFT" | "SPAWN_RIGHT") {
+    return this.objects.find((f) => f.id === id);
+  }
+
+  initStaticFlags() {
+    const centerFlag = new Flag({
+      x: 1270,
+      y: 660,
+      id: "CENTER_FLAG",
+      isOnScreen: false,
+    });
+    this.objects.push(centerFlag);
+  }
+
+  findStaticFlag(id: "CENTER_FLAG") {
+    return this.objects.find((f) => f.id === id);
   }
 }
