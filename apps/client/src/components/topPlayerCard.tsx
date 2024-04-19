@@ -37,18 +37,18 @@ export const TopPlayerCard = ({
 
 function getPlayerCardColors(type: PlayerTitle["type"]) {
   if (type === "RICH") {
-    return "bg-yellow-100 text-yellow-600 border-yellow-500";
+    return "bg-brown-5 text-brown-1 border-brown-1";
   }
   if (type === "FAMOUS") {
-    return "bg-blue-100 text-blue-800 border-blue-800";
+    return "bg-blue-5 text-blue-1 border-blue-1";
   }
   if (type === "VIEWER") {
-    return "bg-violet-100 text-violet-700 border-violet-800";
+    return "bg-violet-5 text-violet-1 border-violet-1";
   }
   if (type === "WOODSMAN") {
-    return "bg-green-200 text-green-800 border-green-700";
+    return "bg-green-5 text-green-1 border-green-1";
   }
   if (type === "MINER") {
-    return "bg-zinc-200 text-zinc-700 border-zinc-600";
+    return "bg-silver-4 text-silver-1 border-silver-1";
   }
 }

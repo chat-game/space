@@ -1,6 +1,6 @@
 import type {
-  ChatAction,
   GameSceneType,
+  IGameSceneAction,
 } from "../../../../packages/api-sdk/src";
 import { DBRepository } from "../db/db.repository";
 import { sendMessage } from "../websocket/websocket.server";
@@ -8,7 +8,7 @@ import type { Group } from "./common";
 import { DefenceScene, type GameScene, VillageScene } from "./scenes";
 
 interface HandleChatCommandOptions {
-  action: ChatAction;
+  action: IGameSceneAction;
   userId: string; // Twitch
   userName: string; // Twitch
   viewerCount?: number;
@@ -27,7 +27,7 @@ export class Game {
   constructor() {
     this.repository = new DBRepository();
 
-    this.initScene("VILLAGE");
+    this.initScene("DEFENCE");
   }
 
   public async handleChatCommand({
@@ -51,11 +51,11 @@ export class Game {
     const { group } = this.prepareSceneBeforeChange();
 
     if (scene === "VILLAGE") {
-      this.scene = new VillageScene(this, group);
+      this.scene = new VillageScene({ game: this, group: undefined });
       return;
     }
     if (scene === "DEFENCE") {
-      this.scene = new DefenceScene(this, group);
+      this.scene = new DefenceScene({ game: this, group });
       return;
     }
   }

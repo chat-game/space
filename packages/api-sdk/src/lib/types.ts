@@ -8,7 +8,7 @@ export interface Village {
   globalTargetSuccess: number | null;
 }
 
-export type ChatAction =
+export type IGameSceneAction =
   | "HELP"
   | "GIFT"
   | "SELL"
@@ -20,7 +20,8 @@ export type ChatAction =
   | "DISBAND_GROUP"
   | "JOIN_GROUP"
   | "START_CHANGING_SCENE"
-  | "START_RAID";
+  | "START_RAID"
+  | "CREATE_NEW_PLAYER";
 
 export type ItemType = "WOOD" | "STONE" | "AXE" | "PICKAXE";
 
@@ -71,14 +72,15 @@ export type IGameObjectState =
   | "MINING"
   | "DESTROYED";
 export type IGameObjectEntity =
-  | undefined
   | "RABBIT"
   | "WOLF"
   | "PLAYER"
   | "RAIDER"
   | "TREE"
   | "STONE"
-  | "FLAG";
+  | "FLAG"
+  | "BUILDING"
+  | "COURIER";
 export type IGameObjectDirection = "LEFT" | "RIGHT";
 
 export interface WebSocketMessage {
@@ -91,6 +93,10 @@ export interface WebSocketMessage {
     | "COUNTDOWN_NEXT_WAVE_STARTED"
     | "SCENE_CHANGED";
   object?: IGameObject;
+}
+
+export interface IGameObjectBuilding extends IGameObject {
+  type: "CAMP_FIRE" | "WAREHOUSE";
 }
 
 export interface IGameObjectFlag extends IGameObject {
@@ -110,12 +116,17 @@ export interface IGameObjectStone extends IGameObject {
   size: number;
 }
 
-export interface IGameObjectPlayer extends IGameObject {
+export interface IGameObjectUnit extends IGameObject {
+  inventory: IGameInventory;
+}
+
+export interface IGameObjectCourier extends IGameObjectUnit {}
+
+export interface IGameObjectPlayer extends IGameObjectUnit {
   coins: number;
   reputation: number;
   userName: string;
   colorIndex: number;
-  inventory: IGameInventory | null;
   skills: IGameSkill[];
 }
 

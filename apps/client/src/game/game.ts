@@ -1,6 +1,9 @@
 import { Container } from "pixi.js";
 import type {
   IGameObject,
+  IGameObjectBuilding,
+  IGameObjectCourier,
+  IGameObjectFlag,
   IGameObjectPlayer,
   IGameObjectRabbit,
   IGameObjectRaider,
@@ -9,7 +12,6 @@ import type {
   IGameObjectWolf,
   WebSocketMessage,
 } from "../../../../packages/api-sdk/src";
-import { addBackground } from "./addBackground";
 import {
   type GameObjectContainer,
   Player,
@@ -19,6 +21,9 @@ import {
   Tree,
   Wolf,
 } from "./objects";
+import { Building } from "./objects/building";
+import { Courier } from "./objects/courier.ts";
+import { Flag } from "./objects/flag.ts";
 import {
   AssetsManager,
   AudioManager,
@@ -49,22 +54,16 @@ export class Game extends Container {
     this.scene = new SceneManager();
   }
 
-  handleResize({
-    viewWidth,
-    viewHeight,
-  }: {
-    viewWidth: number;
-    viewHeight: number;
-  }) {
-    console.log(viewWidth, viewHeight);
-  }
-
   async play() {
     await AssetsManager.init();
 
     this.audio.playBackgroundSound();
 
-    addBackground(this.scene.app);
+    const bg = AssetsManager.generateSceneBackground({
+      width: this.viewWidth,
+      height: this.viewHeight,
+    });
+    this.scene.app.stage.addChild(...bg);
 
     this.scene.app.stage.addChild(this);
 
@@ -119,6 +118,18 @@ export class Game extends Container {
     }
   }
 
+  initCourier(object: IGameObjectCourier) {
+    const courier = new Courier({ game: this, object });
+    this.addChild(courier);
+  }
+
+  updateCourier(object: IGameObjectCourier) {
+    const courier = this.findObject(object.id);
+    if (courier instanceof Courier) {
+      courier.update(object);
+    }
+  }
+
   initRaider(object: IGameObjectRaider) {
     const raider = new Raider({ game: this, object });
     this.addChild(raider);
@@ -155,6 +166,30 @@ export class Game extends Container {
     }
   }
 
+  initBuilding(object: IGameObjectBuilding) {
+    const building = new Building({ game: this, object });
+    this.addChild(building);
+  }
+
+  updateBuilding(object: IGameObjectBuilding) {
+    const building = this.findObject(object.id);
+    if (building instanceof Building) {
+      building.update(object);
+    }
+  }
+
+  initFlag(object: IGameObjectFlag) {
+    const flag = new Flag({ game: this, object });
+    this.addChild(flag);
+  }
+
+  updateFlag(object: IGameObjectFlag) {
+    const flag = this.findObject(object.id);
+    if (flag instanceof Flag) {
+      flag.update(object);
+    }
+  }
+
   animateObjects() {
     for (const object of this.children) {
       object.animate();
@@ -185,6 +220,10 @@ export class Game extends Container {
         this.initPlayer(object as IGameObjectPlayer);
         return;
       }
+      if (object.entity === "COURIER") {
+        this.initCourier(object as IGameObjectCourier);
+        return;
+      }
       if (object.entity === "RAIDER") {
         this.initRaider(object as IGameObjectRaider);
         return;
@@ -195,6 +234,14 @@ export class Game extends Container {
       }
       if (object.entity === "WOLF") {
         this.initWolf(object as IGameObjectWolf);
+        return;
+      }
+      if (object.entity === "BUILDING") {
+        this.initBuilding(object as IGameObjectBuilding);
+        return;
+      }
+      if (object.entity === "FLAG") {
+        this.initFlag(object as IGameObjectFlag);
         return;
       }
       return;
@@ -212,6 +259,10 @@ export class Game extends Container {
       this.updatePlayer(object as IGameObjectPlayer);
       return;
     }
+    if (object.entity === "COURIER") {
+      this.updateCourier(object as IGameObjectCourier);
+      return;
+    }
     if (object.entity === "RAIDER") {
       this.updateRaider(object as IGameObjectRaider);
       return;
@@ -222,6 +273,14 @@ export class Game extends Container {
     }
     if (object.entity === "WOLF") {
       this.updateWolf(object as IGameObjectWolf);
+      return;
+    }
+    if (object.entity === "BUILDING") {
+      this.updateBuilding(object as IGameObjectBuilding);
+      return;
+    }
+    if (object.entity === "FLAG") {
+      this.updateFlag(object as IGameObjectFlag);
       return;
     }
   }

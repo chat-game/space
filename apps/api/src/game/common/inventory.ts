@@ -9,49 +9,79 @@ import { db } from "../../db/db.client";
 interface IInventoryOptions {
   objectId: string;
   id: string;
+  saveInDb: boolean;
 }
 
 export class Inventory implements IGameInventory {
   public id: string;
   public objectId: string;
   public items: InventoryItem[] = [];
+  public saveInDb: boolean;
 
-  constructor({ id, objectId }: IInventoryOptions) {
+  constructor({ id, objectId, saveInDb }: IInventoryOptions) {
     this.id = id;
     this.objectId = objectId;
+    this.saveInDb = saveInDb;
   }
 
   public async init() {
-    await this.readFromDB();
+    await this.updateFromDB();
   }
 
-  async addOrCreateItem(type: ItemType, amount: number) {
+  public transferItemWithType(type: ItemType) {
+    return this.items.find((i) => i.type === type);
+  }
+
+  public destroyItem(id: string) {
+    const itemIndex = this.items.findIndex((i) => i.id === id);
+    if (itemIndex < 0) {
+      return;
+    }
+
+    this.items.splice(itemIndex, 1);
+  }
+
+  public async addOrCreateItem(type: ItemType, amount: number) {
+    if (this.saveInDb) {
+      return this.addOrCreateItemInDB(type, amount);
+    }
+
+    const item = this.checkIfAlreadyHaveItem(type);
+    if (!item) {
+      this.createItem(type, amount);
+      return;
+    }
+
+    item.amount += amount;
+  }
+
+  async addOrCreateItemInDB(type: ItemType, amount: number) {
     const item = await this.checkIfAlreadyHaveItemInDB(this.id, type);
     if (!item) {
       await this.createItemInDB(this.id, type, amount);
-      await this.readFromDB();
+      await this.updateFromDB();
       return;
     }
 
     await this.incrementAmountOfItemInDB(item.id, amount);
-    await this.readFromDB();
+    await this.updateFromDB();
   }
 
   async destroyItemInDB(id: string) {
     await db.inventoryItem.delete({
       where: { id },
     });
-    await this.readFromDB();
+    await this.updateFromDB();
   }
 
-  tryGetItem(type: ItemType) {
+  public tryGetItemInDB(type: ItemType) {
     return this.checkIfAlreadyHaveItemInDB(this.id, type);
   }
 
   async checkAndBreakItem(item: InventoryItem, decrement: number) {
     if (item.durability <= decrement) {
       await this.destroyItemInDB(item.id);
-      await this.readFromDB();
+      await this.updateFromDB();
       return;
     }
 
@@ -92,19 +122,27 @@ export class Inventory implements IGameInventory {
     });
   }
 
-  async readFromDB() {
+  checkIfAlreadyHaveItem(type: ItemType) {
+    return this.items.find((item) => item.type === type);
+  }
+
+  createItem(type: ItemType, amount: number) {
+    const item: InventoryItem = {
+      id: createId(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      type,
+      amount,
+      durability: 100,
+      inventoryId: "",
+    };
+    this.items.push(item);
+  }
+
+  async updateFromDB() {
     const items = await db.inventoryItem.findMany({
       where: { inventoryId: this.id },
     });
     this.items = items as InventoryItem[];
-  }
-
-  public static async createInDB(objectId: string) {
-    return db.inventory.create({
-      data: {
-        id: createId(),
-        objectId,
-      },
-    });
   }
 }

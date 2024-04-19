@@ -1,7 +1,6 @@
 import {
   type IGameObject,
   type IGameObjectDirection,
-  type IGameObjectEntity,
   type IGameObjectState,
   getRandomInRange,
 } from "../../../../../packages/api-sdk/src";
@@ -12,6 +11,7 @@ interface IGameObjectOptions {
   id: string;
   x: number;
   y: number;
+  entity: IGameObject["entity"];
 }
 
 export class GameObject implements IGameObject {
@@ -20,22 +20,23 @@ export class GameObject implements IGameObject {
   public y: number;
   public health = 100;
 
-  public entity: IGameObjectEntity;
+  public entity: IGameObject["entity"];
   public direction: IGameObjectDirection = "RIGHT";
   public state: IGameObjectState = "IDLE";
 
   public target: IGameObject | undefined;
 
-  constructor({ id, x, y }: IGameObjectOptions) {
+  constructor({ id, x, y, entity }: IGameObjectOptions) {
     this.id = id;
     this.x = x;
     this.y = y;
+    this.entity = entity;
   }
 
   live(): void {}
 
-  move(speed: number) {
-    const isOnTarget = this.checkIfIsOnTarget();
+  move(speed: number, minDistance?: number) {
+    const isOnTarget = this.checkIfIsOnTarget(minDistance);
     if (isOnTarget) {
       this.stop();
       return false;
@@ -90,8 +91,10 @@ export class GameObject implements IGameObject {
     this.state = "IDLE";
   }
 
-  checkIfIsOnTarget() {
-    return this.x === this.target?.x && this.y === this.target?.y;
+  checkIfIsOnTarget(minDistance = 1) {
+    return (
+      this.getDistanceToTargetX() + this.getDistanceToTargetY() <= minDistance
+    );
   }
 
   getDistanceToTargetX() {

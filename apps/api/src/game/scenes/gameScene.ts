@@ -1,9 +1,9 @@
 import { createId } from "@paralleldrive/cuid2";
 import {
-  type ChatAction,
   type GameSceneType,
   type GetSceneResponse,
   type IGameEvent,
+  type IGameSceneAction,
   type ItemType,
   getRandomInRange,
 } from "../../../../../packages/api-sdk/src";
@@ -17,20 +17,22 @@ import { sendMessage } from "../../websocket/websocket.server";
 import { Event, Group, Raid } from "../common";
 import type { Game } from "../game";
 import {
+  Building,
+  Courier,
   Flag,
   type GameObject,
   Player,
   Rabbit,
-  type Stone,
-  type Tree,
+  Raider,
+  Stone,
+  Tree,
   Wolf,
 } from "../objects";
 
-interface GameSceneOptions {
+interface IGameSceneOptions {
   game: Game;
   group: Group | undefined;
-  possibleActions: ChatAction[];
-  canAddNewPlayer: boolean;
+  possibleActions: IGameSceneAction[];
 }
 
 export class GameScene {
@@ -40,89 +42,23 @@ export class GameScene {
   public group: Group | undefined;
   public raids: Raid[] = [];
   public events: Event[] = [];
-  public possibleActions: ChatAction[] = [];
-  public canAddNewPlayer = false;
+  public possibleActions: IGameSceneAction[] = [];
 
-  constructor({
-    game,
-    group,
-    possibleActions,
-    canAddNewPlayer,
-  }: GameSceneOptions) {
+  constructor({ game, group, possibleActions }: IGameSceneOptions) {
     this.id = createId();
     this.game = game;
     this.group = group;
     this.possibleActions = possibleActions;
-    this.canAddNewPlayer = canAddNewPlayer;
 
     this.initSpawnFlags();
     this.initStaticFlags();
-
-    void this.play();
   }
 
   public async play() {
     return setInterval(() => {
-      this.handleEvents();
-
-      for (const obj of this.objects) {
-        obj.live();
-
-        if (obj instanceof Player && obj.state === "IDLE") {
-          const random = getRandomInRange(1, 800);
-          if (random <= 1) {
-            const randObj = this.getRandomFlag();
-            if (!randObj) {
-              return;
-            }
-            obj.setTarget(randObj);
-          }
-        }
-        if (obj instanceof Rabbit && obj.state === "IDLE") {
-          const random = getRandomInRange(1, 100);
-          if (random <= 1) {
-            const randomObj = this.getRandomFlag();
-            if (!randomObj) {
-              return;
-            }
-            obj.setTarget(randomObj);
-          }
-        }
-        if (obj instanceof Wolf && obj.state === "IDLE") {
-          const random = getRandomInRange(1, 100);
-          if (random <= 1) {
-            const randomObj = this.getRandomFlag();
-            if (!randomObj) {
-              return;
-            }
-            obj.setTarget(randomObj);
-          }
-        }
-      }
-
-      for (const raid of this.raids) {
-        // Stop raid?
-        if (raid.raidEndsAt.getTime() <= new Date().getTime()) {
-          this.stopRaid(raid);
-        }
-        if (raid.raidDeletesAt.getTime() <= new Date().getTime()) {
-          this.removeRaid(raid);
-        }
-
-        for (const raider of raid.raiders) {
-          if (raider.state === "IDLE") {
-            const random = getRandomInRange(1, 100);
-            if (random <= 1) {
-              const randomObj = this.getRandomFlag();
-              if (!randomObj) {
-                return;
-              }
-              raider.setTarget(randomObj);
-            }
-          }
-          raider.live();
-        }
-      }
+      this.updateEvents();
+      this.updateObjects();
+      this.updateRaids();
     }, SERVER_TICK_MS);
   }
 
@@ -131,7 +67,7 @@ export class GameScene {
   }
 
   public async handleAction(
-    action: ChatAction,
+    action: IGameSceneAction,
     playerId: string,
     params?: string[],
   ) {
@@ -204,7 +140,7 @@ export class GameScene {
     };
   }
 
-  checkIfActionIsPossible(action: ChatAction) {
+  checkIfActionIsPossible(action: IGameSceneAction) {
     return this.possibleActions.find((a) => a === action);
   }
 
@@ -245,7 +181,7 @@ export class GameScene {
     };
   }
 
-  handleEvents() {
+  updateEvents() {
     for (const event of this.events) {
       const status = event.checkStatus();
 
@@ -254,6 +190,175 @@ export class GameScene {
 
         const index = this.events.indexOf(event);
         this.events.splice(index, 1);
+      }
+    }
+  }
+
+  updateObjects() {
+    for (const obj of this.objects) {
+      if (obj instanceof Player) {
+        this.updatePlayer(obj);
+      }
+      if (obj instanceof Courier) {
+        this.updateCourier(obj);
+      }
+      if (obj instanceof Rabbit) {
+        this.updateRabbit(obj);
+      }
+      if (obj instanceof Wolf) {
+        this.updateWolf(obj);
+      }
+      if (obj instanceof Tree) {
+        this.updateTree(obj);
+      }
+      if (obj instanceof Stone) {
+        this.updateStone(obj);
+      }
+      if (obj instanceof Raider) {
+        this.updateRaider(obj);
+      }
+      if (obj instanceof Building) {
+        this.updateBuilding(obj);
+      }
+      if (obj instanceof Flag) {
+        this.updateFlag(obj);
+      }
+    }
+  }
+
+  updatePlayer(object: Player) {
+    object.live();
+
+    if (object.state === "IDLE") {
+      const random = getRandomInRange(1, 800);
+      if (random <= 1) {
+        const randObj = this.getRandomFlag();
+        if (!randObj) {
+          return;
+        }
+        object.setTarget(randObj);
+      }
+    }
+  }
+
+  async updateCourier(object: Courier) {
+    object.live();
+
+    if (object.state === "MOVING") {
+      const isMoving = object.move(1.5, 12);
+      object.handleChange();
+
+      if (!isMoving && object.target) {
+        if (object.target instanceof Player) {
+          await object.takeItemFromUnit("WOOD");
+          await object.takeItemFromUnit("STONE");
+
+          const warehouse = this.findStaticFlag("CENTER_FLAG");
+          if (warehouse) {
+            return object.setTarget(warehouse);
+          }
+        }
+      }
+
+      return;
+    }
+
+    if (object.state === "IDLE") {
+      const playerWithWood = this.findUnitWithItem("WOOD");
+      if (playerWithWood) {
+        object.setTarget(playerWithWood);
+        return;
+      }
+
+      const playerWithStone = this.findUnitWithItem("STONE");
+      if (playerWithStone) {
+        object.setTarget(playerWithStone);
+        return;
+      }
+
+      const random = getRandomInRange(1, 100);
+      if (random <= 1) {
+        const randObj = this.getRandomFlag();
+        if (!randObj) {
+          return;
+        }
+        object.setTarget(randObj);
+      }
+    }
+  }
+
+  updateRabbit(object: Rabbit) {
+    object.live();
+
+    if (object.state === "IDLE") {
+      const random = getRandomInRange(1, 100);
+      if (random <= 1) {
+        const randomObj = this.getRandomFlag();
+        if (!randomObj) {
+          return;
+        }
+        object.setTarget(randomObj);
+      }
+    }
+  }
+
+  updateWolf(object: Wolf) {
+    object.live();
+
+    if (object.state === "IDLE") {
+      const random = getRandomInRange(1, 100);
+      if (random <= 1) {
+        const randomObj = this.getRandomFlag();
+        if (!randomObj) {
+          return;
+        }
+        object.setTarget(randomObj);
+      }
+    }
+  }
+
+  updateTree(object: Tree) {
+    object.live();
+  }
+
+  updateStone(object: Stone) {
+    object.live();
+  }
+
+  updateRaider(object: Raider) {
+    object.live();
+  }
+
+  updateBuilding(object: Building) {
+    object.live();
+  }
+
+  updateFlag(object: Flag) {
+    object.live();
+  }
+
+  updateRaids() {
+    for (const raid of this.raids) {
+      // Stop raid?
+      if (raid.raidEndsAt.getTime() <= new Date().getTime()) {
+        this.stopRaid(raid);
+      }
+      if (raid.raidDeletesAt.getTime() <= new Date().getTime()) {
+        this.removeRaid(raid);
+      }
+
+      for (const raider of raid.raiders) {
+        if (raider.state === "IDLE") {
+          const random = getRandomInRange(1, 100);
+          if (random <= 1) {
+            const randomObj = this.getRandomFlag();
+            if (!randomObj) {
+              return;
+            }
+            raider.setTarget(randomObj);
+          }
+        }
+        raider.live();
       }
     }
   }
@@ -289,11 +394,8 @@ export class GameScene {
 
   async findOrCreatePlayer(id: string) {
     const player = this.findPlayer(id);
-    if (!player) {
-      // Is scene give possibility?
-      if (this.canAddNewPlayer) {
-        return await this.createPlayer(id);
-      }
+    if (!player && this.checkIfActionIsPossible("CREATE_NEW_PLAYER")) {
+      return this.createPlayer(id);
     }
     return player;
   }
@@ -306,10 +408,9 @@ export class GameScene {
   }
 
   async initPlayer(id: string) {
-    const instance = new Player(id);
-    await instance.readFromDB();
-    await instance.initInventory();
-    await instance.initSkills();
+    const instance = new Player({ id });
+    await instance.init();
+    await instance.initInventoryFromDB();
 
     const spawnFlag = this.findSpawnFlag("SPAWN_LEFT");
     if (spawnFlag) {
@@ -324,25 +425,6 @@ export class GameScene {
     }
 
     return instance;
-  }
-
-  // async initActivePlayers() {
-  //   const playersFromDb = await this.game.repository.findActivePlayers();
-  //   for (const player of playersFromDb) {
-  //     const instance = await this.initPlayer(player.id);
-  //     this.objects.push(instance);
-  //   }
-  // }
-
-  async initGroupPlayers() {
-    if (!this.group) {
-      return;
-    }
-
-    for (const player of this.group.players) {
-      const instance = await this.initPlayer(player.id);
-      this.objects.push(instance);
-    }
   }
 
   public async createPlayer(id: string): Promise<Player> {
@@ -884,5 +966,16 @@ export class GameScene {
 
   findStaticFlag(id: "CENTER_FLAG") {
     return this.objects.find((f) => f.id === id);
+  }
+
+  findUnitWithItem(type: ItemType) {
+    for (const object of this.objects) {
+      if (object instanceof Player) {
+        const item = object.inventory?.checkIfAlreadyHaveItem(type);
+        if (item) {
+          return object;
+        }
+      }
+    }
   }
 }

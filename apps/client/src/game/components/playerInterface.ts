@@ -68,6 +68,7 @@ export class PlayerInterface extends GraphicsContainer {
     this.drawStone();
     this.drawAxe();
     this.drawPickaxe();
+    this.showInHandTimerSeconds = 0;
   }
 
   update() {
@@ -152,14 +153,14 @@ export class PlayerInterface extends GraphicsContainer {
       text: userName,
       style: {
         fontSize: 14,
-        fill: 0x78350f,
+        fill: 0x694f62,
         align: "center",
       },
     });
 
     const graphics = new Graphics();
     graphics.roundRect(-6, -2, basicText.width + 12, basicText.height + 4, 8);
-    graphics.fill(0xfef3c7);
+    graphics.fill(0xffffff);
 
     container.addChild(graphics, basicText);
 

@@ -12,7 +12,7 @@ export const EventCard = ({ event }: { event: IGameEvent }) => {
   const description = getEventDescriptionByType(event.type);
 
   return (
-    <div className="w-full h-auto px-4 py-4 font-semibold text-amber-900 bg-amber-100 border-b-4 rounded-2xl">
+    <div className="w-full h-auto px-4 py-4 font-semibold bg-primary text-primary border-primary border-b-4 rounded-2xl">
       <p className="text-2xl font-bold">{event.title}</p>
       {description}
       <p className="mt-2 text-base font-semibold italic">

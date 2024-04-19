@@ -7,14 +7,12 @@ import { MAX_X, MAX_Y, MIN_X, MIN_Y } from "../../config";
 import { GameObject } from "./gameObject";
 
 export class Rabbit extends GameObject implements IGameObjectRabbit {
-  public readonly entity = "RABBIT";
-
   constructor() {
     const id = createId();
     const x = getRandomInRange(MIN_X, MAX_X);
     const y = getRandomInRange(MIN_Y, MAX_Y);
 
-    super({ id, x, y });
+    super({ id, x, y, entity: "RABBIT" });
   }
 
   live() {

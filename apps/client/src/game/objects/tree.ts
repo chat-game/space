@@ -1,5 +1,8 @@
 import { Sprite } from "pixi.js";
-import type { IGameObjectTree } from "../../../../../packages/api-sdk/src";
+import {
+  type IGameObjectTree,
+  getRandomInRange,
+} from "../../../../../packages/api-sdk/src";
 import type { Game } from "../game";
 import { GameObjectContainer } from "./gameObjectContainer";
 
@@ -14,7 +17,7 @@ export class Tree extends GameObjectContainer implements IGameObjectTree {
   public size!: number;
   public isReadyToChop!: boolean;
 
-  public animationAngle = 0;
+  public animationAngle = getRandomInRange(-1, 1);
   public animationSlowSpeed = 0.04;
   public animationHighSpeed = 0.15;
 
@@ -46,6 +49,8 @@ export class Tree extends GameObjectContainer implements IGameObjectTree {
   }
 
   animate() {
+    this.scale = this.size / 100;
+
     if (this.state === "IDLE") {
       this.shakeOnWind();
     }
@@ -55,7 +60,6 @@ export class Tree extends GameObjectContainer implements IGameObjectTree {
     }
 
     if (this.state === "CHOPPING") {
-      this.scale = 0.98;
       this.shakeAnimation();
     }
   }

@@ -1,38 +1,44 @@
 import { createId } from "@paralleldrive/cuid2";
 import {
   type IGameObjectPlayer,
+  type IGameSkill,
   type ItemType,
   getRandomInRange,
 } from "../../../../../packages/api-sdk/src";
 import { MAX_X, MAX_Y, MIN_X, MIN_Y } from "../../config";
 import { db } from "../../db/db.client";
 import { Inventory, Skill } from "../common";
-import { GameObject } from "./gameObject";
 import { Stone } from "./stone";
 import { Tree } from "./tree";
+import { Unit } from "./unit";
 
-export class Player extends GameObject implements IGameObjectPlayer {
-  public readonly entity = "PLAYER";
+interface IPlayerOptions {
+  id?: string;
+}
+
+export class Player extends Unit implements IGameObjectPlayer {
   public coins = 0;
   public reputation = 0;
   public userName = "NPC";
   public colorIndex = 0;
   public health = 100;
 
-  public inventoryId: string | null = null;
-  public inventory: Inventory | null = null;
+  public inventoryId?: string;
 
   public skills: Skill[] = [];
 
-  constructor(id?: string) {
+  constructor({ id }: IPlayerOptions) {
     const objectId = id ?? createId();
 
     const x = getRandomInRange(MIN_X, MAX_X);
     const y = getRandomInRange(MIN_Y, MAX_Y);
 
-    super({ id: objectId, x, y });
+    super({ id: objectId, x, y, entity: "PLAYER" });
+  }
 
-    console.log(`Creating player ${objectId}!`);
+  async init() {
+    await this.readFromDB();
+    await this.initSkillsFromDB();
   }
 
   live() {
@@ -71,12 +77,12 @@ export class Player extends GameObject implements IGameObjectPlayer {
         }
 
         // Check instrument
-        const axe = this.inventory?.items.find((item) => item.type === "AXE");
+        const axe = this.inventory.items.find((item) => item.type === "AXE");
         if (axe) {
           this.target.health -= 0.16;
           const random = getRandomInRange(1, 40);
           if (random <= 1) {
-            void this.inventory?.checkAndBreakItem(axe, 1);
+            void this.inventory.checkAndBreakItem(axe, 1);
           }
         }
 
@@ -103,14 +109,14 @@ export class Player extends GameObject implements IGameObjectPlayer {
         }
 
         // Check instrument
-        const pickaxe = this.inventory?.items.find(
+        const pickaxe = this.inventory.items.find(
           (item) => item.type === "PICKAXE",
         );
         if (pickaxe) {
           this.target.health -= 0.16;
           const random = getRandomInRange(1, 40);
           if (random <= 1) {
-            void this.inventory?.checkAndBreakItem(pickaxe, 1);
+            void this.inventory.checkAndBreakItem(pickaxe, 1);
           }
         }
 
@@ -134,11 +140,7 @@ export class Player extends GameObject implements IGameObjectPlayer {
     this.state = "CHOPPING";
     this.direction = "RIGHT";
 
-    const skill = this.skills.find((skill) => skill.type === "WOODSMAN");
-    if (!skill) {
-      await Skill.createInDB(this.id, "WOODSMAN");
-      await this.initSkills();
-    }
+    await this.findOrCreateSkillInDB("WOODSMAN");
 
     await this.updateInDB();
     this.handleChange();
@@ -147,9 +149,7 @@ export class Player extends GameObject implements IGameObjectPlayer {
   async stopChopping(tree: Tree) {
     this.state = "IDLE";
     // Reward
-    if (this.inventory) {
-      await this.inventory.addOrCreateItem("WOOD", tree.resource);
-    }
+    await this.inventory.addOrCreateItem("WOOD", tree.resource);
     this.handleChange();
   }
 
@@ -157,11 +157,7 @@ export class Player extends GameObject implements IGameObjectPlayer {
     this.state = "MINING";
     this.direction = "RIGHT";
 
-    const skill = this.skills.find((skill) => skill.type === "MINER");
-    if (!skill) {
-      await Skill.createInDB(this.id, "MINER");
-      await this.initSkills();
-    }
+    await this.findOrCreateSkillInDB("MINER");
 
     await this.updateInDB();
     this.handleChange();
@@ -170,9 +166,7 @@ export class Player extends GameObject implements IGameObjectPlayer {
   async stopMining(stone: Stone) {
     this.state = "IDLE";
     // Reward
-    if (this.inventory) {
-      await this.inventory.addOrCreateItem("STONE", stone.resource);
-    }
+    await this.inventory.addOrCreateItem("STONE", stone.resource);
     this.handleChange();
   }
 
@@ -200,17 +194,8 @@ export class Player extends GameObject implements IGameObjectPlayer {
     });
   }
 
-  addViewerPoints(increment: number) {
-    return db.player.update({
-      where: { id: this.id },
-      data: {
-        viewerPoints: { increment },
-      },
-    });
-  }
-
   async buyItemFromDealer(type: ItemType, price: number, amount: number) {
-    const item = await this.inventory?.tryGetItem(type);
+    const item = await this.inventory.tryGetItemInDB(type);
     if (item) {
       return false;
     }
@@ -220,7 +205,7 @@ export class Player extends GameObject implements IGameObjectPlayer {
     }
 
     await this.updateCoins(-price);
-    await this.inventory?.addOrCreateItem(type, amount);
+    await this.inventory.addOrCreateItem(type, amount);
     this.handleChange();
 
     return true;
@@ -232,8 +217,6 @@ export class Player extends GameObject implements IGameObjectPlayer {
       return;
     }
 
-    this.x = player.x;
-    this.y = player.y;
     this.userName = player.userName;
     this.coins = player.coins;
     this.reputation = player.reputation;
@@ -245,56 +228,12 @@ export class Player extends GameObject implements IGameObjectPlayer {
     return db.player.update({
       where: { id: this.id },
       data: {
-        x: this.x,
-        y: this.y,
         lastActionAt: new Date(),
       },
     });
   }
 
-  public static createInDB({
-    twitchId,
-    userName,
-    inventoryId,
-    id,
-  }: { twitchId: string; userName: string; inventoryId: string; id: string }) {
-    const colorIndex = getRandomInRange(0, 360);
-    return db.player.create({
-      data: {
-        id,
-        twitchId,
-        userName,
-        x: -100,
-        y: 600,
-        colorIndex,
-        inventoryId,
-      },
-    });
-  }
-
-  public static findByTwitchIdInDB(twitchId: string) {
-    return db.player.findFirst({
-      where: { twitchId },
-    });
-  }
-
-  public static async findOrCreatePlayer(twitchId: string, userName: string) {
-    const player = await Player.findByTwitchIdInDB(twitchId);
-    if (!player) {
-      const id = createId();
-      const inventory = await Inventory.createInDB(id);
-      return Player.createInDB({
-        id,
-        twitchId,
-        userName,
-        inventoryId: inventory.id,
-      });
-    }
-
-    return player;
-  }
-
-  public async initInventory() {
+  public async initInventoryFromDB() {
     if (!this.inventoryId) {
       return;
     }
@@ -302,12 +241,13 @@ export class Player extends GameObject implements IGameObjectPlayer {
     const inventory = new Inventory({
       objectId: this.id,
       id: this.inventoryId,
+      saveInDb: true,
     });
     await inventory.init();
     this.inventory = inventory;
   }
 
-  public async initSkills() {
+  public async initSkillsFromDB() {
     this.skills = [];
     const skills = await Skill.findAllInDB(this.id);
     for (const skill of skills) {
@@ -315,5 +255,16 @@ export class Player extends GameObject implements IGameObjectPlayer {
       await instance.init();
       this.skills.push(instance);
     }
+  }
+
+  async findOrCreateSkillInDB(type: IGameSkill["type"]) {
+    const skill = this.skills.find((skill) => skill.type === type);
+    if (!skill) {
+      await Skill.createInDB(this.id, type);
+      await this.initSkillsFromDB();
+      return this.skills.find((skill) => skill.type === type) as Skill;
+    }
+
+    return skill;
   }
 }

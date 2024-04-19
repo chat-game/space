@@ -14,7 +14,6 @@ interface IFlagOptions {
 }
 
 export class Flag extends GameObject implements IGameObjectFlag {
-  public readonly entity = "FLAG";
   public isOnScreen = true;
 
   constructor({ x, y, id, isOnScreen }: IFlagOptions) {
@@ -22,8 +21,19 @@ export class Flag extends GameObject implements IGameObjectFlag {
     const finalX = x ?? getRandomInRange(MIN_X, MAX_X);
     const finalY = y ?? getRandomInRange(MIN_Y, MAX_Y);
 
-    super({ id: finalId, x: finalX, y: finalY });
+    super({ id: finalId, x: finalX, y: finalY, entity: "FLAG" });
 
     this.isOnScreen = isOnScreen ?? true;
+  }
+
+  live() {
+    const random = getRandomInRange(1, 60);
+    if (random <= 1) {
+      this.handleChange();
+    }
+  }
+
+  handleChange() {
+    this.sendMessageObjectUpdated();
   }
 }

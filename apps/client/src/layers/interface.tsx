@@ -68,7 +68,7 @@ export const InterfaceLayer = () => {
         {/*<DealerBlock dealer={{ x: 520, y: 720 }} />*/}
 
         <div className="fixed top-4 left-4" style={{ zIndex: 1000 }}>
-          <div className="w-72 h-auto px-4 py-4 text-amber-900 bg-amber-100 border-b-4 rounded-2xl">
+          <div className="w-72 h-auto px-4 py-4 bg-primary text-primary border-primary border-b-4 rounded-2xl">
             <div className="flex flex-row gap-1 items-start">
               <img
                 src={"/discord.svg"}
