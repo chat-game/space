@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { ChunkBlock } from "../components/chunkBlock";
 import { EventsBlock } from "../components/eventsBlock";
 import { GroupPlayersBlock } from "../components/groupPlayers";
 import { Loader } from "../components/loader";
 import { TopPlayersBlock } from "../components/topPlayers";
+import { WagonBlock } from "../components/wagonBlock";
 import { useScene } from "../hooks/useScene";
 
 export const InterfaceLayer = () => {
@@ -54,7 +56,7 @@ export const InterfaceLayer = () => {
     <>
       <Loader isVisible={showLoader} />
 
-      <div className="absolute z-10 bottom-0 left-0">
+      <div className="z-10 absolute bottom-0 left-0">
         {showPlayersGroup ? (
           <GroupPlayersBlock group={scene?.group} />
         ) : (
@@ -62,36 +64,36 @@ export const InterfaceLayer = () => {
         )}
       </div>
 
-      <div className="relative">
-        {/*<Village />*/}
+      <div className="z-10 fixed top-4 left-4">
+        <div className="w-72 h-auto px-4 py-4 bg-primary text-primary border-primary border-b-4 rounded-2xl">
+          <div className="flex flex-row gap-1 items-start">
+            <img
+              src={"/discord.svg"}
+              alt=""
+              className="-ml-2 -mt-2 w-36 h-36"
+            />
 
-        {/*<DealerBlock dealer={{ x: 520, y: 720 }} />*/}
-
-        <div className="fixed top-4 left-4" style={{ zIndex: 1000 }}>
-          <div className="w-72 h-auto px-4 py-4 bg-primary text-primary border-primary border-b-4 rounded-2xl">
-            <div className="flex flex-row gap-1 items-start">
-              <img
-                src={"/discord.svg"}
-                alt=""
-                className="-ml-2 -mt-2 w-36 h-36"
-              />
-
-              <p className="font-semibold leading-tight">
-                Есть идеи? Присоединяйся к нашему Discord серверу
-              </p>
-            </div>
-
-            <p className="mt-3 font-semibold">Пиши команды в чат:</p>
-            {showCommands}
+            <p className="font-semibold leading-tight">
+              Есть идеи? Присоединяйся к нашему Discord серверу
+            </p>
           </div>
 
-          <div className="text-sm text-amber-950">
-            ({mousePos.x}, {mousePos.y})
-          </div>
+          <p className="mt-3 font-semibold">Пиши команды в чат:</p>
+          {showCommands}
+        </div>
+
+        <ChunkBlock chunk={scene?.chunk} />
+
+        <div className="text-sm text-amber-950">
+          ({mousePos.x}, {mousePos.y})
         </div>
       </div>
 
-      <div className="absolute top-0 right-0" style={{ zIndex: 1000 }}>
+      <div className="z-10 absolute top-0 left-0 right-0">
+        <WagonBlock wagon={scene?.wagon} />
+      </div>
+
+      <div className="z-10 absolute top-0 right-0" style={{ zIndex: 1000 }}>
         <EventsBlock events={scene?.events} />
       </div>
     </>

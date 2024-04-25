@@ -14,6 +14,8 @@ import { Unit } from "./unit";
 
 interface IPlayerOptions {
   id?: string;
+  x?: number;
+  y?: number;
 }
 
 export class Player extends Unit implements IGameObjectPlayer {
@@ -27,18 +29,23 @@ export class Player extends Unit implements IGameObjectPlayer {
 
   public skills: Skill[] = [];
 
-  constructor({ id }: IPlayerOptions) {
+  constructor({ id, x, y }: IPlayerOptions) {
     const objectId = id ?? createId();
 
-    const x = getRandomInRange(MIN_X, MAX_X);
-    const y = getRandomInRange(MIN_Y, MAX_Y);
+    const finalX = x ?? getRandomInRange(MIN_X, MAX_X);
+    const finalY = y ?? getRandomInRange(MIN_Y, MAX_Y);
 
-    super({ id: objectId, x, y, entity: "PLAYER" });
+    super({ id: objectId, x: finalX, y: finalY, entity: "PLAYER" });
   }
 
   async init() {
     await this.readFromDB();
     await this.initSkillsFromDB();
+    super.initVisual({
+      head: "1",
+      hairstyle: "CLASSIC",
+      top: "VIOLET_SHIRT",
+    });
   }
 
   live() {
@@ -48,7 +55,7 @@ export class Player extends Unit implements IGameObjectPlayer {
     }
 
     if (this.state === "MOVING") {
-      const isMoving = this.move(1);
+      const isMoving = this.move(1.2);
       this.handleChange();
 
       if (!isMoving && this.target) {

@@ -1,5 +1,6 @@
 import { createId } from "@paralleldrive/cuid2";
 import type { IGameObjectBuilding } from "../../../../../packages/api-sdk/src";
+import { Inventory } from "../common";
 import { GameObject } from "./gameObject";
 
 interface IBuildingOptions {
@@ -10,6 +11,7 @@ interface IBuildingOptions {
 
 export class Building extends GameObject implements IGameObjectBuilding {
   public type: IGameObjectBuilding["type"];
+  public inventory!: Inventory;
 
   constructor({ type, x, y }: IBuildingOptions) {
     const finalId = createId();
@@ -17,6 +19,7 @@ export class Building extends GameObject implements IGameObjectBuilding {
     super({ id: finalId, x, y, entity: "BUILDING" });
 
     this.type = type;
+    this.initInventory();
   }
 
   live() {
@@ -25,5 +28,13 @@ export class Building extends GameObject implements IGameObjectBuilding {
 
   handleChange() {
     this.sendMessageObjectUpdated();
+  }
+
+  public initInventory() {
+    this.inventory = new Inventory({
+      objectId: this.id,
+      id: createId(),
+      saveInDb: false,
+    });
   }
 }

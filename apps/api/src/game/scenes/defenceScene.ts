@@ -1,7 +1,7 @@
 import { getRandomInRange } from "../../../../../packages/api-sdk/src";
 import type { Group } from "../common";
 import type { Game } from "../game";
-import { Building, Courier, Flag, Player, Stone, Tree } from "../objects";
+import { Building, Player, Stone, Tree } from "../objects";
 import { GameScene } from "./gameScene";
 
 interface IDefenceSceneOptions {
@@ -32,10 +32,8 @@ export class DefenceScene extends GameScene {
 
   public async init() {
     await this.initGroupPlayers();
-    this.initCouriers(1);
-    this.initTrees(6);
-    this.initStones(4);
-    this.initFlags(30);
+    this.initTrees(12);
+    this.initStones(8);
     this.initBuildings();
 
     this.wood = 0;
@@ -71,43 +69,40 @@ export class DefenceScene extends GameScene {
       instance.y = spawnFlag.y;
     }
 
-    const centerFlag = this.findStaticFlag("CENTER_FLAG");
-    if (centerFlag) {
-      instance.target = centerFlag;
+    const targetFlag = this.findRandomMovementFlag();
+    if (targetFlag) {
+      instance.target = targetFlag;
       instance.state = "MOVING";
     }
 
     return instance;
   }
 
-  initCouriers(count: number) {
-    for (let i = 0; i < count; i++) {
-      this.objects.push(new Courier({}));
-    }
-  }
-
   private initTrees(count: number) {
     for (let i = 0; i < count; i++) {
-      const size = getRandomInRange(75, 90);
-      const resource = 1;
-      this.objects.push(new Tree({ size, resource }));
+      const flag = this.findRandomEmptyResourceFlag();
+      if (flag) {
+        const size = getRandomInRange(75, 90);
+        const tree = new Tree({ x: flag.x, y: flag.y, size, resource: 1 });
+        flag.target = tree;
+        this.objects.push(tree);
+      }
     }
   }
 
   private initStones(count: number) {
     for (let i = 0; i < count; i++) {
-      this.objects.push(new Stone());
+      const flag = this.findRandomEmptyResourceFlag();
+      if (flag) {
+        const stone = new Stone({ x: flag.x, y: flag.y, resource: 1 });
+        flag.target = stone;
+        this.objects.push(stone);
+      }
     }
   }
 
   initBuildings() {
     this.objects.push(new Building({ type: "CAMP_FIRE", x: 1275, y: 690 }));
     this.objects.push(new Building({ type: "WAREHOUSE", x: 1440, y: 610 }));
-  }
-
-  private initFlags(count: number) {
-    for (let i = 0; i < count; i++) {
-      this.objects.push(new Flag({}));
-    }
   }
 }

@@ -1,5 +1,6 @@
 import { Sprite } from "pixi.js";
 import type { IGameObjectBuilding } from "../../../../../packages/api-sdk/src";
+import { BuildingInterface } from "../components/buildingInterface";
 import type { Game } from "../game";
 import { GameObjectContainer } from "./gameObjectContainer";
 
@@ -13,12 +14,19 @@ export class Building
   implements IGameObjectBuilding
 {
   public type!: IGameObjectBuilding["type"];
+  public inventory!: IGameObjectBuilding["inventory"];
+
+  public interface!: BuildingInterface;
 
   constructor({ game, object }: IBuildingOptions) {
     super({ game, ...object });
 
     this.update(object);
     this.init();
+
+    if (object.type === "WAREHOUSE") {
+      this.initInterface();
+    }
   }
 
   init() {
@@ -27,6 +35,11 @@ export class Building
       sprite.anchor.set(0.5, 1);
       this.addChild(sprite);
     }
+  }
+
+  initInterface() {
+    this.interface = new BuildingInterface(this);
+    this.addChild(this.interface);
   }
 
   getSpriteByType() {
@@ -45,6 +58,10 @@ export class Building
     if (this.state === "DESTROYED") {
       this.visible = false;
     }
+
+    if (this.interface) {
+      this.interface.animate();
+    }
   }
 
   update(object: IGameObjectBuilding) {
@@ -57,5 +74,6 @@ export class Building
     this.state = object.state;
     this.direction = object.direction;
     this.health = object.health;
+    this.inventory = object.inventory;
   }
 }

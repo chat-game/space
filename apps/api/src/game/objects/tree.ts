@@ -3,11 +3,12 @@ import {
   type IGameObjectTree,
   getRandomInRange,
 } from "../../../../../packages/api-sdk/src";
-import { MAX_X, MAX_Y, MIN_X, MIN_Y } from "../../config";
 import { GameObject } from "./gameObject";
 
 interface ITreeOptions {
   id?: string;
+  x: number;
+  y: number;
   resource?: number;
   size?: number;
   health?: number;
@@ -25,11 +26,8 @@ export class Tree extends GameObject implements IGameObjectTree {
   public isReadyToChop = false;
   public isReserved = false;
 
-  constructor({ id, resource, size, health, growSpeed }: ITreeOptions) {
+  constructor({ id, x, y, resource, size, health, growSpeed }: ITreeOptions) {
     const objectId = id ?? createId();
-
-    const x = getRandomInRange(MIN_X, MAX_X);
-    const y = getRandomInRange(MIN_Y, MAX_Y);
 
     super({ id: objectId, x, y, entity: "TREE" });
 

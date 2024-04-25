@@ -2,7 +2,9 @@ import { createId } from "@paralleldrive/cuid2";
 import {
   type GameSceneType,
   type GetSceneResponse,
+  type IGameChunk,
   type IGameEvent,
+  type IGameObjectBuilding,
   type IGameSceneAction,
   type ItemType,
   getRandomInRange,
@@ -13,20 +15,20 @@ import {
   DONATE_URL,
   SERVER_TICK_MS,
 } from "../../config";
-import { sendMessage } from "../../websocket/websocket.server";
-import { Event, Group, Raid } from "../common";
+import { Forest, type GameChunk, Village } from "../chunks";
+import { Event, Group } from "../common";
 import type { Game } from "../game";
 import {
   Building,
-  Courier,
   Flag,
   type GameObject,
   Player,
-  Rabbit,
+  type Rabbit,
   Raider,
-  Stone,
-  Tree,
-  Wolf,
+  type Stone,
+  type Tree,
+  Wagon,
+  type Wolf,
 } from "../objects";
 
 interface IGameSceneOptions {
@@ -40,8 +42,9 @@ export class GameScene {
   public game: Game;
   public objects: GameObject[] = [];
   public group: Group | undefined;
-  public raids: Raid[] = [];
   public events: Event[] = [];
+  public chunks: GameChunk[] = [];
+  public chunkNow: GameChunk | undefined;
   public possibleActions: IGameSceneAction[] = [];
 
   constructor({ game, group, possibleActions }: IGameSceneOptions) {
@@ -51,14 +54,13 @@ export class GameScene {
     this.possibleActions = possibleActions;
 
     this.initSpawnFlags();
-    this.initStaticFlags();
   }
 
   public async play() {
     return setInterval(() => {
       this.updateEvents();
       this.updateObjects();
-      this.updateRaids();
+      this.updateChunks();
     }, SERVER_TICK_MS);
   }
 
@@ -161,15 +163,27 @@ export class GameScene {
   }
 
   getEvents(): IGameEvent[] {
-    return this.events.map((event) => {
-      return {
-        id: event.id,
-        title: event.title,
-        type: event.type,
-        status: event.status,
-        endsAt: event.endsAt,
-      };
-    });
+    return this.events.map((event) => ({
+      id: event.id,
+      title: event.title,
+      type: event.type,
+      status: event.status,
+      endsAt: event.endsAt,
+    }));
+  }
+
+  getChunkNow(): IGameChunk | null {
+    if (!this.chunkNow) {
+      return null;
+    }
+
+    return {
+      id: this.chunkNow.id,
+      title: this.chunkNow.title,
+      center: this.chunkNow.center,
+      area: this.chunkNow.area,
+      isVisibleOnClient: this.chunkNow.isVisibleOnClient,
+    };
   }
 
   getInfo(): GetSceneResponse {
@@ -178,6 +192,8 @@ export class GameScene {
       commands: this.getAvailableCommands(),
       events: this.getEvents(),
       group: this.group,
+      wagon: this.getWagon(),
+      chunk: this.getChunkNow(),
     };
   }
 
@@ -196,89 +212,75 @@ export class GameScene {
 
   updateObjects() {
     for (const obj of this.objects) {
+      obj.isVisibleOnClient = this.checkIfPointIsOnWagonView({
+        x: obj.x,
+        y: obj.y,
+      });
+
+      if (obj instanceof Wagon) {
+        this.updateWagon(obj);
+        continue;
+      }
       if (obj instanceof Player) {
         this.updatePlayer(obj);
+        continue;
       }
-      if (obj instanceof Courier) {
-        this.updateCourier(obj);
+
+      void obj.live();
+    }
+  }
+
+  updateChunks() {
+    for (const chunk of this.chunks) {
+      chunk.isVisibleOnClient = this.checkIfPointIsOnWagonView({
+        x: chunk.center.x,
+        y: chunk.center.y,
+      });
+
+      const wagon = this.getWagon();
+
+      const isWagonOnThisChunk = chunk.checkIfPointIsInArea({
+        x: wagon.x,
+        y: wagon.y,
+      });
+      if (isWagonOnThisChunk) {
+        this.chunkNow = chunk;
       }
-      if (obj instanceof Rabbit) {
-        this.updateRabbit(obj);
-      }
-      if (obj instanceof Wolf) {
-        this.updateWolf(obj);
-      }
-      if (obj instanceof Tree) {
-        this.updateTree(obj);
-      }
-      if (obj instanceof Stone) {
-        this.updateStone(obj);
-      }
-      if (obj instanceof Raider) {
-        this.updateRaider(obj);
-      }
-      if (obj instanceof Building) {
-        this.updateBuilding(obj);
-      }
-      if (obj instanceof Flag) {
-        this.updateFlag(obj);
+
+      chunk.live();
+    }
+  }
+
+  getWagon() {
+    return this.objects.find((obj) => obj instanceof Wagon) as Wagon;
+  }
+
+  checkIfPointIsOnWagonView(point: { x: number; y: number }) {
+    const wagon = this.getWagon();
+    if (!wagon) {
+      return false;
+    }
+
+    if (point.x >= wagon.area.startX && point.x <= wagon.area.endX) {
+      if (point.y >= wagon.area.startY && point.y <= wagon.area.endY) {
+        return true;
       }
     }
+
+    return false;
+  }
+
+  updateWagon(object: Wagon) {
+    object.live();
   }
 
   updatePlayer(object: Player) {
     object.live();
 
     if (object.state === "IDLE") {
-      const random = getRandomInRange(1, 800);
+      const random = getRandomInRange(1, 120);
       if (random <= 1) {
-        const randObj = this.getRandomFlag();
-        if (!randObj) {
-          return;
-        }
-        object.setTarget(randObj);
-      }
-    }
-  }
-
-  async updateCourier(object: Courier) {
-    object.live();
-
-    if (object.state === "MOVING") {
-      const isMoving = object.move(1.5, 12);
-      object.handleChange();
-
-      if (!isMoving && object.target) {
-        if (object.target instanceof Player) {
-          await object.takeItemFromUnit("WOOD");
-          await object.takeItemFromUnit("STONE");
-
-          const warehouse = this.findStaticFlag("CENTER_FLAG");
-          if (warehouse) {
-            return object.setTarget(warehouse);
-          }
-        }
-      }
-
-      return;
-    }
-
-    if (object.state === "IDLE") {
-      const playerWithWood = this.findUnitWithItem("WOOD");
-      if (playerWithWood) {
-        object.setTarget(playerWithWood);
-        return;
-      }
-
-      const playerWithStone = this.findUnitWithItem("STONE");
-      if (playerWithStone) {
-        object.setTarget(playerWithStone);
-        return;
-      }
-
-      const random = getRandomInRange(1, 100);
-      if (random <= 1) {
-        const randObj = this.getRandomFlag();
+        const randObj = this.findRandomNearWagonFlag();
         if (!randObj) {
           return;
         }
@@ -293,7 +295,7 @@ export class GameScene {
     if (object.state === "IDLE") {
       const random = getRandomInRange(1, 100);
       if (random <= 1) {
-        const randomObj = this.getRandomFlag();
+        const randomObj = this.findRandomMovementFlag();
         if (!randomObj) {
           return;
         }
@@ -308,7 +310,7 @@ export class GameScene {
     if (object.state === "IDLE") {
       const random = getRandomInRange(1, 100);
       if (random <= 1) {
-        const randomObj = this.getRandomFlag();
+        const randomObj = this.findRandomMovementFlag();
         if (!randomObj) {
           return;
         }
@@ -317,48 +319,31 @@ export class GameScene {
     }
   }
 
-  updateTree(object: Tree) {
-    object.live();
-  }
-
-  updateStone(object: Stone) {
-    object.live();
-  }
-
   updateRaider(object: Raider) {
     object.live();
-  }
 
-  updateBuilding(object: Building) {
-    object.live();
-  }
-
-  updateFlag(object: Flag) {
-    object.live();
-  }
-
-  updateRaids() {
-    for (const raid of this.raids) {
-      // Stop raid?
-      if (raid.raidEndsAt.getTime() <= new Date().getTime()) {
-        this.stopRaid(raid);
-      }
-      if (raid.raidDeletesAt.getTime() <= new Date().getTime()) {
-        this.removeRaid(raid);
-      }
-
-      for (const raider of raid.raiders) {
-        if (raider.state === "IDLE") {
-          const random = getRandomInRange(1, 100);
-          if (random <= 1) {
-            const randomObj = this.getRandomFlag();
-            if (!randomObj) {
-              return;
-            }
-            raider.setTarget(randomObj);
-          }
+    if (object.state === "IDLE") {
+      const random = getRandomInRange(1, 100);
+      if (random <= 1) {
+        const randomObj = this.findRandomMovementFlag();
+        if (!randomObj) {
+          return;
         }
-        raider.live();
+        object.setTarget(randomObj);
+      }
+    }
+
+    if (object.state === "MOVING") {
+      const isMoving = object.move(1);
+      if (!isMoving) {
+        if (object.target?.id === "SPAWN_RIGHT") {
+          // Destroy
+          const index = this.objects.indexOf(object);
+          this.objects.splice(index, 1);
+        }
+
+        object.state = "IDLE";
+        return;
       }
     }
   }
@@ -412,16 +397,10 @@ export class GameScene {
     await instance.init();
     await instance.initInventoryFromDB();
 
-    const spawnFlag = this.findSpawnFlag("SPAWN_LEFT");
-    if (spawnFlag) {
-      instance.x = spawnFlag.x;
-      instance.y = spawnFlag.y;
-    }
-
-    const centerFlag = this.findStaticFlag("CENTER_FLAG");
-    if (centerFlag) {
-      instance.target = centerFlag;
-      instance.state = "MOVING";
+    const wagon = this.getWagon();
+    if (wagon) {
+      instance.x = wagon.x - 250;
+      instance.y = wagon.y;
     }
 
     return instance;
@@ -648,36 +627,36 @@ export class GameScene {
       : undefined;
   }
 
-  getRandomFlag() {
-    const flagsOnScreen = this.objects.filter(
-      (obj) => obj.entity === "FLAG" && obj instanceof Flag && obj.isOnScreen,
-    );
-    return flagsOnScreen[getRandomInRange(0, flagsOnScreen.length - 1)];
+  initRaiders(count: number) {
+    for (let i = 0; i < count; i++) {
+      this.objects.push(new Raider());
+    }
   }
 
   public startRaidAction(raidersCount = 0) {
-    const raid = new Raid({ raidersCount });
-    this.raids.push(raid);
-    sendMessage("RAID_STARTED");
+    this.initEvent({
+      title: "Начался рейд!",
+      type: "RAID_STARTED",
+      secondsToEnd: 60 * 10,
+    });
+    this.initRaiders(raidersCount);
+
     return {
       ok: true,
       message: null,
     };
   }
 
-  public stopRaid(raid: Raid) {
-    const raidersCamp = this.objects.find((f) => f.id === "raiders-camp");
-    if (!raidersCamp) {
+  public stopRaid() {
+    const flag = this.findSpawnFlag("SPAWN_RIGHT");
+    if (!flag) {
       return;
     }
 
-    raid.moveAllRaidersBackToCamp(raidersCamp as Flag);
-  }
-
-  public removeRaid(raid: Raid) {
-    const index = this.raids.indexOf(raid);
-    if (index >= 0) {
-      this.raids.splice(index, 1);
+    for (const obj of this.objects) {
+      if (obj instanceof Raider) {
+        obj.moveOutOfScene(flag);
+      }
     }
   }
 
@@ -934,18 +913,72 @@ export class GameScene {
     return null;
   }
 
+  generateRandomVillage(center: { x: number; y: number }) {
+    const village = new Village({ center });
+    this.chunks.push(village);
+  }
+
+  generateRandomForest(center: { x: number; y: number }) {
+    const forest = new Forest({ center });
+    this.chunks.push(forest);
+  }
+
+  initWagonMovementFlags({
+    startX,
+    startY,
+    endX,
+    endY,
+  }: {
+    startX: number;
+    startY: number;
+    endX: number;
+    endY: number;
+  }) {
+    const finalFlag = new Flag({ type: "WAGON_MOVEMENT", x: endX, y: endY });
+    this.objects.push(finalFlag);
+  }
+
+  findRandomNearWagonFlag() {
+    const wagon = this.getWagon();
+    if (!wagon) {
+      return undefined;
+    }
+
+    return wagon.nearFlags[Math.floor(Math.random() * wagon.nearFlags.length)];
+  }
+
+  findRandomMovementFlag() {
+    const flags = this.objects.filter(
+      (f) => f instanceof Flag && f.type === "MOVEMENT",
+    );
+    return flags.length > 0
+      ? flags[Math.floor(Math.random() * flags.length)]
+      : undefined;
+  }
+
+  findRandomEmptyResourceFlag() {
+    const flags = this.objects.filter(
+      (f) => f instanceof Flag && f.type === "RESOURCE" && !f.target,
+    );
+    return flags.length > 0
+      ? flags[Math.floor(Math.random() * flags.length)]
+      : undefined;
+  }
+
   initSpawnFlags() {
     const spawnLeftFlag = new Flag({
       x: -100,
       y: 620,
       id: "SPAWN_LEFT",
       isOnScreen: false,
+      type: "SPAWN_LEFT",
     });
     const spawnRightFlag = new Flag({
       x: 2700,
       y: 620,
       id: "SPAWN_RIGHT",
       isOnScreen: false,
+      type: "SPAWN_RIGHT",
     });
     this.objects.push(spawnLeftFlag, spawnRightFlag);
   }
@@ -954,18 +987,15 @@ export class GameScene {
     return this.objects.find((f) => f.id === id);
   }
 
-  initStaticFlags() {
-    const centerFlag = new Flag({
-      x: 1270,
-      y: 660,
-      id: "CENTER_FLAG",
-      isOnScreen: false,
-    });
-    this.objects.push(centerFlag);
-  }
-
-  findStaticFlag(id: "CENTER_FLAG") {
-    return this.objects.find((f) => f.id === id);
+  findBuildingByType(type: IGameObjectBuilding["type"]) {
+    const buildings = this.objects.filter((obj) => obj.entity === "BUILDING");
+    for (const build of buildings) {
+      if (build instanceof Building) {
+        if (build.type === type) {
+          return build;
+        }
+      }
+    }
   }
 
   findUnitWithItem(type: ItemType) {

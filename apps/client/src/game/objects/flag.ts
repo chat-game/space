@@ -9,7 +9,9 @@ interface IFlagOptions {
 }
 
 export class Flag extends GameObjectContainer implements IGameObjectFlag {
+  public type!: IGameObjectFlag["type"];
   public isOnScreen: boolean;
+  public isVisibleOnClient!: IGameObjectFlag["isVisibleOnClient"];
 
   constructor({ game, object }: IFlagOptions) {
     super({ game, ...object });
@@ -20,15 +22,38 @@ export class Flag extends GameObjectContainer implements IGameObjectFlag {
   }
 
   init() {
-    const sprite = Sprite.from("flag1");
+    const sprite = this.getSpriteByType();
     if (sprite) {
       sprite.anchor.set(0.5, 1);
       this.addChild(sprite);
     }
   }
 
+  getSpriteByType() {
+    if (
+      this.type === "MOVEMENT" ||
+      this.type === "WAGON_NEAR_MOVEMENT" ||
+      this.type === "WAGON_MOVEMENT"
+    ) {
+      return Sprite.from("flag1");
+    }
+    if (this.type === "RESOURCE") {
+      return Sprite.from("flag2");
+    }
+  }
+
   animate() {
-    if (this.state === "IDLE") {
+    this.visible = false;
+
+    if (
+      this.type === "RESOURCE" &&
+      this.game.checkIfThisFlagIsTarget(this.id)
+    ) {
+      this.visible = true;
+    }
+
+    if (this.type === "WAGON_MOVEMENT" || this.type === "WAGON_NEAR_MOVEMENT") {
+      this.visible = true;
     }
 
     if (this.state === "DESTROYED") {
@@ -39,11 +64,13 @@ export class Flag extends GameObjectContainer implements IGameObjectFlag {
   update(object: IGameObjectFlag) {
     this.x = object.x;
     this.y = object.y;
-    this.zIndex = Math.round(object.y);
+    this.zIndex = Math.round(object.y) + 1;
 
     this.entity = object.entity;
     this.state = object.state;
     this.direction = object.direction;
     this.health = object.health;
+    this.target = object.target;
+    this.type = object.type;
   }
 }

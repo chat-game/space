@@ -11,22 +11,36 @@ interface IFlagOptions {
   y?: number;
   id?: string;
   isOnScreen?: boolean;
+  type: IGameObjectFlag["type"];
+  offsetX?: number;
+  offsetY?: number;
 }
 
 export class Flag extends GameObject implements IGameObjectFlag {
+  public type: IGameObjectFlag["type"];
   public isOnScreen = true;
 
-  constructor({ x, y, id, isOnScreen }: IFlagOptions) {
+  public offsetX: number;
+  public offsetY: number;
+
+  constructor({ x, y, id, isOnScreen, type, offsetX, offsetY }: IFlagOptions) {
     const finalId = id ?? createId();
     const finalX = x ?? getRandomInRange(MIN_X, MAX_X);
     const finalY = y ?? getRandomInRange(MIN_Y, MAX_Y);
 
     super({ id: finalId, x: finalX, y: finalY, entity: "FLAG" });
 
+    this.type = type;
     this.isOnScreen = isOnScreen ?? true;
+    this.offsetX = offsetX ?? 0;
+    this.offsetY = offsetY ?? 0;
   }
 
   live() {
+    if (this.target && this.target.state === "DESTROYED") {
+      this.removeTarget();
+    }
+
     const random = getRandomInRange(1, 60);
     if (random <= 1) {
       this.handleChange();
@@ -35,5 +49,9 @@ export class Flag extends GameObject implements IGameObjectFlag {
 
   handleChange() {
     this.sendMessageObjectUpdated();
+  }
+
+  removeTarget() {
+    this.target = undefined;
   }
 }

@@ -12,7 +12,7 @@ export class SceneManager {
     await this.app.init({
       background: "#ffffff",
       resizeTo: window,
-      antialias: false,
+      antialias: true,
       roundPixels: false,
     });
     document.getElementById("game-canvas")?.appendChild(this.app.canvas);

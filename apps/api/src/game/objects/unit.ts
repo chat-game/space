@@ -13,12 +13,15 @@ interface IUnitOptions {
   id?: string;
   x?: number;
   y?: number;
+  visual?: IGameObjectUnit["visual"];
 }
 
 export class Unit extends GameObject implements IGameObjectUnit {
   public inventory!: Inventory;
+  public visual!: IGameObjectUnit["visual"];
+  public coins: number;
 
-  constructor({ entity, id, x, y }: IUnitOptions) {
+  constructor({ entity, id, x, y, visual }: IUnitOptions) {
     const objectId = id ?? createId();
 
     const finalX = x ?? getRandomInRange(MIN_X, MAX_X);
@@ -26,14 +29,24 @@ export class Unit extends GameObject implements IGameObjectUnit {
 
     super({ id: objectId, x: finalX, y: finalY, entity });
 
-    void this.initInventory();
+    this.initInventory();
+    this.initVisual(visual);
+    this.coins = 0;
   }
 
-  public async initInventory() {
+  public initInventory() {
     this.inventory = new Inventory({
       objectId: this.id,
       id: createId(),
       saveInDb: false,
     });
+  }
+
+  public initVisual(visual: IGameObjectUnit["visual"] | undefined) {
+    this.visual = visual ?? {
+      head: "1",
+      hairstyle: "CLASSIC",
+      top: "VIOLET_SHIRT",
+    };
   }
 }

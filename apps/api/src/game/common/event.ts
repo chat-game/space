@@ -59,7 +59,7 @@ export class Event implements IGameEvent {
       this.game.initScene(this.scene);
     }
     if (this.type === "RAID_STARTED") {
-      console.log("Raid is over!");
+      this.game.scene.stopRaid();
     }
     if (this.type === "COUNTDOWN_NEXT_WAVE_STARTED") {
       console.log("Next wave!");

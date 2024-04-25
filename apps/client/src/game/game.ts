@@ -3,16 +3,22 @@ import type {
   IGameObject,
   IGameObjectBuilding,
   IGameObjectCourier,
+  IGameObjectFarmer,
   IGameObjectFlag,
   IGameObjectPlayer,
   IGameObjectRabbit,
   IGameObjectRaider,
   IGameObjectStone,
   IGameObjectTree,
+  IGameObjectWagon,
   IGameObjectWolf,
   WebSocketMessage,
 } from "../../../../packages/api-sdk/src";
 import {
+  Building,
+  Courier,
+  Farmer,
+  Flag,
   type GameObjectContainer,
   Player,
   Rabbit,
@@ -21,9 +27,7 @@ import {
   Tree,
   Wolf,
 } from "./objects";
-import { Building } from "./objects/building";
-import { Courier } from "./objects/courier.ts";
-import { Flag } from "./objects/flag.ts";
+import { Wagon } from "./objects/wagon.ts";
 import {
   AssetsManager,
   AudioManager,
@@ -44,6 +48,15 @@ export class Game extends Container {
   public viewWidth: number;
   public viewHeight: number;
 
+  public cameraOffsetX = 0;
+  public cameraMovementSpeedX = 0.005;
+  public cameraOffsetY = 0;
+  public cameraMovementSpeedY = 0.005;
+  public cameraX = 0;
+  public cameraY = 0;
+  public cameraPerfectX = 0;
+  public cameraPerfectY = 0;
+
   constructor(options: GameOptions) {
     super();
 
@@ -59,19 +72,79 @@ export class Game extends Container {
 
     this.audio.playBackgroundSound();
 
-    const bg = AssetsManager.generateSceneBackground({
-      width: this.viewWidth,
-      height: this.viewHeight,
-    });
-    this.scene.app.stage.addChild(...bg);
+    // const bg = AssetsManager.generateSceneBackground({
+    //   width: this.viewWidth,
+    //   height: this.viewHeight,
+    // });
+    // this.scene.app.stage.addChild(...bg);
+
+    const bg = AssetsManager.getGeneratedBackground();
+    bg.x = -10000;
+    bg.y = -10000;
+    bg.width = 50000;
+    bg.height = 50000;
+    this.scene.app.stage.addChild(bg);
 
     this.scene.app.stage.addChild(this);
 
     this.scene.app.ticker.add(() => {
       this.animateObjects();
+
+      const wagon = this.children.find((child) => child instanceof Wagon);
+      if (wagon) {
+        this.moveCameraToWagon(wagon as Wagon);
+      }
     });
 
     WebSocketManager.init(this);
+
+    setInterval(() => {
+      console.log("FPS", this.scene.app.ticker.FPS);
+      console.log("Objects", this.children.length);
+    }, 1000);
+  }
+
+  async saveScreenshot(imageName = "untitled") {
+    const blob = await this.scene.app.renderer.extract.image(
+      this.scene.app.stage,
+    );
+
+    const link = document.createElement("a");
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.setAttribute("download", `${imageName}.png`);
+    link.setAttribute(
+      "href",
+      blob.src.replace("image/png", "image/octet-stream"),
+    );
+    link.click();
+  }
+
+  moveCameraToWagon(wagon: Wagon) {
+    const columnWidth = this.scene.app.screen.width / 6;
+    const leftPadding =
+      wagon.direction === "LEFT" ? columnWidth * 5 : columnWidth * 2;
+
+    const topPadding = this.scene.app.screen.height / 2;
+
+    this.cameraPerfectX = -wagon.x + this.cameraOffsetX + leftPadding;
+    this.cameraPerfectY = -wagon.y + this.cameraOffsetY + topPadding;
+
+    this.cameraX = this.cameraPerfectX;
+    this.cameraY = this.cameraPerfectY;
+
+    if (Math.abs(this.cameraOffsetX) >= 20) {
+      this.cameraMovementSpeedX *= -1;
+    }
+    this.cameraOffsetX += this.cameraMovementSpeedX;
+
+    if (Math.abs(this.cameraOffsetY) >= 30) {
+      this.cameraMovementSpeedY *= -1;
+    }
+    this.cameraOffsetY += this.cameraMovementSpeedY;
+
+    this.parent.x = this.cameraX;
+    this.parent.y = this.cameraY;
   }
 
   rebuildScene() {
@@ -80,6 +153,18 @@ export class Game extends Container {
 
   findObject(id: string) {
     return this.children.find((obj) => obj.id === id);
+  }
+
+  initWagon(object: IGameObjectWagon) {
+    const wagon = new Wagon({ game: this, object });
+    this.addChild(wagon);
+  }
+
+  updateWagon(object: IGameObjectWagon) {
+    const wagon = this.findObject(object.id);
+    if (wagon instanceof Wagon) {
+      wagon.update(object);
+    }
   }
 
   initTree(object: IGameObjectTree) {
@@ -127,6 +212,18 @@ export class Game extends Container {
     const courier = this.findObject(object.id);
     if (courier instanceof Courier) {
       courier.update(object);
+    }
+  }
+
+  initFarmer(object: IGameObjectFarmer) {
+    const farmer = new Farmer({ game: this, object });
+    this.addChild(farmer);
+  }
+
+  updateFarmer(object: IGameObjectFarmer) {
+    const farmer = this.findObject(object.id);
+    if (farmer instanceof Farmer) {
+      farmer.update(object);
     }
   }
 
@@ -190,6 +287,14 @@ export class Game extends Container {
     }
   }
 
+  checkIfThisFlagIsTarget(id: string) {
+    for (const obj of this.children) {
+      if (obj.target?.id === id) {
+        return true;
+      }
+    }
+  }
+
   animateObjects() {
     for (const object of this.children) {
       object.animate();
@@ -205,9 +310,17 @@ export class Game extends Container {
     }
   }
 
-  handleMessageObject(object: IGameObject) {
+  handleMessageObject(object: Partial<IGameObject>) {
+    if (!object.id) {
+      return;
+    }
+
     const obj = this.findObject(object.id);
     if (!obj) {
+      if (object.entity === "WAGON") {
+        this.initWagon(object as IGameObjectWagon);
+        return;
+      }
       if (object.entity === "TREE") {
         this.initTree(object as IGameObjectTree);
         return;
@@ -222,6 +335,10 @@ export class Game extends Container {
       }
       if (object.entity === "COURIER") {
         this.initCourier(object as IGameObjectCourier);
+        return;
+      }
+      if (object.entity === "FARMER") {
+        this.initFarmer(object as IGameObjectFarmer);
         return;
       }
       if (object.entity === "RAIDER") {
@@ -247,6 +364,10 @@ export class Game extends Container {
       return;
     }
 
+    if (object.entity === "WAGON") {
+      this.updateWagon(object as IGameObjectWagon);
+      return;
+    }
     if (object.entity === "TREE") {
       this.updateTree(object as IGameObjectTree);
       return;
@@ -261,6 +382,10 @@ export class Game extends Container {
     }
     if (object.entity === "COURIER") {
       this.updateCourier(object as IGameObjectCourier);
+      return;
+    }
+    if (object.entity === "FARMER") {
+      this.updateFarmer(object as IGameObjectFarmer);
       return;
     }
     if (object.entity === "RAIDER") {

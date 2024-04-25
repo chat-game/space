@@ -5,7 +5,12 @@ import type {
 import { DBRepository } from "../db/db.repository";
 import { sendMessage } from "../websocket/websocket.server";
 import type { Group } from "./common";
-import { DefenceScene, type GameScene, VillageScene } from "./scenes";
+import {
+  DefenceScene,
+  type GameScene,
+  MovingScene,
+  VillageScene,
+} from "./scenes";
 
 interface HandleChatCommandOptions {
   action: IGameSceneAction;
@@ -27,7 +32,7 @@ export class Game {
   constructor() {
     this.repository = new DBRepository();
 
-    this.initScene("DEFENCE");
+    this.initScene("MOVING");
   }
 
   public async handleChatCommand({
@@ -50,6 +55,10 @@ export class Game {
   public initScene(scene: GameSceneType) {
     const { group } = this.prepareSceneBeforeChange();
 
+    if (scene === "MOVING") {
+      this.scene = new MovingScene({ game: this, group: undefined });
+      return;
+    }
     if (scene === "VILLAGE") {
       this.scene = new VillageScene({ game: this, group: undefined });
       return;

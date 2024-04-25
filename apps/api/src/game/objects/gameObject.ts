@@ -1,10 +1,8 @@
-import {
-  type IGameObject,
-  type IGameObjectDirection,
-  type IGameObjectState,
-  getRandomInRange,
+import type {
+  IGameObject,
+  IGameObjectDirection,
+  IGameObjectState,
 } from "../../../../../packages/api-sdk/src";
-import { MAX_X, MAX_Y, MIN_X, MIN_Y } from "../../config";
 import { sendMessage } from "../../websocket/websocket.server";
 
 interface IGameObjectOptions {
@@ -12,6 +10,7 @@ interface IGameObjectOptions {
   x: number;
   y: number;
   entity: IGameObject["entity"];
+  isVisibleOnClient?: boolean;
 }
 
 export class GameObject implements IGameObject {
@@ -19,6 +18,7 @@ export class GameObject implements IGameObject {
   public x: number;
   public y: number;
   public health = 100;
+  public isVisibleOnClient: boolean;
 
   public entity: IGameObject["entity"];
   public direction: IGameObjectDirection = "RIGHT";
@@ -26,11 +26,12 @@ export class GameObject implements IGameObject {
 
   public target: IGameObject | undefined;
 
-  constructor({ id, x, y, entity }: IGameObjectOptions) {
+  constructor({ id, x, y, entity, isVisibleOnClient }: IGameObjectOptions) {
     this.id = id;
     this.x = x;
     this.y = y;
     this.entity = entity;
+    this.isVisibleOnClient = isVisibleOnClient ?? false;
   }
 
   live(): void {}
@@ -116,27 +117,10 @@ export class GameObject implements IGameObject {
     this.state = "MOVING";
   }
 
-  public getRandomCoordinates(maxRange: number) {
-    let newX = this.x + getRandomInRange(-maxRange, maxRange);
-    if (newX < MIN_X) {
-      newX = MIN_X + maxRange;
+  public sendMessageObjectUpdated(object: Partial<IGameObject> = this) {
+    if (!this.isVisibleOnClient) {
+      return; // No need to send message
     }
-    if (newX > MAX_X) {
-      newX = MAX_X - maxRange;
-    }
-
-    let newY = this.y + getRandomInRange(-maxRange, maxRange);
-    if (newY < MIN_Y) {
-      newY = MIN_Y + maxRange;
-    }
-    if (newY > MAX_Y) {
-      newY = MAX_Y - maxRange;
-    }
-
-    return { x: newX, y: newY };
-  }
-
-  public sendMessageObjectUpdated() {
-    sendMessage("OBJECT_UPDATED", this);
+    sendMessage("OBJECT_UPDATED", object);
   }
 }

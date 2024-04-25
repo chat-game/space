@@ -1,4 +1,4 @@
-import { AnimatedSprite, Assets, Sprite, Texture } from "pixi.js";
+import { AnimatedSprite, Assets, Sprite, Texture, TilingSprite } from "pixi.js";
 import { getRandomInRange } from "../../../../../packages/api-sdk/src";
 import heroLeft1 from "../assets/images/animation/hero-moving-left/1.png";
 import heroLeft2 from "../assets/images/animation/hero-moving-left/2.png";
@@ -17,12 +17,30 @@ import background2 from "../assets/images/background/2.png";
 import background3 from "../assets/images/background/3.png";
 import background4 from "../assets/images/background/4.png";
 import background5 from "../assets/images/background/5.png";
+import generatedBackground1 from "../assets/images/background/generated-1.png";
 import campFire1 from "../assets/images/camp-fire-1.png";
 import flag1 from "../assets/images/objects/flag-1.png";
+import flag2 from "../assets/images/objects/flag-2.png";
 import stone1 from "../assets/images/objects/stone-1.png";
 import tree1 from "../assets/images/objects/tree-1.png";
 import tree2 from "../assets/images/objects/tree-2.png";
 import tree3 from "../assets/images/objects/tree-3.png";
+import blackTopLeft from "../assets/images/top/black-top-left.png";
+import blackTopRight from "../assets/images/top/black-top-right.png";
+import blueTopLeft from "../assets/images/top/blue-top-left.png";
+import blueTopRight from "../assets/images/top/blue-top-right.png";
+import greenTopLeft from "../assets/images/top/green-top-left.png";
+import greenTopRight from "../assets/images/top/green-top-right.png";
+import violetTopLeft from "../assets/images/top/violet-top-left.png";
+import violetTopRight from "../assets/images/top/violet-top-right.png";
+import unitHairClassicLeft from "../assets/images/unit/hair-classic-left.png";
+import unitHairClassicRight from "../assets/images/unit/hair-classic-right.png";
+import unitHead1Left from "../assets/images/unit/head-1-left.png";
+import unitHead1Right from "../assets/images/unit/head-1-right.png";
+import wagonEngine1 from "../assets/images/wagon/engine-1.png";
+import wagonBase1 from "../assets/images/wagon/wagon-1.png";
+import wagonBase2 from "../assets/images/wagon/wagon-2.png";
+import wagonWheel1 from "../assets/images/wagon/wheel-1.png";
 import warehouse1 from "../assets/images/warehouse-1.png";
 
 export abstract class AssetsManager {
@@ -32,6 +50,7 @@ export abstract class AssetsManager {
     { alias: "background3", src: background3 },
     { alias: "background4", src: background4 },
     { alias: "background5", src: background5 },
+    { alias: "generatedBackground1", src: generatedBackground1 },
     { alias: "player1", src: "/hero/hero_64.png" },
     { alias: "playerLeft", src: "/hero/hero_empty_left_64.png" },
     { alias: "playerTopLeft", src: "/hero/top2_left_64.png" },
@@ -52,6 +71,11 @@ export abstract class AssetsManager {
     { alias: "campFire1", src: campFire1 },
     { alias: "warehouse1", src: warehouse1 },
     { alias: "flag1", src: flag1 },
+    { alias: "flag2", src: flag2 },
+    { alias: "wagonWheel1", src: wagonWheel1 },
+    { alias: "wagonBase1", src: wagonBase1 },
+    { alias: "wagonBase2", src: wagonBase2 },
+    { alias: "wagonEngine1", src: wagonEngine1 },
   ];
 
   static animationAssets = [
@@ -69,9 +93,33 @@ export abstract class AssetsManager {
     { alias: "heroLeft6", src: heroLeft6 },
   ];
 
+  static headAssets = [
+    { alias: "unitHead1Left", src: unitHead1Left },
+    { alias: "unitHead1Right", src: unitHead1Right },
+  ];
+
+  static hairAssets = [
+    { alias: "unitHairClassicLeft", src: unitHairClassicLeft },
+    { alias: "unitHairClassicRight", src: unitHairClassicRight },
+  ];
+
+  static topAssets = [
+    { alias: "violetTopLeft", src: violetTopLeft },
+    { alias: "violetTopRight", src: violetTopRight },
+    { alias: "blackTopLeft", src: blackTopLeft },
+    { alias: "blackTopRight", src: blackTopRight },
+    { alias: "greenTopLeft", src: greenTopLeft },
+    { alias: "greenTopRight", src: greenTopRight },
+    { alias: "blueTopLeft", src: blueTopLeft },
+    { alias: "blueTopRight", src: blueTopRight },
+  ];
+
   public static async init() {
     await Assets.load(AssetsManager.assets);
     await Assets.load(AssetsManager.animationAssets);
+    await Assets.load(AssetsManager.headAssets);
+    await Assets.load(AssetsManager.hairAssets);
+    await Assets.load(AssetsManager.topAssets);
   }
 
   public static getAnimatedSpriteHeroRight() {
@@ -165,5 +213,11 @@ export abstract class AssetsManager {
     }
 
     return bg;
+  }
+
+  public static getGeneratedBackground() {
+    return new TilingSprite({
+      texture: Texture.from("generatedBackground1"),
+    });
   }
 }

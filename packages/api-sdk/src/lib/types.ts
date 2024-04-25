@@ -25,10 +25,6 @@ export type IGameSceneAction =
 
 export type ItemType = "WOOD" | "STONE" | "AXE" | "PICKAXE";
 
-export interface IGameRaid {
-  raiders: IGameObjectRaider[];
-}
-
 export interface IGameInventory {
   id: string;
   objectId: string;
@@ -54,6 +50,27 @@ export interface IGameSkill {
   xpNextLvl: number;
 }
 
+export interface IGameChunk {
+  id: string;
+  title: string;
+  type: "VILLAGE" | "FOREST";
+  center: {
+    x: number;
+    y: number;
+  };
+  area: {
+    startX: number;
+    endX: number;
+    startY: number;
+    endY: number;
+  };
+  isVisibleOnClient: boolean;
+}
+
+export interface IGameVillageChunk extends IGameChunk {}
+
+export interface IGameForestChunk extends IGameChunk {}
+
 export interface IGameObject {
   id: string;
   x: number;
@@ -63,6 +80,7 @@ export interface IGameObject {
   entity: IGameObjectEntity;
   target: IGameObject | undefined;
   health: number;
+  isVisibleOnClient: boolean;
 }
 
 export type IGameObjectState =
@@ -80,7 +98,9 @@ export type IGameObjectEntity =
   | "STONE"
   | "FLAG"
   | "BUILDING"
-  | "COURIER";
+  | "COURIER"
+  | "FARMER"
+  | "WAGON";
 export type IGameObjectDirection = "LEFT" | "RIGHT";
 
 export interface WebSocketMessage {
@@ -92,14 +112,32 @@ export interface WebSocketMessage {
     | "SCENE_CHANGING_STARTED"
     | "COUNTDOWN_NEXT_WAVE_STARTED"
     | "SCENE_CHANGED";
-  object?: IGameObject;
+  object?: Partial<IGameObject>;
+}
+
+export interface IGameObjectWagon extends IGameObject {
+  speed: number;
+  area: {
+    startX: number;
+    endX: number;
+    startY: number;
+    endY: number;
+  };
 }
 
 export interface IGameObjectBuilding extends IGameObject {
+  inventory: IGameInventory;
   type: "CAMP_FIRE" | "WAREHOUSE";
 }
 
 export interface IGameObjectFlag extends IGameObject {
+  type:
+    | "MOVEMENT"
+    | "WAGON_MOVEMENT"
+    | "WAGON_NEAR_MOVEMENT"
+    | "RESOURCE"
+    | "SPAWN_LEFT"
+    | "SPAWN_RIGHT";
   isOnScreen: boolean;
 }
 
@@ -117,20 +155,27 @@ export interface IGameObjectStone extends IGameObject {
 }
 
 export interface IGameObjectUnit extends IGameObject {
+  coins: number;
   inventory: IGameInventory;
+  visual: {
+    head: "1";
+    hairstyle: "BOLD" | "CLASSIC";
+    top: "VIOLET_SHIRT" | "BLACK_SHIRT" | "GREEN_SHIRT" | "BLUE_SHIRT";
+  };
 }
 
 export interface IGameObjectCourier extends IGameObjectUnit {}
 
+export interface IGameObjectFarmer extends IGameObjectUnit {}
+
 export interface IGameObjectPlayer extends IGameObjectUnit {
-  coins: number;
   reputation: number;
   userName: string;
   colorIndex: number;
   skills: IGameSkill[];
 }
 
-export interface IGameObjectRaider extends IGameObject {
+export interface IGameObjectRaider extends IGameObjectUnit {
   userName: string;
   colorIndex: number;
 }
@@ -147,13 +192,15 @@ export interface IGameEvent {
   endsAt: Date;
 }
 
-export type GameSceneType = "VILLAGE" | "DEFENCE";
+export type GameSceneType = "VILLAGE" | "DEFENCE" | "MOVING";
 
 export interface GetSceneResponse {
   id: string;
   commands: string[];
+  chunk: IGameChunk | null;
   events: IGameEvent[];
   group: IGameGroup | undefined;
+  wagon: IGameObjectWagon | undefined;
 }
 
 export interface IGameGroup {
@@ -166,3 +213,17 @@ export interface PlayerTitle {
   title: string;
   type: "RICH" | "FAMOUS" | "VIEWER" | "WOODSMAN" | "MINER";
 }
+
+export type GraphicsContainerType =
+  | "INTERFACE"
+  | "PLAYER_IDLE"
+  | "PLAYER_COINS"
+  | "PLAYER_WOOD"
+  | "PLAYER_STONE"
+  | "PLAYER_AXE"
+  | "PLAYER_PICKAXE"
+  | "UNIT_TOP"
+  | "UNIT_HEAD"
+  | "UNIT_HAIR"
+  | "WAGON_WHEEL"
+  | "WAGON_ENGINE";
