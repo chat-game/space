@@ -36,6 +36,8 @@ export class UnitHairContainer extends GraphicsContainer {
     return [
       UnitHairContainer.create("unitHairClassicLeft", "LEFT", "CLASSIC"),
       UnitHairContainer.create("unitHairClassicRight", "RIGHT", "CLASSIC"),
+      UnitHairContainer.create("unitHairCoalLongLeft", "LEFT", "COAL_LONG"),
+      UnitHairContainer.create("unitHairCoalLongRight", "RIGHT", "COAL_LONG"),
     ];
   }
 }

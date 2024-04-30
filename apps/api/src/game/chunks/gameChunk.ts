@@ -20,6 +20,8 @@ export class GameChunk implements IGameChunk {
   public center: IGameChunk["center"];
   public area!: IGameChunk["area"];
   public isVisibleOnClient = false;
+
+  public needToSendDataToClient: boolean;
   public objects: GameObject[] = [];
 
   constructor({ center, title, type, width, height }: IGameChunkOptions) {
@@ -27,6 +29,8 @@ export class GameChunk implements IGameChunk {
     this.center = center;
     this.title = title;
     this.type = type;
+
+    this.needToSendDataToClient = false;
 
     this.initArea(width, height);
   }
@@ -46,6 +50,7 @@ export class GameChunk implements IGameChunk {
   public live() {
     for (const obj of this.objects) {
       obj.isVisibleOnClient = this.isVisibleOnClient;
+      obj.needToSendDataToClient = this.needToSendDataToClient;
     }
   }
 

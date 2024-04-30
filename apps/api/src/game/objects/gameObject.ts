@@ -19,12 +19,12 @@ export class GameObject implements IGameObject {
   public y: number;
   public health = 100;
   public isVisibleOnClient: boolean;
-
   public entity: IGameObject["entity"];
   public direction: IGameObjectDirection = "RIGHT";
   public state: IGameObjectState = "IDLE";
-
   public target: IGameObject | undefined;
+
+  public needToSendDataToClient: boolean;
 
   constructor({ id, x, y, entity, isVisibleOnClient }: IGameObjectOptions) {
     this.id = id;
@@ -32,6 +32,8 @@ export class GameObject implements IGameObject {
     this.y = y;
     this.entity = entity;
     this.isVisibleOnClient = isVisibleOnClient ?? false;
+
+    this.needToSendDataToClient = false;
   }
 
   live(): void {}
@@ -118,8 +120,8 @@ export class GameObject implements IGameObject {
   }
 
   public sendMessageObjectUpdated(object: Partial<IGameObject> = this) {
-    if (!this.isVisibleOnClient) {
-      return; // No need to send message
+    if (!this.needToSendDataToClient) {
+      return;
     }
     sendMessage("OBJECT_UPDATED", object);
   }

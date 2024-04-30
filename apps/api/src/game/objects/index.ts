@@ -6,8 +6,6 @@ export { Tree } from "./tree";
 export { Stone } from "./stone";
 export { Flag } from "./flag";
 export { Raider } from "./raider";
-export { Building } from "./building";
-export { Unit } from "./unit";
 export { VillageCourier } from "./villageCourier";
 export { VillageFarmer } from "./villageFarmer";
 export { Wagon } from "./wagon";

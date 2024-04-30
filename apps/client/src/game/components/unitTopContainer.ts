@@ -42,6 +42,12 @@ export class UnitTopContainer extends GraphicsContainer {
       UnitTopContainer.create("greenTopRight", "RIGHT", "GREEN_SHIRT"),
       UnitTopContainer.create("blueTopLeft", "LEFT", "BLUE_SHIRT"),
       UnitTopContainer.create("blueTopRight", "RIGHT", "BLUE_SHIRT"),
+      UnitTopContainer.create("darkSilverTopLeft", "LEFT", "DARK_SILVER_SHIRT"),
+      UnitTopContainer.create(
+        "darkSilverTopRight",
+        "RIGHT",
+        "DARK_SILVER_SHIRT",
+      ),
     ];
   }
 }

@@ -1,6 +1,7 @@
 # [Twitch Chat Game] Royal Madness 👑
 
 👉 Building and playing it live: https://www.twitch.tv/hmbanan666
+
 👉 Our community: https://discord.gg/B6etUajrGZ
 
 🤔 Imagine an open world where your Hero can:
@@ -9,7 +10,6 @@
 - 💎 **Gather** loot and a variety of materials
 - 🏗️ **Construct** buildings with other Heroes
 - 💬 **Chat** with other Heroes in real time
-- 🐕 **Collect** battle pets, **upgrade** them, and **fight** Bosses in turn-based battles
 - 🏆 **Earn** more than 1000 achievements!
 
 Let's build a similar world together!

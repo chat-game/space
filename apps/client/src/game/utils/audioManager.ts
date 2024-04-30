@@ -1,5 +1,6 @@
 import { Howl } from "howler";
 import chop1Audio from "../assets/audio/chop-1.wav";
+import fireBurn1Audio from "../assets/audio/fire-1.wav";
 import forest1Audio from "../assets/audio/forest-1.mp3";
 import handPunch1Audio from "../assets/audio/hand-punch-1.wav";
 import marchWithHorns1Audio from "../assets/audio/marching-with-horns-1.wav";
@@ -12,7 +13,8 @@ type SoundName =
   | "hand-hit"
   | "marching-with-horns"
   | "forest-background"
-  | "wagon-moving";
+  | "wagon-moving"
+  | "fire-burn";
 
 export class AudioManager {
   public chop1 = new Howl({
@@ -43,6 +45,10 @@ export class AudioManager {
     rate: 0.7,
   });
 
+  public fireBurn1 = new Howl({
+    src: fireBurn1Audio,
+  });
+
   getSounds(name: SoundName): Howl[] {
     switch (name) {
       case "chop-hit":
@@ -57,6 +63,8 @@ export class AudioManager {
         return [this.forest1];
       case "wagon-moving":
         return [this.wagon1];
+      case "fire-burn":
+        return [this.fireBurn1];
       default:
         return [];
     }
@@ -73,6 +81,13 @@ export class AudioManager {
 
   playBackgroundSound() {
     return this.play({ name: "forest-background", volume: 0.5 });
+  }
+
+  playCampfireSound() {
+    if (this.fireBurn1.playing()) {
+      return;
+    }
+    return this.play({ name: "fire-burn", volume: 0.7 });
   }
 
   playWagonMovingSound() {

@@ -10,7 +10,7 @@ import {
   RAIDER_CAMP_MIN_Y,
 } from "../../config";
 import type { GameObject } from "./gameObject";
-import { Unit } from "./unit";
+import { Unit } from "./units/unit";
 
 export class Raider extends Unit implements IGameObjectRaider {
   public userName = "рейдер";

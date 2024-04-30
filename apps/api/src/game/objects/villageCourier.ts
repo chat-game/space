@@ -4,9 +4,9 @@ import {
   type ItemType,
   getRandomInRange,
 } from "../../../../../packages/api-sdk/src";
-import type { Village } from "../chunks/village";
-import { Building } from "./building";
-import { Unit } from "./unit";
+import type { Village } from "../chunks";
+import { Building } from "./buildings/building";
+import { Unit } from "./units/unit";
 
 interface ICourierOptions {
   village: Village;

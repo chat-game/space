@@ -1,5 +1,13 @@
 import { AnimatedSprite, Assets, Sprite, Texture, TilingSprite } from "pixi.js";
 import { getRandomInRange } from "../../../../../packages/api-sdk/src";
+import campfireAnimation1 from "../assets/images/animation/campfire/1.png";
+import campfireAnimation2 from "../assets/images/animation/campfire/2.png";
+import campfireAnimation3 from "../assets/images/animation/campfire/3.png";
+import campfireAnimation4 from "../assets/images/animation/campfire/4.png";
+import campfireAnimation5 from "../assets/images/animation/campfire/5.png";
+import fireParticle1 from "../assets/images/animation/campfire/particle-1.png";
+import fireParticle2 from "../assets/images/animation/campfire/particle-2.png";
+import fireParticle3 from "../assets/images/animation/campfire/particle-3.png";
 import heroLeft1 from "../assets/images/animation/hero-moving-left/1.png";
 import heroLeft2 from "../assets/images/animation/hero-moving-left/2.png";
 import heroLeft3 from "../assets/images/animation/hero-moving-left/3.png";
@@ -18,7 +26,8 @@ import background3 from "../assets/images/background/3.png";
 import background4 from "../assets/images/background/4.png";
 import background5 from "../assets/images/background/5.png";
 import generatedBackground1 from "../assets/images/background/generated-1.png";
-import campFire1 from "../assets/images/camp-fire-1.png";
+import wagonStop1 from "../assets/images/buildings/wagon-stop-1.png";
+import campfire1 from "../assets/images/camp-fire-1.png";
 import flag1 from "../assets/images/objects/flag-1.png";
 import flag2 from "../assets/images/objects/flag-2.png";
 import stone1 from "../assets/images/objects/stone-1.png";
@@ -29,14 +38,22 @@ import blackTopLeft from "../assets/images/top/black-top-left.png";
 import blackTopRight from "../assets/images/top/black-top-right.png";
 import blueTopLeft from "../assets/images/top/blue-top-left.png";
 import blueTopRight from "../assets/images/top/blue-top-right.png";
+import darkSilverTopLeft from "../assets/images/top/dark-silver-top-left.png";
+import darkSilverTopRight from "../assets/images/top/dark-silver-top-right.png";
 import greenTopLeft from "../assets/images/top/green-top-left.png";
 import greenTopRight from "../assets/images/top/green-top-right.png";
 import violetTopLeft from "../assets/images/top/violet-top-left.png";
 import violetTopRight from "../assets/images/top/violet-top-right.png";
 import unitHairClassicLeft from "../assets/images/unit/hair-classic-left.png";
 import unitHairClassicRight from "../assets/images/unit/hair-classic-right.png";
+import unitHairCoalLongLeft from "../assets/images/unit/hair-coal-long-left.png";
+import unitHairCoalLongRight from "../assets/images/unit/hair-coal-long-right.png";
 import unitHead1Left from "../assets/images/unit/head-1-left.png";
 import unitHead1Right from "../assets/images/unit/head-1-right.png";
+import wagonEngineCloud1 from "../assets/images/wagon/clouds/1.png";
+import wagonEngineCloud2 from "../assets/images/wagon/clouds/2.png";
+import wagonEngineCloud3 from "../assets/images/wagon/clouds/3.png";
+import wagonEngineCloud4 from "../assets/images/wagon/clouds/4.png";
 import wagonEngine1 from "../assets/images/wagon/engine-1.png";
 import wagonBase1 from "../assets/images/wagon/wagon-1.png";
 import wagonBase2 from "../assets/images/wagon/wagon-2.png";
@@ -68,14 +85,27 @@ export abstract class AssetsManager {
     { alias: "stoneRes1", src: "/stone/stone_res1_64.png" },
     { alias: "toolAxe1", src: "/tools/axe1_64.png" },
     { alias: "toolPickaxe1", src: "/tools/pickaxe1_64.png" },
-    { alias: "campFire1", src: campFire1 },
+    { alias: "campfire1", src: campfire1 },
+    { alias: "campfireAnimation1", src: campfireAnimation1 },
+    { alias: "campfireAnimation2", src: campfireAnimation2 },
+    { alias: "campfireAnimation3", src: campfireAnimation3 },
+    { alias: "campfireAnimation4", src: campfireAnimation4 },
+    { alias: "campfireAnimation5", src: campfireAnimation5 },
+    { alias: "fireParticle1", src: fireParticle1 },
+    { alias: "fireParticle2", src: fireParticle2 },
+    { alias: "fireParticle3", src: fireParticle3 },
     { alias: "warehouse1", src: warehouse1 },
+    { alias: "wagonStop1", src: wagonStop1 },
     { alias: "flag1", src: flag1 },
     { alias: "flag2", src: flag2 },
     { alias: "wagonWheel1", src: wagonWheel1 },
     { alias: "wagonBase1", src: wagonBase1 },
     { alias: "wagonBase2", src: wagonBase2 },
     { alias: "wagonEngine1", src: wagonEngine1 },
+    { alias: "wagonEngineCloud1", src: wagonEngineCloud1 },
+    { alias: "wagonEngineCloud2", src: wagonEngineCloud2 },
+    { alias: "wagonEngineCloud3", src: wagonEngineCloud3 },
+    { alias: "wagonEngineCloud4", src: wagonEngineCloud4 },
   ];
 
   static animationAssets = [
@@ -101,6 +131,8 @@ export abstract class AssetsManager {
   static hairAssets = [
     { alias: "unitHairClassicLeft", src: unitHairClassicLeft },
     { alias: "unitHairClassicRight", src: unitHairClassicRight },
+    { alias: "unitHairCoalLongLeft", src: unitHairCoalLongLeft },
+    { alias: "unitHairCoalLongRight", src: unitHairCoalLongRight },
   ];
 
   static topAssets = [
@@ -112,6 +144,8 @@ export abstract class AssetsManager {
     { alias: "greenTopRight", src: greenTopRight },
     { alias: "blueTopLeft", src: blueTopLeft },
     { alias: "blueTopRight", src: blueTopRight },
+    { alias: "darkSilverTopLeft", src: darkSilverTopLeft },
+    { alias: "darkSilverTopRight", src: darkSilverTopRight },
   ];
 
   public static async init() {
@@ -152,6 +186,27 @@ export abstract class AssetsManager {
       "heroLeft4",
       "heroLeft5",
       "heroLeft6",
+    ];
+    const textureArray = [];
+
+    for (const image of images) {
+      const texture = Texture.from(image);
+      textureArray.push(texture);
+    }
+
+    const animation = new AnimatedSprite(textureArray);
+    animation.anchor.set(0.5, 1);
+
+    return animation;
+  }
+
+  public static getAnimatedSpriteCampfire() {
+    const images = [
+      "campfireAnimation1",
+      "campfireAnimation2",
+      "campfireAnimation3",
+      "campfireAnimation4",
+      "campfireAnimation5",
     ];
     const textureArray = [];
 

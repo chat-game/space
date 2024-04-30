@@ -1,6 +1,6 @@
 import type { IGameObjectCourier } from "../../../../../packages/api-sdk/src";
 import type { Game } from "../game";
-import { Unit } from "./unit";
+import { Unit } from "./units/unit.ts";
 
 interface ICourierOptions {
   game: Game;

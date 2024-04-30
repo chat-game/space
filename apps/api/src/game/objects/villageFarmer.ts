@@ -3,10 +3,10 @@ import {
   type IGameObjectFarmer,
   getRandomInRange,
 } from "../../../../../packages/api-sdk/src";
-import type { Village } from "../chunks/village";
+import type { Village } from "../chunks";
 import { Flag } from "./flag";
 import { Tree } from "./tree";
-import { Unit } from "./unit";
+import { Unit } from "./units/unit";
 
 interface IVillageFarmerOptions {
   village: Village;

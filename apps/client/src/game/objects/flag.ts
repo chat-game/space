@@ -11,7 +11,6 @@ interface IFlagOptions {
 export class Flag extends GameObjectContainer implements IGameObjectFlag {
   public type!: IGameObjectFlag["type"];
   public isOnScreen: boolean;
-  public isVisibleOnClient!: IGameObjectFlag["isVisibleOnClient"];
 
   constructor({ game, object }: IFlagOptions) {
     super({ game, ...object });

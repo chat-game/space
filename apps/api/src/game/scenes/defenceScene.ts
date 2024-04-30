@@ -1,7 +1,7 @@
 import { getRandomInRange } from "../../../../../packages/api-sdk/src";
 import type { Group } from "../common";
 import type { Game } from "../game";
-import { Building, Player, Stone, Tree } from "../objects";
+import { Player, Stone, Tree } from "../objects";
 import { GameScene } from "./gameScene";
 
 interface IDefenceSceneOptions {
@@ -34,7 +34,6 @@ export class DefenceScene extends GameScene {
     await this.initGroupPlayers();
     this.initTrees(12);
     this.initStones(8);
-    this.initBuildings();
 
     this.wood = 0;
     this.stone = 0;
@@ -99,10 +98,5 @@ export class DefenceScene extends GameScene {
         this.objects.push(stone);
       }
     }
-  }
-
-  initBuildings() {
-    this.objects.push(new Building({ type: "CAMP_FIRE", x: 1275, y: 690 }));
-    this.objects.push(new Building({ type: "WAREHOUSE", x: 1440, y: 610 }));
   }
 }

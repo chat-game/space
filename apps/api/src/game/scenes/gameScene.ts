@@ -4,7 +4,6 @@ import {
   type GetSceneResponse,
   type IGameChunk,
   type IGameEvent,
-  type IGameObjectBuilding,
   type IGameSceneAction,
   type ItemType,
   getRandomInRange,
@@ -19,7 +18,6 @@ import { Forest, type GameChunk, Village } from "../chunks";
 import { Event, Group } from "../common";
 import type { Game } from "../game";
 import {
-  Building,
   Flag,
   type GameObject,
   Player,
@@ -61,6 +59,7 @@ export class GameScene {
       this.updateEvents();
       this.updateObjects();
       this.updateChunks();
+      this.updateChunkNow();
     }, SERVER_TICK_MS);
   }
 
@@ -180,6 +179,7 @@ export class GameScene {
     return {
       id: this.chunkNow.id,
       title: this.chunkNow.title,
+      type: this.chunkNow.type,
       center: this.chunkNow.center,
       area: this.chunkNow.area,
       isVisibleOnClient: this.chunkNow.isVisibleOnClient,
@@ -212,7 +212,11 @@ export class GameScene {
 
   updateObjects() {
     for (const obj of this.objects) {
-      obj.isVisibleOnClient = this.checkIfPointIsOnWagonView({
+      obj.isVisibleOnClient = this.checkIfPointIsOnWagonVisibility({
+        x: obj.x,
+        y: obj.y,
+      });
+      obj.needToSendDataToClient = this.checkIfPointIsOnWagonServerDataView({
         x: obj.x,
         y: obj.y,
       });
@@ -232,13 +236,25 @@ export class GameScene {
 
   updateChunks() {
     for (const chunk of this.chunks) {
-      chunk.isVisibleOnClient = this.checkIfPointIsOnWagonView({
+      chunk.isVisibleOnClient = this.checkIfPointIsOnWagonVisibility({
+        x: chunk.center.x,
+        y: chunk.center.y,
+      });
+      chunk.needToSendDataToClient = this.checkIfPointIsOnWagonServerDataView({
         x: chunk.center.x,
         y: chunk.center.y,
       });
 
-      const wagon = this.getWagon();
+      chunk.live();
+    }
+  }
 
+  updateChunkNow() {
+    this.chunkNow = undefined;
+
+    const wagon = this.getWagon();
+
+    for (const chunk of this.chunks) {
       const isWagonOnThisChunk = chunk.checkIfPointIsInArea({
         x: wagon.x,
         y: wagon.y,
@@ -246,8 +262,6 @@ export class GameScene {
       if (isWagonOnThisChunk) {
         this.chunkNow = chunk;
       }
-
-      chunk.live();
     }
   }
 
@@ -255,14 +269,35 @@ export class GameScene {
     return this.objects.find((obj) => obj instanceof Wagon) as Wagon;
   }
 
-  checkIfPointIsOnWagonView(point: { x: number; y: number }) {
+  checkIfPointIsOnWagonVisibility(point: { x: number; y: number }) {
     const wagon = this.getWagon();
-    if (!wagon) {
-      return false;
+
+    if (
+      point.x >= wagon.visibilityArea.startX &&
+      point.x <= wagon.visibilityArea.endX
+    ) {
+      if (
+        point.y >= wagon.visibilityArea.startY &&
+        point.y <= wagon.visibilityArea.endY
+      ) {
+        return true;
+      }
     }
 
-    if (point.x >= wagon.area.startX && point.x <= wagon.area.endX) {
-      if (point.y >= wagon.area.startY && point.y <= wagon.area.endY) {
+    return false;
+  }
+
+  checkIfPointIsOnWagonServerDataView(point: { x: number; y: number }) {
+    const wagon = this.getWagon();
+
+    if (
+      point.x >= wagon.serverDataArea.startX &&
+      point.x <= wagon.serverDataArea.endX
+    ) {
+      if (
+        point.y >= wagon.serverDataArea.startY &&
+        point.y <= wagon.serverDataArea.endY
+      ) {
         return true;
       }
     }
@@ -985,27 +1020,5 @@ export class GameScene {
 
   findSpawnFlag(id: "SPAWN_LEFT" | "SPAWN_RIGHT") {
     return this.objects.find((f) => f.id === id);
-  }
-
-  findBuildingByType(type: IGameObjectBuilding["type"]) {
-    const buildings = this.objects.filter((obj) => obj.entity === "BUILDING");
-    for (const build of buildings) {
-      if (build instanceof Building) {
-        if (build.type === type) {
-          return build;
-        }
-      }
-    }
-  }
-
-  findUnitWithItem(type: ItemType) {
-    for (const object of this.objects) {
-      if (object instanceof Player) {
-        const item = object.inventory?.checkIfAlreadyHaveItem(type);
-        if (item) {
-          return object;
-        }
-      }
-    }
   }
 }

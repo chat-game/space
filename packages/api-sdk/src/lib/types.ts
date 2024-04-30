@@ -97,10 +97,11 @@ export type IGameObjectEntity =
   | "TREE"
   | "STONE"
   | "FLAG"
-  | "BUILDING"
   | "COURIER"
   | "FARMER"
-  | "WAGON";
+  | "MECHANIC"
+  | "WAGON"
+  | IGameObjectBuildingType;
 export type IGameObjectDirection = "LEFT" | "RIGHT";
 
 export interface WebSocketMessage {
@@ -117,7 +118,7 @@ export interface WebSocketMessage {
 
 export interface IGameObjectWagon extends IGameObject {
   speed: number;
-  area: {
+  visibilityArea: {
     startX: number;
     endX: number;
     startY: number;
@@ -125,10 +126,17 @@ export interface IGameObjectWagon extends IGameObject {
   };
 }
 
+export type IGameObjectBuildingType = "CAMPFIRE" | "WAREHOUSE" | "WAGON_STOP";
+
 export interface IGameObjectBuilding extends IGameObject {
   inventory: IGameInventory;
-  type: "CAMP_FIRE" | "WAREHOUSE";
 }
+
+export interface IGameBuildingCampfire extends IGameObjectBuilding {}
+
+export interface IGameBuildingWarehouse extends IGameObjectBuilding {}
+
+export interface IGameBuildingWagonStop extends IGameObjectBuilding {}
 
 export interface IGameObjectFlag extends IGameObject {
   type:
@@ -159,14 +167,21 @@ export interface IGameObjectUnit extends IGameObject {
   inventory: IGameInventory;
   visual: {
     head: "1";
-    hairstyle: "BOLD" | "CLASSIC";
-    top: "VIOLET_SHIRT" | "BLACK_SHIRT" | "GREEN_SHIRT" | "BLUE_SHIRT";
+    hairstyle: "BOLD" | "CLASSIC" | "COAL_LONG";
+    top:
+      | "VIOLET_SHIRT"
+      | "BLACK_SHIRT"
+      | "GREEN_SHIRT"
+      | "BLUE_SHIRT"
+      | "DARK_SILVER_SHIRT";
   };
 }
 
 export interface IGameObjectCourier extends IGameObjectUnit {}
 
 export interface IGameObjectFarmer extends IGameObjectUnit {}
+
+export interface IGameObjectMechanic extends IGameObjectUnit {}
 
 export interface IGameObjectPlayer extends IGameObjectUnit {
   reputation: number;
@@ -226,4 +241,6 @@ export type GraphicsContainerType =
   | "UNIT_HEAD"
   | "UNIT_HAIR"
   | "WAGON_WHEEL"
-  | "WAGON_ENGINE";
+  | "WAGON_ENGINE"
+  | "WAGON_ENGINE_CLOUD"
+  | "FIRE_PARTICLE";

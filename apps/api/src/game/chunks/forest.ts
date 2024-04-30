@@ -11,7 +11,13 @@ interface IForestOptions {
 
 export class Forest extends GameChunk implements IGameForestChunk {
   constructor({ center }: IForestOptions) {
-    super({ center, title: "Лес", type: "FOREST", width: 3000, height: 1600 });
+    super({
+      center,
+      title: "Роскошный Лес",
+      type: "FOREST",
+      width: 3000,
+      height: 1600,
+    });
 
     this.initTrees(200);
   }

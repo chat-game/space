@@ -1,6 +1,7 @@
 import { Sprite } from "pixi.js";
 import type { IGameObjectWagon } from "../../../../../packages/api-sdk/src";
 import type { GraphicsContainer } from "../components/graphicsContainer";
+import { WagonEngineCloudsContainer } from "../components/wagonEngineCloudsContainer.ts";
 import { WagonEngineContainer } from "../components/wagonEngineContainer.ts";
 import { WagonWheelContainer } from "../components/wagonWheelContainer";
 import type { Game } from "../game";
@@ -13,8 +14,7 @@ interface IWagonOptions {
 
 export class Wagon extends GameObjectContainer implements IGameObjectWagon {
   public speed!: number;
-  public area!: IGameObjectWagon["area"];
-  public isVisibleOnClient!: IGameObjectWagon["isVisibleOnClient"];
+  public visibilityArea!: IGameObjectWagon["visibilityArea"];
 
   public children: GraphicsContainer[] = [];
 
@@ -42,7 +42,9 @@ export class Wagon extends GameObjectContainer implements IGameObjectWagon {
     wheel1.scale = 0.75;
     wheel2.scale = 0.75;
 
-    this.addChild(spriteBase, engine, spriteSide, wheel1, wheel2);
+    const clouds = new WagonEngineCloudsContainer();
+
+    this.addChild(spriteBase, engine, spriteSide, wheel1, wheel2, clouds);
   }
 
   animate() {
@@ -51,6 +53,10 @@ export class Wagon extends GameObjectContainer implements IGameObjectWagon {
 
       this.drawWheels(container);
       this.drawEngine(container);
+
+      if (container instanceof WagonEngineCloudsContainer) {
+        container.animate(this.speed);
+      }
     }
 
     this.handleSoundByState();
@@ -71,7 +77,7 @@ export class Wagon extends GameObjectContainer implements IGameObjectWagon {
 
       const wheelRotation = this.direction === "LEFT" ? -1 : 1;
 
-      container.angle += (wheelRotation * this.speed) / 3;
+      container.angle += (wheelRotation * this.speed) / 2.5;
     }
   }
 

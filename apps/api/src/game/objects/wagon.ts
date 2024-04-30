@@ -2,6 +2,7 @@ import { createId } from "@paralleldrive/cuid2";
 import type { IGameObjectWagon } from "../../../../../packages/api-sdk/src";
 import { Flag } from "./flag";
 import { GameObject } from "./gameObject";
+import { Mechanic } from "./units/mechanic";
 
 interface IWagonOptions {
   x: number;
@@ -10,8 +11,10 @@ interface IWagonOptions {
 
 export class Wagon extends GameObject implements IGameObjectWagon {
   public speed: number;
-  public area!: IGameObjectWagon["area"];
+  public visibilityArea!: IGameObjectWagon["visibilityArea"];
 
+  public mechanic!: Mechanic;
+  public serverDataArea!: IGameObjectWagon["visibilityArea"];
   public nearFlags: Flag[] = [];
 
   constructor({ x, y }: IWagonOptions) {
@@ -20,13 +23,17 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     super({ id: finalId, x, y, entity: "WAGON", isVisibleOnClient: true });
 
     this.speed = 0;
-    this.updateArea();
+    this.updateVisibilityArea();
+    this.updateServerDataArea();
     this.initNearFlags();
+    this.initMechanic();
   }
 
   live() {
-    this.updateArea();
+    this.updateVisibilityArea();
+    this.updateServerDataArea();
     this.updateNearFlags();
+    this.updateMechanic();
 
     if (this.state === "IDLE") {
       this.handleChange();
@@ -52,13 +59,41 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     this.sendMessageObjectUpdated();
   }
 
-  updateArea() {
-    this.area = {
-      startX: this.x - 3000,
-      endX: this.x + 3000,
-      startY: this.y - 1500,
-      endY: this.y + 1500,
+  updateVisibilityArea() {
+    const offsetX = 2560 / 2;
+    const offsetY = 1440 / 2;
+
+    this.visibilityArea = {
+      startX: this.x - offsetX,
+      endX: this.x + offsetX,
+      startY: this.y - offsetY,
+      endY: this.y + offsetY,
     };
+  }
+
+  updateServerDataArea() {
+    const offsetX = 2560 * 1.5;
+    const offsetY = 1440;
+
+    this.serverDataArea = {
+      startX: this.x - offsetX,
+      endX: this.x + offsetX,
+      startY: this.y - offsetY,
+      endY: this.y + offsetY,
+    };
+  }
+
+  initMechanic() {
+    this.mechanic = new Mechanic({ x: this.x, y: this.y });
+  }
+
+  updateMechanic() {
+    this.mechanic.isVisibleOnClient = true;
+    this.mechanic.needToSendDataToClient = true;
+    this.mechanic.live();
+    this.mechanic.direction = "LEFT";
+    this.mechanic.x = this.x - 50;
+    this.mechanic.y = this.y - 48;
   }
 
   initNearFlags() {

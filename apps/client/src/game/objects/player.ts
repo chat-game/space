@@ -4,7 +4,7 @@ import type {
 } from "../../../../../packages/api-sdk/src";
 import { PlayerInterface } from "../components/playerInterface";
 import type { Game } from "../game";
-import { Unit } from "./unit";
+import { Unit } from "./units/unit.ts";
 
 interface IPlayerOptions {
   game: Game;

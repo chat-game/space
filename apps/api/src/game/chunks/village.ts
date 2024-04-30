@@ -3,14 +3,10 @@ import {
   type IGameVillageChunk,
   getRandomInRange,
 } from "../../../../../packages/api-sdk/src";
-import {
-  Building,
-  Flag,
-  Stone,
-  Tree,
-  VillageCourier,
-  VillageFarmer,
-} from "../objects";
+import { Flag, Stone, Tree, VillageCourier, VillageFarmer } from "../objects";
+import { Campfire } from "../objects/buildings/campfire";
+import { WagonStop } from "../objects/buildings/wagonStop";
+import { Warehouse } from "../objects/buildings/warehouse";
 import { GameChunk } from "./gameChunk";
 
 interface IVillageOptions {
@@ -99,17 +95,21 @@ export class Village extends GameChunk implements IGameVillageChunk {
 
   initBuildings() {
     this.objects.push(
-      new Building({
-        type: "CAMP_FIRE",
+      new Campfire({
         x: this.center.x,
         y: this.center.y,
       }),
     );
     this.objects.push(
-      new Building({
-        type: "WAREHOUSE",
+      new Warehouse({
         x: this.center.x + 300,
-        y: this.center.y - 140,
+        y: this.center.y - 120,
+      }),
+    );
+    this.objects.push(
+      new WagonStop({
+        x: this.center.x - 480,
+        y: this.center.y + 220,
       }),
     );
   }

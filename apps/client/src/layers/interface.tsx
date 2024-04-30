@@ -84,7 +84,7 @@ export const InterfaceLayer = () => {
 
         <ChunkBlock chunk={scene?.chunk} />
 
-        <div className="text-sm text-amber-950">
+        <div className="hidden text-sm text-amber-950">
           ({mousePos.x}, {mousePos.y})
         </div>
       </div>

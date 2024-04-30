@@ -1,10 +1,13 @@
 import { Container } from "pixi.js";
 import type {
+  IGameBuildingCampfire,
+  IGameBuildingWagonStop,
+  IGameBuildingWarehouse,
   IGameObject,
-  IGameObjectBuilding,
   IGameObjectCourier,
   IGameObjectFarmer,
   IGameObjectFlag,
+  IGameObjectMechanic,
   IGameObjectPlayer,
   IGameObjectRabbit,
   IGameObjectRaider,
@@ -15,7 +18,6 @@ import type {
   WebSocketMessage,
 } from "../../../../packages/api-sdk/src";
 import {
-  Building,
   Courier,
   Farmer,
   Flag,
@@ -27,7 +29,11 @@ import {
   Tree,
   Wolf,
 } from "./objects";
-import { Wagon } from "./objects/wagon.ts";
+import { Campfire } from "./objects/buildings/campfire";
+import { WagonStop } from "./objects/buildings/wagonStop";
+import { Warehouse } from "./objects/buildings/warehouse";
+import { Mechanic } from "./objects/units/mechanic";
+import { Wagon } from "./objects/wagon";
 import {
   AssetsManager,
   AudioManager,
@@ -71,12 +77,6 @@ export class Game extends Container {
     await AssetsManager.init();
 
     this.audio.playBackgroundSound();
-
-    // const bg = AssetsManager.generateSceneBackground({
-    //   width: this.viewWidth,
-    //   height: this.viewHeight,
-    // });
-    // this.scene.app.stage.addChild(...bg);
 
     const bg = AssetsManager.getGeneratedBackground();
     bg.x = -10000;
@@ -227,6 +227,18 @@ export class Game extends Container {
     }
   }
 
+  initMechanic(object: IGameObjectMechanic) {
+    const unit = new Mechanic({ game: this, object });
+    this.addChild(unit);
+  }
+
+  updateMechanic(object: IGameObjectMechanic) {
+    const unit = this.findObject(object.id);
+    if (unit instanceof Mechanic) {
+      unit.update(object);
+    }
+  }
+
   initRaider(object: IGameObjectRaider) {
     const raider = new Raider({ game: this, object });
     this.addChild(raider);
@@ -263,14 +275,38 @@ export class Game extends Container {
     }
   }
 
-  initBuilding(object: IGameObjectBuilding) {
-    const building = new Building({ game: this, object });
+  initCampfire(object: IGameBuildingCampfire) {
+    const building = new Campfire({ game: this, object });
     this.addChild(building);
   }
 
-  updateBuilding(object: IGameObjectBuilding) {
+  updateCampfire(object: IGameBuildingCampfire) {
     const building = this.findObject(object.id);
-    if (building instanceof Building) {
+    if (building instanceof Campfire) {
+      building.update(object);
+    }
+  }
+
+  initWarehouse(object: IGameBuildingWarehouse) {
+    const building = new Warehouse({ game: this, object });
+    this.addChild(building);
+  }
+
+  updateWarehouse(object: IGameBuildingWarehouse) {
+    const building = this.findObject(object.id);
+    if (building instanceof Warehouse) {
+      building.update(object);
+    }
+  }
+
+  initWagonStop(object: IGameBuildingWagonStop) {
+    const building = new WagonStop({ game: this, object });
+    this.addChild(building);
+  }
+
+  updateWagonStop(object: IGameBuildingWagonStop) {
+    const building = this.findObject(object.id);
+    if (building instanceof WagonStop) {
       building.update(object);
     }
   }
@@ -341,6 +377,10 @@ export class Game extends Container {
         this.initFarmer(object as IGameObjectFarmer);
         return;
       }
+      if (object.entity === "MECHANIC") {
+        this.initMechanic(object as IGameObjectMechanic);
+        return;
+      }
       if (object.entity === "RAIDER") {
         this.initRaider(object as IGameObjectRaider);
         return;
@@ -353,8 +393,16 @@ export class Game extends Container {
         this.initWolf(object as IGameObjectWolf);
         return;
       }
-      if (object.entity === "BUILDING") {
-        this.initBuilding(object as IGameObjectBuilding);
+      if (object.entity === "CAMPFIRE") {
+        this.initCampfire(object as IGameBuildingCampfire);
+        return;
+      }
+      if (object.entity === "WAREHOUSE") {
+        this.initWarehouse(object as IGameBuildingWarehouse);
+        return;
+      }
+      if (object.entity === "WAGON_STOP") {
+        this.initWagonStop(object as IGameBuildingWagonStop);
         return;
       }
       if (object.entity === "FLAG") {
@@ -388,6 +436,10 @@ export class Game extends Container {
       this.updateFarmer(object as IGameObjectFarmer);
       return;
     }
+    if (object.entity === "MECHANIC") {
+      this.updateMechanic(object as IGameObjectMechanic);
+      return;
+    }
     if (object.entity === "RAIDER") {
       this.updateRaider(object as IGameObjectRaider);
       return;
@@ -400,8 +452,16 @@ export class Game extends Container {
       this.updateWolf(object as IGameObjectWolf);
       return;
     }
-    if (object.entity === "BUILDING") {
-      this.updateBuilding(object as IGameObjectBuilding);
+    if (object.entity === "CAMPFIRE") {
+      this.updateCampfire(object as IGameBuildingCampfire);
+      return;
+    }
+    if (object.entity === "WAREHOUSE") {
+      this.updateWarehouse(object as IGameBuildingWarehouse);
+      return;
+    }
+    if (object.entity === "WAGON_STOP") {
+      this.updateWagonStop(object as IGameBuildingWagonStop);
       return;
     }
     if (object.entity === "FLAG") {

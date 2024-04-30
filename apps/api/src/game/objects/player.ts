@@ -10,7 +10,7 @@ import { db } from "../../db/db.client";
 import { Inventory, Skill } from "../common";
 import { Stone } from "./stone";
 import { Tree } from "./tree";
-import { Unit } from "./unit";
+import { Unit } from "./units/unit";
 
 interface IPlayerOptions {
   id?: string;
