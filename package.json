@@ -37,7 +37,7 @@
     "@twurple/pubsub": "7.1.0",
     "hono": "4.2.9",
     "howler": "2.2.4",
-    "pixi.js": "8.1.0",
+    "pixi.js": "8.1.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-use-websocket": "4.8.1",
