@@ -15,6 +15,7 @@ export class Wagon extends GameObject implements IGameObjectWagon {
 
   public mechanic!: Mechanic;
   public serverDataArea!: IGameObjectWagon["visibilityArea"];
+  public collisionArea!: IGameObjectWagon["visibilityArea"];
   public nearFlags: Flag[] = [];
 
   constructor({ x, y }: IWagonOptions) {
@@ -32,6 +33,7 @@ export class Wagon extends GameObject implements IGameObjectWagon {
   live() {
     this.updateVisibilityArea();
     this.updateServerDataArea();
+    this.updateCollisionArea();
     this.updateNearFlags();
     this.updateMechanic();
 
@@ -39,18 +41,8 @@ export class Wagon extends GameObject implements IGameObjectWagon {
       this.handleChange();
       return;
     }
-
-    if (this.state === "MOVING") {
-      this.speed = 0.5;
-
-      const isMoving = this.move(this.speed);
+    if (this.state === "WAITING") {
       this.handleChange();
-
-      if (!isMoving) {
-        this.state = "IDLE";
-        this.speed = 0;
-      }
-
       return;
     }
   }
@@ -81,6 +73,45 @@ export class Wagon extends GameObject implements IGameObjectWagon {
       startY: this.y - offsetY,
       endY: this.y + offsetY,
     };
+  }
+
+  updateCollisionArea() {
+    const offsetX = 250;
+    const offsetY = 180;
+
+    this.collisionArea = {
+      startX: this.x - offsetX,
+      endX: this.x + offsetX,
+      startY: this.y - offsetY,
+      endY: this.y + offsetY,
+    };
+  }
+
+  public checkIfPointInCollisionArea(point: { x: number; y: number }) {
+    return (
+      this.collisionArea.startX < point.x &&
+      point.x < this.collisionArea.endX &&
+      this.collisionArea.startY < point.y &&
+      point.y < this.collisionArea.endY
+    );
+  }
+
+  public checkIfPointInVisibilityArea(point: { x: number; y: number }) {
+    return (
+      this.visibilityArea.startX < point.x &&
+      point.x < this.visibilityArea.endX &&
+      this.visibilityArea.startY < point.y &&
+      point.y < this.visibilityArea.endY
+    );
+  }
+
+  public checkIfPointInServerDataArea(point: { x: number; y: number }) {
+    return (
+      this.serverDataArea.startX < point.x &&
+      point.x < this.serverDataArea.endX &&
+      this.serverDataArea.startY < point.y &&
+      point.y < this.serverDataArea.endY
+    );
   }
 
   initMechanic() {

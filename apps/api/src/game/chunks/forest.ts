@@ -7,19 +7,23 @@ import { GameChunk } from "./gameChunk";
 
 interface IForestOptions {
   center: IGameForestChunk["center"];
+  width: number;
+  height: number;
 }
 
 export class Forest extends GameChunk implements IGameForestChunk {
-  constructor({ center }: IForestOptions) {
+  constructor({ width, height, center }: IForestOptions) {
     super({
-      center,
       title: "Роскошный Лес",
       type: "FOREST",
-      width: 3000,
-      height: 1600,
+      width,
+      height,
+      center,
     });
 
-    this.initTrees(200);
+    const treesToPrepare = Math.round((this.area.endX - this.area.startX) / 10);
+    console.log(`preparing ${treesToPrepare} trees`);
+    this.initTrees(treesToPrepare);
   }
 
   live() {
@@ -34,7 +38,13 @@ export class Forest extends GameChunk implements IGameForestChunk {
     for (let i = 0; i < count; i++) {
       const point = this.getRandomPoint();
       const size = getRandomInRange(75, 90);
-      const tree = new Tree({ x: point.x, y: point.y, size, resource: 1 });
+      const tree = new Tree({
+        x: point.x,
+        y: point.y,
+        size,
+        resource: 1,
+        health: 20,
+      });
       this.objects.push(tree);
     }
   }

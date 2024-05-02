@@ -11,11 +11,13 @@ import { GameChunk } from "./gameChunk";
 
 interface IVillageOptions {
   center: IGameVillageChunk["center"];
+  width: number;
+  height: number;
 }
 
 export class Village extends GameChunk implements IGameVillageChunk {
-  constructor({ center }: IVillageOptions) {
-    super({ center, title: "", type: "VILLAGE", width: 3000, height: 1600 });
+  constructor({ width, height, center }: IVillageOptions) {
+    super({ title: "", type: "VILLAGE", width, height, center });
 
     this.title = this.getRandomTitle();
 
@@ -53,7 +55,13 @@ export class Village extends GameChunk implements IGameVillageChunk {
       const flag = this.getRandomEmptyResourceFlagInVillage();
       if (flag) {
         const size = getRandomInRange(75, 90);
-        const tree = new Tree({ x: flag.x, y: flag.y, size, resource: 1 });
+        const tree = new Tree({
+          x: flag.x,
+          y: flag.y,
+          size,
+          resource: 1,
+          health: 20,
+        });
         flag.target = tree;
         this.objects.push(tree);
       }
@@ -112,6 +120,15 @@ export class Village extends GameChunk implements IGameVillageChunk {
         y: this.center.y + 220,
       }),
     );
+  }
+
+  public getWagonStopPoint() {
+    for (const object of this.objects) {
+      if (object instanceof WagonStop) {
+        return { x: object.x, y: object.y };
+      }
+    }
+    return { x: 500, y: 500 };
   }
 
   getRandomEmptyResourceFlagInVillage() {

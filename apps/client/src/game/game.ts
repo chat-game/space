@@ -55,9 +55,9 @@ export class Game extends Container {
   public viewHeight: number;
 
   public cameraOffsetX = 0;
-  public cameraMovementSpeedX = 0.005;
+  public cameraMovementSpeedX = 0.008;
   public cameraOffsetY = 0;
-  public cameraMovementSpeedY = 0.005;
+  public cameraMovementSpeedY = 0.008;
   public cameraX = 0;
   public cameraY = 0;
   public cameraPerfectX = 0;

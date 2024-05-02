@@ -43,6 +43,10 @@ export class BotService {
     return this.buildCommand("расформировать", "DISBAND_GROUP");
   }
 
+  public commandStartCreatingNewAdventure() {
+    return this.buildCommand("путешествовать", "START_CREATING_NEW_ADVENTURE");
+  }
+
   public commandChop() {
     return this.buildCommand("рубить", "CHOP");
   }

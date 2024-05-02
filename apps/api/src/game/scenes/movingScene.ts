@@ -1,8 +1,6 @@
-import { Village } from "../chunks";
 import type { Group } from "../common";
 import type { Game } from "../game";
 import { Wagon } from "../objects";
-import { WagonStop } from "../objects/buildings/wagonStop";
 import { GameScene } from "./gameScene";
 
 interface IMovingSceneOptions {
@@ -25,6 +23,7 @@ export class MovingScene extends GameScene {
         "JOIN_GROUP",
         "START_CHANGING_SCENE",
         "CREATE_NEW_PLAYER",
+        "START_CREATING_NEW_ADVENTURE",
       ],
     });
 
@@ -32,43 +31,29 @@ export class MovingScene extends GameScene {
   }
 
   public async init() {
-    this.generateRandomVillage({ x: 1000, y: 1000 });
-    //this.generateRandomForest({ x: 4000, y: 3000 });
-    this.generateRandomVillage({ x: 4000, y: 1400 });
+    const village = this.initStartingVillage();
+    const wagonStartPoint = village.getWagonStopPoint();
 
-    this.initWagon();
-    const wagon = this.getWagon();
-    if (wagon) {
-      this.initWagonMovementFlags({
-        startX: wagon.x,
-        startY: wagon.y,
-        endX: 7900,
-        endY: 3200,
-      });
-
-      // const finalFlag = this.objects.find(
-      //   (obj) => obj instanceof Flag && obj.type === "WAGON_MOVEMENT",
-      // );
-      // if (finalFlag) {
-      //   wagon.target = finalFlag;
-      //   wagon.state = "MOVING";
-      // }
-
-      const targetWagonStop = this.chunks.find((obj) => {
-        if (obj instanceof Village) {
-          const findBuilding = obj.objects.find((object) => {
-            if (object instanceof WagonStop) {
-              wagon.target = object;
-              wagon.state = "MOVING";
-            }
-          });
-        }
-      });
-    }
-
+    this.initWagon(wagonStartPoint);
     await this.initGroupPlayers();
 
     void this.play();
+  }
+
+  initStartingVillage() {
+    const area = {
+      width: 2500,
+      height: 2000,
+      center: {
+        x: Math.round(2500 / 2),
+        y: Math.round(2000 / 2),
+      },
+    };
+    return this.generateRandomVillage({
+      center: area.center,
+      width: area.width,
+      height: area.height,
+    });
   }
 
   async initGroupPlayers() {
@@ -82,8 +67,8 @@ export class MovingScene extends GameScene {
     }
   }
 
-  initWagon() {
-    const wagon = new Wagon({ x: 530, y: 1175 });
+  initWagon({ x, y }: { x: number; y: number }) {
+    const wagon = new Wagon({ x, y });
     this.objects.push(wagon);
   }
 }

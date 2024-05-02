@@ -5,6 +5,7 @@ import {
   getDatePlusSeconds,
 } from "../../../../../packages/api-sdk/src";
 import { sendMessage } from "../../websocket/websocket.server";
+import { Village } from "../chunks";
 import type { Game } from "../game";
 
 interface IEventOptions {
@@ -63,6 +64,12 @@ export class Event implements IGameEvent {
     }
     if (this.type === "COUNTDOWN_NEXT_WAVE_STARTED") {
       console.log("Next wave!");
+    }
+    if (this.type === "CREATING_NEW_ADVENTURE_STARTED") {
+      const village = this.game.scene.chunkNow;
+      if (village instanceof Village) {
+        this.game.scene.generateAdventure(village);
+      }
     }
   }
 }

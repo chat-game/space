@@ -21,7 +21,8 @@ export type IGameSceneAction =
   | "JOIN_GROUP"
   | "START_CHANGING_SCENE"
   | "START_RAID"
-  | "CREATE_NEW_PLAYER";
+  | "CREATE_NEW_PLAYER"
+  | "START_CREATING_NEW_ADVENTURE";
 
 export type ItemType = "WOOD" | "STONE" | "AXE" | "PICKAXE";
 
@@ -86,6 +87,7 @@ export interface IGameObject {
 export type IGameObjectState =
   | "MOVING"
   | "IDLE"
+  | "WAITING"
   | "CHOPPING"
   | "MINING"
   | "DESTROYED";
@@ -112,7 +114,8 @@ export interface WebSocketMessage {
     | "GROUP_FORM_STARTED"
     | "SCENE_CHANGING_STARTED"
     | "COUNTDOWN_NEXT_WAVE_STARTED"
-    | "SCENE_CHANGED";
+    | "SCENE_CHANGED"
+    | "CREATING_NEW_ADVENTURE_STARTED";
   object?: Partial<IGameObject>;
 }
 
@@ -146,7 +149,6 @@ export interface IGameObjectFlag extends IGameObject {
     | "RESOURCE"
     | "SPAWN_LEFT"
     | "SPAWN_RIGHT";
-  isOnScreen: boolean;
 }
 
 export interface IGameObjectTree extends IGameObject {
@@ -216,12 +218,19 @@ export interface GetSceneResponse {
   events: IGameEvent[];
   group: IGameGroup | undefined;
   wagon: IGameObjectWagon | undefined;
+  route: IGameRoute | null;
 }
 
 export interface IGameGroup {
   id: string;
   target: GameSceneType;
   players: IGameObjectPlayer[];
+}
+
+export interface IGameRoute {
+  startPoint: { x: number; y: number };
+  endPoint: { x: number; y: number };
+  chunks: IGameChunk[];
 }
 
 export interface PlayerTitle {

@@ -10,7 +10,6 @@ interface IFlagOptions {
   x?: number;
   y?: number;
   id?: string;
-  isOnScreen?: boolean;
   type: IGameObjectFlag["type"];
   offsetX?: number;
   offsetY?: number;
@@ -18,12 +17,11 @@ interface IFlagOptions {
 
 export class Flag extends GameObject implements IGameObjectFlag {
   public type: IGameObjectFlag["type"];
-  public isOnScreen = true;
 
   public offsetX: number;
   public offsetY: number;
 
-  constructor({ x, y, id, isOnScreen, type, offsetX, offsetY }: IFlagOptions) {
+  constructor({ x, y, id, type, offsetX, offsetY }: IFlagOptions) {
     const finalId = id ?? createId();
     const finalX = x ?? getRandomInRange(MIN_X, MAX_X);
     const finalY = y ?? getRandomInRange(MIN_Y, MAX_Y);
@@ -31,7 +29,6 @@ export class Flag extends GameObject implements IGameObjectFlag {
     super({ id: finalId, x: finalX, y: finalY, entity: "FLAG" });
 
     this.type = type;
-    this.isOnScreen = isOnScreen ?? true;
     this.offsetX = offsetX ?? 0;
     this.offsetY = offsetY ?? 0;
   }

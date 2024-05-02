@@ -4,6 +4,7 @@ import {
   type GetSceneResponse,
   type IGameChunk,
   type IGameEvent,
+  type IGameRoute,
   type IGameSceneAction,
   type ItemType,
   getRandomInRange,
@@ -15,7 +16,7 @@ import {
   SERVER_TICK_MS,
 } from "../../config";
 import { Forest, type GameChunk, Village } from "../chunks";
-import { Event, Group } from "../common";
+import { Event, Group, Route } from "../common";
 import type { Game } from "../game";
 import {
   Flag,
@@ -24,7 +25,7 @@ import {
   type Rabbit,
   Raider,
   type Stone,
-  type Tree,
+  Tree,
   Wagon,
   type Wolf,
 } from "../objects";
@@ -43,6 +44,7 @@ export class GameScene {
   public events: Event[] = [];
   public chunks: GameChunk[] = [];
   public chunkNow: GameChunk | undefined;
+  public route: Route | undefined;
   public possibleActions: IGameSceneAction[] = [];
 
   constructor({ game, group, possibleActions }: IGameSceneOptions) {
@@ -58,6 +60,7 @@ export class GameScene {
     return setInterval(() => {
       this.updateEvents();
       this.updateObjects();
+      this.updateRoute();
       this.updateChunks();
       this.updateChunkNow();
     }, SERVER_TICK_MS);
@@ -115,6 +118,16 @@ export class GameScene {
         };
       }
       return this.disbandGroupAction();
+    }
+    if (action === "START_CREATING_NEW_ADVENTURE") {
+      // Admin only
+      if (player.id !== ADMIN_PLAYER_ID) {
+        return {
+          ok: false,
+          message: null,
+        };
+      }
+      return this.startCreatingNewAdventureAction();
     }
     if (action === "JOIN_GROUP") {
       return this.joinGroupAction(player);
@@ -186,6 +199,18 @@ export class GameScene {
     };
   }
 
+  getRoute(): IGameRoute | null {
+    if (!this.route) {
+      return null;
+    }
+
+    return {
+      startPoint: this.route.startPoint,
+      endPoint: this.route.endPoint,
+      chunks: this.route.chunks,
+    };
+  }
+
   getInfo(): GetSceneResponse {
     return {
       id: this.id,
@@ -194,6 +219,7 @@ export class GameScene {
       group: this.group,
       wagon: this.getWagon(),
       chunk: this.getChunkNow(),
+      route: this.getRoute(),
     };
   }
 
@@ -211,12 +237,14 @@ export class GameScene {
   }
 
   updateObjects() {
+    const wagon = this.getWagon();
+
     for (const obj of this.objects) {
-      obj.isVisibleOnClient = this.checkIfPointIsOnWagonVisibility({
+      obj.isVisibleOnClient = wagon.checkIfPointInVisibilityArea({
         x: obj.x,
         y: obj.y,
       });
-      obj.needToSendDataToClient = this.checkIfPointIsOnWagonServerDataView({
+      obj.needToSendDataToClient = wagon.checkIfPointInServerDataArea({
         x: obj.x,
         y: obj.y,
       });
@@ -234,13 +262,25 @@ export class GameScene {
     }
   }
 
+  updateRoute() {
+    if (!this.route?.flags) {
+      return;
+    }
+
+    for (const flag of this.route.flags) {
+      void flag.live();
+    }
+  }
+
   updateChunks() {
+    const wagon = this.getWagon();
+
     for (const chunk of this.chunks) {
-      chunk.isVisibleOnClient = this.checkIfPointIsOnWagonVisibility({
+      chunk.isVisibleOnClient = wagon.checkIfPointInVisibilityArea({
         x: chunk.center.x,
         y: chunk.center.y,
       });
-      chunk.needToSendDataToClient = this.checkIfPointIsOnWagonServerDataView({
+      chunk.needToSendDataToClient = wagon.checkIfPointInServerDataArea({
         x: chunk.center.x,
         y: chunk.center.y,
       });
@@ -269,43 +309,52 @@ export class GameScene {
     return this.objects.find((obj) => obj instanceof Wagon) as Wagon;
   }
 
-  checkIfPointIsOnWagonVisibility(point: { x: number; y: number }) {
-    const wagon = this.getWagon();
-
-    if (
-      point.x >= wagon.visibilityArea.startX &&
-      point.x <= wagon.visibilityArea.endX
-    ) {
-      if (
-        point.y >= wagon.visibilityArea.startY &&
-        point.y <= wagon.visibilityArea.endY
-      ) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  checkIfPointIsOnWagonServerDataView(point: { x: number; y: number }) {
-    const wagon = this.getWagon();
-
-    if (
-      point.x >= wagon.serverDataArea.startX &&
-      point.x <= wagon.serverDataArea.endX
-    ) {
-      if (
-        point.y >= wagon.serverDataArea.startY &&
-        point.y <= wagon.serverDataArea.endY
-      ) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
   updateWagon(object: Wagon) {
+    const collisionObjects =
+      this.chunkNow?.objects.filter(
+        (obj) => obj.isOnWagonPath && obj.state !== "DESTROYED",
+      ) ?? [];
+    for (const collisionObject of collisionObjects) {
+      const isInArea = object.checkIfPointInCollisionArea({
+        x: collisionObject.x,
+        y: collisionObject.y,
+      });
+      if (isInArea) {
+        object.state = "WAITING";
+        object.speed = 0;
+        object.handleChange();
+        return;
+      }
+    }
+
+    if (object.state === "WAITING") {
+      object.state = "IDLE";
+    }
+    if (object.state === "IDLE") {
+      const target = this.route?.getNextFlag();
+      if (target) {
+        object.target = target;
+        object.state = "MOVING";
+      }
+    }
+    if (object.state === "MOVING") {
+      object.speed = 0.5;
+      const isMoving = object.move(object.speed);
+      object.handleChange();
+
+      if (!isMoving) {
+        if (
+          object.target instanceof Flag &&
+          object.target.type === "WAGON_MOVEMENT"
+        ) {
+          this.route?.removeFlag(object.target);
+          object.target = undefined;
+          object.state = "IDLE";
+          object.speed = 0;
+        }
+      }
+    }
+
     object.live();
   }
 
@@ -465,7 +514,7 @@ export class GameScene {
       };
     }
 
-    const tree = this.getRandomTree();
+    const tree = this.getTreeToChop();
     if (!tree) {
       return {
         ok: false,
@@ -525,6 +574,26 @@ export class GameScene {
     return {
       ok: true,
       message: "Группа расформирована!",
+    };
+  }
+
+  startCreatingNewAdventureAction() {
+    if (!this.checkIfActionIsPossible("START_CREATING_NEW_ADVENTURE")) {
+      return {
+        ok: false,
+        message: "Сейчас этого сделать нельзя.",
+      };
+    }
+
+    this.initEvent({
+      type: "CREATING_NEW_ADVENTURE_STARTED",
+      title: "Генерируем приключение",
+      secondsToEnd: 15,
+    });
+
+    return {
+      ok: true,
+      message: "Началось создание новых локаций...",
     };
   }
 
@@ -642,15 +711,32 @@ export class GameScene {
     };
   }
 
-  getRandomTree() {
-    const onlyReadyToChop = this.objects.filter(
-      (obj) => obj.entity === "TREE" && obj.state !== "DESTROYED",
+  getTreeToChop() {
+    // Part 1: Check trees on Wagon Path
+    const onlyOnPath = this.chunkNow?.objects.filter(
+      (obj) =>
+        obj instanceof Tree &&
+        obj.state !== "DESTROYED" &&
+        !obj.isReserved &&
+        obj.isOnWagonPath,
     );
-    return onlyReadyToChop.length
-      ? (onlyReadyToChop[
-          getRandomInRange(0, onlyReadyToChop.length - 1)
-        ] as Tree)
-      : undefined;
+    if (onlyOnPath && onlyOnPath.length > 0) {
+      const wagon = this.getWagon();
+      return this.determineNearestObject(wagon, onlyOnPath) as Tree;
+    }
+
+    // Part 2: Check nearest free tree
+    const other = this.chunkNow?.objects.filter(
+      (obj) =>
+        obj instanceof Tree &&
+        obj.state !== "DESTROYED" &&
+        !obj.isReserved &&
+        obj.isReadyToChop,
+    );
+    if (other && other.length > 0) {
+      const wagon = this.getWagon();
+      return this.determineNearestObject(wagon, other) as Tree;
+    }
   }
 
   getRandomStone() {
@@ -660,6 +746,27 @@ export class GameScene {
     return onlyReady.length
       ? (onlyReady[getRandomInRange(0, onlyReady.length - 1)] as Stone)
       : undefined;
+  }
+
+  determineNearestObject(
+    point: {
+      x: number;
+      y: number;
+    },
+    objects: GameObject[],
+  ) {
+    let closestObject = objects[0];
+    let shortestDistance = undefined;
+
+    for (const object of objects) {
+      const distance = Route.getDistanceBetween2Points(point, object);
+      if (!shortestDistance || distance < shortestDistance) {
+        shortestDistance = distance;
+        closestObject = object;
+      }
+    }
+
+    return closestObject;
   }
 
   initRaiders(count: number) {
@@ -948,29 +1055,97 @@ export class GameScene {
     return null;
   }
 
-  generateRandomVillage(center: { x: number; y: number }) {
-    const village = new Village({ center });
-    this.chunks.push(village);
-  }
-
-  generateRandomForest(center: { x: number; y: number }) {
-    const forest = new Forest({ center });
-    this.chunks.push(forest);
-  }
-
-  initWagonMovementFlags({
-    startX,
-    startY,
-    endX,
-    endY,
+  generateRandomVillage({
+    center,
+    width,
+    height,
   }: {
-    startX: number;
-    startY: number;
-    endX: number;
-    endY: number;
+    center: { x: number; y: number };
+    width: number;
+    height: number;
   }) {
-    const finalFlag = new Flag({ type: "WAGON_MOVEMENT", x: endX, y: endY });
-    this.objects.push(finalFlag);
+    const village = new Village({ width, height, center });
+    this.chunks.push(village);
+    return village;
+  }
+
+  generateRandomForest({
+    center,
+    width,
+    height,
+  }: {
+    center: { x: number; y: number };
+    width: number;
+    height: number;
+  }) {
+    const forest = new Forest({ width, height, center });
+    this.chunks.push(forest);
+    return forest;
+  }
+
+  generateAdventure(village: Village) {
+    const wagonStartPoint = village.getWagonStopPoint();
+    const villageOutPoint = village.getRandomOutPointOnRight();
+
+    this.route = new Route();
+    this.route.addGlobalFlag(wagonStartPoint);
+    this.route.startPoint = wagonStartPoint;
+    this.route.addChunk(village);
+
+    this.generateChunks({ x: villageOutPoint.x, y: villageOutPoint.y }, 2);
+    this.markObjectsAsOnWagonPath(this.route);
+  }
+
+  generateChunks(startPoint: { x: number; y: number }, amount: number) {
+    let outPoint = startPoint;
+
+    for (let i = 1; i <= amount; i++) {
+      const chunk = this.generateRandomChunk(outPoint);
+      outPoint = chunk.getRandomOutPointOnRight();
+      this.route?.addGlobalFlag(outPoint);
+      this.route?.addChunk(chunk);
+    }
+
+    // Generate last chunk
+    const finalVillage = this.generateRandomVillage({
+      center: { x: outPoint.x + 2500 / 2, y: outPoint.y },
+      width: 2500,
+      height: 2000,
+    });
+    const stopPoint = finalVillage.getWagonStopPoint();
+    this.route?.addGlobalFlag(stopPoint);
+    this.route?.addChunk(finalVillage);
+    this.route?.setEndPoint(stopPoint);
+  }
+
+  generateRandomChunk(startPoint: { x: number; y: number }) {
+    const forestWidth = getRandomInRange(1500, 2000);
+    const forestHeight = 2500;
+    const forestCenter = {
+      x: startPoint.x + forestWidth / 2,
+      y: startPoint.y,
+    };
+    return this.generateRandomForest({
+      center: forestCenter,
+      width: forestWidth,
+      height: forestHeight,
+    });
+  }
+
+  markObjectsAsOnWagonPath(route: Route) {
+    for (const chunk of this.chunks) {
+      for (const object of chunk.objects) {
+        if (object instanceof Tree) {
+          const isOnPath = route.checkIfPointIsOnWagonPath({
+            x: object.x,
+            y: object.y,
+          });
+          if (isOnPath) {
+            object.isOnWagonPath = true;
+          }
+        }
+      }
+    }
   }
 
   findRandomNearWagonFlag() {
@@ -1005,14 +1180,12 @@ export class GameScene {
       x: -100,
       y: 620,
       id: "SPAWN_LEFT",
-      isOnScreen: false,
       type: "SPAWN_LEFT",
     });
     const spawnRightFlag = new Flag({
       x: 2700,
       y: 620,
       id: "SPAWN_RIGHT",
-      isOnScreen: false,
       type: "SPAWN_RIGHT",
     });
     this.objects.push(spawnLeftFlag, spawnRightFlag);

@@ -1,31 +1,59 @@
-import type { IGameObjectWagon } from "../../../../packages/api-sdk/src";
+import type {
+  IGameObjectWagon,
+  IGameRoute,
+} from "../../../../packages/api-sdk/src";
 
 export const WagonBlock = ({
   wagon,
-}: { wagon: IGameObjectWagon | undefined }) => {
-  if (!wagon) {
+  route,
+}: {
+  wagon: IGameObjectWagon | undefined;
+  route: IGameRoute | null | undefined;
+}) => {
+  if (!wagon || !route) {
     return null;
   }
 
-  const distanceToTargetX = 8000 - wagon.x;
-  const distanceMoved = 8000 - distanceToTargetX;
-  const targetWidth = Math.round(distanceMoved / (8000 / 100));
+  const nowX = wagon.x;
+  const startX = route.startPoint.x;
+  const finishX = route.endPoint.x;
 
-  const distanceToTargetInMeters = Math.round((8000 - wagon.x) / 30);
+  const distanceAll = Math.abs(finishX - startX);
+  const onePercent = Math.round(distanceAll / 100);
+
+  const distanceNowInPercent = Math.round((nowX - startX) / onePercent);
+
+  const distanceAllChunks = Math.round(
+    route.chunks[route.chunks.length - 1].area.endX -
+      route.chunks[0].area.startX,
+  );
+  const onePercentAllChunks = Math.round(distanceAllChunks / 100);
+
   const speedInMeters = wagon.speed;
 
   return (
     <div className="z-10 fixed top-4 left-1/4 right-1/4">
       <div className="-z-10 relative w-full h-10 p-1.5 bg-primary text-primary border-primary rounded-2xl border-b-4">
-        <div
-          className="h-6 bg-amber-500 border-b-2 border-amber-700 rounded-2xl"
-          style={{ width: `${targetWidth}%` }}
-        />
-        <div className="absolute top-0.5 left-0 right-0 text-xl text-amber-900 font-bold">
-          <div className="mx-auto text-center">
-            Еще {distanceToTargetInMeters} м
-          </div>
+        <div className="-z-10 absolute w-full flex flex-row">
+          {route.chunks?.map((chunk) => {
+            const widthInPercent =
+              (chunk.area.endX - chunk.area.startX) / onePercentAllChunks;
+
+            return (
+              <div
+                key={chunk.id}
+                className="border-r last:border-0 text-center"
+                style={{ width: `${widthInPercent}%` }}
+              >
+                {chunk.title}
+              </div>
+            );
+          })}
         </div>
+        <div
+          className="z-10 h-6 bg-amber-500 border-b-2 border-amber-700 rounded-2xl"
+          style={{ width: `${distanceNowInPercent}%` }}
+        />
       </div>
 
       {/*<div*/}

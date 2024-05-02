@@ -93,5 +93,6 @@ export class Tree extends GameObjectContainer implements IGameObjectTree {
     this.isReadyToChop = object.isReadyToChop;
     this.resource = object.resource;
     this.size = object.size;
+    //this.isOnWagonPath = object.isOnWagonPath;
   }
 }

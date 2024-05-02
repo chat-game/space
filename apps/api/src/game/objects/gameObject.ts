@@ -25,6 +25,7 @@ export class GameObject implements IGameObject {
   public target: IGameObject | undefined;
 
   public needToSendDataToClient: boolean;
+  public isOnWagonPath = false;
 
   constructor({ id, x, y, entity, isVisibleOnClient }: IGameObjectOptions) {
     this.id = id;

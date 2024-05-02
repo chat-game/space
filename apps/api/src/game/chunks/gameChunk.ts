@@ -17,14 +17,14 @@ export class GameChunk implements IGameChunk {
   public id: string;
   public title: string;
   public type: IGameChunk["type"];
-  public center: IGameChunk["center"];
+  public center!: IGameChunk["center"];
   public area!: IGameChunk["area"];
   public isVisibleOnClient = false;
 
   public needToSendDataToClient: boolean;
   public objects: GameObject[] = [];
 
-  constructor({ center, title, type, width, height }: IGameChunkOptions) {
+  constructor({ title, type, width, height, center }: IGameChunkOptions) {
     this.id = createId();
     this.center = center;
     this.title = title;
@@ -57,6 +57,13 @@ export class GameChunk implements IGameChunk {
   public getRandomPoint() {
     return {
       x: getRandomInRange(this.area.startX, this.area.endX),
+      y: getRandomInRange(this.area.startY, this.area.endY),
+    };
+  }
+
+  public getRandomOutPointOnRight() {
+    return {
+      x: this.area.endX,
       y: getRandomInRange(this.area.startY, this.area.endY),
     };
   }

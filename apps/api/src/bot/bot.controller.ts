@@ -41,6 +41,7 @@ export class BotController {
       this.service.commandJoinGroup(),
       this.service.commandDisbandGroup(),
       this.service.commandStartChangingScene(),
+      this.service.commandStartCreatingNewAdventure(),
       this.service.commandChop(),
       this.service.commandMine(),
       this.service.commandGift(),

@@ -10,12 +10,10 @@ interface IFlagOptions {
 
 export class Flag extends GameObjectContainer implements IGameObjectFlag {
   public type!: IGameObjectFlag["type"];
-  public isOnScreen: boolean;
 
   constructor({ game, object }: IFlagOptions) {
     super({ game, ...object });
 
-    this.isOnScreen = object.isOnScreen;
     this.update(object);
     this.init();
   }

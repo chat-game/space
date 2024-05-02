@@ -90,7 +90,7 @@ export const InterfaceLayer = () => {
       </div>
 
       <div className="z-10 absolute top-0 left-0 right-0">
-        <WagonBlock wagon={scene?.wagon} />
+        <WagonBlock route={scene?.route} wagon={scene?.wagon} />
       </div>
 
       <div className="z-10 absolute top-0 right-0" style={{ zIndex: 1000 }}>
