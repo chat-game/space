@@ -4,6 +4,8 @@
 
 👉 Our community: https://discord.gg/B6etUajrGZ
 
+![Screen](https://github.com/hmbanan666/royal-madness-twitch-game/assets/25910785/a80009a5-ac75-4935-afd2-e1aae16285d6)
+
 🤔 Imagine an open world where your Hero can:
 
 - 🗺️ **Travel**, **defeat** creatures and **find** an infinite number of quests
