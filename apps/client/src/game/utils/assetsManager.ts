@@ -28,17 +28,6 @@ import heroRight3 from "../assets/images/animation/hero-moving-right/3.png"
 import heroRight4 from "../assets/images/animation/hero-moving-right/4.png"
 import heroRight5 from "../assets/images/animation/hero-moving-right/5.png"
 import heroRight6 from "../assets/images/animation/hero-moving-right/6.png"
-import background1 from "../assets/images/background/1.png"
-import backgroundMini from "../assets/images/background/2-16.png"
-import background2 from "../assets/images/background/2.png"
-import background3 from "../assets/images/background/3.png"
-import background4 from "../assets/images/background/4.png"
-import background5 from "../assets/images/background/5.png"
-import backgroundTeal1 from "../assets/images/background/teal/1.png"
-import backgroundTeal2 from "../assets/images/background/teal/2.png"
-import backgroundTeal3 from "../assets/images/background/teal/3.png"
-import backgroundTeal4 from "../assets/images/background/teal/4.png"
-import backgroundTeal5 from "../assets/images/background/teal/5.png"
 import campfire1 from "../assets/images/buildings/camp-fire-1.png"
 import wagonStop1 from "../assets/images/buildings/wagon-stop-1.png"
 import warehouse1 from "../assets/images/buildings/warehouse-1.png"
@@ -90,11 +79,6 @@ import water4 from "../assets/images/water/4.png"
 
 export abstract class AssetsManager {
   static assets = [
-    { alias: "background1", src: background1 },
-    { alias: "background2", src: background2 },
-    { alias: "background3", src: background3 },
-    { alias: "background4", src: background4 },
-    { alias: "background5", src: background5 },
     { alias: "water1", src: water1 },
     { alias: "water2", src: water2 },
     { alias: "water3", src: water3 },
@@ -202,15 +186,6 @@ export abstract class AssetsManager {
     },
   ]
 
-  static backgroundAssets = [
-    { alias: "backgroundTeal1", src: backgroundTeal1 },
-    { alias: "backgroundTeal2", src: backgroundTeal2 },
-    { alias: "backgroundTeal3", src: backgroundTeal3 },
-    { alias: "backgroundTeal4", src: backgroundTeal4 },
-    { alias: "backgroundTeal5", src: backgroundTeal5 },
-    { alias: "backgroundMini", src: backgroundMini },
-  ]
-
   public static async init() {
     await Assets.load(AssetsManager.assets)
     await Assets.load(AssetsManager.animationAssets)
@@ -218,7 +193,6 @@ export abstract class AssetsManager {
     await Assets.load(AssetsManager.hairAssets)
     await Assets.load(AssetsManager.topAssets)
     await Assets.load(AssetsManager.treeAssets)
-    await Assets.load(AssetsManager.backgroundAssets)
   }
 
   public static getAnimatedSpriteHeroRight() {
