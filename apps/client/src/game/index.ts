@@ -1,5 +1,5 @@
-import { Game } from "./game";
+import { Game } from "./game"
 
-const game = new Game();
+const game = new Game()
 
-void game.play();
+void game.play()

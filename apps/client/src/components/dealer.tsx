@@ -1,23 +1,23 @@
-import type { ItemType } from "../../../../packages/api-sdk/src";
+import type { ItemType } from "../../../../packages/api-sdk/src"
 
 interface Dealer {
-  x: number;
-  y: number;
+  x: number
+  y: number
 }
 
 interface Deal {
-  command: string;
-  type: "SELL" | "BUY";
-  item: ItemType;
-  amount: number;
-  price: number;
-  isOver?: boolean;
+  command: string
+  type: "SELL" | "BUY"
+  item: ItemType
+  amount: number
+  price: number
+  isOver?: boolean
 }
 
 export const DealerBlock = ({ dealer }: { dealer: Dealer }) => {
-  const size = 100;
-  const height = (size * 64) / 100;
-  const width = height;
+  const size = 100
+  const height = (size * 64) / 100
+  const width = height
 
   return (
     <div
@@ -76,22 +76,21 @@ export const DealerBlock = ({ dealer }: { dealer: Dealer }) => {
         </div>
 
         <div className="w-fit text-center">
-          <div
-            className="px-2 py-0.5 bg-amber-100/90 text-amber-900 rounded-2xl text-xs">
+          <div className="px-2 py-0.5 bg-amber-100/90 text-amber-900 rounded-2xl text-xs">
             Торговец
           </div>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 const DealBlock = ({
-                     deal,
-                   }: {
-  deal: Deal;
+  deal,
+}: {
+  deal: Deal
 }) => {
-  const item = getDealItem(deal.item, deal.amount);
+  const item = getDealItem(deal.item, deal.amount)
 
   return (
     <div
@@ -111,24 +110,22 @@ const DealBlock = ({
 
       <div className="flex flex-row gap-1 items-center justify-center">
         <p className="font-bold text-yellow-600">{deal.price}</p>
-        <div
-          className="w-5 h-5 bg-yellow-200 border border-b-4 border-yellow-400 rounded-full"/>
+        <div className="w-5 h-5 bg-yellow-200 border border-b-4 border-yellow-400 rounded-full" />
       </div>
     </div>
-  );
-};
+  )
+}
 
 function getDealItem(type: ItemType, amount: number) {
   if (type === "WOOD") {
     return (
       <div className="-mt-4 relative text-center">
-        <img src={"wood/wood1_64.png"} alt="" className="mx-auto w-12 h-auto"/>
-        <div
-          className="w-full absolute top-6 left-0 text-amber-50 text-base">
+        <img src={"wood/wood1_64.png"} alt="" className="mx-auto w-12 h-auto" />
+        <div className="w-full absolute top-6 left-0 text-amber-50 text-base">
           {amount}
         </div>
       </div>
-    );
+    )
   }
   if (type === "STONE") {
     return (
@@ -138,19 +135,18 @@ function getDealItem(type: ItemType, amount: number) {
           alt=""
           className="mx-auto w-12 h-auto"
         />
-        <div
-          className="w-full absolute top-6 left-0 text-amber-50 text-base">
+        <div className="w-full absolute top-6 left-0 text-amber-50 text-base">
           {amount}
         </div>
       </div>
-    );
+    )
   }
   if (type === "AXE") {
     return (
       <div className="-mt-6 -mb-2 relative text-center">
-        <img src={"tools/axe1_64.png"} alt="" className="-ml-2 w-18 h-auto"/>
+        <img src={"tools/axe1_64.png"} alt="" className="-ml-2 w-18 h-auto" />
       </div>
-    );
+    )
   }
   if (type === "PICKAXE") {
     return (
@@ -161,6 +157,6 @@ function getDealItem(type: ItemType, amount: number) {
           className="-ml-2 w-18 h-auto"
         />
       </div>
-    );
+    )
   }
 }

@@ -1,17 +1,16 @@
-import { useTopPlayers } from "../hooks/useTopPlayers";
-import { TopPlayerCard } from "./topPlayerCard";
+import { useTopPlayers } from "../hooks/useTopPlayers"
+import { TopPlayerCard } from "./topPlayerCard"
 
 export const TopPlayersBlock = () => {
-  const playersWithResult = useTopPlayers();
+  const playersWithResult = useTopPlayers()
   if (!playersWithResult) {
-    return null;
+    return null
   }
 
   return (
     <div className="-z-50 fixed bottom-4 left-4">
       <div className="flex flex-row flex-nowrap gap-2 items-end">
-        <div
-          className="w-fit px-3 py-2 font-bold text-xl bg-primary text-primary border-primary border-b-4 rounded-2xl">
+        <div className="w-fit px-3 py-2 font-bold text-xl bg-primary text-primary border-primary border-b-4 rounded-2xl">
           Топ игроков
         </div>
         <div className="h-fit flex flex-nowrap gap-2">
@@ -53,5 +52,5 @@ export const TopPlayersBlock = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

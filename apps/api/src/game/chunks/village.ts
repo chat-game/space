@@ -2,106 +2,106 @@ import {
   type IGameObjectFlag,
   type IGameVillageChunk,
   getRandomInRange,
-} from "../../../../../packages/api-sdk/src";
-import { Flag, Stone, Tree } from "../objects";
-import { Campfire } from "../objects/buildings/campfire";
-import { WagonStop } from "../objects/buildings/wagonStop";
-import { Warehouse } from "../objects/buildings/warehouse";
-import { GameChunk } from "./gameChunk";
-import { VillageCourier, VillageFarmer } from "../objects/units";
+} from "../../../../../packages/api-sdk/src"
+import { Flag, Stone, Tree } from "../objects"
+import { Campfire } from "../objects/buildings/campfire"
+import { WagonStop } from "../objects/buildings/wagonStop"
+import { Warehouse } from "../objects/buildings/warehouse"
+import { VillageCourier, VillageFarmer } from "../objects/units"
+import { GameChunk } from "./gameChunk"
 
 interface IVillageOptions {
-  width: number;
-  height: number;
-  center: IGameVillageChunk["center"];
-  theme: IGameVillageChunk["theme"];
+  width: number
+  height: number
+  center: IGameVillageChunk["center"]
+  theme: IGameVillageChunk["theme"]
 }
 
 export class Village extends GameChunk implements IGameVillageChunk {
   constructor({ width, height, center, theme }: IVillageOptions) {
-    super({ title: "", type: "VILLAGE", theme, width, height, center });
+    super({ title: "", type: "VILLAGE", theme, width, height, center })
 
-    this.title = this.getRandomTitle();
+    this.title = this.getRandomTitle()
 
-    this.initFlags("RESOURCE", 40);
-    this.initFlags("MOVEMENT", 30);
-    this.initTrees(20);
-    this.initStones(5);
+    this.initFlags("RESOURCE", 40)
+    this.initFlags("MOVEMENT", 30)
+    this.initTrees(20)
+    this.initStones(5)
 
-    this.initCourier();
-    this.initFarmer();
-    this.initBuildings();
+    this.initCourier()
+    this.initFarmer()
+    this.initBuildings()
   }
 
   live() {
-    super.live();
+    super.live()
 
     for (const obj of this.objects) {
-      void obj.live();
+      void obj.live()
     }
   }
 
   initFlag(type: IGameObjectFlag["type"]) {
-    const randomPoint = this.getRandomPoint();
-    this.objects.push(new Flag({ type, x: randomPoint.x, y: randomPoint.y }));
+    const randomPoint = this.getRandomPoint()
+    this.objects.push(new Flag({ type, x: randomPoint.x, y: randomPoint.y }))
   }
 
   initFlags(type: IGameObjectFlag["type"], count: number) {
     for (let i = 0; i < count; i++) {
-      this.initFlag(type);
+      this.initFlag(type)
     }
   }
 
   initTrees(count: number) {
     for (let i = 0; i < count; i++) {
-      const flag = this.getRandomEmptyResourceFlagInVillage();
+      const flag = this.getRandomEmptyResourceFlagInVillage()
       if (flag) {
-        const size = getRandomInRange(75, 90);
+        const size = getRandomInRange(75, 90)
         const tree = new Tree({
           x: flag.x,
           y: flag.y,
           size,
           resource: 1,
           health: 20,
-          variant: this.theme
-        });
-        flag.target = tree;
-        this.objects.push(tree);
+          variant: this.theme,
+        })
+        flag.target = tree
+        this.objects.push(tree)
       }
     }
   }
 
   initStones(count: number) {
     for (let i = 0; i < count; i++) {
-      const flag = this.getRandomEmptyResourceFlagInVillage();
+      const flag = this.getRandomEmptyResourceFlagInVillage()
       if (flag) {
-        const stone = new Stone({ x: flag.x, y: flag.y, resource: 1 });
-        flag.target = stone;
-        this.objects.push(stone);
+        const stone = new Stone({ x: flag.x, y: flag.y, resource: 1 })
+        flag.target = stone
+        this.objects.push(stone)
       }
     }
   }
 
   initCourier() {
-    const randomPoint = this.getRandomPoint();
+    const randomPoint = this.getRandomPoint()
     this.objects.push(
       new VillageCourier({
         village: this,
         x: randomPoint.x,
         y: randomPoint.y,
       }),
-    );
+    )
   }
 
   initFarmer() {
-    const randomPoint = this.getRandomPoint();
+    const randomPoint = this.getRandomPoint()
     this.objects.push(
       new VillageFarmer({
         village: this,
         x: randomPoint.x,
         y: randomPoint.y,
       }),
-    );
+    )
   }
 
   initBuildings() {
@@ -110,46 +110,46 @@ export class Village extends GameChunk implements IGameVillageChunk {
         x: this.center.x,
         y: this.center.y,
       }),
-    );
+    )
     this.objects.push(
       new Warehouse({
         x: this.center.x + 300,
         y: this.center.y - 120,
       }),
-    );
+    )
     this.objects.push(
       new WagonStop({
         x: this.center.x - 480,
         y: this.center.y + 220,
       }),
-    );
+    )
   }
 
   public getWagonStopPoint() {
     for (const object of this.objects) {
       if (object instanceof WagonStop) {
-        return { x: object.x, y: object.y };
+        return { x: object.x, y: object.y }
       }
     }
-    return { x: 500, y: 500 };
+    return { x: 500, y: 500 }
   }
 
   getRandomEmptyResourceFlagInVillage() {
     const flags = this.objects.filter(
       (f) => f instanceof Flag && f.type === "RESOURCE" && !f.target,
-    );
+    )
     return flags.length > 0
       ? flags[Math.floor(Math.random() * flags.length)]
-      : undefined;
+      : undefined
   }
 
   getRandomMovementFlagInVillage() {
     const flags = this.objects.filter(
       (f) => f instanceof Flag && f.type === "MOVEMENT",
-    );
+    )
     return flags.length > 0
       ? flags[Math.floor(Math.random() * flags.length)]
-      : undefined;
+      : undefined
   }
 
   getRandomTitle() {
@@ -164,21 +164,21 @@ export class Village extends GameChunk implements IGameVillageChunk {
       "Магическая Долина",
       "Королевское Пристанище",
       "Призрачный Утес",
-    ];
-    return titles[Math.floor(Math.random() * titles.length)];
+    ]
+    return titles[Math.floor(Math.random() * titles.length)]
   }
 
   checkIfNeedToPlantTree() {
     const treesNow = this.objects.filter(
       (t) => t instanceof Tree && t.state !== "DESTROYED",
-    );
+    )
     if (treesNow.length < 40) {
-      return this.getRandomEmptyResourceFlagInVillage();
+      return this.getRandomEmptyResourceFlagInVillage()
     }
   }
 
   plantNewTree(flag: Flag, tree: Tree) {
-    flag.target = tree;
-    this.objects.push(tree);
+    flag.target = tree
+    this.objects.push(tree)
   }
 }

@@ -1,13 +1,13 @@
-import { createBotCommand } from "@twurple/easy-bot";
-import type { IGameSceneAction } from "../../../../packages/api-sdk/src";
-import { TWITCH_CHANNEL_REWARDS } from "../config";
-import type { Game } from "../game/game";
+import { createBotCommand } from "@twurple/easy-bot"
+import type { IGameSceneAction } from "../../../../packages/api-sdk/src"
+import { TWITCH_CHANNEL_REWARDS } from "../config"
+import type { Game } from "../game/game"
 
 export class BotService {
-  public game: Game;
+  public game: Game
 
   constructor(game: Game) {
-    this.game = game;
+    this.game = game
   }
 
   private buildCommand(commandName: string, action: IGameSceneAction) {
@@ -19,103 +19,103 @@ export class BotService {
           userId,
           userName,
           params,
-        });
+        })
         if (result.message) {
-          void reply(result.message);
+          void reply(result.message)
         }
       },
-    );
+    )
   }
 
   public commandStartChangingScene() {
-    return this.buildCommand("вернуться", "START_CHANGING_SCENE");
+    return this.buildCommand("вернуться", "START_CHANGING_SCENE")
   }
 
   public commandStartGroupBuild() {
-    return this.buildCommand("собрать", "START_GROUP_BUILD");
+    return this.buildCommand("собрать", "START_GROUP_BUILD")
   }
 
   public commandJoinGroup() {
-    return this.buildCommand("го", "JOIN_GROUP");
+    return this.buildCommand("го", "JOIN_GROUP")
   }
 
   public commandDisbandGroup() {
-    return this.buildCommand("расформировать", "DISBAND_GROUP");
+    return this.buildCommand("расформировать", "DISBAND_GROUP")
   }
 
   public commandStartCreatingNewAdventure() {
-    return this.buildCommand("путешествовать", "START_CREATING_NEW_ADVENTURE");
+    return this.buildCommand("путешествовать", "START_CREATING_NEW_ADVENTURE")
   }
 
   public commandRefuel() {
-    return this.buildCommand("заправить", "REFUEL");
+    return this.buildCommand("заправить", "REFUEL")
   }
 
   public commandChop() {
-    return this.buildCommand("рубить", "CHOP");
+    return this.buildCommand("рубить", "CHOP")
   }
 
   public commandMine() {
-    return this.buildCommand("добыть", "MINE");
+    return this.buildCommand("добыть", "MINE")
   }
 
   public commandGift() {
-    return this.buildCommand("подарить", "GIFT");
+    return this.buildCommand("подарить", "GIFT")
   }
 
   public commandSell() {
-    return this.buildCommand("продать", "SELL");
+    return this.buildCommand("продать", "SELL")
   }
 
   public commandBuy() {
-    return this.buildCommand("купить", "BUY");
+    return this.buildCommand("купить", "BUY")
   }
 
   public commandHelp() {
-    return this.buildCommand("помощь", "HELP");
+    return this.buildCommand("помощь", "HELP")
   }
 
   public commandDonate() {
-    return this.buildCommand("донат", "DONATE");
+    return this.buildCommand("донат", "DONATE")
   }
 
   public async reactOnRaid({
-                             userName,
-                             userId,
-                             viewerCount,
-                           }: {
-    userName: string;
-    userId: string;
-    viewerCount: number;
+    userName,
+    userId,
+    viewerCount,
+  }: {
+    userName: string
+    userId: string
+    viewerCount: number
   }) {
     return this.game.handleChatCommand({
       action: "START_RAID",
       userId,
       userName,
       viewerCount,
-    });
+    })
   }
 
   public async reactOnChannelRewardRedemption({
-                                                userId,
-                                                userName,
-                                                rewardId,
-                                              }: {
-    userId: string;
-    userName: string;
-    rewardId: string;
+    userId,
+    userName,
+    rewardId,
+  }: {
+    userId: string
+    userName: string
+    rewardId: string
   }) {
-    console.log("reactOnChannelRewardRedemption", userId, userName, rewardId);
+    console.log("reactOnChannelRewardRedemption", userId, userName, rewardId)
     const player = await this.game.repository.findOrCreatePlayer(
       userId,
       userName,
-    );
+    )
     if (rewardId === TWITCH_CHANNEL_REWARDS.add150ViewerPointsId) {
-      await this.game.repository.addPlayerViewerPoints(player.id, 150);
-      return;
+      await this.game.repository.addPlayerViewerPoints(player.id, 150)
+      return
     }
     if (rewardId === TWITCH_CHANNEL_REWARDS.villainStealFuelId) {
-      await this.game.scene.stealFuelAction(player.id);
+      await this.game.scene.stealFuelAction(player.id)
       return
     }
   }

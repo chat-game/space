@@ -1,11 +1,11 @@
-import { Application } from "pixi.js";
+import { Application } from "pixi.js"
 
 export class SceneManager {
-  public app: Application;
+  public app: Application
 
   constructor() {
-    this.app = new Application();
-    void this.init();
+    this.app = new Application()
+    void this.init()
   }
 
   public async init() {
@@ -14,8 +14,8 @@ export class SceneManager {
       resizeTo: window,
       antialias: true,
       roundPixels: false,
-      resolution: 1
-    });
-    document.getElementById("game-canvas")?.appendChild(this.app.canvas);
+      resolution: 1,
+    })
+    document.getElementById("game-canvas")?.appendChild(this.app.canvas)
   }
 }

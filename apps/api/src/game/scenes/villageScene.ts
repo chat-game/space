@@ -1,11 +1,11 @@
-import type { Group } from "../common";
-import type { Game } from "../game";
-import { Rabbit, Wolf } from "../objects";
-import { GameScene } from "./gameScene";
+import type { Group } from "../common"
+import type { Game } from "../game"
+import { Rabbit, Wolf } from "../objects"
+import { GameScene } from "./gameScene"
 
 interface IVillageSceneOptions {
-  game: Game;
-  group: Group | undefined;
+  game: Game
+  group: Group | undefined
 }
 
 export class VillageScene extends GameScene {
@@ -27,39 +27,39 @@ export class VillageScene extends GameScene {
         "START_CHANGING_SCENE",
         "CREATE_NEW_PLAYER",
       ],
-    });
+    })
 
-    void this.init();
+    void this.init()
   }
 
   public async init() {
-    await this.initGroupPlayers();
-    this.initRabbits(8);
-    this.initWolfs(4);
+    await this.initGroupPlayers()
+    this.initRabbits(8)
+    this.initWolfs(4)
 
-    void this.play();
+    void this.play()
   }
 
   async initGroupPlayers() {
     if (!this.group) {
-      return;
+      return
     }
 
     for (const player of this.group.players) {
-      const instance = await this.initPlayer(player.id);
-      this.objects.push(instance);
+      const instance = await this.initPlayer(player.id)
+      this.objects.push(instance)
     }
   }
 
   private initRabbits(count: number) {
     for (let i = 0; i < count; i++) {
-      this.objects.push(new Rabbit());
+      this.objects.push(new Rabbit())
     }
   }
 
   private initWolfs(count: number) {
     for (let i = 0; i < count; i++) {
-      this.objects.push(new Wolf());
+      this.objects.push(new Wolf())
     }
   }
 }

@@ -1,1293 +1,231 @@
+import { Application, Container, Graphics, Sprite, TilingSprite } from "pixi.js"
+import { getRandomInRange } from "../../../../../../packages/api-sdk/src"
 import {
-  Graphics,
-  Application,
-  Sprite,
-  TilingSprite,
-  Container
-} from "pixi.js";
-import { getRandomInRange } from "../../../../../../packages/api-sdk/src";
+  BACKGROUND_TILE_1,
+  BACKGROUND_TILE_2,
+  BACKGROUND_TILE_3,
+  BACKGROUND_TILE_4,
+  BACKGROUND_TILE_5,
+} from "./backgroundImages"
+
+interface Palette {
+  93: string
+  97: string
+  103: string
+  111: string
+  115: string
+  123: string
+  136: string
+  147: string
+  149: string
+  151: string
+  153: string
+  156: string
+  168: string
+  173: string
+  203: string
+  206: string
+  209: string
+  211: string
+  213: string
+  218: string
+}
 
 export class BackgroundGenerator {
-  app: Application;
-  palette: any;
-  color1: string;
-  color2: string;
-  color3: string;
-  color4: string;
-  color5: string;
+  app: Application
+  palette: Palette
+  mainColor1: string
+  mainColor2: string
+  accentColor1: string
+  accentColor2: string
+  accentColor3: string
 
   constructor(app: Application) {
-    this.app = app;
+    this.app = app
 
-    this.color1 = "0x239063";
-    this.color2 = "0x1ebc73";
-    this.color3 = "0x91db69";
-    this.color4 = "0xcddf6c";
-    this.color5 = "0x8fd3ff";
+    this.mainColor1 = "0x239063"
+    this.mainColor2 = "0x1ebc73"
+    this.accentColor1 = "0x91db69"
+    this.accentColor2 = "0xcddf6c"
+    this.accentColor3 = "0x8fd3ff"
 
     this.palette = {
-      93: this.color1,
-      97: this.color1,
-      103: this.color1,
-      111: this.color2,
-      115: this.color2,
+      93: this.mainColor1,
+      97: this.mainColor1,
+      103: this.mainColor1,
+      111: this.mainColor2,
+      115: this.mainColor2,
       123: "0xcd683d", // brown
       136: "0xcd683d", // brown
-      147: this.color3,
+      147: this.accentColor1,
       149: "0x92a984", // light neutral
       151: "0xe6904e", // orange
-      153: this.color3,
-      156: this.color3,
+      153: this.accentColor1,
+      156: this.accentColor1,
       168: "0xf68181", // bright pink
       173: "0xfbb954", // light orange
       203: "0x8fd3ff", // light blue
-      206: this.color4,
+      206: this.accentColor2,
       209: "0xc7dcd0", // almost white
-      211: this.color5,
-      213: this.color5,
-      218: "0xfbff86" // light yellow
+      211: this.accentColor3,
+      213: this.accentColor3,
+      218: "0xfbff86", // light yellow
     }
   }
 
-  generate1() {
-    const graphics = new Graphics();
-    graphics.rect(0, 0, 16, 16).fill(this.color1);
+  generate(imageArray: number[]) {
+    const imageWidth = Math.sqrt(imageArray.length)
 
-    return this.app.renderer.generateTexture({
-      target: graphics,
-      resolution: 4
-    });
-  }
+    const graphics = new Graphics()
 
-  generate2() {
-    const imageArray = [
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      111,
-      93,
-      93,
-      111,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      111,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93
-    ]
-
-    const imageWidth = Math.sqrt(imageArray.length);
-
-    const graphics = new Graphics();
-
-    let index = 0;
+    let index = 0
     for (let y = 0; y < imageWidth; y++) {
       for (let x = 0; x < imageWidth; x++) {
-        const color = this.palette[imageArray[index]];
-        graphics.rect(x, y, 1, 1).fill(color);
-        index++;
+        const grayscaleKey = imageArray[index]
+
+        if (!(grayscaleKey in this.palette)) {
+          // Not found!
+          console.log("Not found key in Palette:", grayscaleKey)
+          continue
+        }
+
+        const color = this.palette[grayscaleKey as keyof Palette]
+
+        graphics.rect(x, y, 1, 1).fill(color)
+        index++
       }
     }
 
     return this.app.renderer.generateTexture({
       target: graphics,
-      resolution: 4
-    });
-  }
-
-  generate3() {
-    const imageArray = [
-      97,
-      97,
-      97,
-      149,
-      149,
-      97,
-      97,
-      97,
-      149,
-      149,
-      97,
-      97,
-      97,
-      115,
-      97,
-      97,
-      97,
-      206,
-      97,
-      149,
-      115,
-      115,
-      97,
-      115,
-      115,
-      97,
-      97,
-      97,
-      103,
-      115,
-      103,
-      97,
-      97,
-      206,
-      206,
-      97,
-      115,
-      115,
-      97,
-      115,
-      97,
-      97,
-      153,
-      153,
-      97,
-      97,
-      103,
-      97,
-      103,
-      115,
-      115,
-      97,
-      103,
-      115,
-      97,
-      97,
-      103,
-      97,
-      153,
-      115,
-      115,
-      97,
-      149,
-      149,
-      97,
-      103,
-      115,
-      97,
-      103,
-      115,
-      103,
-      97,
-      97,
-      97,
-      103,
-      115,
-      115,
-      103,
-      115,
-      115,
-      97,
-      97,
-      97,
-      97,
-      97,
-      97,
-      97,
-      97,
-      206,
-      206,
-      103,
-      97,
-      97,
-      103,
-      97,
-      115,
-      97,
-      206,
-      206,
-      206,
-      97,
-      97,
-      97,
-      115,
-      115,
-      206,
-      97,
-      97,
-      97,
-      97,
-      103,
-      97,
-      97,
-      97,
-      206,
-      115,
-      115,
-      97,
-      103,
-      115,
-      115,
-      103,
-      97,
-      149,
-      103,
-      206,
-      206,
-      97,
-      97,
-      97,
-      103,
-      115,
-      115,
-      97,
-      103,
-      115,
-      103,
-      97,
-      149,
-      115,
-      103,
-      115,
-      115,
-      97,
-      153,
-      153,
-      97,
-      103,
-      115,
-      97,
-      103,
-      97,
-      103,
-      97,
-      115,
-      103,
-      97,
-      103,
-      115,
-      97,
-      153,
-      115,
-      115,
-      97,
-      97,
-      103,
-      153,
-      153,
-      97,
-      97,
-      97,
-      97,
-      97,
-      103,
-      97,
-      97,
-      103,
-      115,
-      115,
-      103,
-      97,
-      103,
-      153,
-      115,
-      115,
-      97,
-      97,
-      206,
-      206,
-      206,
-      97,
-      97,
-      97,
-      103,
-      97,
-      103,
-      97,
-      97,
-      103,
-      115,
-      115,
-      97,
-      115,
-      115,
-      206,
-      97,
-      97,
-      97,
-      149,
-      97,
-      97,
-      97,
-      206,
-      206,
-      97,
-      97,
-      97,
-      103,
-      115,
-      115,
-      103,
-      97,
-      206,
-      97,
-      115,
-      149,
-      97,
-      97,
-      103,
-      115,
-      115,
-      103,
-      97,
-      103,
-      115,
-      103,
-      97,
-      115,
-      206,
-      97,
-      97,
-      115,
-      103,
-      97,
-      97,
-      103,
-      115,
-      103,
-      97,
-      103,
-      97,
-      97,
-      97,
-      115,
-      115,
-      103
-    ]
-
-    const imageWidth = Math.sqrt(imageArray.length);
-
-    const graphics = new Graphics();
-
-    let index = 0;
-    for (let y = 0; y < imageWidth; y++) {
-      for (let x = 0; x < imageWidth; x++) {
-        const color = this.palette[imageArray[index]];
-        graphics.rect(x, y, 1, 1).fill(color);
-        index++;
-      }
-    }
-
-    return this.app.renderer.generateTexture({
-      target: graphics,
-      resolution: 4
-    });
-  }
-
-  generate4() {
-    const imageArray = [
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      111,
-      173,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      173,
-      168,
-      173,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      103,
-      173,
-      93,
-      111,
-      93,
-      93,
-      93,
-      211,
-      111,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      211,
-      168,
-      111,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      103,
-      93,
-      103,
-      93,
-      93,
-      93,
-      209,
-      209,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      209,
-      173,
-      173,
-      173,
-      93,
-      111,
-      93,
-      93,
-      111,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      103,
-      209,
-      173,
-      136,
-      173,
-      209,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      103,
-      103,
-      173,
-      173,
-      173,
-      209,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      103,
-      209,
-      209,
-      103,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      218,
-      93,
-      93,
-      93,
-      111,
-      93,
-      173,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      111,
-      147,
-      218,
-      93,
-      93,
-      111,
-      173,
-      136,
-      173,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      103,
-      93,
-      93,
-      111,
-      93,
-      103,
-      103,
-      173,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      103,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93
-    ]
-
-    const imageWidth = Math.sqrt(imageArray.length);
-
-    const graphics = new Graphics();
-
-    let index = 0;
-    for (let y = 0; y < imageWidth; y++) {
-      for (let x = 0; x < imageWidth; x++) {
-        const color = this.palette[imageArray[index]];
-        graphics.rect(x, y, 1, 1).fill(color);
-        index++;
-      }
-    }
-
-    return this.app.renderer.generateTexture({
-      target: graphics,
-      resolution: 4
-    });
-  }
-
-  generate5() {
-    const imageArray = [
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      111,
-      93,
-      211,
-      211,
-      93,
-      111,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      211,
-      173,
-      173,
-      173,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      103,
-      211,
-      173,
-      123,
-      173,
-      211,
-      93,
-      93,
-      93,
-      93,
-      213,
-      93,
-      93,
-      93,
-      93,
-      93,
-      103,
-      103,
-      173,
-      173,
-      173,
-      211,
-      111,
-      93,
-      93,
-      93,
-      151,
-      213,
-      93,
-      93,
-      93,
-      111,
-      93,
-      103,
-      211,
-      211,
-      156,
-      93,
-      111,
-      93,
-      93,
-      103,
-      156,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      111,
-      93,
-      93,
-      111,
-      93,
-      93,
-      111,
-      203,
-      93,
-      93,
-      111,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      203,
-      136,
-      203,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      209,
-      93,
-      93,
-      93,
-      93,
-      103,
-      156,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      211,
-      209,
-      151,
-      93,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      103,
-      209,
-      151,
-      209,
-      209,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      218,
-      93,
-      111,
-      93,
-      103,
-      103,
-      211,
-      209,
-      211,
-      93,
-      93,
-      111,
-      93,
-      111,
-      93,
-      218,
-      168,
-      93,
-      93,
-      93,
-      111,
-      103,
-      103,
-      156,
-      103,
-      111,
-      93,
-      93,
-      93,
-      111,
-      93,
-      103,
-      156,
-      111,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      111,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93,
-      93
-    ]
-
-    const imageWidth = Math.sqrt(imageArray.length);
-
-    const graphics = new Graphics();
-
-    let index = 0;
-    for (let y = 0; y < imageWidth; y++) {
-      for (let x = 0; x < imageWidth; x++) {
-        const color = this.palette[imageArray[index]];
-        graphics.rect(x, y, 1, 1).fill(color);
-        index++;
-      }
-    }
-
-    return this.app.renderer.generateTexture({
-      target: graphics,
-      resolution: 4
-    });
+      resolution: 4,
+    })
   }
 
   async getPixelsData() {
-    let canvas = document.createElement("CANVAS") as HTMLCanvasElement;
-    let ctx = canvas.getContext('2d');
+    const canvas = document.createElement("CANVAS") as HTMLCanvasElement
+    const ctx = canvas.getContext("2d")
     if (!ctx) {
-      return;
+      return
     }
 
-    const app = new Application();
-    await app.init();
+    const app = new Application()
+    await app.init()
 
-    let img = Sprite.from("backgroundMini");
-    app.stage.addChild(img);
+    const img = Sprite.from("backgroundMini")
+    app.stage.addChild(img)
 
     const blob = await app.renderer.extract.image({
       target: app.stage,
       format: "webp",
-      quality: 1
-    });
+      quality: 1,
+    })
 
-    ctx.canvas.width = blob.width;
-    ctx.canvas.height = blob.height;
-    ctx.drawImage(blob, 0, 0);
+    ctx.canvas.width = blob.width
+    ctx.canvas.height = blob.height
+    ctx.drawImage(blob, 0, 0)
 
-    const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+    const imageData = ctx.getImageData(
+      0,
+      0,
+      ctx.canvas.width,
+      ctx.canvas.height,
+    )
 
-    const pixels: number[] = [];
+    const pixels: number[] = []
 
     for (let y = 0; y < blob.width; y++) {
       for (let x = 0; x < blob.width; x++) {
-        const [redIndex, greenIndex, blueIndex, _] = this.getColorIndicesForCoord(x, y, ctx.canvas.width);
+        const [redIndex, greenIndex, blueIndex, _] =
+          this.getColorIndicesForCoord(x, y, ctx.canvas.width)
 
-        const average = Math.round((imageData?.data[redIndex] + imageData?.data[greenIndex] + imageData?.data[blueIndex]) / 3);
+        const average = Math.round(
+          (imageData?.data[redIndex] +
+            imageData?.data[greenIndex] +
+            imageData?.data[blueIndex]) /
+            3,
+        )
 
         pixels.push(average)
       }
     }
 
-    console.log(pixels);
+    console.log(pixels)
 
-    return imageData;
+    return imageData
   }
 
   getColorIndicesForCoord(x: number, y: number, width: number) {
-    const red = y * (width * 4) + x * 4;
-    return [red, red + 1, red + 2, red + 3];
-  };
+    const red = y * (width * 4) + x * 4
+    return [red, red + 1, red + 2, red + 3]
+  }
 
   public async getGeneratedBackgroundTilingSprite() {
     const bg = this.generateRandomGridBackground({
       width: 2560,
       height: 1440,
-    });
-    const container = new Container();
-    container.addChild(...bg);
+    })
+    const container = new Container()
+    container.addChild(...bg)
 
-    const texture = this.app.renderer.generateTexture(container);
-    container.destroy();
+    const texture = this.app.renderer.generateTexture(container)
+    container.destroy()
 
     return new TilingSprite({
       texture,
-    });
+    })
   }
 
   generateRandomGridBackground({
-                                 width,
-                                 height,
-                               }: {
-    width: number;
-    height: number;
+    width,
+    height,
+  }: {
+    width: number
+    height: number
   }) {
-    const gridX = Math.ceil(width / 64);
-    const gridY = Math.floor(height / 64);
+    const gridX = Math.ceil(width / 64)
+    const gridY = Math.floor(height / 64)
 
-    const bg: Sprite[] = [];
+    const bg: Sprite[] = []
 
     for (let i = 0; i < gridX; i++) {
       for (let j = 0; j < gridY; j++) {
-        const background = this.getRandomSpriteForBackground();
+        const background = this.getRandomSpriteForBackground()
 
-        background.x = i * 64;
-        background.y = j * 64;
+        background.x = i * 64
+        background.y = j * 64
 
-        bg.push(background);
+        bg.push(background)
       }
     }
 
-    return bg;
+    return bg
   }
 
   getRandomSpriteForBackground() {
-    const random = getRandomInRange(1, 100);
+    const tileArray = this.getTileByRandomChance()
+    const sprite = Sprite.from(this.generate(tileArray))
+    sprite.scale = 4
+
+    return sprite
+  }
+
+  getTileByRandomChance(): number[] {
+    const randomMax = 100
+    const random = getRandomInRange(1, randomMax)
+
     if (random <= 55) {
-      const sprite = Sprite.from(this.generate1());
-      sprite.scale = 4;
-      return sprite;
+      return BACKGROUND_TILE_1
     }
     if (random <= 93) {
-      const sprite = Sprite.from(this.generate2());
-      sprite.scale = 4;
-      return sprite;
+      return BACKGROUND_TILE_2
     }
     if (random <= 96) {
-      const sprite = Sprite.from(this.generate3())
-      sprite.scale = 4;
-      return sprite;
+      return BACKGROUND_TILE_3
     }
     if (random <= 98) {
-      const sprite = Sprite.from(this.generate4());
-      sprite.scale = 4;
-      return sprite;
+      return BACKGROUND_TILE_4
     }
-    const sprite = Sprite.from(this.generate5())
-    sprite.scale = 4;
-    return sprite;
+    return BACKGROUND_TILE_5
   }
 }

@@ -1,21 +1,21 @@
-import { Sprite } from "pixi.js";
+import { Sprite } from "pixi.js"
 import type {
   IGameObjectDirection,
   IGameObjectUnit,
-} from "../../../../../packages/api-sdk/src";
-import { GraphicsContainer } from "./graphicsContainer";
+} from "../../../../../packages/api-sdk/src"
+import { GraphicsContainer } from "./graphicsContainer"
 
 interface IUnitTopContainerOptions {
-  direction: IGameObjectDirection;
-  visual: IGameObjectUnit["visual"]["top"];
+  direction: IGameObjectDirection
+  visual: IGameObjectUnit["visual"]["top"]
 }
 
 export class UnitTopContainer extends GraphicsContainer {
-  public visual: IGameObjectUnit["visual"]["top"];
+  public visual: IGameObjectUnit["visual"]["top"]
 
   constructor({ direction, visual }: IUnitTopContainerOptions) {
-    super({ type: "UNIT_TOP", direction });
-    this.visual = visual;
+    super({ type: "UNIT_TOP", direction })
+    this.visual = visual
   }
 
   static create(
@@ -23,13 +23,13 @@ export class UnitTopContainer extends GraphicsContainer {
     direction: IGameObjectDirection,
     visual: IGameObjectUnit["visual"]["top"],
   ) {
-    const sprite = Sprite.from(spriteIndex);
-    sprite.anchor.set(0.5, 1);
+    const sprite = Sprite.from(spriteIndex)
+    sprite.anchor.set(0.5, 1)
 
-    const container = new UnitTopContainer({ direction, visual });
-    container.addChild(sprite);
+    const container = new UnitTopContainer({ direction, visual })
+    container.addChild(sprite)
 
-    return container;
+    return container
   }
 
   static getAll() {
@@ -48,6 +48,6 @@ export class UnitTopContainer extends GraphicsContainer {
         "RIGHT",
         "DARK_SILVER_SHIRT",
       ),
-    ];
+    ]
   }
 }

@@ -1,38 +1,38 @@
-import { RefreshingAuthProvider } from "@twurple/auth";
-import { Bot } from "@twurple/easy-bot";
-import { PubSubClient } from "@twurple/pubsub";
-import type { Game } from "../game/game";
-import { BotService } from "./bot.service";
+import { RefreshingAuthProvider } from "@twurple/auth"
+import { Bot } from "@twurple/easy-bot"
+import { PubSubClient } from "@twurple/pubsub"
+import type { Game } from "../game/game"
+import { BotService } from "./bot.service"
 
 export class BotController {
-  private readonly channel = process.env.TWITCH_CHANNEL_NAME as string;
-  private readonly userId = process.env.TWITCH_CHANNEL_ID as string;
-  private readonly clientId = process.env.TWITCH_CLIENT_ID as string;
-  private readonly clientSecret = process.env.TWITCH_SECRET_ID as string;
+  private readonly channel = process.env.TWITCH_CHANNEL_NAME as string
+  private readonly userId = process.env.TWITCH_CHANNEL_ID as string
+  private readonly clientId = process.env.TWITCH_CLIENT_ID as string
+  private readonly clientSecret = process.env.TWITCH_SECRET_ID as string
 
-  private readonly service: BotService;
+  private readonly service: BotService
 
   constructor(game: Game) {
-    this.service = new BotService(game);
+    this.service = new BotService(game)
   }
 
   private async prepareAuthProvider() {
-    const tokenFile = Bun.file(`./apps/api/tmp/${this.userId}.token.json`);
-    const tokenData = await tokenFile.json();
+    const tokenFile = Bun.file(`./apps/api/tmp/${this.userId}.token.json`)
+    const tokenData = await tokenFile.json()
 
     const authProvider = new RefreshingAuthProvider({
       clientId: this.clientId,
       clientSecret: this.clientSecret,
-    });
+    })
 
     authProvider.onRefresh(async (_, newTokenData) => {
-      const data = JSON.stringify(newTokenData, null, 4);
-      await Bun.write(tokenFile, data);
-    });
+      const data = JSON.stringify(newTokenData, null, 4)
+      await Bun.write(tokenFile, data)
+    })
 
-    await authProvider.addUserForToken(tokenData, ["chat", "channel"]);
+    await authProvider.addUserForToken(tokenData, ["chat", "channel"])
 
-    return authProvider;
+    return authProvider
   }
 
   prepareBotCommands() {
@@ -50,21 +50,21 @@ export class BotController {
       this.service.commandBuy(),
       this.service.commandHelp(),
       this.service.commandDonate(),
-    ];
+    ]
   }
 
   public async serve() {
-    const authProvider = await this.prepareAuthProvider();
+    const authProvider = await this.prepareAuthProvider()
 
-    const pubSubClient = new PubSubClient({ authProvider });
+    const pubSubClient = new PubSubClient({ authProvider })
 
     pubSubClient.onRedemption(this.userId, ({ userId, userName, rewardId }) => {
       this.service.reactOnChannelRewardRedemption({
         userId,
         userName,
         rewardId,
-      });
-    });
+      })
+    })
 
     const bot = new Bot({
       authProvider,
@@ -73,50 +73,50 @@ export class BotController {
       chatClientOptions: {
         requestMembershipEvents: true,
       },
-    });
+    })
 
     bot.onRaid(({ broadcasterName, userName, userId, viewerCount }) => {
-      void bot.say(broadcasterName, `@${userName} устроил(а) рейд! Готовимся!`);
-      void this.service.reactOnRaid({ userName, userId, viewerCount });
-    });
+      void bot.say(broadcasterName, `@${userName} устроил(а) рейд! Готовимся!`)
+      void this.service.reactOnRaid({ userName, userId, viewerCount })
+    })
     bot.onRaidCancel((event) => {
-      console.log("raid canceled!", event);
-    });
+      console.log("raid canceled!", event)
+    })
 
     bot.onMessage(({ userId, isAction, text }) => {
-      console.log("message", userId, isAction, text);
-    });
+      console.log("message", userId, isAction, text)
+    })
 
     bot.onAction(({ userId, userName, isAction, text }) => {
-      console.log("action!", userId, userName, isAction, text);
-    });
+      console.log("action!", userId, userName, isAction, text)
+    })
 
     bot.onJoin(({ userName }) => {
-      console.log(new Date().toLocaleTimeString(), "joined!", userName);
-    });
+      console.log(new Date().toLocaleTimeString(), "joined!", userName)
+    })
     bot.onLeave(({ userName }) => {
-      console.log("left!", userName);
-    });
+      console.log("left!", userName)
+    })
 
     bot.onSub(({ broadcasterName, userName }) => {
       void bot.say(
         broadcasterName,
         `Thanks to @${userName} for subscribing to the channel!`,
-      );
-    });
+      )
+    })
     bot.onResub(({ broadcasterName, userName, months }) => {
       void bot.say(
         broadcasterName,
         `Thanks to @${userName} for subscribing to the channel for a total of ${months} months!`,
-      );
-    });
+      )
+    })
     bot.onSubGift(({ broadcasterName, gifterName, userName }) => {
       void bot.say(
         broadcasterName,
         `Thanks to @${gifterName} for gifting a subscription to @${userName}!`,
-      );
-    });
+      )
+    })
 
-    return bot;
+    return bot
   }
 }

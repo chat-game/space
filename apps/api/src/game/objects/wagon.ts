@@ -1,101 +1,101 @@
-import { createId } from "@paralleldrive/cuid2";
-import type { IGameObjectWagon } from "../../../../../packages/api-sdk/src";
-import { Flag } from "./flag";
-import { GameObject } from "./gameObject";
-import { Mechanic } from "./units";
+import { createId } from "@paralleldrive/cuid2"
+import type { IGameObjectWagon } from "../../../../../packages/api-sdk/src"
+import { Flag } from "./flag"
+import { GameObject } from "./gameObject"
+import { Mechanic } from "./units"
 
 interface IWagonOptions {
-  x: number;
-  y: number;
+  x: number
+  y: number
 }
 
 export class Wagon extends GameObject implements IGameObjectWagon {
-  public speed: number;
-  public fuel: number;
-  public visibilityArea!: IGameObjectWagon["visibilityArea"];
+  public speed: number
+  public fuel: number
+  public visibilityArea!: IGameObjectWagon["visibilityArea"]
 
-  public mechanic!: Mechanic;
-  public serverDataArea!: IGameObjectWagon["visibilityArea"];
-  public collisionArea!: IGameObjectWagon["visibilityArea"];
-  public nearFlags: Flag[] = [];
+  public mechanic!: Mechanic
+  public serverDataArea!: IGameObjectWagon["visibilityArea"]
+  public collisionArea!: IGameObjectWagon["visibilityArea"]
+  public nearFlags: Flag[] = []
 
   constructor({ x, y }: IWagonOptions) {
-    const finalId = createId();
+    const finalId = createId()
 
-    super({ id: finalId, x, y, entity: "WAGON", isVisibleOnClient: true });
+    super({ id: finalId, x, y, entity: "WAGON", isVisibleOnClient: true })
 
-    this.speed = 0;
-    this.fuel = 2000;
-    this.updateVisibilityArea();
-    this.updateServerDataArea();
-    this.initNearFlags();
-    this.initMechanic();
+    this.speed = 0
+    this.fuel = 2000
+    this.updateVisibilityArea()
+    this.updateServerDataArea()
+    this.initNearFlags()
+    this.initMechanic()
   }
 
   live() {
-    this.updateVisibilityArea();
-    this.updateServerDataArea();
-    this.updateCollisionArea();
-    this.updateNearFlags();
-    this.updateMechanic();
-    this.consumeFuel();
+    this.updateVisibilityArea()
+    this.updateServerDataArea()
+    this.updateCollisionArea()
+    this.updateNearFlags()
+    this.updateMechanic()
+    this.consumeFuel()
 
     if (this.state === "IDLE") {
-      this.handleChange();
-      return;
+      this.handleChange()
+      return
     }
     if (this.state === "WAITING") {
-      this.handleChange();
-      return;
+      this.handleChange()
+      return
     }
   }
 
   handleChange() {
-    this.sendMessageObjectUpdated();
+    this.sendMessageObjectUpdated()
   }
 
   consumeFuel() {
     if (this.speed <= 0) {
-      return;
+      return
     }
 
-    this.fuel -= this.speed * 2;
+    this.fuel -= this.speed * 2
   }
 
   updateVisibilityArea() {
-    const offsetX = 2560 / 2;
-    const offsetY = 1440 / 2;
+    const offsetX = 2560 / 2
+    const offsetY = 1440 / 2
 
     this.visibilityArea = {
       startX: this.x - offsetX,
       endX: this.x + offsetX,
       startY: this.y - offsetY,
       endY: this.y + offsetY,
-    };
+    }
   }
 
   updateServerDataArea() {
-    const offsetX = 2560 * 1.5;
-    const offsetY = 1440;
+    const offsetX = 2560 * 1.5
+    const offsetY = 1440
 
     this.serverDataArea = {
       startX: this.x - offsetX,
       endX: this.x + offsetX,
       startY: this.y - offsetY,
       endY: this.y + offsetY,
-    };
+    }
   }
 
   updateCollisionArea() {
-    const offsetX = 250;
-    const offsetY = 180;
+    const offsetX = 250
+    const offsetY = 180
 
     this.collisionArea = {
       startX: this.x - offsetX,
       endX: this.x + offsetX,
       startY: this.y - offsetY,
       endY: this.y + offsetY,
-    };
+    }
   }
 
   public checkIfPointInCollisionArea(point: { x: number; y: number }) {
@@ -104,7 +104,7 @@ export class Wagon extends GameObject implements IGameObjectWagon {
       point.x < this.collisionArea.endX &&
       this.collisionArea.startY < point.y &&
       point.y < this.collisionArea.endY
-    );
+    )
   }
 
   public checkIfPointInVisibilityArea(point: { x: number; y: number }) {
@@ -113,7 +113,7 @@ export class Wagon extends GameObject implements IGameObjectWagon {
       point.x < this.visibilityArea.endX &&
       this.visibilityArea.startY < point.y &&
       point.y < this.visibilityArea.endY
-    );
+    )
   }
 
   public checkIfPointInServerDataArea(point: { x: number; y: number }) {
@@ -122,20 +122,20 @@ export class Wagon extends GameObject implements IGameObjectWagon {
       point.x < this.serverDataArea.endX &&
       this.serverDataArea.startY < point.y &&
       point.y < this.serverDataArea.endY
-    );
+    )
   }
 
   initMechanic() {
-    this.mechanic = new Mechanic({ x: this.x, y: this.y });
+    this.mechanic = new Mechanic({ x: this.x, y: this.y })
   }
 
   updateMechanic() {
-    this.mechanic.isVisibleOnClient = true;
-    this.mechanic.needToSendDataToClient = true;
-    this.mechanic.live();
-    this.mechanic.direction = "LEFT";
-    this.mechanic.x = this.x - 50;
-    this.mechanic.y = this.y - 48;
+    this.mechanic.isVisibleOnClient = true
+    this.mechanic.needToSendDataToClient = true
+    this.mechanic.live()
+    this.mechanic.direction = "LEFT"
+    this.mechanic.x = this.x - 50
+    this.mechanic.y = this.y - 48
   }
 
   initNearFlags() {
@@ -145,28 +145,28 @@ export class Wagon extends GameObject implements IGameObjectWagon {
       y: this.y,
       offsetX: -300,
       offsetY: 0,
-    });
+    })
     const flag2 = new Flag({
       type: "WAGON_NEAR_MOVEMENT",
       x: this.x - 100,
       y: this.y + 150,
       offsetX: -100,
       offsetY: 150,
-    });
+    })
     const flag3 = new Flag({
       type: "WAGON_NEAR_MOVEMENT",
       x: this.x + 200,
       y: this.y + 150,
       offsetX: 200,
       offsetY: 150,
-    });
-    this.nearFlags.push(flag1, flag2, flag3);
+    })
+    this.nearFlags.push(flag1, flag2, flag3)
   }
 
   updateNearFlags() {
     for (const nearFlag of this.nearFlags) {
-      nearFlag.x = this.x + nearFlag.offsetX;
-      nearFlag.y = this.y + nearFlag.offsetY;
+      nearFlag.x = this.x + nearFlag.offsetX
+      nearFlag.y = this.y + nearFlag.offsetY
     }
   }
 }

@@ -1,49 +1,49 @@
-import type { AnimatedSprite } from "pixi.js";
+import type { AnimatedSprite } from "pixi.js"
 import type {
   IGameInventory,
   IGameObjectUnit,
-} from "../../../../../../packages/api-sdk/src";
-import type { GraphicsContainer } from "../../components/graphicsContainer";
-import { UnitHairContainer } from "../../components/unitHairContainer";
-import { UnitHeadContainer } from "../../components/unitHeadContainer";
-import { UnitInterface } from "../../components/unitInterface";
-import { UnitTopContainer } from "../../components/unitTopContainer";
-import type { Game } from "../../game";
-import { AssetsManager } from "../../utils";
-import { Flag } from "../flag";
-import { GameObjectContainer } from "../gameObjectContainer";
+} from "../../../../../../packages/api-sdk/src"
+import type { GraphicsContainer } from "../../components/graphicsContainer"
+import { UnitHairContainer } from "../../components/unitHairContainer"
+import { UnitHeadContainer } from "../../components/unitHeadContainer"
+import { UnitInterface } from "../../components/unitInterface"
+import { UnitTopContainer } from "../../components/unitTopContainer"
+import type { Game } from "../../game"
+import { AssetsManager } from "../../utils"
+import { Flag } from "../flag"
+import { GameObjectContainer } from "../gameObjectContainer"
 
 interface IUnitOptions {
-  game: Game;
-  object: IGameObjectUnit;
+  game: Game
+  object: IGameObjectUnit
 }
 
 export class Unit extends GameObjectContainer implements IGameObjectUnit {
-  public inventory!: IGameInventory;
-  public visual!: IGameObjectUnit["visual"];
-  public coins = 0;
+  public inventory!: IGameInventory
+  public visual!: IGameObjectUnit["visual"]
+  public coins = 0
 
-  public interface!: UnitInterface;
-  public children: GraphicsContainer[] = [];
-  animationMovingLeft!: AnimatedSprite;
-  animationMovingRight!: AnimatedSprite;
+  public interface!: UnitInterface
+  public children: GraphicsContainer[] = []
+  animationMovingLeft!: AnimatedSprite
+  animationMovingRight!: AnimatedSprite
 
   constructor({ game, object }: IUnitOptions) {
-    super({ game, ...object });
-    this.update(object);
+    super({ game, ...object })
+    this.update(object)
 
-    this.animationMovingLeft = AssetsManager.getAnimatedSpriteHeroLeft();
-    this.animationMovingRight = AssetsManager.getAnimatedSpriteHeroRight();
+    this.animationMovingLeft = AssetsManager.getAnimatedSpriteHeroLeft()
+    this.animationMovingRight = AssetsManager.getAnimatedSpriteHeroRight()
 
-    this.init();
+    this.init()
   }
 
   init() {
-    const top = this.initTop();
-    const head = this.initHead();
-    const hair = this.initHair();
+    const top = this.initTop()
+    const head = this.initHead()
+    const hair = this.initHair()
 
-    this.initInterface();
+    this.initInterface()
 
     this.addChild(
       ...top,
@@ -52,40 +52,40 @@ export class Unit extends GameObjectContainer implements IGameObjectUnit {
       this.animationMovingLeft,
       this.animationMovingRight,
       this.interface,
-    );
+    )
   }
 
   initTop() {
-    return UnitTopContainer.getAll();
+    return UnitTopContainer.getAll()
   }
 
   initHead() {
-    return UnitHeadContainer.getAll();
+    return UnitHeadContainer.getAll()
   }
 
   initHair() {
-    return UnitHairContainer.getAll();
+    return UnitHairContainer.getAll()
   }
 
   initInterface() {
-    this.interface = new UnitInterface(this);
+    this.interface = new UnitInterface(this)
   }
 
   animate() {
     for (const container of this.children) {
-      container.visible = false;
+      container.visible = false
 
       if (this.state === "MOVING") {
-        this.animationMovingLeft.animationSpeed = 0.25;
-        this.animationMovingRight.animationSpeed = 0.25;
+        this.animationMovingLeft.animationSpeed = 0.25
+        this.animationMovingRight.animationSpeed = 0.25
 
         if (this.direction === "RIGHT") {
-          this.animationMovingRight.visible = true;
-          this.animationMovingRight.play();
+          this.animationMovingRight.visible = true
+          this.animationMovingRight.play()
         }
         if (this.direction === "LEFT") {
-          this.animationMovingLeft.visible = true;
-          this.animationMovingLeft.play();
+          this.animationMovingLeft.visible = true
+          this.animationMovingLeft.play()
         }
       }
 
@@ -94,77 +94,77 @@ export class Unit extends GameObjectContainer implements IGameObjectUnit {
         this.state === "CHOPPING" ||
         this.state === "MINING"
       ) {
-        this.animationMovingLeft.animationSpeed = 0;
-        this.animationMovingRight.animationSpeed = 0;
-        this.animationMovingLeft.currentFrame = 0;
-        this.animationMovingRight.currentFrame = 0;
+        this.animationMovingLeft.animationSpeed = 0
+        this.animationMovingRight.animationSpeed = 0
+        this.animationMovingLeft.currentFrame = 0
+        this.animationMovingRight.currentFrame = 0
 
         if (this.direction === "LEFT") {
-          this.animationMovingLeft.visible = true;
+          this.animationMovingLeft.visible = true
         }
         if (this.direction === "RIGHT") {
-          this.animationMovingRight.visible = true;
+          this.animationMovingRight.visible = true
         }
       }
 
-      this.drawTop(container);
-      this.drawHead(container);
-      this.drawHair(container);
+      this.drawTop(container)
+      this.drawHead(container)
+      this.drawHair(container)
     }
 
-    this.interface.animate();
+    this.interface.animate()
 
     if (this.target && this.target instanceof Flag) {
-      this.target.visible = true;
+      this.target.visible = true
     }
   }
 
   drawTop(container: GraphicsContainer) {
     if (container instanceof UnitTopContainer) {
       if (container.visual !== this.visual.top) {
-        return;
+        return
       }
       if (container.direction !== this.direction) {
-        return;
+        return
       }
 
-      container.visible = true;
+      container.visible = true
     }
   }
 
   drawHead(container: GraphicsContainer) {
     if (container instanceof UnitHeadContainer) {
       if (container.visual !== this.visual.head) {
-        return;
+        return
       }
       if (container.direction !== this.direction) {
-        return;
+        return
       }
 
-      container.visible = true;
+      container.visible = true
     }
   }
 
   drawHair(container: GraphicsContainer) {
     if (container instanceof UnitHairContainer) {
       if (container.visual !== this.visual.hairstyle) {
-        return;
+        return
       }
       if (container.direction !== this.direction) {
-        return;
+        return
       }
 
-      container.visible = true;
+      container.visible = true
     }
   }
 
   update(object: IGameObjectUnit) {
-    super.update(object);
+    super.update(object)
 
-    this.zIndex = Math.round(object.y + 1);
+    this.zIndex = Math.round(object.y + 1)
 
-    this.inventory = object.inventory;
-    this.visual = object.visual;
-    this.coins = object.coins;
+    this.inventory = object.inventory
+    this.visual = object.visual
+    this.coins = object.coins
   }
 }

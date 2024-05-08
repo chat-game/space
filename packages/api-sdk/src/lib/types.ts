@@ -13,80 +13,77 @@ export type IGameSceneAction =
   | "START_CHANGING_SCENE"
   | "START_RAID"
   | "CREATE_NEW_PLAYER"
-  | "START_CREATING_NEW_ADVENTURE";
+  | "START_CREATING_NEW_ADVENTURE"
 
-export type ItemType = "WOOD" | "STONE" | "AXE" | "PICKAXE";
+export type ItemType = "WOOD" | "STONE" | "AXE" | "PICKAXE"
 
 export interface IGameInventory {
-  id: string;
-  objectId: string;
-  items: InventoryItem[];
+  id: string
+  objectId: string
+  items: InventoryItem[]
 }
 
 export interface InventoryItem {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  inventoryId: string;
-  type: ItemType;
-  amount: number;
-  durability: number;
+  id: string
+  createdAt: Date
+  updatedAt: Date
+  inventoryId: string
+  type: ItemType
+  amount: number
+  durability: number
 }
 
 export interface IGameSkill {
-  id: string;
-  type: "WOODSMAN" | "MINER";
-  objectId: string | null;
-  lvl: number;
-  xp: number;
-  xpNextLvl: number;
+  id: string
+  type: "WOODSMAN" | "MINER"
+  objectId: string | null
+  lvl: number
+  xp: number
+  xpNextLvl: number
 }
 
 export interface IGameChunk {
-  id: string;
-  title: string;
-  type: "VILLAGE" | "FOREST" | "LAKE";
-  theme: IGameChunkTheme;
+  id: string
+  title: string
+  type: "VILLAGE" | "FOREST" | "LAKE"
+  theme: IGameChunkTheme
   center: {
-    x: number;
-    y: number;
-  };
+    x: number
+    y: number
+  }
   area: {
-    startX: number;
-    endX: number;
-    startY: number;
-    endY: number;
-  };
-  isVisibleOnClient: boolean;
+    startX: number
+    endX: number
+    startY: number
+    endY: number
+  }
+  isVisibleOnClient: boolean
 }
 
 export type IGameChunkTheme =
-  "GREEN"
+  | "GREEN"
   | "TOXIC"
   | "STONE"
   | "TEAL"
   | "BLUE"
-  | "VIOLET";
+  | "VIOLET"
 
-export interface IGameVillageChunk extends IGameChunk {
-}
+export interface IGameVillageChunk extends IGameChunk {}
 
-export interface IGameForestChunk extends IGameChunk {
-}
+export interface IGameForestChunk extends IGameChunk {}
 
-export interface IGameLakeChunk extends IGameChunk {
-}
+export interface IGameLakeChunk extends IGameChunk {}
 
 export interface IGameObject {
-  id: string;
-  x: number;
-  y: number;
-  state: IGameObjectState;
-  direction: IGameObjectDirection;
-  entity: IGameObjectEntity;
-  target: IGameObject | undefined;
-  health: number;
-  isVisibleOnClient: boolean;
+  id: string
+  x: number
+  y: number
+  state: IGameObjectState
+  direction: IGameObjectDirection
+  entity: IGameObjectEntity
+  target: IGameObject | undefined
+  health: number
+  isVisibleOnClient: boolean
 }
 
 export type IGameObjectState =
@@ -95,7 +92,7 @@ export type IGameObjectState =
   | "WAITING"
   | "CHOPPING"
   | "MINING"
-  | "DESTROYED";
+  | "DESTROYED"
 export type IGameObjectEntity =
   | "RABBIT"
   | "WOLF"
@@ -110,11 +107,11 @@ export type IGameObjectEntity =
   | "FARMER"
   | "MECHANIC"
   | "WAGON"
-  | IGameObjectBuildingType;
-export type IGameObjectDirection = "LEFT" | "RIGHT";
+  | IGameObjectBuildingType
+export type IGameObjectDirection = "LEFT" | "RIGHT"
 
 export interface WebSocketMessage {
-  id: string;
+  id: string
   event:
     | "OBJECT_UPDATED"
     | "RAID_STARTED"
@@ -122,35 +119,32 @@ export interface WebSocketMessage {
     | "SCENE_CHANGING_STARTED"
     | "COUNTDOWN_NEXT_WAVE_STARTED"
     | "SCENE_CHANGED"
-    | "CREATING_NEW_ADVENTURE_STARTED";
-  object?: Partial<IGameObject>;
+    | "CREATING_NEW_ADVENTURE_STARTED"
+  object?: Partial<IGameObject>
 }
 
 export interface IGameObjectWagon extends IGameObject {
-  speed: number;
-  fuel: number;
+  speed: number
+  fuel: number
   visibilityArea: {
-    startX: number;
-    endX: number;
-    startY: number;
-    endY: number;
-  };
+    startX: number
+    endX: number
+    startY: number
+    endY: number
+  }
 }
 
-export type IGameObjectBuildingType = "CAMPFIRE" | "WAREHOUSE" | "WAGON_STOP";
+export type IGameObjectBuildingType = "CAMPFIRE" | "WAREHOUSE" | "WAGON_STOP"
 
 export interface IGameObjectBuilding extends IGameObject {
-  inventory: IGameInventory;
+  inventory: IGameInventory
 }
 
-export interface IGameBuildingCampfire extends IGameObjectBuilding {
-}
+export interface IGameBuildingCampfire extends IGameObjectBuilding {}
 
-export interface IGameBuildingWarehouse extends IGameObjectBuilding {
-}
+export interface IGameBuildingWarehouse extends IGameObjectBuilding {}
 
-export interface IGameBuildingWagonStop extends IGameObjectBuilding {
-}
+export interface IGameBuildingWagonStop extends IGameObjectBuilding {}
 
 export interface IGameObjectFlag extends IGameObject {
   type:
@@ -159,108 +153,109 @@ export interface IGameObjectFlag extends IGameObject {
     | "WAGON_NEAR_MOVEMENT"
     | "RESOURCE"
     | "SPAWN_LEFT"
-    | "SPAWN_RIGHT";
+    | "SPAWN_RIGHT"
 }
 
-export interface IGameObjectWater extends IGameObject {
-}
+export interface IGameObjectWater extends IGameObject {}
 
 export interface IGameObjectLake extends IGameObject {
-  water: IGameObjectWater[];
+  water: IGameObjectWater[]
 }
 
 export interface IGameObjectTree extends IGameObject {
-  type: "1" | "2" | "3" | "4" | "5";
-  variant: IGameChunkTheme;
-  resource: number;
-  size: number;
-  isReadyToChop: boolean;
+  type: "1" | "2" | "3" | "4" | "5"
+  variant: IGameChunkTheme
+  resource: number
+  size: number
+  isReadyToChop: boolean
 }
 
 export interface IGameObjectStone extends IGameObject {
-  type: "1";
-  resource: number;
-  size: number;
+  type: "1"
+  resource: number
+  size: number
 }
 
 export interface IGameObjectUnit extends IGameObject {
-  coins: number;
-  inventory: IGameInventory;
+  coins: number
+  inventory: IGameInventory
   visual: {
-    head: "1";
-    hairstyle: "BOLD" | "CLASSIC" | "COAL_LONG";
+    head: "1"
+    hairstyle: "BOLD" | "CLASSIC" | "COAL_LONG"
     top:
       | "VIOLET_SHIRT"
       | "BLACK_SHIRT"
       | "GREEN_SHIRT"
       | "BLUE_SHIRT"
-      | "DARK_SILVER_SHIRT";
-  };
+      | "DARK_SILVER_SHIRT"
+  }
 }
 
-export interface IGameObjectCourier extends IGameObjectUnit {
-}
+export interface IGameObjectCourier extends IGameObjectUnit {}
 
-export interface IGameObjectFarmer extends IGameObjectUnit {
-}
+export interface IGameObjectFarmer extends IGameObjectUnit {}
 
-export interface IGameObjectMechanic extends IGameObjectUnit {
-}
+export interface IGameObjectMechanic extends IGameObjectUnit {}
 
 export interface IGameObjectPlayer extends IGameObjectUnit {
-  reputation: number;
-  villainPoints: number;
-  refuellerPoints: number;
-  userName: string;
-  skills: IGameSkill[];
+  reputation: number
+  villainPoints: number
+  refuellerPoints: number
+  userName: string
+  skills: IGameSkill[]
 }
 
 export interface IGameObjectRaider extends IGameObjectUnit {
-  userName: string;
-  colorIndex: number;
+  userName: string
+  colorIndex: number
 }
 
-export interface IGameObjectRabbit extends IGameObject {
-}
+export interface IGameObjectRabbit extends IGameObject {}
 
-export interface IGameObjectWolf extends IGameObject {
-}
+export interface IGameObjectWolf extends IGameObject {}
 
 export interface IGameEvent {
-  id: string;
-  title: string;
-  type: WebSocketMessage["event"];
-  status: "STARTED" | "STOPPED";
-  endsAt: Date;
+  id: string
+  title: string
+  type: WebSocketMessage["event"]
+  status: "STARTED" | "STOPPED"
+  endsAt: Date
 }
 
-export type GameSceneType = "VILLAGE" | "DEFENCE" | "MOVING";
+export type GameSceneType = "VILLAGE" | "DEFENCE" | "MOVING"
 
 export interface GetSceneResponse {
-  id: string;
-  commands: string[];
-  chunk: IGameChunk | null;
-  events: IGameEvent[];
-  group: IGameGroup | undefined;
-  wagon: IGameObjectWagon | undefined;
-  route: IGameRoute | null;
+  id: string
+  commands: string[]
+  chunk: IGameChunk | null
+  events: IGameEvent[]
+  group: IGameGroup | undefined
+  wagon: IGameObjectWagon | undefined
+  route: IGameRoute | null
 }
 
 export interface IGameGroup {
-  id: string;
-  target: GameSceneType;
-  players: IGameObjectPlayer[];
+  id: string
+  target: GameSceneType
+  players: IGameObjectPlayer[]
 }
 
 export interface IGameRoute {
-  startPoint: { x: number; y: number };
-  endPoint: { x: number; y: number };
-  chunks: IGameChunk[];
+  startPoint: { x: number; y: number }
+  endPoint: { x: number; y: number }
+  chunks: IGameChunk[]
 }
 
 export interface PlayerTitle {
-  title: string;
-  type: "RICH" | "FAMOUS" | "VIEWER" | "VILLAIN" | "REFUELLER" | "WOODSMAN" | "MINER";
+  title: string
+  type:
+    | "RICH"
+    | "FAMOUS"
+    | "VIEWER"
+    | "VILLAIN"
+    | "REFUELLER"
+    | "WOODSMAN"
+    | "MINER"
 }
 
 export type GraphicsContainerType =
@@ -277,4 +272,4 @@ export type GraphicsContainerType =
   | "WAGON_WHEEL"
   | "WAGON_ENGINE"
   | "WAGON_ENGINE_CLOUD"
-  | "FIRE_PARTICLE";
+  | "FIRE_PARTICLE"

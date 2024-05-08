@@ -1,15 +1,15 @@
-import { createId } from "@paralleldrive/cuid2";
-import type { IGameObjectMechanic } from "../../../../../../packages/api-sdk/src";
-import { Unit } from "./unit";
+import { createId } from "@paralleldrive/cuid2"
+import type { IGameObjectMechanic } from "../../../../../../packages/api-sdk/src"
+import { Unit } from "./unit"
 
 interface IMechanicOptions {
-  x: number;
-  y: number;
+  x: number
+  y: number
 }
 
 export class Mechanic extends Unit implements IGameObjectMechanic {
   constructor({ x, y }: IMechanicOptions) {
-    const id = createId();
+    const id = createId()
 
     super({
       id,
@@ -21,18 +21,18 @@ export class Mechanic extends Unit implements IGameObjectMechanic {
         hairstyle: "COAL_LONG",
         top: "DARK_SILVER_SHIRT",
       },
-    });
+    })
   }
 
   live() {
-    this.handleChange();
+    this.handleChange()
   }
 
   handleChange() {
     const prepared = {
       ...this,
-    };
+    }
 
-    this.sendMessageObjectUpdated(prepared);
+    this.sendMessageObjectUpdated(prepared)
   }
 }

@@ -1,54 +1,54 @@
-import { createId } from "@paralleldrive/cuid2";
+import { createId } from "@paralleldrive/cuid2"
 import {
   type IGameObjectFlag,
   getRandomInRange,
-} from "../../../../../packages/api-sdk/src";
-import { MAX_X, MAX_Y, MIN_X, MIN_Y } from "../../config";
-import { GameObject } from "./gameObject";
+} from "../../../../../packages/api-sdk/src"
+import { MAX_X, MAX_Y, MIN_X, MIN_Y } from "../../config"
+import { GameObject } from "./gameObject"
 
 interface IFlagOptions {
-  x?: number;
-  y?: number;
-  id?: string;
-  type: IGameObjectFlag["type"];
-  offsetX?: number;
-  offsetY?: number;
+  x?: number
+  y?: number
+  id?: string
+  type: IGameObjectFlag["type"]
+  offsetX?: number
+  offsetY?: number
 }
 
 export class Flag extends GameObject implements IGameObjectFlag {
-  public type: IGameObjectFlag["type"];
+  public type: IGameObjectFlag["type"]
 
-  public offsetX: number;
-  public offsetY: number;
+  public offsetX: number
+  public offsetY: number
 
   constructor({ x, y, id, type, offsetX, offsetY }: IFlagOptions) {
-    const finalId = id ?? createId();
-    const finalX = x ?? getRandomInRange(MIN_X, MAX_X);
-    const finalY = y ?? getRandomInRange(MIN_Y, MAX_Y);
+    const finalId = id ?? createId()
+    const finalX = x ?? getRandomInRange(MIN_X, MAX_X)
+    const finalY = y ?? getRandomInRange(MIN_Y, MAX_Y)
 
-    super({ id: finalId, x: finalX, y: finalY, entity: "FLAG" });
+    super({ id: finalId, x: finalX, y: finalY, entity: "FLAG" })
 
-    this.type = type;
-    this.offsetX = offsetX ?? 0;
-    this.offsetY = offsetY ?? 0;
+    this.type = type
+    this.offsetX = offsetX ?? 0
+    this.offsetY = offsetY ?? 0
   }
 
   live() {
     if (this.target && this.target.state === "DESTROYED") {
-      this.removeTarget();
+      this.removeTarget()
     }
 
-    const random = getRandomInRange(1, 60);
+    const random = getRandomInRange(1, 60)
     if (random <= 1) {
-      this.handleChange();
+      this.handleChange()
     }
   }
 
   handleChange() {
-    this.sendMessageObjectUpdated();
+    this.sendMessageObjectUpdated()
   }
 
   removeTarget() {
-    this.target = undefined;
+    this.target = undefined
   }
 }

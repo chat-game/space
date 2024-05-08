@@ -1,47 +1,47 @@
-import { createId } from "@paralleldrive/cuid2";
-import { getRandomInRange } from "../../../../packages/api-sdk/src";
-import { db } from "./db.client";
+import { createId } from "@paralleldrive/cuid2"
+import { getRandomInRange } from "../../../../packages/api-sdk/src"
+import { db } from "./db.client"
 
 export class DBRepository {
-  private readonly db;
+  private readonly db
 
   constructor() {
-    this.db = db;
+    this.db = db
   }
 
   findVillage() {
-    return db.village.findFirst();
+    return db.village.findFirst()
   }
 
   findActivePlayers() {
-    const milliseconds = 20 * 60 * 1000;
-    const gte = new Date(new Date().getTime() - milliseconds);
+    const milliseconds = 20 * 60 * 1000
+    const gte = new Date(new Date().getTime() - milliseconds)
 
     return this.db.player.findMany({
       where: {
         lastActionAt: { gte },
       },
-    });
+    })
   }
 
   async findTopPlayers() {
     const famous = await db.player.findFirst({
       orderBy: { reputation: "desc" },
-    });
+    })
     const rich = await db.player.findFirst({
       orderBy: { coins: "desc" },
-    });
+    })
     const viewer = await db.player.findFirst({
       orderBy: { viewerPoints: "desc" },
-    });
+    })
     const villain = await db.player.findFirst({
       orderBy: { villainPoints: "desc" },
     })
     const refueller = await db.player.findFirst({
       orderBy: { refuellerPoints: "desc" },
     })
-    const woodsman = await this.findTopWoodsmanPlayer();
-    const miner = await this.findTopMinerPlayer();
+    const woodsman = await this.findTopWoodsmanPlayer()
+    const miner = await this.findTopMinerPlayer()
 
     return {
       famous: {
@@ -66,63 +66,63 @@ export class DBRepository {
       },
       woodsman,
       miner,
-    };
+    }
   }
 
   async findTopWoodsmanPlayer() {
     const topSkill = await db.skill.findFirst({
       where: { type: "WOODSMAN" },
       orderBy: { lvl: "desc" },
-    });
+    })
     if (!topSkill) {
-      return null;
+      return null
     }
     const player = await db.player.findUnique({
       where: { id: topSkill.objectId },
-    });
+    })
 
     return {
       player,
       points: topSkill.lvl,
-    };
+    }
   }
 
   async findTopMinerPlayer() {
     const topSkill = await db.skill.findFirst({
       where: { type: "MINER" },
       orderBy: { lvl: "desc" },
-    });
+    })
     if (!topSkill) {
-      return null;
+      return null
     }
     const player = await db.player.findUnique({
       where: { id: topSkill.objectId },
-    });
+    })
 
     return {
       player,
       points: topSkill.lvl,
-    };
+    }
   }
 
   findPlayerByTwitchId(twitchId: string) {
     return this.db.player.findFirst({
       where: { twitchId },
-    });
+    })
   }
 
   createPlayer({
-                 twitchId,
-                 userName,
-                 inventoryId,
-                 id,
-               }: {
-    twitchId: string;
-    userName: string;
-    inventoryId: string;
-    id: string;
+    twitchId,
+    userName,
+    inventoryId,
+    id,
+  }: {
+    twitchId: string
+    userName: string
+    inventoryId: string
+    id: string
   }) {
-    const colorIndex = getRandomInRange(0, 360);
+    const colorIndex = getRandomInRange(0, 360)
     return db.player.create({
       data: {
         id,
@@ -133,23 +133,23 @@ export class DBRepository {
         colorIndex,
         inventoryId,
       },
-    });
+    })
   }
 
   async findOrCreatePlayer(twitchId: string, userName: string) {
-    const player = await this.findPlayerByTwitchId(twitchId);
+    const player = await this.findPlayerByTwitchId(twitchId)
     if (!player) {
-      const id = createId();
-      const inventory = await this.createInventory(id);
+      const id = createId()
+      const inventory = await this.createInventory(id)
       return this.createPlayer({
         id,
         twitchId,
         userName,
         inventoryId: inventory.id,
-      });
+      })
     }
 
-    return player;
+    return player
   }
 
   createInventory(objectId: string) {
@@ -158,7 +158,7 @@ export class DBRepository {
         id: createId(),
         objectId,
       },
-    });
+    })
   }
 
   addPlayerViewerPoints(id: string, increment: number) {
@@ -167,7 +167,7 @@ export class DBRepository {
       data: {
         viewerPoints: { increment },
       },
-    });
+    })
   }
 
   addWoodToVillage(increment: number) {
@@ -175,7 +175,7 @@ export class DBRepository {
       data: {
         wood: { increment },
       },
-    });
+    })
   }
 
   async addStoneToVillage(amount: number) {
@@ -185,15 +185,15 @@ export class DBRepository {
           increment: amount,
         },
       },
-    });
+    })
 
     // Global target
-    const village = await this.findVillage();
+    const village = await this.findVillage()
     if (village?.globalTargetSuccess && village?.globalTarget) {
       const plusToTarget =
         village.globalTargetSuccess >= village.globalTarget + amount
           ? amount
-          : 0;
+          : 0
 
       await db.village.updateMany({
         data: {
@@ -201,7 +201,7 @@ export class DBRepository {
             increment: plusToTarget,
           },
         },
-      });
+      })
     }
   }
 }

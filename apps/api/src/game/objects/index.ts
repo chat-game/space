@@ -1,9 +1,9 @@
-export { GameObject } from "./gameObject";
-export { Rabbit } from "./rabbit";
-export { Wolf } from "./wolf";
-export { Tree } from "./tree";
-export { Stone } from "./stone";
-export { Flag } from "./flag";
-export { Wagon } from "./wagon";
+export { GameObject } from "./gameObject"
+export { Rabbit } from "./rabbit"
+export { Wolf } from "./wolf"
+export { Tree } from "./tree"
+export { Stone } from "./stone"
+export { Flag } from "./flag"
+export { Wagon } from "./wagon"
 export { Lake } from "./lake"
 export { Water } from "./water"

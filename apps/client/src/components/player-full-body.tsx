@@ -1,9 +1,9 @@
-import type { IGameObjectPlayer } from "packages/api-sdk/src";
-import { PlayerTopBlock } from "./player-top";
+import type { IGameObjectPlayer } from "packages/api-sdk/src"
+import { PlayerTopBlock } from "./player-top"
 
 export const PlayerFullBody = ({ player }: { player: IGameObjectPlayer }) => {
-  const size = 100;
-  const height = (size * 64) / 100;
+  const size = 100
+  const height = (size * 64) / 100
 
   return (
     <div className="relative">
@@ -15,5 +15,5 @@ export const PlayerFullBody = ({ player }: { player: IGameObjectPlayer }) => {
       />
       <PlayerTopBlock top="BASIC" colorIndex={0} />
     </div>
-  );
-};
+  )
+}

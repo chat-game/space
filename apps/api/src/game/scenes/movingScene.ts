@@ -1,11 +1,11 @@
-import type { Group } from "../common";
-import type { Game } from "../game";
-import { Wagon } from "../objects";
-import { GameScene } from "./gameScene";
+import type { Group } from "../common"
+import type { Game } from "../game"
+import { Wagon } from "../objects"
+import { GameScene } from "./gameScene"
 
 interface IMovingSceneOptions {
-  game: Game;
-  group: Group | undefined;
+  game: Game
+  group: Group | undefined
 }
 
 export class MovingScene extends GameScene {
@@ -26,19 +26,19 @@ export class MovingScene extends GameScene {
         "CREATE_NEW_PLAYER",
         "START_CREATING_NEW_ADVENTURE",
       ],
-    });
+    })
 
-    void this.init();
+    void this.init()
   }
 
   public async init() {
-    const village = this.initStartingVillage();
-    const wagonStartPoint = village.getWagonStopPoint();
+    const village = this.initStartingVillage()
+    const wagonStartPoint = village.getWagonStopPoint()
 
-    this.initWagon(wagonStartPoint);
-    await this.initGroupPlayers();
+    this.initWagon(wagonStartPoint)
+    await this.initGroupPlayers()
 
-    void this.play();
+    void this.play()
   }
 
   initStartingVillage() {
@@ -49,28 +49,28 @@ export class MovingScene extends GameScene {
         x: Math.round(2500 / 2),
         y: Math.round(2000 / 2),
       },
-    };
+    }
     return this.generateRandomVillage({
       center: area.center,
       width: area.width,
       height: area.height,
-      theme: "GREEN"
-    });
+      theme: "GREEN",
+    })
   }
 
   async initGroupPlayers() {
     if (!this.group) {
-      return;
+      return
     }
 
     for (const player of this.group.players) {
-      const instance = await this.initPlayer(player.id);
-      this.objects.push(instance);
+      const instance = await this.initPlayer(player.id)
+      this.objects.push(instance)
     }
   }
 
   initWagon({ x, y }: { x: number; y: number }) {
-    const wagon = new Wagon({ x, y });
-    this.objects.push(wagon);
+    const wagon = new Wagon({ x, y })
+    this.objects.push(wagon)
   }
 }

@@ -1,16 +1,16 @@
-import { Howl } from "howler";
-import { useEffect, useMemo } from "react";
-import type { IGameObjectPlayer } from "../../../../packages/api-sdk/src";
+import { Howl } from "howler"
+import { useEffect, useMemo } from "react"
+import type { IGameObjectPlayer } from "../../../../packages/api-sdk/src"
 
 export const ToolBlock = ({
   object,
 }: {
-  object: IGameObjectPlayer;
+  object: IGameObjectPlayer
 }) => {
-  const axe = object.inventory?.items.find((item) => item.type === "AXE");
+  const axe = object.inventory?.items.find((item) => item.type === "AXE")
   const pickaxe = object.inventory?.items.find(
     (item) => item.type === "PICKAXE",
-  );
+  )
 
   const soundChopping = useMemo(
     () =>
@@ -20,7 +20,7 @@ export const ToolBlock = ({
         volume: 0.3,
       }),
     [],
-  );
+  )
 
   const soundPunch = useMemo(
     () =>
@@ -31,7 +31,7 @@ export const ToolBlock = ({
         rate: 0.5,
       }),
     [],
-  );
+  )
 
   const soundMining = useMemo(
     () =>
@@ -42,43 +42,43 @@ export const ToolBlock = ({
         rate: 0.7,
       }),
     [],
-  );
+  )
 
-  const isChoppingWithAxe = object.state === "CHOPPING" && !!axe;
-  const isMiningWithPickaxe = object.state === "MINING" && !!pickaxe;
+  const isChoppingWithAxe = object.state === "CHOPPING" && !!axe
+  const isMiningWithPickaxe = object.state === "MINING" && !!pickaxe
 
   useEffect(() => {
     if (object.state === "CHOPPING") {
       if (isChoppingWithAxe) {
-        soundPunch.stop();
-        soundChopping.play();
+        soundPunch.stop()
+        soundChopping.play()
       } else {
-        soundChopping.stop();
-        soundPunch.play();
+        soundChopping.stop()
+        soundPunch.play()
       }
-      return;
+      return
     }
 
     if (object.state === "MINING") {
       if (isMiningWithPickaxe) {
-        soundPunch.stop();
-        soundMining.play();
+        soundPunch.stop()
+        soundMining.play()
       } else {
-        soundMining.stop();
-        soundPunch.play();
+        soundMining.stop()
+        soundPunch.play()
       }
-      return;
+      return
     }
 
-    soundChopping.stop();
-    soundMining.stop();
-    soundPunch.stop();
+    soundChopping.stop()
+    soundMining.stop()
+    soundPunch.stop()
 
     return () => {
-      soundChopping.stop();
-      soundMining.stop();
-      soundPunch.stop();
-    };
+      soundChopping.stop()
+      soundMining.stop()
+      soundPunch.stop()
+    }
   }, [
     object.state,
     isChoppingWithAxe,
@@ -86,7 +86,7 @@ export const ToolBlock = ({
     soundChopping,
     soundMining,
     soundPunch,
-  ]);
+  ])
 
   return (
     <>
@@ -108,5 +108,5 @@ export const ToolBlock = ({
         />
       )}
     </>
-  );
-};
+  )
+}

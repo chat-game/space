@@ -2,7 +2,7 @@ export const PlayerTopBlock = ({
   top,
   colorIndex,
 }: { top: "BASIC"; colorIndex: number }) => {
-  const color = colorIndex / 100; // from 0 to 100 => 0 to 1
+  const color = colorIndex / 100 // from 0 to 100 => 0 to 1
 
   switch (top) {
     case "BASIC":
@@ -17,6 +17,6 @@ export const PlayerTopBlock = ({
             filter: `hue-rotate(${color}turn)`,
           }}
         />
-      );
+      )
   }
-};
+}

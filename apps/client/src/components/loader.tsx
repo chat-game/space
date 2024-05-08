@@ -9,5 +9,5 @@ export const Loader = ({ isVisible }: { isVisible: boolean }) => {
         <img src={"/hero/hero_512.png"} alt="" width={256} height={256} />
       </div>
     </div>
-  );
-};
+  )
+}

@@ -1,29 +1,29 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 import {
   type GetSceneResponse,
   getSceneInfo,
-} from "../../../../packages/api-sdk/src";
+} from "../../../../packages/api-sdk/src"
 
 export const useScene = () => {
-  const [sceneInfo, setSceneInfo] = useState<GetSceneResponse>();
+  const [sceneInfo, setSceneInfo] = useState<GetSceneResponse>()
 
   useEffect(() => {
     getSceneInfo().then((res) => {
-      if (!res) return;
+      if (!res) return
 
-      setSceneInfo(res);
-    });
+      setSceneInfo(res)
+    })
 
     const reload = setInterval(() => {
       getSceneInfo().then((res) => {
-        if (!res) return;
+        if (!res) return
 
-        setSceneInfo(res);
-      });
-    }, 500);
+        setSceneInfo(res)
+      })
+    }, 500)
 
-    return () => clearInterval(reload);
-  }, []);
+    return () => clearInterval(reload)
+  }, [])
 
-  return sceneInfo;
-};
+  return sceneInfo
+}

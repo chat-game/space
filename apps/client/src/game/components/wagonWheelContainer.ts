@@ -1,18 +1,18 @@
-import { Sprite } from "pixi.js";
-import type { IGameObjectDirection } from "../../../../../packages/api-sdk/src";
-import { GraphicsContainer } from "./graphicsContainer";
+import { Sprite } from "pixi.js"
+import type { IGameObjectDirection } from "../../../../../packages/api-sdk/src"
+import { GraphicsContainer } from "./graphicsContainer"
 
 interface IWagonWheelContainerOptions {
-  direction: IGameObjectDirection;
-  side: "LEFT" | "RIGHT";
+  direction: IGameObjectDirection
+  side: "LEFT" | "RIGHT"
 }
 
 export class WagonWheelContainer extends GraphicsContainer {
-  public side: IWagonWheelContainerOptions["side"];
+  public side: IWagonWheelContainerOptions["side"]
 
   constructor({ direction, side }: IWagonWheelContainerOptions) {
-    super({ type: "WAGON_WHEEL", direction });
-    this.side = side;
+    super({ type: "WAGON_WHEEL", direction })
+    this.side = side
   }
 
   static create(
@@ -20,12 +20,12 @@ export class WagonWheelContainer extends GraphicsContainer {
     direction: IGameObjectDirection,
     side: IWagonWheelContainerOptions["side"],
   ) {
-    const sprite = Sprite.from(spriteIndex);
-    sprite.anchor.set(0.5, 0.5);
+    const sprite = Sprite.from(spriteIndex)
+    sprite.anchor.set(0.5, 0.5)
 
-    const container = new WagonWheelContainer({ direction, side });
-    container.addChild(sprite);
+    const container = new WagonWheelContainer({ direction, side })
+    container.addChild(sprite)
 
-    return container;
+    return container
   }
 }

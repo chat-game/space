@@ -1,16 +1,16 @@
-import { GameObject } from "./gameObject";
-import { IGameObjectWater } from "../../../../../packages/api-sdk/src";
-import { createId } from "@paralleldrive/cuid2";
+import { createId } from "@paralleldrive/cuid2"
+import type { IGameObjectWater } from "../../../../../packages/api-sdk/src"
+import { GameObject } from "./gameObject"
 
 interface IWaterOptions {
-  x: number;
-  y: number;
+  x: number
+  y: number
 }
 
 export class Water extends GameObject implements IGameObjectWater {
   constructor({ x, y }: IWaterOptions) {
-    const id = createId();
+    const id = createId()
 
-    super({ id, x, y, entity: "WATER" });
+    super({ id, x, y, entity: "WATER" })
   }
 }

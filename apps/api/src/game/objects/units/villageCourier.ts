@@ -1,24 +1,24 @@
-import { createId } from "@paralleldrive/cuid2";
+import { createId } from "@paralleldrive/cuid2"
 import {
   type IGameObjectCourier,
   type ItemType,
   getRandomInRange,
-} from "../../../../../../packages/api-sdk/src";
-import type { Village } from "../../chunks";
-import { Building } from "../buildings/building";
-import { Unit } from "./unit";
+} from "../../../../../../packages/api-sdk/src"
+import type { Village } from "../../chunks"
+import { Building } from "../buildings/building"
+import { Unit } from "./unit"
 
 interface ICourierOptions {
-  village: Village;
-  x: number;
-  y: number;
+  village: Village
+  x: number
+  y: number
 }
 
 export class VillageCourier extends Unit implements IGameObjectCourier {
-  private village: Village;
+  private village: Village
 
   constructor({ village, x, y }: ICourierOptions) {
-    const id = createId();
+    const id = createId()
 
     super({
       id,
@@ -30,9 +30,9 @@ export class VillageCourier extends Unit implements IGameObjectCourier {
         hairstyle: "BOLD",
         top: "BLUE_SHIRT",
       },
-    });
+    })
 
-    this.village = village;
+    this.village = village
   }
 
   async live() {
@@ -49,22 +49,22 @@ export class VillageCourier extends Unit implements IGameObjectCourier {
       //   return;
       // }
 
-      const random = getRandomInRange(1, 100);
+      const random = getRandomInRange(1, 100)
       if (random <= 1) {
-        const randObj = this.village.getRandomMovementFlagInVillage();
+        const randObj = this.village.getRandomMovementFlagInVillage()
         if (!randObj) {
-          return;
+          return
         }
-        this.setTarget(randObj);
+        this.setTarget(randObj)
       }
 
-      this.handleChange();
-      return;
+      this.handleChange()
+      return
     }
 
     if (this.state === "MOVING") {
-      const isMoving = this.move(2, 12);
-      this.handleChange();
+      const isMoving = this.move(2, 12)
+      this.handleChange()
 
       if (!isMoving && this.target) {
         // if (this.target instanceof Player) {
@@ -83,7 +83,7 @@ export class VillageCourier extends Unit implements IGameObjectCourier {
         // }
       }
 
-      return;
+      return
     }
   }
 
@@ -91,36 +91,36 @@ export class VillageCourier extends Unit implements IGameObjectCourier {
     const prepared = {
       ...this,
       village: undefined,
-    };
+    }
 
-    this.sendMessageObjectUpdated(prepared);
+    this.sendMessageObjectUpdated(prepared)
   }
 
   async takeItemFromUnit(type: ItemType) {
     if (this.target instanceof Unit) {
-      const item = this.target.inventory.transferItemWithType(type);
+      const item = this.target.inventory.transferItemWithType(type)
       if (item) {
-        await this.inventory.addOrCreateItem(item.type, item.amount);
-        this.target.inventory.destroyItem(item.id);
+        await this.inventory.addOrCreateItem(item.type, item.amount)
+        this.target.inventory.destroyItem(item.id)
 
-        return true;
+        return true
       }
     }
 
-    return false;
+    return false
   }
 
   async placeItemInBuilding(type: ItemType) {
     if (this.target instanceof Building) {
-      const item = this.inventory.transferItemWithType(type);
+      const item = this.inventory.transferItemWithType(type)
       if (item) {
-        await this.target.inventory.addOrCreateItem(item.type, item.amount);
-        this.inventory.destroyItem(item.id);
+        await this.target.inventory.addOrCreateItem(item.type, item.amount)
+        this.inventory.destroyItem(item.id)
 
-        return true;
+        return true
       }
     }
 
-    return false;
+    return false
   }
 }
