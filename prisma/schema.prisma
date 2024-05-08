@@ -18,57 +18,59 @@ model Village {
 }
 
 model Player {
-  id                 String          @id
-  createdAt          DateTime        @default(now())
-  updatedAt          DateTime        @default(now())
-  lastActionAt       DateTime        @default(now())
-  twitchId           String
-  userName           String
-  x                  Int             @default(0)
-  y                  Int             @default(0)
-  targetX            Int?            @default(0)
-  targetY            Int?            @default(0)
-  targetId           String?
-  isBusy             Boolean         @default(false)
-  businessType       String?
-  colorIndex         Int             @default(0)
-  handsItemType      String?
-  handsItemAmount    Int             @default(0)
-  coins              Int             @default(0)
-  reputation         Int             @default(0)
-  viewerPoints         Int @default(0)
+  id              String    @id
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @default(now())
+  lastActionAt    DateTime  @default(now())
+  twitchId        String
+  userName        String
+  x               Int       @default(0)
+  y               Int       @default(0)
+  targetX         Int?      @default(0)
+  targetY         Int?      @default(0)
+  targetId        String?
+  isBusy          Boolean   @default(false)
+  businessType    String?
+  colorIndex      Int       @default(0)
+  handsItemType   String?
+  handsItemAmount Int       @default(0)
+  coins           Int       @default(0)
+  reputation      Int       @default(0)
+  viewerPoints    Int       @default(0)
+  villainPoints   Int       @default(0)
+  refuellerPoints Int       @default(0)
   inventoryId     String
-  commands           Command[]
+  commands        Command[]
 }
 
 model Skill {
-  id                 String          @id
-  createdAt          DateTime        @default(now())
-  updatedAt          DateTime        @default(now())
-  type String
-  lvl Int @default(0)
-  xp  Int @default(0)
-  xpNextLvl Int @default(20)
-  objectId String
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  type      String
+  lvl       Int      @default(0)
+  xp        Int      @default(0)
+  xpNextLvl Int      @default(20)
+  objectId  String
 }
 
 model Inventory {
-  id         String   @id
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now())
-  objectId   String
-  items  InventoryItem[]
+  id        String          @id
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @default(now())
+  objectId  String
+  items     InventoryItem[]
 }
 
 model InventoryItem {
-  id         String   @id
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now())
-  inventoryId   String
-  inventory  Inventory @relation(fields: [inventoryId], references: [id])
-  type       String
-  amount     Int      @default(1)
-  durability Int      @default(100)
+  id          String    @id
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now())
+  inventoryId String
+  inventory   Inventory @relation(fields: [inventoryId], references: [id])
+  type        String
+  amount      Int       @default(1)
+  durability  Int       @default(100)
 }
 
 model Command {

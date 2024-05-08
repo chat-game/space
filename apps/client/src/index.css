@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wdth,wght@0,62.5..100,100..900;1,62.5..100,100..900&display=swap');
+
 :root {
     /* Resurrect 64 Palette */
     --color-coal-1: #2e222f;
@@ -80,6 +82,14 @@
     --color-rose-6: #fdcbb0;
 }
 
+body, html {
+    font-family: "Noto Serif", serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
+}
+
 .bg-primary {
     background-color: var(--color-silver-5);
 }
@@ -89,7 +99,7 @@
 }
 
 .border-primary {
-    border-color: var(--color-silver-1);
+    border-color: var(--color-silver-3);
 }
 
 .bg-coal-1 {
@@ -190,6 +200,54 @@
 
 .text-silver-5 {
     color: var(--color-silver-5);
+}
+
+.bg-red-1 {
+    background-color: var(--color-red-1);
+}
+
+.bg-red-2 {
+    background-color: var(--color-red-2);
+}
+
+.bg-red-3 {
+    background-color: var(--color-red-3);
+}
+
+.bg-red-4 {
+    background-color: var(--color-red-4);
+}
+
+.border-red-1 {
+    border-color: var(--color-red-1);
+}
+
+.border-red-2 {
+    border-color: var(--color-red-2);
+}
+
+.border-red-3 {
+    border-color: var(--color-red-3);
+}
+
+.border-red-4 {
+    border-color: var(--color-red-4);
+}
+
+.text-red-1 {
+    color: var(--color-red-1);
+}
+
+.text-red-2 {
+    color: var(--color-red-2);
+}
+
+.text-red-3 {
+    color: var(--color-red-3);
+}
+
+.text-red-4 {
+    color: var(--color-red-4);
 }
 
 .bg-violet-1 {
@@ -430,6 +488,66 @@
 
 .text-blue-5 {
     color: var(--color-blue-5);
+}
+
+.bg-teal-1 {
+    background-color: var(--color-teal-1);
+}
+
+.bg-teal-2 {
+    background-color: var(--color-teal-2);
+}
+
+.bg-teal-3 {
+    background-color: var(--color-teal-3);
+}
+
+.bg-teal-4 {
+    background-color: var(--color-teal-4);
+}
+
+.bg-teal-5 {
+    background-color: var(--color-teal-5);
+}
+
+.border-teal-1 {
+    border-color: var(--color-teal-1);
+}
+
+.border-teal-2 {
+    border-color: var(--color-teal-2);
+}
+
+.border-teal-3 {
+    border-color: var(--color-teal-3);
+}
+
+.border-teal-4 {
+    border-color: var(--color-teal-4);
+}
+
+.border-teal-5 {
+    border-color: var(--color-teal-5);
+}
+
+.text-teal-1 {
+    color: var(--color-teal-1);
+}
+
+.text-teal-2 {
+    color: var(--color-teal-2);
+}
+
+.text-teal-3 {
+    color: var(--color-teal-3);
+}
+
+.text-teal-4 {
+    color: var(--color-teal-4);
+}
+
+.text-teal-5 {
+    color: var(--color-teal-5);
 }
 
 .bg-green-1 {

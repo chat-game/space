@@ -2,7 +2,7 @@ import { createId } from "@paralleldrive/cuid2";
 import type { IGameObjectWagon } from "../../../../../packages/api-sdk/src";
 import { Flag } from "./flag";
 import { GameObject } from "./gameObject";
-import { Mechanic } from "./units/mechanic";
+import { Mechanic } from "./units";
 
 interface IWagonOptions {
   x: number;
@@ -11,6 +11,7 @@ interface IWagonOptions {
 
 export class Wagon extends GameObject implements IGameObjectWagon {
   public speed: number;
+  public fuel: number;
   public visibilityArea!: IGameObjectWagon["visibilityArea"];
 
   public mechanic!: Mechanic;
@@ -24,6 +25,7 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     super({ id: finalId, x, y, entity: "WAGON", isVisibleOnClient: true });
 
     this.speed = 0;
+    this.fuel = 2000;
     this.updateVisibilityArea();
     this.updateServerDataArea();
     this.initNearFlags();
@@ -36,6 +38,7 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     this.updateCollisionArea();
     this.updateNearFlags();
     this.updateMechanic();
+    this.consumeFuel();
 
     if (this.state === "IDLE") {
       this.handleChange();
@@ -49,6 +52,14 @@ export class Wagon extends GameObject implements IGameObjectWagon {
 
   handleChange() {
     this.sendMessageObjectUpdated();
+  }
+
+  consumeFuel() {
+    if (this.speed <= 0) {
+      return;
+    }
+
+    this.fuel -= this.speed * 2;
   }
 
   updateVisibilityArea() {

@@ -57,15 +57,4 @@ export class Wolf extends GameObjectContainer implements IGameObjectWolf {
     this.animationAngle += this.animationSlowSpeed;
     this.angle = this.animationAngle;
   }
-
-  update(object: IGameObjectWolf) {
-    this.x = object.x;
-    this.y = object.y;
-    this.zIndex = Math.round(object.y);
-
-    this.entity = object.entity;
-    this.state = object.state;
-    this.direction = object.direction;
-    this.health = object.health;
-  }
 }

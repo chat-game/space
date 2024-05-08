@@ -8,6 +8,7 @@ import {
   type IGameSceneAction,
   type ItemType,
   getRandomInRange,
+  IGameChunkTheme,
 } from "../../../../../packages/api-sdk/src";
 import {
   ADMIN_PLAYER_ID,
@@ -15,20 +16,19 @@ import {
   DONATE_URL,
   SERVER_TICK_MS,
 } from "../../config";
-import { Forest, type GameChunk, Village } from "../chunks";
+import { Forest, type GameChunk, Village, LakeChunk } from "../chunks";
 import { Event, Group, Route } from "../common";
 import type { Game } from "../game";
 import {
   Flag,
   type GameObject,
-  Player,
   type Rabbit,
-  Raider,
-  type Stone,
+  Stone,
   Tree,
   Wagon,
   type Wolf,
 } from "../objects";
+import { Player, Raider } from "../objects/units";
 
 interface IGameSceneOptions {
   game: Game;
@@ -83,6 +83,9 @@ export class GameScene {
       };
     }
 
+    if (action === "REFUEL") {
+      return this.refuelAction(player, params);
+    }
     if (action === "CHOP") {
       return this.chopAction(player);
     }
@@ -159,11 +162,11 @@ export class GameScene {
   }
 
   initEvent({
-    title,
-    type,
-    secondsToEnd,
-    scene,
-  }: {
+              title,
+              type,
+              secondsToEnd,
+              scene,
+            }: {
     title: string;
     type: IGameEvent["type"];
     secondsToEnd: number;
@@ -193,6 +196,7 @@ export class GameScene {
       id: this.chunkNow.id,
       title: this.chunkNow.title,
       type: this.chunkNow.type,
+      theme: this.chunkNow.theme,
       center: this.chunkNow.center,
       area: this.chunkNow.area,
       isVisibleOnClient: this.chunkNow.isVisibleOnClient,
@@ -327,6 +331,13 @@ export class GameScene {
       }
     }
 
+    if (object.fuel <= 1) {
+      object.state = "WAITING";
+      object.speed = 0;
+      object.handleChange();
+      return;
+    }
+
     if (object.state === "WAITING") {
       object.state = "IDLE";
     }
@@ -438,6 +449,9 @@ export class GameScene {
       if (action === "HELP") {
         commands.push("!помощь");
       }
+      if (action === "REFUEL") {
+        commands.push("!заправить [кол-во]");
+      }
       if (action === "CHOP") {
         commands.push("!рубить");
       }
@@ -500,6 +514,72 @@ export class GameScene {
     return player;
   }
 
+  async refuelAction(player: Player, params?: string[]) {
+    if (!this.checkIfActionIsPossible("REFUEL")) {
+      return {
+        ok: false,
+        message: "Сейчас этого сделать нельзя.",
+      };
+    }
+
+    if (!params) {
+      return {
+        ok: false,
+        message: "Не указана цель.",
+      };
+    }
+
+    const count = this.getCountFromChatCommand(params[0]);
+    if (!count) {
+      return {
+        ok: false,
+        message: "Неверно указано количество.",
+      };
+    }
+
+    const items = player.inventory?.items ?? [];
+    const itemExist = items.find((item) => item.type === "WOOD");
+    if (!itemExist) {
+      return {
+        ok: false,
+        message: `${player.userName}, у тебя нет древесины.`,
+      };
+    }
+
+    const isSuccess = await player.inventory?.reduceOrDestroyItem(itemExist.type, count);
+    if (!isSuccess) {
+      return {
+        ok: false,
+        message: `${player.userName}, недостаточно древесины.`,
+      };
+    }
+
+    await player.addRefuellerPoints(count);
+
+    this.refuelWagon(count);
+
+    return {
+      ok: true,
+      message: `${player.userName}, ты помог заправить Машину.`,
+    };
+  }
+
+  async stealFuelAction(playerId: string) {
+    this.emptyWagonFuel();
+
+    const player = await this.findOrCreatePlayer(playerId);
+    if (!player) {
+      return;
+    }
+
+    await player.addVillainPoints(1);
+
+    return {
+      ok: true,
+      message: `${player.userName}, а ты Злодей!`,
+    };
+  }
+
   async chopAction(player: Player) {
     if (!this.checkIfActionIsPossible("CHOP")) {
       return {
@@ -544,7 +624,7 @@ export class GameScene {
       };
     }
 
-    const stone = this.getRandomStone();
+    const stone = this.getStoneToMine();
     if (!stone) {
       return {
         ok: false,
@@ -682,6 +762,14 @@ export class GameScene {
     return null;
   }
 
+  getCountFromChatCommand(text: string): number | null {
+    if (typeof Number(text) === "number") {
+      return Number(text);
+    }
+
+    return null;
+  }
+
   joinGroupAction(player: Player) {
     if (!this.checkIfActionIsPossible("JOIN_GROUP")) {
       return {
@@ -709,6 +797,16 @@ export class GameScene {
       ok: true,
       message: `${player.userName}, ты вступил(а) в группу!`,
     };
+  }
+
+  refuelWagon(woodAmount: number) {
+    const wagon = this.getWagon();
+    wagon.fuel += woodAmount * 5 * 40;
+  }
+
+  emptyWagonFuel() {
+    const wagon = this.getWagon();
+    wagon.fuel = 0;
   }
 
   getTreeToChop() {
@@ -739,13 +837,31 @@ export class GameScene {
     }
   }
 
-  getRandomStone() {
-    const onlyReady = this.objects.filter(
-      (obj) => obj.entity === "STONE" && obj.state !== "DESTROYED",
+  getStoneToMine() {
+    // Part 1: Check on Wagon Path
+    const onlyOnPath = this.chunkNow?.objects.filter(
+      (obj) =>
+        obj instanceof Stone &&
+        obj.state !== "DESTROYED" &&
+        !obj.isReserved &&
+        obj.isOnWagonPath,
     );
-    return onlyReady.length
-      ? (onlyReady[getRandomInRange(0, onlyReady.length - 1)] as Stone)
-      : undefined;
+    if (onlyOnPath && onlyOnPath.length > 0) {
+      const wagon = this.getWagon();
+      return this.determineNearestObject(wagon, onlyOnPath) as Stone;
+    }
+
+    // Part 2: Check nearest free
+    const other = this.chunkNow?.objects.filter(
+      (obj) =>
+        obj instanceof Stone &&
+        obj.state !== "DESTROYED" &&
+        !obj.isReserved,
+    );
+    if (other && other.length > 0) {
+      const wagon = this.getWagon();
+      return this.determineNearestObject(wagon, other) as Stone;
+    }
   }
 
   determineNearestObject(
@@ -1056,24 +1172,26 @@ export class GameScene {
   }
 
   generateRandomVillage({
-    center,
-    width,
-    height,
-  }: {
+                          center,
+                          width,
+                          height,
+                          theme
+                        }: {
     center: { x: number; y: number };
     width: number;
     height: number;
+    theme: IGameChunkTheme;
   }) {
-    const village = new Village({ width, height, center });
+    const village = new Village({ width, height, center, theme });
     this.chunks.push(village);
     return village;
   }
 
   generateRandomForest({
-    center,
-    width,
-    height,
-  }: {
+                         center,
+                         width,
+                         height,
+                       }: {
     center: { x: number; y: number };
     width: number;
     height: number;
@@ -1081,6 +1199,20 @@ export class GameScene {
     const forest = new Forest({ width, height, center });
     this.chunks.push(forest);
     return forest;
+  }
+
+  generateRandomLake({
+                       center,
+                       width,
+                       height,
+                     }: {
+    center: { x: number; y: number };
+    width: number;
+    height: number;
+  }) {
+    const lake = new LakeChunk({ width, height, center });
+    this.chunks.push(lake);
+    return lake;
   }
 
   generateAdventure(village: Village) {
@@ -1092,7 +1224,7 @@ export class GameScene {
     this.route.startPoint = wagonStartPoint;
     this.route.addChunk(village);
 
-    this.generateChunks({ x: villageOutPoint.x, y: villageOutPoint.y }, 2);
+    this.generateChunks({ x: villageOutPoint.x, y: villageOutPoint.y }, 3);
     this.markObjectsAsOnWagonPath(this.route);
   }
 
@@ -1101,6 +1233,10 @@ export class GameScene {
 
     for (let i = 1; i <= amount; i++) {
       const chunk = this.generateRandomChunk(outPoint);
+      if (!chunk) {
+        continue;
+      }
+
       outPoint = chunk.getRandomOutPointOnRight();
       this.route?.addGlobalFlag(outPoint);
       this.route?.addChunk(chunk);
@@ -1111,6 +1247,7 @@ export class GameScene {
       center: { x: outPoint.x + 2500 / 2, y: outPoint.y },
       width: 2500,
       height: 2000,
+      theme: "GREEN"
     });
     const stopPoint = finalVillage.getWagonStopPoint();
     this.route?.addGlobalFlag(stopPoint);
@@ -1119,23 +1256,37 @@ export class GameScene {
   }
 
   generateRandomChunk(startPoint: { x: number; y: number }) {
-    const forestWidth = getRandomInRange(1500, 2000);
-    const forestHeight = 2500;
-    const forestCenter = {
-      x: startPoint.x + forestWidth / 2,
+    const random = getRandomInRange(1, 2);
+
+    const width = getRandomInRange(1500, 2500);
+    const height = getRandomInRange(2200, 3000);
+    const center = {
+      x: startPoint.x + width / 2,
       y: startPoint.y,
     };
-    return this.generateRandomForest({
-      center: forestCenter,
-      width: forestWidth,
-      height: forestHeight,
-    });
+
+    switch (random) {
+      case 1:
+        return this.generateRandomForest({
+          center: center,
+          width: width,
+          height: height,
+        })
+      case 2:
+        return this.generateRandomLake({
+          center: center,
+          width: width,
+          height: height,
+        })
+      default:
+        return undefined;
+    }
   }
 
   markObjectsAsOnWagonPath(route: Route) {
     for (const chunk of this.chunks) {
       for (const object of chunk.objects) {
-        if (object instanceof Tree) {
+        if (object instanceof Tree || object instanceof Stone) {
           const isOnPath = route.checkIfPointIsOnWagonPath({
             x: object.x,
             y: object.y,

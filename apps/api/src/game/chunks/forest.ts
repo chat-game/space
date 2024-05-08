@@ -2,7 +2,7 @@ import {
   type IGameForestChunk,
   getRandomInRange,
 } from "../../../../../packages/api-sdk/src";
-import { Tree } from "../objects";
+import { Tree, Stone } from "../objects";
 import { GameChunk } from "./gameChunk";
 
 interface IForestOptions {
@@ -24,6 +24,7 @@ export class Forest extends GameChunk implements IGameForestChunk {
     const treesToPrepare = Math.round((this.area.endX - this.area.startX) / 10);
     console.log(`preparing ${treesToPrepare} trees`);
     this.initTrees(treesToPrepare);
+    this.initStones(3);
   }
 
   live() {
@@ -46,6 +47,14 @@ export class Forest extends GameChunk implements IGameForestChunk {
         health: 20,
       });
       this.objects.push(tree);
+    }
+  }
+
+  initStones(count: number) {
+    for (let i = 0; i < count; i++) {
+      const point = this.getRandomPoint();
+      const stone = new Stone({ x: point.x, y: point.y, resource: 1 });
+      this.objects.push(stone);
     }
   }
 }

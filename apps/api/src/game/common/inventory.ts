@@ -41,6 +41,25 @@ export class Inventory implements IGameInventory {
     this.items.splice(itemIndex, 1);
   }
 
+  public async reduceOrDestroyItem(type: ItemType, amount: number) {
+    const item = this.checkIfAlreadyHaveItem(type);
+    if (!item) {
+      return false;
+    }
+
+    if (amount > item.amount) {
+      return false;
+    }
+
+    if (amount === item.amount) {
+      this.destroyItem(item.id);
+      return true;
+    }
+
+    item.amount -= amount;
+    return true;
+  }
+
   public async addOrCreateItem(type: ItemType, amount: number) {
     if (this.saveInDb) {
       return this.addOrCreateItemInDB(type, amount);

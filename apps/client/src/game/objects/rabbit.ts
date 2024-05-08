@@ -56,15 +56,4 @@ export class Rabbit extends GameObjectContainer implements IGameObjectRabbit {
     }
     this.animationAngle += 0.08;
   }
-
-  update(object: IGameObjectRabbit) {
-    this.x = object.x;
-    this.y = object.y;
-    this.zIndex = Math.round(object.y);
-
-    this.entity = object.entity;
-    this.state = object.state;
-    this.direction = object.direction;
-    this.health = object.health;
-  }
 }

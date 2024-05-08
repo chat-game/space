@@ -10,7 +10,8 @@ export const TopPlayersBlock = () => {
   return (
     <div className="-z-50 fixed bottom-4 left-4">
       <div className="flex flex-row flex-nowrap gap-2 items-end">
-        <div className="w-fit px-3 py-2 font-bold text-xl tracking-tight leading-5 bg-primary text-primary border-primary border-b-4 rounded-2xl">
+        <div
+          className="w-fit px-3 py-2 font-bold text-xl bg-primary text-primary border-primary border-b-4 rounded-2xl">
           Топ игроков
         </div>
         <div className="h-fit flex flex-nowrap gap-2">
@@ -25,9 +26,19 @@ export const TopPlayersBlock = () => {
             title={{ title: "Богач", type: "RICH" }}
           />
           <TopPlayerCard
+            player={playersWithResult.villain?.player}
+            points={`${playersWithResult.villain?.points} очков`}
+            title={{ title: "Злодей", type: "VILLAIN" }}
+          />
+          <TopPlayerCard
             player={playersWithResult.famous?.player}
             points={`${playersWithResult.famous?.points} репутации`}
             title={{ title: "Филантроп", type: "FAMOUS" }}
+          />
+          <TopPlayerCard
+            player={playersWithResult.refueller?.player}
+            points={`${playersWithResult.refueller?.points} топлива`}
+            title={{ title: "Заправщик", type: "REFUELLER" }}
           />
           <TopPlayerCard
             player={playersWithResult.woodsman?.player}

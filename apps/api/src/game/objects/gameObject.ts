@@ -37,7 +37,8 @@ export class GameObject implements IGameObject {
     this.needToSendDataToClient = false;
   }
 
-  live(): void {}
+  live(): void {
+  }
 
   move(speed: number, minDistance?: number) {
     const isOnTarget = this.checkIfIsOnTarget(minDistance);

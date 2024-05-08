@@ -32,8 +32,10 @@ export class PlayerInterface extends UnitInterface {
     const basicText = new Text({
       text: userName,
       style: {
+        fontFamily: "Noto Serif",
         fontSize: 14,
-        fill: 0x694f62,
+        fontWeight: "500",
+        fill: 0x2e222f,
         align: "center",
       },
     });

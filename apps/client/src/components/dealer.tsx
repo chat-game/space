@@ -76,7 +76,8 @@ export const DealerBlock = ({ dealer }: { dealer: Dealer }) => {
         </div>
 
         <div className="w-fit text-center">
-          <div className="px-2 py-0.5 bg-amber-100/90 text-amber-900 rounded-2xl font-semibold text-xs tracking-tight">
+          <div
+            className="px-2 py-0.5 bg-amber-100/90 text-amber-900 rounded-2xl text-xs">
             Торговец
           </div>
         </div>
@@ -86,8 +87,8 @@ export const DealerBlock = ({ dealer }: { dealer: Dealer }) => {
 };
 
 const DealBlock = ({
-  deal,
-}: {
+                     deal,
+                   }: {
   deal: Deal;
 }) => {
   const item = getDealItem(deal.item, deal.amount);
@@ -104,13 +105,14 @@ const DealBlock = ({
         </div>
       )}
       {item}
-      <div className="px-2 py-1 font-bold text-amber-900 text-sm text-center tracking-tight leading-4">
+      <div className="px-2 py-1 font-bold text-amber-900 text-sm text-center">
         {deal.command}
       </div>
 
       <div className="flex flex-row gap-1 items-center justify-center">
         <p className="font-bold text-yellow-600">{deal.price}</p>
-        <div className="w-5 h-5 bg-yellow-200 border border-b-4 border-yellow-400 rounded-full" />
+        <div
+          className="w-5 h-5 bg-yellow-200 border border-b-4 border-yellow-400 rounded-full"/>
       </div>
     </div>
   );
@@ -120,8 +122,9 @@ function getDealItem(type: ItemType, amount: number) {
   if (type === "WOOD") {
     return (
       <div className="-mt-4 relative text-center">
-        <img src={"wood/wood1_64.png"} alt="" className="mx-auto w-12 h-auto" />
-        <div className="w-full absolute top-6 left-0 text-amber-50 text-base font-semibold">
+        <img src={"wood/wood1_64.png"} alt="" className="mx-auto w-12 h-auto"/>
+        <div
+          className="w-full absolute top-6 left-0 text-amber-50 text-base">
           {amount}
         </div>
       </div>
@@ -135,7 +138,8 @@ function getDealItem(type: ItemType, amount: number) {
           alt=""
           className="mx-auto w-12 h-auto"
         />
-        <div className="w-full absolute top-6 left-0 text-amber-50 text-base font-semibold">
+        <div
+          className="w-full absolute top-6 left-0 text-amber-50 text-base">
           {amount}
         </div>
       </div>
@@ -144,7 +148,7 @@ function getDealItem(type: ItemType, amount: number) {
   if (type === "AXE") {
     return (
       <div className="-mt-6 -mb-2 relative text-center">
-        <img src={"tools/axe1_64.png"} alt="" className="-ml-2 w-18 h-auto" />
+        <img src={"tools/axe1_64.png"} alt="" className="-ml-2 w-18 h-auto"/>
       </div>
     );
   }

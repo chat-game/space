@@ -26,15 +26,8 @@ export class Building
   }
 
   update(object: IGameObjectBuilding) {
-    this.x = object.x;
-    this.y = object.y;
-    this.zIndex = Math.round(object.y);
+    super.update(object);
 
-    this.entity = object.entity;
-    this.state = object.state;
-    this.direction = object.direction;
-    this.health = object.health;
     this.inventory = object.inventory;
-    this.isVisibleOnClient = object.isVisibleOnClient;
   }
 }

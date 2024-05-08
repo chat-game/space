@@ -114,10 +114,8 @@ export class Unit extends GameObjectContainer implements IGameObjectUnit {
 
     this.interface.animate();
 
-    if (this.target) {
-      if (this.target instanceof Flag) {
-        this.target.visible = true;
-      }
+    if (this.target && this.target instanceof Flag) {
+      this.target.visible = true;
     }
   }
 
@@ -161,18 +159,12 @@ export class Unit extends GameObjectContainer implements IGameObjectUnit {
   }
 
   update(object: IGameObjectUnit) {
-    this.x = object.x;
-    this.y = object.y;
+    super.update(object);
+
     this.zIndex = Math.round(object.y + 1);
 
-    this.entity = object.entity;
-    this.state = object.state;
-    this.direction = object.direction;
-    this.target = object.target;
     this.inventory = object.inventory;
     this.visual = object.visual;
     this.coins = object.coins;
-
-    this.health = object.health;
   }
 }

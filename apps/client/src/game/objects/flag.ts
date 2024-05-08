@@ -59,15 +59,8 @@ export class Flag extends GameObjectContainer implements IGameObjectFlag {
   }
 
   update(object: IGameObjectFlag) {
-    this.x = object.x;
-    this.y = object.y;
-    this.zIndex = Math.round(object.y) + 1;
+    super.update(object);
 
-    this.entity = object.entity;
-    this.state = object.state;
-    this.direction = object.direction;
-    this.health = object.health;
-    this.target = object.target;
     this.type = object.type;
   }
 }

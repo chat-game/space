@@ -47,6 +47,10 @@ export class BotService {
     return this.buildCommand("путешествовать", "START_CREATING_NEW_ADVENTURE");
   }
 
+  public commandRefuel() {
+    return this.buildCommand("заправить", "REFUEL");
+  }
+
   public commandChop() {
     return this.buildCommand("рубить", "CHOP");
   }
@@ -76,10 +80,10 @@ export class BotService {
   }
 
   public async reactOnRaid({
-    userName,
-    userId,
-    viewerCount,
-  }: {
+                             userName,
+                             userId,
+                             viewerCount,
+                           }: {
     userName: string;
     userId: string;
     viewerCount: number;
@@ -93,10 +97,10 @@ export class BotService {
   }
 
   public async reactOnChannelRewardRedemption({
-    userId,
-    userName,
-    rewardId,
-  }: {
+                                                userId,
+                                                userName,
+                                                rewardId,
+                                              }: {
     userId: string;
     userName: string;
     rewardId: string;
@@ -106,9 +110,13 @@ export class BotService {
       userId,
       userName,
     );
-    if (rewardId === TWITCH_CHANNEL_REWARDS["150viewerPoints"].id) {
+    if (rewardId === TWITCH_CHANNEL_REWARDS.add150ViewerPointsId) {
       await this.game.repository.addPlayerViewerPoints(player.id, 150);
       return;
+    }
+    if (rewardId === TWITCH_CHANNEL_REWARDS.villainStealFuelId) {
+      await this.game.scene.stealFuelAction(player.id);
+      return
     }
   }
 }

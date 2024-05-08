@@ -15,6 +15,7 @@ export class MovingScene extends GameScene {
       group,
       possibleActions: [
         "HELP",
+        "REFUEL",
         "CHOP",
         "MINE",
         "DONATE",
@@ -53,6 +54,7 @@ export class MovingScene extends GameScene {
       center: area.center,
       width: area.width,
       height: area.height,
+      theme: "GREEN"
     });
   }
 

@@ -3,7 +3,7 @@ import type {
   IGameObjectDirection,
   IGameObjectUnit,
 } from "../../../../../packages/api-sdk/src";
-import { GraphicsContainer } from "./graphicsContainer.ts";
+import { GraphicsContainer } from "./graphicsContainer";
 
 interface IUnitTopContainerOptions {
   direction: IGameObjectDirection;

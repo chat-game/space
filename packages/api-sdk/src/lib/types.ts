@@ -1,19 +1,10 @@
-export interface Village {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  wood: number;
-  stone: number;
-  globalTarget: number | null;
-  globalTargetSuccess: number | null;
-}
-
 export type IGameSceneAction =
   | "HELP"
   | "GIFT"
   | "SELL"
   | "BUY"
   | "DONATE"
+  | "REFUEL"
   | "CHOP"
   | "MINE"
   | "START_GROUP_BUILD"
@@ -54,7 +45,8 @@ export interface IGameSkill {
 export interface IGameChunk {
   id: string;
   title: string;
-  type: "VILLAGE" | "FOREST";
+  type: "VILLAGE" | "FOREST" | "LAKE";
+  theme: IGameChunkTheme;
   center: {
     x: number;
     y: number;
@@ -68,9 +60,22 @@ export interface IGameChunk {
   isVisibleOnClient: boolean;
 }
 
-export interface IGameVillageChunk extends IGameChunk {}
+export type IGameChunkTheme =
+  "GREEN"
+  | "TOXIC"
+  | "STONE"
+  | "TEAL"
+  | "BLUE"
+  | "VIOLET";
 
-export interface IGameForestChunk extends IGameChunk {}
+export interface IGameVillageChunk extends IGameChunk {
+}
+
+export interface IGameForestChunk extends IGameChunk {
+}
+
+export interface IGameLakeChunk extends IGameChunk {
+}
 
 export interface IGameObject {
   id: string;
@@ -98,6 +103,8 @@ export type IGameObjectEntity =
   | "RAIDER"
   | "TREE"
   | "STONE"
+  | "WATER"
+  | "LAKE"
   | "FLAG"
   | "COURIER"
   | "FARMER"
@@ -121,6 +128,7 @@ export interface WebSocketMessage {
 
 export interface IGameObjectWagon extends IGameObject {
   speed: number;
+  fuel: number;
   visibilityArea: {
     startX: number;
     endX: number;
@@ -135,11 +143,14 @@ export interface IGameObjectBuilding extends IGameObject {
   inventory: IGameInventory;
 }
 
-export interface IGameBuildingCampfire extends IGameObjectBuilding {}
+export interface IGameBuildingCampfire extends IGameObjectBuilding {
+}
 
-export interface IGameBuildingWarehouse extends IGameObjectBuilding {}
+export interface IGameBuildingWarehouse extends IGameObjectBuilding {
+}
 
-export interface IGameBuildingWagonStop extends IGameObjectBuilding {}
+export interface IGameBuildingWagonStop extends IGameObjectBuilding {
+}
 
 export interface IGameObjectFlag extends IGameObject {
   type:
@@ -151,8 +162,16 @@ export interface IGameObjectFlag extends IGameObject {
     | "SPAWN_RIGHT";
 }
 
+export interface IGameObjectWater extends IGameObject {
+}
+
+export interface IGameObjectLake extends IGameObject {
+  water: IGameObjectWater[];
+}
+
 export interface IGameObjectTree extends IGameObject {
-  type: "1" | "2" | "3";
+  type: "1" | "2" | "3" | "4" | "5";
+  variant: IGameChunkTheme;
   resource: number;
   size: number;
   isReadyToChop: boolean;
@@ -179,16 +198,20 @@ export interface IGameObjectUnit extends IGameObject {
   };
 }
 
-export interface IGameObjectCourier extends IGameObjectUnit {}
+export interface IGameObjectCourier extends IGameObjectUnit {
+}
 
-export interface IGameObjectFarmer extends IGameObjectUnit {}
+export interface IGameObjectFarmer extends IGameObjectUnit {
+}
 
-export interface IGameObjectMechanic extends IGameObjectUnit {}
+export interface IGameObjectMechanic extends IGameObjectUnit {
+}
 
 export interface IGameObjectPlayer extends IGameObjectUnit {
   reputation: number;
+  villainPoints: number;
+  refuellerPoints: number;
   userName: string;
-  colorIndex: number;
   skills: IGameSkill[];
 }
 
@@ -197,9 +220,11 @@ export interface IGameObjectRaider extends IGameObjectUnit {
   colorIndex: number;
 }
 
-export interface IGameObjectRabbit extends IGameObject {}
+export interface IGameObjectRabbit extends IGameObject {
+}
 
-export interface IGameObjectWolf extends IGameObject {}
+export interface IGameObjectWolf extends IGameObject {
+}
 
 export interface IGameEvent {
   id: string;
@@ -235,7 +260,7 @@ export interface IGameRoute {
 
 export interface PlayerTitle {
   title: string;
-  type: "RICH" | "FAMOUS" | "VIEWER" | "WOODSMAN" | "MINER";
+  type: "RICH" | "FAMOUS" | "VIEWER" | "VILLAIN" | "REFUELLER" | "WOODSMAN" | "MINER";
 }
 
 export type GraphicsContainerType =

@@ -1,9 +1,9 @@
 import type { IGameSkill } from "../../../../packages/api-sdk/src";
 
 export const PlayerSkillBlock = ({
-  skill,
-  isVisible,
-}: {
+                                   skill,
+                                   isVisible,
+                                 }: {
   skill: IGameSkill | undefined;
   isVisible: boolean;
 }) => {
@@ -19,13 +19,14 @@ export const PlayerSkillBlock = ({
       <div className="-mb-1 text-emerald-300 font-bold text-lg">
         {skill.lvl}
       </div>
-      <div className="relative w-14 h-2 bg-zinc-200/30 border-b-2 border-zinc-500 rounded-2xl">
+      <div
+        className="relative w-14 h-2 bg-zinc-200/30 border-b-2 border-zinc-500 rounded-2xl">
         <div
           className="h-2 bg-emerald-300 border-b-2 border-emerald-500 rounded-2xl animate-pulse"
           style={{ width: `${width}%` }}
         />
       </div>
-      <div className="-mt-1 text-emerald-300 font-semibold text-sm">
+      <div className="-mt-1 text-emerald-300 text-sm">
         {description}
       </div>
     </div>

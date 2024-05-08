@@ -16,23 +16,20 @@ import type {
   IGameObjectWagon,
   IGameObjectWolf,
   WebSocketMessage,
+  IGameObjectLake,
 } from "../../../../packages/api-sdk/src";
 import {
-  Courier,
-  Farmer,
   Flag,
   type GameObjectContainer,
-  Player,
   Rabbit,
-  Raider,
   Stone,
   Tree,
   Wolf,
+  Lake,
 } from "./objects";
 import { Campfire } from "./objects/buildings/campfire";
 import { WagonStop } from "./objects/buildings/wagonStop";
 import { Warehouse } from "./objects/buildings/warehouse";
-import { Mechanic } from "./objects/units/mechanic";
 import { Wagon } from "./objects/wagon";
 import {
   AssetsManager,
@@ -40,19 +37,14 @@ import {
   SceneManager,
   WebSocketManager,
 } from "./utils";
-
-export interface GameOptions {
-  viewWidth: number;
-  viewHeight: number;
-}
+import { Player, Courier, Farmer, Mechanic, Raider } from "./objects/units";
+import { BackgroundGenerator } from "./utils/generators/background.ts";
 
 export class Game extends Container {
   public children: GameObjectContainer[] = [];
   public audio: AudioManager;
   public scene: SceneManager;
-
-  public viewWidth: number;
-  public viewHeight: number;
+  public bg: BackgroundGenerator;
 
   public cameraOffsetX = 0;
   public cameraMovementSpeedX = 0.008;
@@ -63,14 +55,12 @@ export class Game extends Container {
   public cameraPerfectX = 0;
   public cameraPerfectY = 0;
 
-  constructor(options: GameOptions) {
+  constructor() {
     super();
-
-    this.viewWidth = options.viewWidth;
-    this.viewHeight = options.viewHeight;
 
     this.audio = new AudioManager();
     this.scene = new SceneManager();
+    this.bg = new BackgroundGenerator(this.scene.app);
   }
 
   async play() {
@@ -78,7 +68,7 @@ export class Game extends Container {
 
     this.audio.playBackgroundSound();
 
-    const bg = AssetsManager.getGeneratedBackground();
+    const bg = await this.bg.getGeneratedBackgroundTilingSprite();
     bg.x = -10000;
     bg.y = -10000;
     bg.width = 50000;
@@ -102,22 +92,6 @@ export class Game extends Container {
       console.log("FPS", this.scene.app.ticker.FPS);
       console.log("Objects", this.children.length);
     }, 1000);
-  }
-
-  async saveScreenshot(imageName = "untitled") {
-    const blob = await this.scene.app.renderer.extract.image(
-      this.scene.app.stage,
-    );
-
-    const link = document.createElement("a");
-    link.style.display = "none";
-    document.body.appendChild(link);
-    link.setAttribute("download", `${imageName}.png`);
-    link.setAttribute(
-      "href",
-      blob.src.replace("image/png", "image/octet-stream"),
-    );
-    link.click();
   }
 
   moveCameraToWagon(wagon: Wagon) {
@@ -275,6 +249,18 @@ export class Game extends Container {
     }
   }
 
+  initLake(object: IGameObjectLake) {
+    const lake = new Lake({ game: this, object });
+    this.addChild(lake);
+  }
+
+  updateLake(object: IGameObjectLake) {
+    const lake = this.findObject(object.id);
+    if (lake instanceof Lake) {
+      lake.update(object);
+    }
+  }
+
   initCampfire(object: IGameBuildingCampfire) {
     const building = new Campfire({ game: this, object });
     this.addChild(building);
@@ -393,6 +379,10 @@ export class Game extends Container {
         this.initWolf(object as IGameObjectWolf);
         return;
       }
+      if (object.entity === "LAKE") {
+        this.initLake(object as IGameObjectLake);
+        return;
+      }
       if (object.entity === "CAMPFIRE") {
         this.initCampfire(object as IGameBuildingCampfire);
         return;
@@ -452,6 +442,10 @@ export class Game extends Container {
       this.updateWolf(object as IGameObjectWolf);
       return;
     }
+    if (object.entity === "LAKE") {
+      this.updateLake(object as IGameObjectLake);
+      return;
+    }
     if (object.entity === "CAMPFIRE") {
       this.updateCampfire(object as IGameBuildingCampfire);
       return;
@@ -475,6 +469,9 @@ export class Game extends Container {
       this.audio.playRaidSound();
     }
     if (event === "GROUP_FORM_STARTED") {
+      this.audio.playRaidSound();
+    }
+    if (event === "CREATING_NEW_ADVENTURE_STARTED") {
       this.audio.playRaidSound();
     }
     if (event === "SCENE_CHANGED") {

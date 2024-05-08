@@ -57,15 +57,9 @@ export class Stone extends GameObjectContainer implements IGameObjectStone {
   }
 
   update(object: IGameObjectStone) {
-    this.x = object.x;
-    this.y = object.y;
-    this.zIndex = Math.round(object.y);
+    super.update(object);
 
     this.type = object.type;
-    this.entity = object.entity;
-    this.state = object.state;
-    this.direction = object.direction;
-    this.health = object.health;
     this.resource = object.resource;
     this.size = object.size;
   }

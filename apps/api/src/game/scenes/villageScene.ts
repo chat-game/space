@@ -1,6 +1,6 @@
 import type { Group } from "../common";
 import type { Game } from "../game";
-import { Rabbit, Stone, Wolf } from "../objects";
+import { Rabbit, Wolf } from "../objects";
 import { GameScene } from "./gameScene";
 
 interface IVillageSceneOptions {
@@ -34,7 +34,6 @@ export class VillageScene extends GameScene {
 
   public async init() {
     await this.initGroupPlayers();
-    this.initStones(15);
     this.initRabbits(8);
     this.initWolfs(4);
 
@@ -49,12 +48,6 @@ export class VillageScene extends GameScene {
     for (const player of this.group.players) {
       const instance = await this.initPlayer(player.id);
       this.objects.push(instance);
-    }
-  }
-
-  private initStones(count: number) {
-    for (let i = 0; i < count; i++) {
-      this.objects.push(new Stone({}));
     }
   }
 

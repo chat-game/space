@@ -14,6 +14,7 @@ export class SceneManager {
       resizeTo: window,
       antialias: true,
       roundPixels: false,
+      resolution: 1
     });
     document.getElementById("game-canvas")?.appendChild(this.app.canvas);
   }

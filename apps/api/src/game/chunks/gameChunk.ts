@@ -9,6 +9,7 @@ interface IGameChunkOptions {
   center: IGameChunk["center"];
   title: IGameChunk["title"];
   type: IGameChunk["type"];
+  theme: IGameChunk["theme"];
   width: number;
   height: number;
 }
@@ -17,6 +18,7 @@ export class GameChunk implements IGameChunk {
   public id: string;
   public title: string;
   public type: IGameChunk["type"];
+  public theme: IGameChunk["theme"];
   public center!: IGameChunk["center"];
   public area!: IGameChunk["area"];
   public isVisibleOnClient = false;
@@ -24,11 +26,19 @@ export class GameChunk implements IGameChunk {
   public needToSendDataToClient: boolean;
   public objects: GameObject[] = [];
 
-  constructor({ title, type, width, height, center }: IGameChunkOptions) {
+  constructor({
+                title,
+                type,
+                theme,
+                width,
+                height,
+                center
+              }: IGameChunkOptions) {
     this.id = createId();
     this.center = center;
     this.title = title;
     this.type = type;
+    this.theme = theme;
 
     this.needToSendDataToClient = false;
 

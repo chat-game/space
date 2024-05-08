@@ -1,8 +1,9 @@
 import { getRandomInRange } from "../../../../../packages/api-sdk/src";
 import type { Group } from "../common";
 import type { Game } from "../game";
-import { Player, Stone, Tree } from "../objects";
+import { Stone, Tree } from "../objects";
 import { GameScene } from "./gameScene";
+import { Player } from "../objects/units";
 
 interface IDefenceSceneOptions {
   game: Game;

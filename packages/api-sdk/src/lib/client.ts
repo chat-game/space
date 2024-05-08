@@ -1,4 +1,4 @@
-import type { GetSceneResponse, IGameObjectPlayer, Village } from "./types";
+import type { GetSceneResponse, IGameObjectPlayer } from "./types";
 
 interface PlayerWithPoints {
   player: IGameObjectPlayer;
@@ -11,15 +11,8 @@ export interface TopPlayersResponse {
   viewer: PlayerWithPoints | null;
   woodsman: PlayerWithPoints | null;
   miner: PlayerWithPoints | null;
-}
-
-export async function getVillage() {
-  try {
-    const res = await fetch("http://localhost:4001/village");
-    return (await res.json()) as Village;
-  } catch (err) {
-    return null;
-  }
+  villain: PlayerWithPoints | null;
+  refueller: PlayerWithPoints | null;
 }
 
 export async function getTopPlayers() {

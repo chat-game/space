@@ -9,14 +9,6 @@ export class DBRepository {
     this.db = db;
   }
 
-  findTrees() {
-    return this.db.tree.findMany();
-  }
-
-  findStones() {
-    return this.db.stone.findMany();
-  }
-
   findVillage() {
     return db.village.findFirst();
   }
@@ -42,6 +34,12 @@ export class DBRepository {
     const viewer = await db.player.findFirst({
       orderBy: { viewerPoints: "desc" },
     });
+    const villain = await db.player.findFirst({
+      orderBy: { villainPoints: "desc" },
+    })
+    const refueller = await db.player.findFirst({
+      orderBy: { refuellerPoints: "desc" },
+    })
     const woodsman = await this.findTopWoodsmanPlayer();
     const miner = await this.findTopMinerPlayer();
 
@@ -57,6 +55,14 @@ export class DBRepository {
       viewer: {
         player: viewer,
         points: viewer?.viewerPoints,
+      },
+      villain: {
+        player: villain,
+        points: villain?.villainPoints,
+      },
+      refueller: {
+        player: refueller,
+        points: refueller?.refuellerPoints,
       },
       woodsman,
       miner,
@@ -106,11 +112,11 @@ export class DBRepository {
   }
 
   createPlayer({
-    twitchId,
-    userName,
-    inventoryId,
-    id,
-  }: {
+                 twitchId,
+                 userName,
+                 inventoryId,
+                 id,
+               }: {
     twitchId: string;
     userName: string;
     inventoryId: string;

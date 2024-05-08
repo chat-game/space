@@ -35,16 +35,14 @@
     "@twurple/easy-bot": "7.1.0",
     "@twurple/eventsub-http": "7.1.0",
     "@twurple/pubsub": "7.1.0",
-    "hono": "4.2.9",
+    "hono": "4.3.3",
     "howler": "2.2.4",
     "pixi.js": "8.1.1",
     "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "react-use-websocket": "4.8.1",
-    "zustand": "4.5.2"
+    "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.7.2",
+    "@biomejs/biome": "1.7.3",
     "@tailwindcss/vite": "4.0.0-alpha.14",
     "@types/bun": "1.1.1",
     "@types/howler": "2.2.11",

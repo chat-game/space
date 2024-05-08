@@ -13,7 +13,7 @@ export const PlayerFullBody = ({ player }: { player: IGameObjectPlayer }) => {
         className="w-fit"
         style={{ height: height }}
       />
-      <PlayerTopBlock top="BASIC" colorIndex={player.colorIndex} />
+      <PlayerTopBlock top="BASIC" colorIndex={0} />
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import { Sprite, Text } from "pixi.js";
 import type { IGameObjectBuilding } from "../../../../../packages/api-sdk/src";
-import { GraphicsContainer } from "./graphicsContainer.ts";
+import { GraphicsContainer } from "./graphicsContainer";
 
 export class BuildingInterface extends GraphicsContainer {
   public building: IGameObjectBuilding;

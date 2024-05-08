@@ -21,7 +21,7 @@ export class Rabbit extends GameObject implements IGameObjectRabbit {
     }
 
     if (this.state === "MOVING") {
-      const isMoving = this.move(0.3);
+      const isMoving = this.move(1);
       this.handleChange();
 
       if (!isMoving) {

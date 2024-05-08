@@ -13,10 +13,13 @@ interface ITreeOptions {
   size?: number;
   health?: number;
   growSpeed?: number;
+  type?: IGameObjectTree["type"];
+  variant?: IGameObjectTree["variant"];
 }
 
 export class Tree extends GameObject implements IGameObjectTree {
   public type: IGameObjectTree["type"] = "1";
+  public variant: IGameObjectTree["variant"] = "GREEN";
   public resource = 0;
   public size;
   public minSizeToChop = 75;
@@ -26,7 +29,16 @@ export class Tree extends GameObject implements IGameObjectTree {
   public isReadyToChop = false;
   public isReserved = false;
 
-  constructor({ id, x, y, resource, size, health, growSpeed }: ITreeOptions) {
+  constructor({
+                id,
+                x,
+                y,
+                resource,
+                size,
+                health,
+                growSpeed,
+                variant, type
+              }: ITreeOptions) {
     const objectId = id ?? createId();
 
     super({ id: objectId, x, y, entity: "TREE" });
@@ -36,7 +48,8 @@ export class Tree extends GameObject implements IGameObjectTree {
     this.size = size ?? 100;
     this.health = health ?? 100;
     this.growSpeed = growSpeed ?? 0.01;
-    this.type = this.getNewTreeType();
+    this.type = type ?? this.getNewType();
+    this.variant = variant ?? this.getNewVariant();
   }
 
   live() {
@@ -107,9 +120,15 @@ export class Tree extends GameObject implements IGameObjectTree {
     this.handleChange();
   }
 
-  getNewTreeType(): IGameObjectTree["type"] {
-    const types: IGameObjectTree["type"][] = ["1", "2", "3"];
+  getNewType(): IGameObjectTree["type"] {
+    const types: IGameObjectTree["type"][] = ["1", "2", "3", "4", "5"];
     const index = getRandomInRange(0, types.length - 1);
     return types[index];
+  }
+
+  getNewVariant(): IGameObjectTree["variant"] {
+    const variants: IGameObjectTree["variant"][] = ["GREEN", "BLUE", "STONE", "TEAL", "TOXIC", "VIOLET"];
+    const index = getRandomInRange(0, variants.length - 1);
+    return variants[index];
   }
 }

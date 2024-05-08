@@ -1,8 +1,10 @@
 import { Sprite } from "pixi.js";
 import type { IGameObjectWagon } from "../../../../../packages/api-sdk/src";
 import type { GraphicsContainer } from "../components/graphicsContainer";
-import { WagonEngineCloudsContainer } from "../components/wagonEngineCloudsContainer.ts";
-import { WagonEngineContainer } from "../components/wagonEngineContainer.ts";
+import {
+  WagonEngineCloudsContainer
+} from "../components/wagonEngineCloudsContainer";
+import { WagonEngineContainer } from "../components/wagonEngineContainer";
 import { WagonWheelContainer } from "../components/wagonWheelContainer";
 import type { Game } from "../game";
 import { GameObjectContainer } from "./gameObjectContainer";
@@ -14,6 +16,7 @@ interface IWagonOptions {
 
 export class Wagon extends GameObjectContainer implements IGameObjectWagon {
   public speed!: number;
+  public fuel!: number;
   public visibilityArea!: IGameObjectWagon["visibilityArea"];
 
   public children: GraphicsContainer[] = [];
@@ -97,15 +100,9 @@ export class Wagon extends GameObjectContainer implements IGameObjectWagon {
   }
 
   update(object: IGameObjectWagon) {
-    this.x = object.x;
-    this.y = object.y;
-    this.zIndex = Math.round(object.y);
-
-    this.entity = object.entity;
-    this.state = object.state;
-    this.direction = object.direction;
-    this.health = object.health;
+    super.update(object);
 
     this.speed = object.speed;
+    this.fuel = object.fuel;
   }
 }

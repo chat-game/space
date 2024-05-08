@@ -13,6 +13,7 @@ interface ITreeOptions {
 
 export class Tree extends GameObjectContainer implements IGameObjectTree {
   public type!: IGameObjectTree["type"];
+  public variant!: IGameObjectTree["variant"];
   public resource!: number;
   public size!: number;
   public isReadyToChop!: boolean;
@@ -38,13 +39,45 @@ export class Tree extends GameObjectContainer implements IGameObjectTree {
 
   getSpriteByType() {
     if (this.type === "1") {
-      return Sprite.from("tree1");
+      if (this.variant === "GREEN") {
+        return Sprite.from("tree1Green");
+      }
+      if (this.variant === "BLUE") {
+        return Sprite.from("tree1Blue");
+      }
+      if (this.variant === "STONE") {
+        return Sprite.from("tree1Stone");
+      }
+      if (this.variant === "TEAL") {
+        return Sprite.from("tree1Teal");
+      }
+      if (this.variant === "TOXIC") {
+        return Sprite.from("tree1Toxic");
+      }
+      if (this.variant === "VIOLET") {
+        return Sprite.from("tree1Violet");
+      }
     }
     if (this.type === "2") {
       return Sprite.from("tree2");
     }
     if (this.type === "3") {
-      return Sprite.from("tree3");
+      const random = getRandomInRange(1, 3);
+      if (random === 1) {
+        return Sprite.from("tree3");
+      }
+      if (random === 2) {
+        return Sprite.from("tree7");
+      }
+      if (random === 3) {
+        return Sprite.from("tree10");
+      }
+    }
+    if (this.type === "4") {
+      return Sprite.from("tree4");
+    }
+    if (this.type === "5") {
+      return Sprite.from("tree5");
     }
   }
 
@@ -81,18 +114,12 @@ export class Tree extends GameObjectContainer implements IGameObjectTree {
   }
 
   update(object: IGameObjectTree) {
-    this.x = object.x;
-    this.y = object.y;
-    this.zIndex = Math.round(object.y);
+    super.update(object);
 
     this.type = object.type;
-    this.entity = object.entity;
-    this.state = object.state;
-    this.direction = object.direction;
-    this.health = object.health;
+    this.variant = object.variant;
     this.isReadyToChop = object.isReadyToChop;
     this.resource = object.resource;
     this.size = object.size;
-    //this.isOnWagonPath = object.isOnWagonPath;
   }
 }

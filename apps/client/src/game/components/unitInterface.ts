@@ -1,4 +1,4 @@
-import { Graphics, Sprite, Text } from "pixi.js";
+import { Sprite, Text, Graphics } from "pixi.js";
 import type { IGameObjectUnit } from "../../../../../packages/api-sdk/src";
 import { GraphicsContainer } from "./graphicsContainer";
 
@@ -48,7 +48,7 @@ export class UnitInterface extends GraphicsContainer {
       (item) => item.type === "PICKAXE",
     );
 
-    this.drawCoins(this.coins);
+    this.drawCoins();
     this.drawWood();
     this.drawStone();
     this.drawAxe();
@@ -60,7 +60,7 @@ export class UnitInterface extends GraphicsContainer {
 
   rebuild() {
     this.children = [];
-    this.drawCoins(this.coins);
+    this.drawCoins();
     this.drawWood();
     this.drawStone();
     this.drawAxe();
@@ -143,26 +143,34 @@ export class UnitInterface extends GraphicsContainer {
     }
   }
 
-  drawCoins(coins: number) {
+  drawCoins() {
     const container = new GraphicsContainer({ type: "PLAYER_COINS" });
 
+    const sprite = Sprite.from("coin1");
+    sprite.width = 32
+    sprite.height = 32;
+    sprite.x = -32;
+    sprite.y = -9;
+
     const basicText = new Text({
-      text: coins,
+      text: this.coins,
       style: {
-        fontSize: 11,
-        fill: 0xca8a04,
+        fontFamily: "Noto Serif",
+        fontSize: 12,
+        fontWeight: "700",
+        fill: 0x0B5E65,
         align: "center",
       },
     });
 
     const graphics = new Graphics();
-    graphics.roundRect(-5, -4, basicText.width + 10, basicText.height + 8, 10);
-    graphics.fill(0xfef08a);
+    graphics.roundRect(-16, -4, basicText.width + 20, basicText.height + 8, 10);
+    graphics.fill(0x8FF8E2);
 
-    container.addChild(graphics, basicText);
+    container.addChild(graphics, sprite, basicText);
 
-    container.x = 45;
-    container.y = -60;
+    container.x = 70;
+    container.y = -56;
 
     this.addChild(container);
   }

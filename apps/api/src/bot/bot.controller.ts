@@ -42,15 +42,14 @@ export class BotController {
       this.service.commandDisbandGroup(),
       this.service.commandStartChangingScene(),
       this.service.commandStartCreatingNewAdventure(),
+      this.service.commandRefuel(),
       this.service.commandChop(),
       this.service.commandMine(),
       this.service.commandGift(),
       this.service.commandSell(),
       this.service.commandBuy(),
       this.service.commandHelp(),
-      //this.service.commandHelpEn(),
       this.service.commandDonate(),
-      //this.service.commandDonateEn(),
     ];
   }
 
