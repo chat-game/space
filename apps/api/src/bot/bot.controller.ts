@@ -83,8 +83,9 @@ export class BotController {
       console.log("raid canceled!", event)
     })
 
-    bot.onMessage(({ userId, isAction, text }) => {
+    bot.onMessage(({ userId, userName, isAction, text }) => {
       console.log("message", userId, isAction, text)
+      void this.service.reactOnMessage({ userName, userId, text })
     })
 
     bot.onAction(({ userId, userName, isAction, text }) => {

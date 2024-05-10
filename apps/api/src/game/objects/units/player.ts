@@ -50,6 +50,8 @@ export class Player extends Unit implements IGameObjectPlayer {
   }
 
   live() {
+    this.handleMessages()
+
     if (this.state === "IDLE") {
       this.handleChange()
       return
@@ -203,6 +205,10 @@ export class Player extends Unit implements IGameObjectPlayer {
   }
 
   addRefuellerPoints(amount: number) {
+    if (amount < 0) {
+      return
+    }
+
     this.refuellerPoints += amount
     this.handleChange()
 

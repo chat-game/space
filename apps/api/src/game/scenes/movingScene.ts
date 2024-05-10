@@ -25,6 +25,7 @@ export class MovingScene extends GameScene {
         "START_CHANGING_SCENE",
         "CREATE_NEW_PLAYER",
         "START_CREATING_NEW_ADVENTURE",
+        "SHOW_MESSAGE",
       ],
     })
 
@@ -42,19 +43,21 @@ export class MovingScene extends GameScene {
   }
 
   initStartingVillage() {
+    const width = 3000
+    const height = 2000
     const area = {
-      width: 2500,
-      height: 2000,
+      width,
+      height,
       center: {
-        x: Math.round(2500 / 2),
-        y: Math.round(2000 / 2),
+        x: Math.round(width / 2),
+        y: Math.round(height / 2),
       },
     }
     return this.generateRandomVillage({
       center: area.center,
       width: area.width,
       height: area.height,
-      theme: "GREEN",
+      theme: this.getRandomTheme(),
     })
   }
 

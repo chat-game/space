@@ -69,7 +69,7 @@ export class VillageFarmer extends Unit implements IGameObjectFarmer {
             y: this.target.y,
             resource: 1,
             size: 12,
-            variant: this.village.theme,
+            variant: this.village.area.theme,
           })
           this.village.plantNewTree(this.target, tree)
         }

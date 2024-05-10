@@ -1,4 +1,5 @@
 import {
+  type IGameChunkTheme,
   type IGameObjectFlag,
   type IGameVillageChunk,
   getRandomInRange,
@@ -14,7 +15,7 @@ interface IVillageOptions {
   width: number
   height: number
   center: IGameVillageChunk["center"]
-  theme: IGameVillageChunk["theme"]
+  theme: IGameChunkTheme
 }
 
 export class Village extends GameChunk implements IGameVillageChunk {
@@ -63,7 +64,7 @@ export class Village extends GameChunk implements IGameVillageChunk {
           size,
           resource: 1,
           health: 20,
-          variant: this.theme,
+          variant: this.area.theme,
         })
         flag.target = tree
         this.objects.push(tree)

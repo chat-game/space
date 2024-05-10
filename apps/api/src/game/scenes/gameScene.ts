@@ -5,6 +5,7 @@ import {
   type IGameChunk,
   type IGameChunkTheme,
   type IGameEvent,
+  type IGamePoll,
   type IGameRoute,
   type IGameSceneAction,
   type ItemType,
@@ -63,6 +64,7 @@ export class GameScene {
       this.updateRoute()
       this.updateChunks()
       this.updateChunkNow()
+      this.updatePolls()
     }, SERVER_TICK_MS)
   }
 
@@ -83,6 +85,9 @@ export class GameScene {
       }
     }
 
+    if (action === "SHOW_MESSAGE") {
+      return this.showMessageAction(player, params)
+    }
     if (action === "REFUEL") {
       return this.refuelAction(player, params)
     }
@@ -133,7 +138,7 @@ export class GameScene {
       return this.startCreatingNewAdventureAction()
     }
     if (action === "JOIN_GROUP") {
-      return this.joinGroupAction(player)
+      return this.joinGroupAction(player, params)
     }
     if (action === "HELP") {
       return this.helpAction(player)
@@ -166,14 +171,16 @@ export class GameScene {
     type,
     secondsToEnd,
     scene,
+    poll,
   }: {
     title: string
     type: IGameEvent["type"]
     secondsToEnd: number
     scene?: GameSceneType
+    poll?: IGamePoll
   }) {
     this.events.push(
-      new Event({ game: this.game, title, type, secondsToEnd, scene }),
+      new Event({ game: this.game, title, type, secondsToEnd, scene, poll }),
     )
   }
 
@@ -184,6 +191,7 @@ export class GameScene {
       type: event.type,
       status: event.status,
       endsAt: event.endsAt,
+      poll: event.poll,
     }))
   }
 
@@ -196,7 +204,6 @@ export class GameScene {
       id: this.chunkNow.id,
       title: this.chunkNow.title,
       type: this.chunkNow.type,
-      theme: this.chunkNow.theme,
       center: this.chunkNow.center,
       area: this.chunkNow.area,
       isVisibleOnClient: this.chunkNow.isVisibleOnClient,
@@ -261,13 +268,19 @@ export class GameScene {
         this.updatePlayer(obj)
         continue
       }
+      if (obj instanceof Raider) {
+        this.updateRaider(obj)
+        continue
+      }
 
       void obj.live()
     }
   }
 
   updateRoute() {
-    if (!this.route?.flags) {
+    if (!this.route?.flags || this.route.flags.length <= 0) {
+      // Route is over
+      this.route = undefined
       return
     }
 
@@ -305,6 +318,28 @@ export class GameScene {
       })
       if (isWagonOnThisChunk) {
         this.chunkNow = chunk
+      }
+    }
+  }
+
+  updatePolls() {
+    if (this.chunkNow instanceof Village) {
+      this.generateNewPollForNewAdventure()
+    }
+    for (const event of this.events) {
+      if (event.type === "VOTING_FOR_NEW_ADVENTURE_STARTED") {
+        if (!event.poll) {
+          continue
+        }
+        if (event.poll?.votes.length >= event.poll?.votesToSuccess) {
+          event.status = "STOPPED"
+
+          for (const event of this.game.scene.events) {
+            if (event.type === "VOTING_FOR_NEW_ADVENTURE_STARTED") {
+              event.status = "STOPPED"
+            }
+          }
+        }
       }
     }
   }
@@ -431,7 +466,7 @@ export class GameScene {
     if (object.state === "MOVING") {
       const isMoving = object.move(1)
       if (!isMoving) {
-        if (object.target?.id === "SPAWN_RIGHT") {
+        if (object.target?.id === "SPAWN_LEFT") {
           // Destroy
           const index = this.objects.indexOf(object)
           this.objects.splice(index, 1)
@@ -512,6 +547,30 @@ export class GameScene {
       return instance
     }
     return player
+  }
+
+  async showMessageAction(player: Player, params?: string[]) {
+    if (!this.checkIfActionIsPossible("SHOW_MESSAGE")) {
+      return {
+        ok: false,
+        message: null,
+      }
+    }
+
+    if (!params || !params[0]) {
+      return {
+        ok: false,
+        message: null,
+      }
+    }
+
+    const message = params[0]
+    player.addMessage(message)
+
+    return {
+      ok: true,
+      message: null,
+    }
   }
 
   async refuelAction(player: Player, params?: string[]) {
@@ -766,14 +825,14 @@ export class GameScene {
   }
 
   getCountFromChatCommand(text: string): number | null {
-    if (typeof Number(text) === "number") {
-      return Number(text)
+    if (typeof Number(text) === "number" && Number(text) > 0) {
+      return Math.round(Number(text))
     }
 
     return null
   }
 
-  joinGroupAction(player: Player) {
+  joinGroupAction(player: Player, params?: string[]) {
     if (!this.checkIfActionIsPossible("JOIN_GROUP")) {
       return {
         ok: false,
@@ -781,28 +840,38 @@ export class GameScene {
       }
     }
 
-    if (!this.group) {
+    if (!params) {
       return {
         ok: false,
-        message: "Нет группы.",
+        message: "Не передан id голосования.",
       }
     }
 
-    const joined = this.group.join(player)
-    if (!joined) {
+    const voteStatus = this.findActivePollAndVote(params[0], player)
+    if (voteStatus === "VOTED_ALREADY") {
       return {
         ok: false,
-        message: "Ты уже в группе.",
+        message: "Ты уже проголосовал.",
+      }
+    }
+    if (voteStatus === "VOTE_NOT_FOUND") {
+      return {
+        ok: false,
+        message: null,
       }
     }
 
     return {
       ok: true,
-      message: `${player.userName}, ты вступил(а) в группу!`,
+      message: `${player.userName}, ты проголосовал(а)!`,
     }
   }
 
   refuelWagon(woodAmount: number) {
+    if (woodAmount < 0) {
+      return
+    }
+
     const wagon = this.getWagon()
     wagon.fuel += woodAmount * 5 * 40
   }
@@ -887,8 +956,16 @@ export class GameScene {
   }
 
   initRaiders(count: number) {
+    const wagon = this.getWagon()
+
     for (let i = 0; i < count; i++) {
-      this.objects.push(new Raider())
+      const x = wagon.visibilityArea.endX
+      const y = getRandomInRange(
+        wagon.visibilityArea.startY,
+        wagon.visibilityArea.endY,
+      )
+
+      this.objects.push(new Raider({ x, y }))
     }
   }
 
@@ -896,7 +973,7 @@ export class GameScene {
     this.initEvent({
       title: "Начался рейд!",
       type: "RAID_STARTED",
-      secondsToEnd: 60 * 10,
+      secondsToEnd: 60 * 5,
     })
     this.initRaiders(raidersCount)
 
@@ -907,7 +984,7 @@ export class GameScene {
   }
 
   public stopRaid() {
-    const flag = this.findSpawnFlag("SPAWN_RIGHT")
+    const flag = this.findSpawnFlag("SPAWN_LEFT")
     if (!flag) {
       return
     }
@@ -1192,12 +1269,14 @@ export class GameScene {
     center,
     width,
     height,
+    theme,
   }: {
     center: { x: number; y: number }
     width: number
     height: number
+    theme: IGameChunkTheme
   }) {
-    const forest = new Forest({ width, height, center })
+    const forest = new Forest({ width, height, center, theme })
     this.chunks.push(forest)
     return forest
   }
@@ -1206,17 +1285,19 @@ export class GameScene {
     center,
     width,
     height,
+    theme,
   }: {
     center: { x: number; y: number }
     width: number
     height: number
+    theme: IGameChunkTheme
   }) {
-    const lake = new LakeChunk({ width, height, center })
+    const lake = new LakeChunk({ width, height, center, theme })
     this.chunks.push(lake)
     return lake
   }
 
-  generateAdventure(village: Village) {
+  generateAdventure(village: Village, chunks: number) {
     const wagonStartPoint = village.getWagonStopPoint()
     const villageOutPoint = village.getRandomOutPointOnRight()
 
@@ -1225,7 +1306,7 @@ export class GameScene {
     this.route.startPoint = wagonStartPoint
     this.route.addChunk(village)
 
-    this.generateChunks({ x: villageOutPoint.x, y: villageOutPoint.y }, 3)
+    this.generateChunks({ x: villageOutPoint.x, y: villageOutPoint.y }, chunks)
     this.markObjectsAsOnWagonPath(this.route)
   }
 
@@ -1248,7 +1329,7 @@ export class GameScene {
       center: { x: outPoint.x + 2500 / 2, y: outPoint.y },
       width: 2500,
       height: 2000,
-      theme: "GREEN",
+      theme: this.getRandomTheme(),
     })
     const stopPoint = finalVillage.getWagonStopPoint()
     this.route?.addGlobalFlag(stopPoint)
@@ -1272,16 +1353,30 @@ export class GameScene {
           center: center,
           width: width,
           height: height,
+          theme: this.getRandomTheme(),
         })
       case 2:
         return this.generateRandomLake({
           center: center,
           width: width,
           height: height,
+          theme: this.getRandomTheme(),
         })
       default:
         return undefined
     }
+  }
+
+  getRandomTheme(): IGameChunkTheme {
+    const themes: IGameChunkTheme[] = [
+      "GREEN",
+      "BLUE",
+      "STONE",
+      "TEAL",
+      "VIOLET",
+      "TOXIC",
+    ]
+    return themes[Math.floor(Math.random() * themes.length)]
   }
 
   markObjectsAsOnWagonPath(route: Route) {
@@ -1310,9 +1405,13 @@ export class GameScene {
   }
 
   findRandomMovementFlag() {
-    const flags = this.objects.filter(
+    const flags = this.chunkNow?.objects.filter(
       (f) => f instanceof Flag && f.type === "MOVEMENT",
     )
+    if (!flags) {
+      return undefined
+    }
+
     return flags.length > 0
       ? flags[Math.floor(Math.random() * flags.length)]
       : undefined
@@ -1329,7 +1428,7 @@ export class GameScene {
 
   initSpawnFlags() {
     const spawnLeftFlag = new Flag({
-      x: -100,
+      x: -300,
       y: 620,
       id: "SPAWN_LEFT",
       type: "SPAWN_LEFT",
@@ -1345,5 +1444,62 @@ export class GameScene {
 
   findSpawnFlag(id: "SPAWN_LEFT" | "SPAWN_RIGHT") {
     return this.objects.find((f) => f.id === id)
+  }
+
+  generateNewPollForNewAdventure() {
+    const votingEvents = this.events.filter(
+      (e) => e.type === "VOTING_FOR_NEW_ADVENTURE_STARTED",
+    )
+    if (votingEvents.length >= 3) {
+      return
+    }
+
+    const creatingEvent = this.events.find(
+      (e) => e.type === "CREATING_NEW_ADVENTURE_STARTED",
+    )
+
+    if (creatingEvent || this.route) {
+      return
+    }
+
+    this.initEvent({
+      type: "VOTING_FOR_NEW_ADVENTURE_STARTED",
+      title: "Новый квест",
+      secondsToEnd: 180,
+      poll: {
+        votes: [],
+        status: "STARTED",
+        votesToSuccess: 4,
+        id: this.generatePollId(),
+      },
+    })
+  }
+
+  generatePollId(): string {
+    const id = getRandomInRange(10, 99).toString()
+    for (const event of this.events) {
+      if (event.type === "VOTING_FOR_NEW_ADVENTURE_STARTED") {
+        if (event.poll?.id === id) {
+          return this.generatePollId()
+        }
+      }
+    }
+    return id
+  }
+
+  findActivePollAndVote(pollId: string, player: { id: string }) {
+    for (const event of this.events) {
+      if (event.type === "VOTING_FOR_NEW_ADVENTURE_STARTED") {
+        if (event.poll?.id === pollId) {
+          const voted = event.vote(player)
+          if (!voted) {
+            return "VOTED_ALREADY"
+          }
+          return "VOTE_SUCCESS"
+        }
+      }
+    }
+
+    return "VOTE_NOT_FOUND"
   }
 }

@@ -35,7 +35,7 @@
     "@twurple/easy-bot": "7.1.0",
     "@twurple/eventsub-http": "7.1.0",
     "@twurple/pubsub": "7.1.0",
-    "hono": "4.3.3",
+    "hono": "4.3.4",
     "howler": "2.2.4",
     "pixi.js": "8.1.1",
     "react": "18.3.1",
@@ -43,15 +43,15 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.7.3",
-    "@tailwindcss/vite": "4.0.0-alpha.14",
+    "@tailwindcss/vite": "4.0.0-alpha.15",
     "@types/bun": "1.1.1",
     "@types/howler": "2.2.11",
     "@types/react": "18.3.1",
     "@types/react-dom": "18.3.0",
     "@vitejs/plugin-react": "4.2.1",
-    "dependency-cruiser": "16.3.1",
+    "dependency-cruiser": "16.3.2",
     "prisma": "5.13.0",
-    "tailwindcss": "4.0.0-alpha.14",
+    "tailwindcss": "4.0.0-alpha.15",
     "typescript": "5.4.5",
     "vite": "5.2.11"
   }

@@ -4,6 +4,7 @@ import type {
   IGameBuildingWagonStop,
   IGameBuildingWarehouse,
   IGameObject,
+  IGameObjectArea,
   IGameObjectCourier,
   IGameObjectFarmer,
   IGameObjectFlag,
@@ -19,6 +20,7 @@ import type {
   WebSocketMessage,
 } from "../../../../packages/api-sdk/src"
 import {
+  Area,
   Flag,
   type GameObjectContainer,
   Lake,
@@ -69,8 +71,8 @@ export class Game extends Container {
     this.audio.playBackgroundSound()
 
     const bg = await this.bg.getGeneratedBackgroundTilingSprite()
-    bg.x = -10000
-    bg.y = -10000
+    bg.x = -500
+    bg.y = -500
     bg.width = 50000
     bg.height = 50000
     this.scene.app.stage.addChild(bg)
@@ -97,7 +99,7 @@ export class Game extends Container {
   moveCameraToWagon(wagon: Wagon) {
     const columnWidth = this.scene.app.screen.width / 6
     const leftPadding =
-      wagon.direction === "LEFT" ? columnWidth * 5 : columnWidth * 2
+      wagon.direction === "LEFT" ? columnWidth * 4 : columnWidth * 2
 
     const topPadding = this.scene.app.screen.height / 2
 
@@ -138,6 +140,18 @@ export class Game extends Container {
     const wagon = this.findObject(object.id)
     if (wagon instanceof Wagon) {
       wagon.update(object)
+    }
+  }
+
+  initArea(object: IGameObjectArea) {
+    const area = new Area({ game: this, object })
+    this.addChild(area)
+  }
+
+  updateArea(object: IGameObjectArea) {
+    const area = this.findObject(object.id)
+    if (area instanceof Area) {
+      area.update(object)
     }
   }
 
@@ -343,6 +357,10 @@ export class Game extends Container {
         this.initWagon(object as IGameObjectWagon)
         return
       }
+      if (object.entity === "AREA") {
+        this.initArea(object as IGameObjectArea)
+        return
+      }
       if (object.entity === "TREE") {
         this.initTree(object as IGameObjectTree)
         return
@@ -404,6 +422,10 @@ export class Game extends Container {
 
     if (object.entity === "WAGON") {
       this.updateWagon(object as IGameObjectWagon)
+      return
+    }
+    if (object.entity === "AREA") {
+      this.updateArea(object as IGameObjectArea)
       return
     }
     if (object.entity === "TREE") {

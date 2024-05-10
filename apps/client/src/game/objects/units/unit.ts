@@ -3,6 +3,7 @@ import type {
   IGameInventory,
   IGameObjectUnit,
 } from "../../../../../../packages/api-sdk/src"
+import { DialogueInterface } from "../../components/dialogueInterface"
 import type { GraphicsContainer } from "../../components/graphicsContainer"
 import { UnitHairContainer } from "../../components/unitHairContainer"
 import { UnitHeadContainer } from "../../components/unitHeadContainer"
@@ -22,8 +23,10 @@ export class Unit extends GameObjectContainer implements IGameObjectUnit {
   public inventory!: IGameInventory
   public visual!: IGameObjectUnit["visual"]
   public coins = 0
+  public dialogue!: IGameObjectUnit["dialogue"]
 
   public interface!: UnitInterface
+  public dialogueInterface!: DialogueInterface
   public children: GraphicsContainer[] = []
   animationMovingLeft!: AnimatedSprite
   animationMovingRight!: AnimatedSprite
@@ -52,6 +55,7 @@ export class Unit extends GameObjectContainer implements IGameObjectUnit {
       this.animationMovingLeft,
       this.animationMovingRight,
       this.interface,
+      this.dialogueInterface,
     )
   }
 
@@ -69,6 +73,7 @@ export class Unit extends GameObjectContainer implements IGameObjectUnit {
 
   initInterface() {
     this.interface = new UnitInterface(this)
+    this.dialogueInterface = new DialogueInterface(this)
   }
 
   animate() {
@@ -113,6 +118,7 @@ export class Unit extends GameObjectContainer implements IGameObjectUnit {
     }
 
     this.interface.animate()
+    this.dialogueInterface.animate()
 
     if (this.target && this.target instanceof Flag) {
       this.target.visible = true
@@ -166,5 +172,6 @@ export class Unit extends GameObjectContainer implements IGameObjectUnit {
     this.inventory = object.inventory
     this.visual = object.visual
     this.coins = object.coins
+    this.dialogue = object.dialogue
   }
 }

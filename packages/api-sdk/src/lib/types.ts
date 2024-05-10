@@ -14,6 +14,7 @@ export type IGameSceneAction =
   | "START_RAID"
   | "CREATE_NEW_PLAYER"
   | "START_CREATING_NEW_ADVENTURE"
+  | "SHOW_MESSAGE"
 
 export type ItemType = "WOOD" | "STONE" | "AXE" | "PICKAXE"
 
@@ -46,17 +47,11 @@ export interface IGameChunk {
   id: string
   title: string
   type: "VILLAGE" | "FOREST" | "LAKE"
-  theme: IGameChunkTheme
   center: {
     x: number
     y: number
   }
-  area: {
-    startX: number
-    endX: number
-    startY: number
-    endY: number
-  }
+  area: IGameObjectArea
   isVisibleOnClient: boolean
 }
 
@@ -103,6 +98,7 @@ export type IGameObjectEntity =
   | "WATER"
   | "LAKE"
   | "FLAG"
+  | "AREA"
   | "COURIER"
   | "FARMER"
   | "MECHANIC"
@@ -120,6 +116,7 @@ export interface WebSocketMessage {
     | "COUNTDOWN_NEXT_WAVE_STARTED"
     | "SCENE_CHANGED"
     | "CREATING_NEW_ADVENTURE_STARTED"
+    | "VOTING_FOR_NEW_ADVENTURE_STARTED"
   object?: Partial<IGameObject>
 }
 
@@ -162,6 +159,16 @@ export interface IGameObjectLake extends IGameObject {
   water: IGameObjectWater[]
 }
 
+export interface IGameObjectArea extends IGameObject {
+  theme: IGameChunkTheme
+  area: {
+    startX: number
+    endX: number
+    startY: number
+    endY: number
+  }
+}
+
 export interface IGameObjectTree extends IGameObject {
   type: "1" | "2" | "3" | "4" | "5"
   variant: IGameChunkTheme
@@ -188,6 +195,9 @@ export interface IGameObjectUnit extends IGameObject {
       | "GREEN_SHIRT"
       | "BLUE_SHIRT"
       | "DARK_SILVER_SHIRT"
+  }
+  dialogue: {
+    messages: { id: string; text: string }[]
   }
 }
 
@@ -220,6 +230,14 @@ export interface IGameEvent {
   type: WebSocketMessage["event"]
   status: "STARTED" | "STOPPED"
   endsAt: Date
+  poll?: IGamePoll
+}
+
+export interface IGamePoll {
+  status: "STARTED" | "STOPPED"
+  id: string
+  votesToSuccess: number
+  votes: { id: string }[]
 }
 
 export type GameSceneType = "VILLAGE" | "DEFENCE" | "MOVING"

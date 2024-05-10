@@ -1,4 +1,5 @@
 import {
+  type IGameChunkTheme,
   type IGameForestChunk,
   getRandomInRange,
 } from "../../../../../packages/api-sdk/src"
@@ -9,20 +10,23 @@ interface IForestOptions {
   center: IGameForestChunk["center"]
   width: number
   height: number
+  theme: IGameChunkTheme
 }
 
 export class Forest extends GameChunk implements IGameForestChunk {
-  constructor({ width, height, center }: IForestOptions) {
+  constructor({ width, height, center, theme }: IForestOptions) {
     super({
       title: "Роскошный Лес",
       type: "FOREST",
       width,
       height,
       center,
+      theme,
     })
 
-    const treesToPrepare = Math.round((this.area.endX - this.area.startX) / 10)
-    console.log(`preparing ${treesToPrepare} trees`)
+    const treesToPrepare = Math.round(
+      (this.area.area.endX - this.area.area.startX) / 10,
+    )
     this.initTrees(treesToPrepare)
     this.initStones(3)
   }
@@ -45,6 +49,7 @@ export class Forest extends GameChunk implements IGameForestChunk {
         size,
         resource: 1,
         health: 20,
+        variant: this.area.theme,
       })
       this.objects.push(tree)
     }

@@ -28,12 +28,8 @@ export class Player extends Unit implements IGameObjectPlayer {
   init() {
     super.init()
 
-    this.initInterface()
-    super.addChild(this.interface)
-  }
-
-  initInterface() {
     this.interface = new PlayerInterface(this)
+    super.addChild(this.interface)
   }
 
   animate() {

@@ -148,19 +148,26 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     })
     const flag2 = new Flag({
       type: "WAGON_NEAR_MOVEMENT",
-      x: this.x - 100,
-      y: this.y + 150,
-      offsetX: -100,
-      offsetY: 150,
+      x: this.x - 200,
+      y: this.y + 50,
+      offsetX: -200,
+      offsetY: 50,
     })
     const flag3 = new Flag({
       type: "WAGON_NEAR_MOVEMENT",
-      x: this.x + 200,
-      y: this.y + 150,
-      offsetX: 200,
-      offsetY: 150,
+      x: this.x - 100,
+      y: this.y + 100,
+      offsetX: -100,
+      offsetY: 100,
     })
-    this.nearFlags.push(flag1, flag2, flag3)
+    const flag4 = new Flag({
+      type: "WAGON_NEAR_MOVEMENT",
+      x: this.x,
+      y: this.y + 200,
+      offsetX: 0,
+      offsetY: 200,
+    })
+    this.nearFlags.push(flag1, flag2, flag3, flag4)
   }
 
   updateNearFlags() {

@@ -1,5 +1,8 @@
 import { Application, Container, Graphics, Sprite, TilingSprite } from "pixi.js"
-import { getRandomInRange } from "../../../../../../packages/api-sdk/src"
+import {
+  type IGameChunkTheme,
+  getRandomInRange,
+} from "../../../../../../packages/api-sdk/src"
 import {
   BACKGROUND_TILE_1,
   BACKGROUND_TILE_2,
@@ -33,44 +36,19 @@ interface Palette {
 
 export class BackgroundGenerator {
   app: Application
-  palette: Palette
-  mainColor1: string
-  mainColor2: string
-  accentColor1: string
-  accentColor2: string
-  accentColor3: string
+  palette!: Palette
+  mainColor1!: string
+  mainColor2!: string
+  accentColor1!: string
+  accentColor2!: string
+  accentColor3!: string
 
   constructor(app: Application) {
     this.app = app
 
-    this.mainColor1 = "0x239063"
-    this.mainColor2 = "0x1ebc73"
-    this.accentColor1 = "0x91db69"
-    this.accentColor2 = "0xcddf6c"
-    this.accentColor3 = "0x8fd3ff"
-
-    this.palette = {
-      93: this.mainColor1,
-      97: this.mainColor1,
-      103: this.mainColor1,
-      111: this.mainColor2,
-      115: this.mainColor2,
-      123: "0xcd683d", // brown
-      136: "0xcd683d", // brown
-      147: this.accentColor1,
-      149: "0x92a984", // light neutral
-      151: "0xe6904e", // orange
-      153: this.accentColor1,
-      156: this.accentColor1,
-      168: "0xf68181", // bright pink
-      173: "0xfbb954", // light orange
-      203: "0x8fd3ff", // light blue
-      206: this.accentColor2,
-      209: "0xc7dcd0", // almost white
-      211: this.accentColor3,
-      213: this.accentColor3,
-      218: "0xfbff86", // light yellow
-    }
+    // Default
+    this.changePaletteByTheme("GREEN")
+    this.changePalette()
   }
 
   generate(imageArray: number[]) {
@@ -100,6 +78,78 @@ export class BackgroundGenerator {
       target: graphics,
       resolution: 4,
     })
+  }
+
+  public changePaletteByTheme(theme: IGameChunkTheme) {
+    if (theme === "GREEN") {
+      this.mainColor1 = "0x239063"
+      this.mainColor2 = "0x1ebc73"
+      this.accentColor1 = "0x91db69"
+      this.accentColor2 = "0xcddf6c"
+      this.accentColor3 = "0x8fd3ff"
+    }
+    if (theme === "TOXIC") {
+      this.mainColor1 = "0xa2a947"
+      this.mainColor2 = "0xd5e04b"
+      this.accentColor1 = "0xf9c22b"
+      this.accentColor2 = "0xed8099"
+      this.accentColor3 = "0xb2ba90"
+    }
+    if (theme === "VIOLET") {
+      this.mainColor1 = "0x6b3e75"
+      this.mainColor2 = "0x905ea9"
+      this.accentColor1 = "0xeaaded"
+      this.accentColor2 = "0xf57d4a"
+      this.accentColor3 = "0x8fd3ff"
+    }
+    if (theme === "BLUE") {
+      this.mainColor1 = "0x4d65b4"
+      this.mainColor2 = "0x4d9be6"
+      this.accentColor1 = "0xa884f3"
+      this.accentColor2 = "0xc7dcd0"
+      this.accentColor3 = "0x8ff8e2"
+    }
+    if (theme === "TEAL") {
+      this.mainColor1 = "0x0b5e65"
+      this.mainColor2 = "0x0b8a8f"
+      this.accentColor1 = "0xfdcbb0"
+      this.accentColor2 = "0xfbb954"
+      this.accentColor3 = "0xf9c22b"
+    }
+    if (theme === "STONE") {
+      this.mainColor1 = "0x374e4a"
+      this.mainColor2 = "0x547e64"
+      this.accentColor1 = "0xfca790"
+      this.accentColor2 = "0xeaaded"
+      this.accentColor3 = "0x8fd3ff"
+    }
+
+    this.changePalette()
+  }
+
+  changePalette() {
+    this.palette = {
+      93: this.mainColor1,
+      97: this.mainColor1,
+      103: this.mainColor1,
+      111: this.mainColor2,
+      115: this.mainColor2,
+      123: "0xcd683d", // brown
+      136: "0xcd683d", // brown
+      147: this.accentColor1,
+      149: "0x92a984", // light neutral
+      151: "0xe6904e", // orange
+      153: this.accentColor1,
+      156: this.accentColor1,
+      168: "0xf68181", // bright pink
+      173: "0xfbb954", // light orange
+      203: "0x8fd3ff", // light blue
+      206: this.accentColor2,
+      209: "0xc7dcd0", // almost white
+      211: this.accentColor3,
+      213: this.accentColor3,
+      218: "0xfbff86", // light yellow
+    }
   }
 
   async getPixelsData() {

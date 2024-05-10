@@ -24,8 +24,8 @@ export const RouteBlock = ({
   const distanceNowInPercent = Math.round((nowX - startX) / onePercent)
 
   const distanceAllChunks = Math.round(
-    route.chunks[route.chunks.length - 1].area.endX -
-      route.chunks[0].area.startX,
+    route.chunks[route.chunks.length - 1].area.area.endX -
+      route.chunks[0].area.area.startX,
   )
   const onePercentAllChunks = Math.round(distanceAllChunks / 100)
 
@@ -35,7 +35,8 @@ export const RouteBlock = ({
         <div className="-z-10 absolute w-full flex flex-row">
           {route.chunks?.map((chunk) => {
             const widthInPercent =
-              (chunk.area.endX - chunk.area.startX) / onePercentAllChunks
+              (chunk.area.area.endX - chunk.area.area.startX) /
+              onePercentAllChunks
 
             return (
               <div

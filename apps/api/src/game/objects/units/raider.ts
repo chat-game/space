@@ -1,31 +1,24 @@
 import { createId } from "@paralleldrive/cuid2"
-import {
-  type IGameObjectRaider,
-  getRandomInRange,
-} from "../../../../../../packages/api-sdk/src"
-import {
-  RAIDER_CAMP_MAX_X,
-  RAIDER_CAMP_MAX_Y,
-  RAIDER_CAMP_MIN_X,
-  RAIDER_CAMP_MIN_Y,
-} from "../../../config"
+import type { IGameObjectRaider } from "../../../../../../packages/api-sdk/src"
 import type { GameObject } from "../gameObject"
 import { Unit } from "./unit"
 
+interface IRaiderOptions {
+  x: number
+  y: number
+}
+
 export class Raider extends Unit implements IGameObjectRaider {
-  public userName = "рейдер"
+  public userName = ""
   public colorIndex = 0
 
-  constructor() {
+  constructor({ x, y }: IRaiderOptions) {
     const objectId = createId()
-
-    const finalX = getRandomInRange(RAIDER_CAMP_MIN_X, RAIDER_CAMP_MAX_X)
-    const finalY = getRandomInRange(RAIDER_CAMP_MIN_Y, RAIDER_CAMP_MAX_Y)
 
     super({
       id: objectId,
-      x: finalX,
-      y: finalY,
+      x,
+      y,
       entity: "RAIDER",
       visual: {
         head: "1",

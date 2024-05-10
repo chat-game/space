@@ -35,19 +35,36 @@ import coin1 from "../assets/images/icons/coin-1.png"
 import flag1 from "../assets/images/objects/flag-1.png"
 import flag2 from "../assets/images/objects/flag-2.png"
 import stone1 from "../assets/images/objects/stone-1.png"
-import tree2 from "../assets/images/objects/tree-2.png"
-import tree3 from "../assets/images/objects/tree-3.png"
-import tree4 from "../assets/images/objects/tree-4.png"
-import tree5 from "../assets/images/objects/tree-5.png"
-import tree6 from "../assets/images/objects/tree-6.png"
-import tree7 from "../assets/images/objects/tree-7.png"
-import tree10 from "../assets/images/objects/tree-10.png"
 import tree1Blue from "../assets/images/objects/tree/1/blue.png"
 import tree1Green from "../assets/images/objects/tree/1/green.png"
 import tree1Stone from "../assets/images/objects/tree/1/stone.png"
 import tree1Teal from "../assets/images/objects/tree/1/teal.png"
 import tree1Toxic from "../assets/images/objects/tree/1/toxic.png"
 import tree1Violet from "../assets/images/objects/tree/1/violet.png"
+import tree2Blue from "../assets/images/objects/tree/2/blue.png"
+import tree2Green from "../assets/images/objects/tree/2/green.png"
+import tree2Stone from "../assets/images/objects/tree/2/stone.png"
+import tree2Teal from "../assets/images/objects/tree/2/teal.png"
+import tree2Toxic from "../assets/images/objects/tree/2/toxic.png"
+import tree2Violet from "../assets/images/objects/tree/2/violet.png"
+import tree3Blue from "../assets/images/objects/tree/3/blue.png"
+import tree3Green from "../assets/images/objects/tree/3/green.png"
+import tree3Stone from "../assets/images/objects/tree/3/stone.png"
+import tree3Teal from "../assets/images/objects/tree/3/teal.png"
+import tree3Toxic from "../assets/images/objects/tree/3/toxic.png"
+import tree3Violet from "../assets/images/objects/tree/3/violet.png"
+import tree4Blue from "../assets/images/objects/tree/4/blue.png"
+import tree4Green from "../assets/images/objects/tree/4/green.png"
+import tree4Stone from "../assets/images/objects/tree/4/stone.png"
+import tree4Teal from "../assets/images/objects/tree/4/teal.png"
+import tree4Toxic from "../assets/images/objects/tree/4/toxic.png"
+import tree4Violet from "../assets/images/objects/tree/4/violet.png"
+import tree5Blue from "../assets/images/objects/tree/5/blue.png"
+import tree5Green from "../assets/images/objects/tree/5/green.png"
+import tree5Stone from "../assets/images/objects/tree/5/stone.png"
+import tree5Teal from "../assets/images/objects/tree/5/teal.png"
+import tree5Toxic from "../assets/images/objects/tree/5/toxic.png"
+import tree5Violet from "../assets/images/objects/tree/5/violet.png"
 import unitHairClassicLeft from "../assets/images/unit/hairstyle/hair-classic-left.png"
 import unitHairClassicRight from "../assets/images/unit/hairstyle/hair-classic-right.png"
 import unitHairCoalLongLeft from "../assets/images/unit/hairstyle/hair-coal-long-left.png"
@@ -88,13 +105,6 @@ export abstract class AssetsManager {
     { alias: "playerTopLeft", src: "/hero/top2_left_64.png" },
     { alias: "playerRight", src: "/hero/hero_empty_right_64.png" },
     { alias: "playerTopRight", src: "/hero/top2_right_64.png" },
-    { alias: "tree2", src: tree2 },
-    { alias: "tree3", src: tree3 },
-    { alias: "tree4", src: tree4 },
-    { alias: "tree5", src: tree5 },
-    { alias: "tree6", src: tree6 },
-    { alias: "tree7", src: tree7 },
-    { alias: "tree10", src: tree10 },
     { alias: "stone1", src: stone1 },
     { alias: "rabbitLeft", src: "/creatures/rabbit1_left_64.png" },
     { alias: "rabbitRight", src: "/creatures/rabbit1_right_64.png" },
@@ -183,6 +193,66 @@ export abstract class AssetsManager {
     {
       alias: "tree1Violet",
       src: tree1Violet,
+    },
+    { alias: "tree2Green", src: tree2Green },
+    { alias: "tree2Blue", src: tree2Blue },
+    { alias: "tree2Stone", src: tree2Stone },
+    {
+      alias: "tree2Teal",
+      src: tree2Teal,
+    },
+    {
+      alias: "tree2Toxic",
+      src: tree2Toxic,
+    },
+    {
+      alias: "tree2Violet",
+      src: tree2Violet,
+    },
+    { alias: "tree3Green", src: tree3Green },
+    { alias: "tree3Blue", src: tree3Blue },
+    { alias: "tree3Stone", src: tree3Stone },
+    {
+      alias: "tree3Teal",
+      src: tree3Teal,
+    },
+    {
+      alias: "tree3Toxic",
+      src: tree3Toxic,
+    },
+    {
+      alias: "tree3Violet",
+      src: tree3Violet,
+    },
+    { alias: "tree4Green", src: tree4Green },
+    { alias: "tree4Blue", src: tree4Blue },
+    { alias: "tree4Stone", src: tree4Stone },
+    {
+      alias: "tree4Teal",
+      src: tree4Teal,
+    },
+    {
+      alias: "tree4Toxic",
+      src: tree4Toxic,
+    },
+    {
+      alias: "tree4Violet",
+      src: tree4Violet,
+    },
+    { alias: "tree5Green", src: tree5Green },
+    { alias: "tree5Blue", src: tree5Blue },
+    { alias: "tree5Stone", src: tree5Stone },
+    {
+      alias: "tree5Teal",
+      src: tree5Teal,
+    },
+    {
+      alias: "tree5Toxic",
+      src: tree5Toxic,
+    },
+    {
+      alias: "tree5Violet",
+      src: tree5Violet,
     },
   ]
 

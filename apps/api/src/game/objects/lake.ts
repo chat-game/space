@@ -20,7 +20,6 @@ export class Lake extends GameObject implements IGameObjectLake {
 
     super({ id: objectId, x, y, entity: "LAKE" })
 
-    //this.init(320, 320);
     this.generate(13)
   }
 

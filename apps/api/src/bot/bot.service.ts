@@ -79,6 +79,23 @@ export class BotService {
     return this.buildCommand("донат", "DONATE")
   }
 
+  public reactOnMessage({
+    userName,
+    userId,
+    text,
+  }: {
+    userName: string
+    userId: string
+    text: string
+  }) {
+    return this.game.handleChatCommand({
+      action: "SHOW_MESSAGE",
+      userId,
+      userName,
+      params: [text],
+    })
+  }
+
   public async reactOnRaid({
     userName,
     userId,

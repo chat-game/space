@@ -19,7 +19,8 @@ interface IUnitOptions {
 export class Unit extends GameObject implements IGameObjectUnit {
   public inventory!: Inventory
   public visual!: IGameObjectUnit["visual"]
-  public coins: number
+  public coins: IGameObjectUnit["coins"]
+  public dialogue!: IGameObjectUnit["dialogue"]
 
   constructor({ entity, id, x, y, visual }: IUnitOptions) {
     const objectId = id ?? createId()
@@ -31,6 +32,7 @@ export class Unit extends GameObject implements IGameObjectUnit {
 
     this.initInventory()
     this.initVisual(visual)
+    this.initDialogue()
     this.coins = 0
   }
 
@@ -47,6 +49,31 @@ export class Unit extends GameObject implements IGameObjectUnit {
       head: "1",
       hairstyle: "CLASSIC",
       top: "VIOLET_SHIRT",
+    }
+  }
+
+  initDialogue() {
+    this.dialogue = {
+      messages: [],
+    }
+  }
+
+  public addMessage(message: string) {
+    const MAX_CHARS = 100
+    const messagePrepared =
+      message.trim().slice(0, MAX_CHARS) +
+      (message.length > MAX_CHARS ? "..." : "")
+
+    this.dialogue.messages.push({
+      id: createId(),
+      text: messagePrepared,
+    })
+  }
+
+  public handleMessages() {
+    const random = getRandomInRange(1, 200)
+    if (random === 1) {
+      this.dialogue.messages.splice(0, 1)
     }
   }
 }

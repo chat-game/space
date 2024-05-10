@@ -32,12 +32,13 @@ export class Inventory implements IGameInventory {
     return this.items.find((i) => i.type === type)
   }
 
-  public destroyItem(id: string) {
+  public async destroyItem(id: string) {
     const itemIndex = this.items.findIndex((i) => i.id === id)
     if (itemIndex < 0) {
       return
     }
 
+    await this.destroyItemInDB(id)
     this.items.splice(itemIndex, 1)
   }
 
@@ -52,10 +53,11 @@ export class Inventory implements IGameInventory {
     }
 
     if (amount === item.amount) {
-      this.destroyItem(item.id)
+      await this.destroyItem(item.id)
       return true
     }
 
+    this.decrementAmountOfItemInDB(item.id, amount)
     item.amount -= amount
     return true
   }
@@ -130,6 +132,17 @@ export class Inventory implements IGameInventory {
       data: {
         amount: {
           increment: amount,
+        },
+      },
+    })
+  }
+
+  decrementAmountOfItemInDB(id: string, amount: number) {
+    return db.inventoryItem.update({
+      where: { id },
+      data: {
+        amount: {
+          decrement: amount,
         },
       },
     })

@@ -1,15 +1,16 @@
 import { createId } from "@paralleldrive/cuid2"
 import {
   type IGameChunk,
+  type IGameChunkTheme,
   getRandomInRange,
 } from "../../../../../packages/api-sdk/src"
-import type { GameObject } from "../objects"
+import { Area, type GameObject } from "../objects"
 
 interface IGameChunkOptions {
   center: IGameChunk["center"]
   title: IGameChunk["title"]
   type: IGameChunk["type"]
-  theme: IGameChunk["theme"]
+  theme: IGameChunkTheme
   width: number
   height: number
 }
@@ -18,9 +19,8 @@ export class GameChunk implements IGameChunk {
   public id: string
   public title: string
   public type: IGameChunk["type"]
-  public theme: IGameChunk["theme"]
   public center!: IGameChunk["center"]
-  public area!: IGameChunk["area"]
+  public area!: Area
   public isVisibleOnClient = false
 
   public needToSendDataToClient: boolean
@@ -38,23 +38,32 @@ export class GameChunk implements IGameChunk {
     this.center = center
     this.title = title
     this.type = type
-    this.theme = theme
 
     this.needToSendDataToClient = false
 
-    this.initArea(width, height)
+    this.initArea({ width, height, theme })
   }
 
-  private initArea(width: number, height: number) {
+  private initArea({
+    width,
+    height,
+    theme,
+  }: {
+    width: number
+    height: number
+    theme: IGameChunkTheme
+  }) {
     const halfWidth = Math.round(width / 2)
     const halfHeight = Math.round(height / 2)
 
-    this.area = {
+    const area = {
       startX: this.center.x - halfWidth,
       endX: this.center.x + halfWidth,
       startY: this.center.y - halfHeight,
       endY: this.center.y + halfHeight,
     }
+
+    this.area = new Area({ theme, area })
   }
 
   public live() {
@@ -62,25 +71,28 @@ export class GameChunk implements IGameChunk {
       obj.isVisibleOnClient = this.isVisibleOnClient
       obj.needToSendDataToClient = this.needToSendDataToClient
     }
+    this.area.isVisibleOnClient = this.isVisibleOnClient
+    this.area.needToSendDataToClient = this.needToSendDataToClient
+    this.area.live()
   }
 
   public getRandomPoint() {
     return {
-      x: getRandomInRange(this.area.startX, this.area.endX),
-      y: getRandomInRange(this.area.startY, this.area.endY),
+      x: getRandomInRange(this.area.area.startX, this.area.area.endX),
+      y: getRandomInRange(this.area.area.startY, this.area.area.endY),
     }
   }
 
   public getRandomOutPointOnRight() {
     return {
-      x: this.area.endX,
-      y: getRandomInRange(this.area.startY, this.area.endY),
+      x: this.area.area.endX,
+      y: getRandomInRange(this.area.area.startY, this.area.area.endY),
     }
   }
 
   public checkIfPointIsInArea(point: { x: number; y: number }): boolean {
-    if (point.x >= this.area.startX && point.x <= this.area.endX) {
-      if (point.y >= this.area.startY && point.y <= this.area.endY) {
+    if (point.x >= this.area.area.startX && point.x <= this.area.area.endX) {
+      if (point.y >= this.area.area.startY && point.y <= this.area.area.endY) {
         return true
       }
     }

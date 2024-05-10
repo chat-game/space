@@ -1,4 +1,5 @@
 import {
+  type IGameChunkTheme,
   type IGameLakeChunk,
   getRandomInRange,
 } from "../../../../../packages/api-sdk/src"
@@ -9,19 +10,23 @@ interface ILakeOptions {
   center: IGameLakeChunk["center"]
   width: number
   height: number
+  theme: IGameChunkTheme
 }
 
 export class LakeChunk extends GameChunk implements IGameLakeChunk {
-  constructor({ width, height, center }: ILakeOptions) {
+  constructor({ width, height, center, theme }: ILakeOptions) {
     super({
       title: "Озеро с Секретом",
       type: "LAKE",
       width,
       height,
       center,
+      theme,
     })
 
-    const treesToPrepare = Math.round((this.area.endX - this.area.startX) / 30)
+    const treesToPrepare = Math.round(
+      (this.area.area.endX - this.area.area.startX) / 30,
+    )
     console.log(`preparing ${treesToPrepare} trees`)
     this.initTrees(treesToPrepare)
     this.initStones(3)
@@ -52,6 +57,7 @@ export class LakeChunk extends GameChunk implements IGameLakeChunk {
         size,
         resource: 1,
         health: 20,
+        variant: this.area.theme,
       })
       this.objects.push(tree)
     }
