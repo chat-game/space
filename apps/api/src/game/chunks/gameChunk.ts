@@ -84,9 +84,14 @@ export class GameChunk implements IGameChunk {
   }
 
   public getRandomOutPointOnRight() {
+    const height = this.area.area.endY - this.area.area.startY
+
     return {
       x: this.area.area.endX,
-      y: getRandomInRange(this.area.area.startY, this.area.area.endY),
+      y: getRandomInRange(
+        this.area.area.startY + Math.round(height / 2),
+        this.area.area.endY,
+      ),
     }
   }
 

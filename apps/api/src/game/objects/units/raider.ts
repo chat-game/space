@@ -26,18 +26,23 @@ export class Raider extends Unit implements IGameObjectRaider {
         top: "BLACK_SHIRT",
       },
     })
+
+    this.speed = 1.5
   }
 
   live() {
-    if (this.state === "IDLE") {
-      this.sendMessageObjectUpdated()
-      return
+    super.live()
+    this.handleChange()
+  }
+
+  handleChange() {
+    const prepared = {
+      ...this,
+      script: undefined,
+      live: undefined,
     }
 
-    if (this.state === "MOVING") {
-      this.sendMessageObjectUpdated()
-      return
-    }
+    this.sendMessageObjectUpdated(prepared)
   }
 
   moveOutOfScene(target: GameObject) {

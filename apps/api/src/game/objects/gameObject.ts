@@ -2,6 +2,7 @@ import type {
   IGameObject,
   IGameObjectDirection,
   IGameObjectState,
+  IGameScript,
 } from "../../../../../packages/api-sdk/src"
 import { sendMessage } from "../../websocket/websocket.server"
 
@@ -18,12 +19,15 @@ export class GameObject implements IGameObject {
   public x: number
   public y: number
   public health = 100
+  public speed = 1
   public isVisibleOnClient: boolean
   public entity: IGameObject["entity"]
   public direction: IGameObjectDirection = "RIGHT"
   public state: IGameObjectState = "IDLE"
-  public target: IGameObject | undefined
+  public target: IGameObject["target"]
 
+  public script: IGameScript | undefined
+  public minDistance = 1
   public needToSendDataToClient: boolean
   public isOnWagonPath = false
 
@@ -39,8 +43,8 @@ export class GameObject implements IGameObject {
 
   live(): void {}
 
-  move(speed: number, minDistance?: number) {
-    const isOnTarget = this.checkIfIsOnTarget(minDistance)
+  move() {
+    const isOnTarget = this.checkIfIsOnTarget()
     if (isOnTarget) {
       this.stop()
       return false
@@ -55,7 +59,8 @@ export class GameObject implements IGameObject {
     const distanceToY = this.getDistanceToTargetY()
 
     // Fix diagonal speed
-    const finalSpeed = distanceToX > 0 && distanceToY > 0 ? speed * 0.75 : speed
+    const finalSpeed =
+      distanceToX > 0 && distanceToY > 0 ? this.speed * 0.75 : this.speed
 
     this.moveX(finalSpeed > distanceToX ? distanceToX : finalSpeed)
     this.moveY(finalSpeed > distanceToY ? distanceToY : finalSpeed)
@@ -94,9 +99,10 @@ export class GameObject implements IGameObject {
     this.state = "IDLE"
   }
 
-  checkIfIsOnTarget(minDistance = 1) {
+  checkIfIsOnTarget() {
     return (
-      this.getDistanceToTargetX() + this.getDistanceToTargetY() <= minDistance
+      this.getDistanceToTargetX() + this.getDistanceToTargetY() <=
+      this.minDistance
     )
   }
 

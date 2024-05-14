@@ -2,6 +2,7 @@ import { createId } from "@paralleldrive/cuid2"
 import {
   type GameSceneType,
   type IGameEvent,
+  type IGameObjectPlayer,
   type IGamePoll,
   getDatePlusSeconds,
 } from "../../../../../packages/api-sdk/src"
@@ -89,7 +90,7 @@ export class Event implements IGameEvent {
     }
   }
 
-  public vote(player: { id: string }): boolean {
+  public vote(player: IGameObjectPlayer): boolean {
     if (!this.poll) {
       return false
     }
@@ -98,7 +99,7 @@ export class Event implements IGameEvent {
       return false
     }
 
-    this.poll.votes.push({ id: player.id })
+    this.poll.votes.push({ id: player.id, userName: player.userName })
     return true
   }
 }

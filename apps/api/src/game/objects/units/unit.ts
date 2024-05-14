@@ -4,15 +4,15 @@ import {
   type IGameObjectUnit,
   getRandomInRange,
 } from "../../../../../../packages/api-sdk/src"
-import { MAX_X, MAX_Y, MIN_X, MIN_Y } from "../../../config"
 import { Inventory } from "../../common"
 import { GameObject } from "../gameObject"
+import { Tree } from "../tree"
 
 interface IUnitOptions {
   entity: IGameObject["entity"]
   id?: string
-  x?: number
-  y?: number
+  x: number
+  y: number
   visual?: IGameObjectUnit["visual"]
 }
 
@@ -25,15 +25,19 @@ export class Unit extends GameObject implements IGameObjectUnit {
   constructor({ entity, id, x, y, visual }: IUnitOptions) {
     const objectId = id ?? createId()
 
-    const finalX = x ?? getRandomInRange(MIN_X, MAX_X)
-    const finalY = y ?? getRandomInRange(MIN_Y, MAX_Y)
-
-    super({ id: objectId, x: finalX, y: finalY, entity })
+    super({ id: objectId, x, y, entity })
 
     this.initInventory()
     this.initVisual(visual)
     this.initDialogue()
     this.coins = 0
+  }
+
+  live() {
+    if (this.script) {
+      this.script.live()
+      return
+    }
   }
 
   public initInventory() {
@@ -74,6 +78,31 @@ export class Unit extends GameObject implements IGameObjectUnit {
     const random = getRandomInRange(1, 200)
     if (random === 1) {
       this.dialogue.messages.splice(0, 1)
+    }
+  }
+
+  public chopTree() {
+    if (this.target instanceof Tree && this.target.state !== "DESTROYED") {
+      this.state = "CHOPPING"
+      this.checkAndBreakAxe()
+
+      this.target.chop()
+    }
+  }
+
+  async stopChopping(tree: Tree) {
+    this.state = "IDLE"
+    await this.inventory.addOrCreateItem("WOOD", tree.resource)
+  }
+
+  checkAndBreakAxe() {
+    const axe = this.inventory.items.find((item) => item.type === "AXE")
+    if (axe) {
+      //this.target.health -= 0.16
+      const random = getRandomInRange(1, 40)
+      if (random <= 1) {
+        void this.inventory.checkAndBreakItem(axe, 1)
+      }
     }
   }
 }

@@ -98,8 +98,8 @@ export class BackgroundGenerator {
     if (theme === "VIOLET") {
       this.mainColor1 = "0x6b3e75"
       this.mainColor2 = "0x905ea9"
-      this.accentColor1 = "0xeaaded"
-      this.accentColor2 = "0xf57d4a"
+      this.accentColor1 = "0xfdcbb0"
+      this.accentColor2 = "0xfbb954"
       this.accentColor3 = "0x8fd3ff"
     }
     if (theme === "BLUE") {
@@ -200,6 +200,7 @@ export class BackgroundGenerator {
       }
     }
 
+    // Result: array
     console.log(pixels)
 
     return imageData

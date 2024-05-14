@@ -1,5 +1,5 @@
 import { RefreshingAuthProvider } from "@twurple/auth"
-import { Bot } from "@twurple/easy-bot"
+import { Bot, type BotCommand } from "@twurple/easy-bot"
 import { PubSubClient } from "@twurple/pubsub"
 import type { Game } from "../game/game"
 import { BotService } from "./bot.service"
@@ -35,21 +35,22 @@ export class BotController {
     return authProvider
   }
 
-  prepareBotCommands() {
+  prepareBotCommands(): BotCommand[] {
     return [
-      this.service.commandStartGroupBuild(),
-      this.service.commandJoinGroup(),
-      this.service.commandDisbandGroup(),
-      this.service.commandStartChangingScene(),
-      this.service.commandStartCreatingNewAdventure(),
-      this.service.commandRefuel(),
-      this.service.commandChop(),
-      this.service.commandMine(),
-      this.service.commandGift(),
-      this.service.commandSell(),
-      this.service.commandBuy(),
-      this.service.commandHelp(),
-      this.service.commandDonate(),
+      ...this.service.commandStartGroupBuild(),
+      ...this.service.commandJoinGroup(),
+      ...this.service.commandDisbandGroup(),
+      ...this.service.commandStartChangingScene(),
+      ...this.service.commandStartCreatingNewAdventure(),
+      ...this.service.commandRefuel(),
+      ...this.service.commandChop(),
+      ...this.service.commandMine(),
+      ...this.service.commandGift(),
+      ...this.service.commandSell(),
+      ...this.service.commandBuy(),
+      ...this.service.commandHelp(),
+      ...this.service.commandDonate(),
+      ...this.service.commandGithub(),
     ]
   }
 
@@ -83,8 +84,7 @@ export class BotController {
       console.log("raid canceled!", event)
     })
 
-    bot.onMessage(({ userId, userName, isAction, text }) => {
-      console.log("message", userId, isAction, text)
+    bot.onMessage(({ userId, userName, text }) => {
       void this.service.reactOnMessage({ userName, userId, text })
     })
 

@@ -1,5 +1,9 @@
 import { createId } from "@paralleldrive/cuid2"
-import type { IGameObjectWagon } from "../../../../../packages/api-sdk/src"
+import {
+  type IGameObjectWagon,
+  getMinusOrPlus,
+  getRandomInRange,
+} from "../../../../../packages/api-sdk/src"
 import { Flag } from "./flag"
 import { GameObject } from "./gameObject"
 import { Mechanic } from "./units"
@@ -10,7 +14,6 @@ interface IWagonOptions {
 }
 
 export class Wagon extends GameObject implements IGameObjectWagon {
-  public speed: number
   public fuel: number
   public visibilityArea!: IGameObjectWagon["visibilityArea"]
 
@@ -18,6 +21,7 @@ export class Wagon extends GameObject implements IGameObjectWagon {
   public serverDataArea!: IGameObjectWagon["visibilityArea"]
   public collisionArea!: IGameObjectWagon["visibilityArea"]
   public nearFlags: Flag[] = []
+  public outFlags: Flag[] = []
 
   constructor({ x, y }: IWagonOptions) {
     const finalId = createId()
@@ -29,6 +33,7 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     this.updateVisibilityArea()
     this.updateServerDataArea()
     this.initNearFlags()
+    this.initOutFlags(10)
     this.initMechanic()
   }
 
@@ -36,7 +41,7 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     this.updateVisibilityArea()
     this.updateServerDataArea()
     this.updateCollisionArea()
-    this.updateNearFlags()
+    this.updateFlags()
     this.updateMechanic()
     this.consumeFuel()
 
@@ -170,10 +175,46 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     this.nearFlags.push(flag1, flag2, flag3, flag4)
   }
 
-  updateNearFlags() {
-    for (const nearFlag of this.nearFlags) {
-      nearFlag.x = this.x + nearFlag.offsetX
-      nearFlag.y = this.y + nearFlag.offsetY
+  updateFlags() {
+    for (const flag of this.nearFlags) {
+      flag.x = this.x + flag.offsetX
+      flag.y = this.y + flag.offsetY
     }
+    for (const flag of this.outFlags) {
+      flag.x = this.x + flag.offsetX
+      flag.y = this.y + flag.offsetY
+    }
+  }
+
+  public findRandomNearFlag() {
+    return this.nearFlags[Math.floor(Math.random() * this.nearFlags.length)]
+  }
+
+  initOutFlags(count: number) {
+    for (let i = 0; i < count; i++) {
+      this.outFlags.push(this.generateRandomOutFlag())
+    }
+  }
+
+  generateRandomOutFlag() {
+    const minOffsetX = 1800
+    const minOffsetY = 1200
+
+    const offsetX =
+      getRandomInRange(minOffsetX, minOffsetX * 1.5) * getMinusOrPlus()
+    const offsetY =
+      getRandomInRange(minOffsetY, minOffsetY * 1.5) * getMinusOrPlus()
+
+    return new Flag({
+      type: "OUT_OF_SCREEN",
+      x: this.x + offsetX,
+      y: this.y + offsetY,
+      offsetX,
+      offsetY,
+    })
+  }
+
+  public findRandomOutFlag() {
+    return this.outFlags[Math.floor(Math.random() * this.outFlags.length)]
   }
 }

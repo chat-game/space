@@ -25,12 +25,15 @@ export class Mechanic extends Unit implements IGameObjectMechanic {
   }
 
   live() {
+    super.live()
     this.handleChange()
   }
 
   handleChange() {
     const prepared = {
       ...this,
+      script: undefined,
+      live: undefined,
     }
 
     this.sendMessageObjectUpdated(prepared)

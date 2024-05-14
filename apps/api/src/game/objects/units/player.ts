@@ -5,7 +5,6 @@ import {
   type ItemType,
   getRandomInRange,
 } from "../../../../../../packages/api-sdk/src"
-import { MAX_X, MAX_Y, MIN_X, MIN_Y } from "../../../config"
 import { db } from "../../../db/db.client"
 import { Inventory, Skill } from "../../common"
 import { Stone } from "../stone"
@@ -14,8 +13,8 @@ import { Unit } from "./unit"
 
 interface IPlayerOptions {
   id?: string
-  x?: number
-  y?: number
+  x: number
+  y: number
 }
 
 export class Player extends Unit implements IGameObjectPlayer {
@@ -23,7 +22,8 @@ export class Player extends Unit implements IGameObjectPlayer {
   public reputation = 0
   public villainPoints = 0
   public refuellerPoints = 0
-  public userName = "NPC"
+  public userName = ""
+  public lastActionAt: IGameObjectPlayer["lastActionAt"] = new Date()
   public health = 100
 
   public inventoryId?: string
@@ -33,10 +33,9 @@ export class Player extends Unit implements IGameObjectPlayer {
   constructor({ id, x, y }: IPlayerOptions) {
     const objectId = id ?? createId()
 
-    const finalX = x ?? getRandomInRange(MIN_X, MAX_X)
-    const finalY = y ?? getRandomInRange(MIN_Y, MAX_Y)
+    super({ id: objectId, x, y, entity: "PLAYER" })
 
-    super({ id: objectId, x: finalX, y: finalY, entity: "PLAYER" })
+    this.speed = 2
   }
 
   async init() {
@@ -52,58 +51,20 @@ export class Player extends Unit implements IGameObjectPlayer {
   live() {
     this.handleMessages()
 
-    if (this.state === "IDLE") {
-      this.handleChange()
-      return
-    }
-
-    if (this.state === "MOVING") {
-      const isMoving = this.move(2)
-      this.handleChange()
-
-      if (!isMoving && this.target) {
-        if (this.target instanceof Tree) {
-          void this.startChopping()
-          return
-        }
-        if (this.target instanceof Stone) {
-          void this.startMining()
-          return
-        }
-      }
-
-      return
-    }
+    super.live()
+    this.handleChange()
 
     if (this.state === "CHOPPING") {
       if (this.target instanceof Tree) {
-        // Skill up on random
-        const random = getRandomInRange(1, 200)
-        if (random <= 1) {
-          const skill = this.skills.find((skill) => skill.type === "WOODSMAN")
-          if (skill) {
-            void skill.addXp()
-          }
-        }
-
-        // Check instrument
-        const axe = this.inventory.items.find((item) => item.type === "AXE")
-        if (axe) {
-          this.target.health -= 0.16
-          const random = getRandomInRange(1, 40)
-          if (random <= 1) {
-            void this.inventory.checkAndBreakItem(axe, 1)
-          }
-        }
-
-        this.target.chop()
-        this.handleChange()
-
-        if (this.target.health <= 0) {
-          void this.stopChopping(this.target)
+        this.chopTree()
+        this.upSkillWoodsman()
+      }
+      if (this.target?.state === "DESTROYED") {
+        this.state = "IDLE"
+        if (this.target instanceof Tree) {
+          void this.inventory.addOrCreateItem("WOOD", this.target?.resource)
         }
       }
-
       return
     }
 
@@ -143,7 +104,13 @@ export class Player extends Unit implements IGameObjectPlayer {
   }
 
   handleChange() {
-    this.sendMessageObjectUpdated()
+    const prepared = {
+      ...this,
+      script: undefined,
+      live: undefined,
+    }
+
+    this.sendMessageObjectUpdated(prepared)
   }
 
   async startChopping() {
@@ -152,14 +119,7 @@ export class Player extends Unit implements IGameObjectPlayer {
 
     await this.findOrCreateSkillInDB("WOODSMAN")
 
-    await this.updateInDB()
-    this.handleChange()
-  }
-
-  async stopChopping(tree: Tree) {
-    this.state = "IDLE"
-    // Reward
-    await this.inventory.addOrCreateItem("WOOD", tree.resource)
+    await this.updateLastActionAt()
     this.handleChange()
   }
 
@@ -169,7 +129,7 @@ export class Player extends Unit implements IGameObjectPlayer {
 
     await this.findOrCreateSkillInDB("MINER")
 
-    await this.updateInDB()
+    await this.updateLastActionAt()
     this.handleChange()
   }
 
@@ -265,7 +225,8 @@ export class Player extends Unit implements IGameObjectPlayer {
     this.inventoryId = player.inventoryId
   }
 
-  public updateInDB() {
+  public updateLastActionAt() {
+    this.lastActionAt = new Date()
     return db.player.update({
       where: { id: this.id },
       data: {
@@ -307,5 +268,15 @@ export class Player extends Unit implements IGameObjectPlayer {
     }
 
     return skill
+  }
+
+  public upSkillWoodsman() {
+    const random = getRandomInRange(1, 200)
+    if (random <= 1) {
+      const skill = this.skills.find((skill) => skill.type === "WOODSMAN")
+      if (skill) {
+        void skill.addXp()
+      }
+    }
   }
 }

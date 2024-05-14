@@ -28,17 +28,12 @@ export class Inventory implements IGameInventory {
     await this.updateFromDB()
   }
 
-  public transferItemWithType(type: ItemType) {
-    return this.items.find((i) => i.type === type)
-  }
-
   public async destroyItem(id: string) {
     const itemIndex = this.items.findIndex((i) => i.id === id)
     if (itemIndex < 0) {
       return
     }
 
-    await this.destroyItemInDB(id)
     this.items.splice(itemIndex, 1)
   }
 

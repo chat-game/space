@@ -22,7 +22,7 @@ export class Wolf extends GameObject implements IGameObjectWolf {
     }
 
     if (this.state === "MOVING") {
-      this.move(1)
+      this.move()
 
       this.sendMessageObjectUpdated()
       return

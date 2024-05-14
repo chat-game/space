@@ -23,6 +23,7 @@ export class Unit extends GameObjectContainer implements IGameObjectUnit {
   public inventory!: IGameInventory
   public visual!: IGameObjectUnit["visual"]
   public coins = 0
+  public speed = 0
   public dialogue!: IGameObjectUnit["dialogue"]
 
   public interface!: UnitInterface
@@ -120,6 +121,8 @@ export class Unit extends GameObjectContainer implements IGameObjectUnit {
     this.interface.animate()
     this.dialogueInterface.animate()
 
+    this.handleSoundByState()
+
     if (this.target && this.target instanceof Flag) {
       this.target.visible = true
     }
@@ -172,6 +175,27 @@ export class Unit extends GameObjectContainer implements IGameObjectUnit {
     this.inventory = object.inventory
     this.visual = object.visual
     this.coins = object.coins
+    this.speed = object.speed
     this.dialogue = object.dialogue
+  }
+
+  handleSoundByState() {
+    if (this.state === "CHOPPING") {
+      if (this.inventory?.items.find((item) => item.type === "AXE")) {
+        this.game.audio.playChopWithAxeSound()
+        return
+      }
+
+      this.game.audio.playHandPunch()
+    }
+
+    if (this.state === "MINING") {
+      if (this.inventory?.items.find((item) => item.type === "PICKAXE")) {
+        this.game.audio.playMineWithPickaxeSound()
+        return
+      }
+
+      this.game.audio.playHandPunch()
+    }
   }
 }

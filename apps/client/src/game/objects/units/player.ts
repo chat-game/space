@@ -17,6 +17,7 @@ export class Player extends Unit implements IGameObjectPlayer {
   refuellerPoints!: number
   userName!: string
   skills!: IGameSkill[]
+  lastActionAt!: IGameObjectPlayer["lastActionAt"]
 
   constructor({ game, object }: IPlayerOptions) {
     super({ game, object })
@@ -37,7 +38,6 @@ export class Player extends Unit implements IGameObjectPlayer {
 
     this.interface.animate()
     this.showToolInHand()
-    this.handleSoundByState()
   }
 
   showToolInHand() {
@@ -61,26 +61,6 @@ export class Player extends Unit implements IGameObjectPlayer {
     }
   }
 
-  handleSoundByState() {
-    if (this.state === "CHOPPING") {
-      if (this.inventory?.items.find((item) => item.type === "AXE")) {
-        this.game.audio.playChopWithAxeSound()
-        return
-      }
-
-      this.game.audio.playHandPunch()
-    }
-
-    if (this.state === "MINING") {
-      if (this.inventory?.items.find((item) => item.type === "PICKAXE")) {
-        this.game.audio.playMineWithPickaxeSound()
-        return
-      }
-
-      this.game.audio.playHandPunch()
-    }
-  }
-
   update(object: IGameObjectPlayer) {
     super.update(object)
 
@@ -89,5 +69,6 @@ export class Player extends Unit implements IGameObjectPlayer {
     this.refuellerPoints = object.refuellerPoints
     this.userName = object.userName
     this.skills = object.skills
+    this.lastActionAt = object.lastActionAt
   }
 }

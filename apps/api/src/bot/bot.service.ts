@@ -1,4 +1,4 @@
-import { createBotCommand } from "@twurple/easy-bot"
+import { type BotCommand, createBotCommand } from "@twurple/easy-bot"
 import type { IGameSceneAction } from "../../../../packages/api-sdk/src"
 import { TWITCH_CHANNEL_REWARDS } from "../config"
 import type { Game } from "../game/game"
@@ -10,73 +10,88 @@ export class BotService {
     this.game = game
   }
 
-  private buildCommand(commandName: string, action: IGameSceneAction) {
-    return createBotCommand(
-      commandName,
-      async (params, { userId, userName, reply }) => {
-        const result = await this.game.handleChatCommand({
-          action,
-          userId,
-          userName,
-          params,
-        })
-        if (result.message) {
-          void reply(result.message)
-        }
-      },
-    )
+  private buildCommand(
+    commandName: string[],
+    action: IGameSceneAction,
+  ): BotCommand[] {
+    const commands = []
+
+    for (const command of commandName) {
+      commands.push(
+        createBotCommand(
+          command,
+          async (params, { userId, userName, reply }) => {
+            const result = await this.game.handleChatCommand({
+              action,
+              userId,
+              userName,
+              params,
+            })
+            if (result.message) {
+              void reply(result.message)
+            }
+          },
+        ),
+      )
+    }
+
+    return commands
   }
 
   public commandStartChangingScene() {
-    return this.buildCommand("вернуться", "START_CHANGING_SCENE")
+    return this.buildCommand(["вернуться"], "START_CHANGING_SCENE")
   }
 
   public commandStartGroupBuild() {
-    return this.buildCommand("собрать", "START_GROUP_BUILD")
+    return this.buildCommand(["собрать"], "START_GROUP_BUILD")
   }
 
   public commandJoinGroup() {
-    return this.buildCommand("го", "JOIN_GROUP")
+    return this.buildCommand(["го"], "JOIN_GROUP")
   }
 
   public commandDisbandGroup() {
-    return this.buildCommand("расформировать", "DISBAND_GROUP")
+    return this.buildCommand(["расформировать"], "DISBAND_GROUP")
   }
 
   public commandStartCreatingNewAdventure() {
-    return this.buildCommand("путешествовать", "START_CREATING_NEW_ADVENTURE")
+    return this.buildCommand(["путешествовать"], "START_CREATING_NEW_ADVENTURE")
   }
 
   public commandRefuel() {
-    return this.buildCommand("заправить", "REFUEL")
+    return this.buildCommand(["заправить", "з"], "REFUEL")
   }
 
   public commandChop() {
-    return this.buildCommand("рубить", "CHOP")
+    return this.buildCommand(["рубить", "р"], "CHOP")
   }
 
   public commandMine() {
-    return this.buildCommand("добыть", "MINE")
+    return this.buildCommand(["добыть", "добывать", "д"], "MINE")
   }
 
   public commandGift() {
-    return this.buildCommand("подарить", "GIFT")
+    return this.buildCommand(["подарить"], "GIFT")
   }
 
   public commandSell() {
-    return this.buildCommand("продать", "SELL")
+    return this.buildCommand(["продать"], "SELL")
   }
 
   public commandBuy() {
-    return this.buildCommand("купить", "BUY")
+    return this.buildCommand(["купить"], "BUY")
   }
 
   public commandHelp() {
-    return this.buildCommand("помощь", "HELP")
+    return this.buildCommand(["помощь"], "HELP")
   }
 
   public commandDonate() {
-    return this.buildCommand("донат", "DONATE")
+    return this.buildCommand(["донат"], "DONATE")
+  }
+
+  public commandGithub() {
+    return this.buildCommand(["github"], "GITHUB")
   }
 
   public reactOnMessage({

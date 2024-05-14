@@ -2,7 +2,6 @@ import { getRandomInRange } from "../../../../../packages/api-sdk/src"
 import type { Group } from "../common"
 import type { Game } from "../game"
 import { Stone, Tree } from "../objects"
-import { Player } from "../objects/units"
 import { GameScene } from "./gameScene"
 
 interface IDefenceSceneOptions {
@@ -57,25 +56,6 @@ export class DefenceScene extends GameScene {
       const instance = await this.initPlayer(player.id)
       this.objects.push(instance)
     }
-  }
-
-  async initPlayer(id: string) {
-    const instance = new Player({ id })
-    await instance.init()
-
-    const spawnFlag = this.findSpawnFlag("SPAWN_LEFT")
-    if (spawnFlag) {
-      instance.x = spawnFlag.x
-      instance.y = spawnFlag.y
-    }
-
-    const targetFlag = this.findRandomMovementFlag()
-    if (targetFlag) {
-      instance.target = targetFlag
-      instance.state = "MOVING"
-    }
-
-    return instance
   }
 
   private initTrees(count: number) {

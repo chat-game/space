@@ -15,6 +15,7 @@ export type IGameSceneAction =
   | "CREATE_NEW_PLAYER"
   | "START_CREATING_NEW_ADVENTURE"
   | "SHOW_MESSAGE"
+  | "GITHUB"
 
 export type ItemType = "WOOD" | "STONE" | "AXE" | "PICKAXE"
 
@@ -78,6 +79,7 @@ export interface IGameObject {
   entity: IGameObjectEntity
   target: IGameObject | undefined
   health: number
+  speed: number
   isVisibleOnClient: boolean
 }
 
@@ -121,7 +123,6 @@ export interface WebSocketMessage {
 }
 
 export interface IGameObjectWagon extends IGameObject {
-  speed: number
   fuel: number
   visibilityArea: {
     startX: number
@@ -151,6 +152,7 @@ export interface IGameObjectFlag extends IGameObject {
     | "RESOURCE"
     | "SPAWN_LEFT"
     | "SPAWN_RIGHT"
+    | "OUT_OF_SCREEN"
 }
 
 export interface IGameObjectWater extends IGameObject {}
@@ -213,6 +215,7 @@ export interface IGameObjectPlayer extends IGameObjectUnit {
   refuellerPoints: number
   userName: string
   skills: IGameSkill[]
+  lastActionAt: Date
 }
 
 export interface IGameObjectRaider extends IGameObjectUnit {
@@ -223,6 +226,19 @@ export interface IGameObjectRaider extends IGameObjectUnit {
 export interface IGameObjectRabbit extends IGameObject {}
 
 export interface IGameObjectWolf extends IGameObject {}
+
+export interface IGameScript {
+  id: string
+  tasks: IGameTask[]
+  live: () => void
+}
+
+export interface IGameTask {
+  id: string
+  status: "IDLE" | "ACTIVE" | "DONE"
+  target?: IGameObject
+  live: () => void
+}
 
 export interface IGameEvent {
   id: string
@@ -237,7 +253,7 @@ export interface IGamePoll {
   status: "STARTED" | "STOPPED"
   id: string
   votesToSuccess: number
-  votes: { id: string }[]
+  votes: { id: string; userName: string }[]
 }
 
 export type GameSceneType = "VILLAGE" | "DEFENCE" | "MOVING"

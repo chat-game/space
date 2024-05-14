@@ -13,6 +13,9 @@ export class Rabbit extends GameObject implements IGameObjectRabbit {
     const y = getRandomInRange(MIN_Y, MAX_Y)
 
     super({ id, x, y, entity: "RABBIT" })
+
+    this.speed = 0.5
+    this.minDistance = 5
   }
 
   live() {
@@ -21,7 +24,7 @@ export class Rabbit extends GameObject implements IGameObjectRabbit {
     }
 
     if (this.state === "MOVING") {
-      const isMoving = this.move(1)
+      const isMoving = this.move()
       this.handleChange()
 
       if (!isMoving) {

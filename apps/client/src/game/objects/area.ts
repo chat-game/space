@@ -25,8 +25,6 @@ export class Area extends GameObjectContainer implements IGameObjectArea {
     bg.width = this.area.endX - this.area.startX
     bg.height = this.area.endY - this.area.startY
     this.addChild(bg)
-
-    console.log(bg, this.theme)
   }
 
   animate() {

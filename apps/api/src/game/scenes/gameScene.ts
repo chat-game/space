@@ -9,12 +9,14 @@ import {
   type IGameRoute,
   type IGameSceneAction,
   type ItemType,
+  getDateMinusMinutes,
   getRandomInRange,
 } from "../../../../../packages/api-sdk/src"
 import {
   ADMIN_PLAYER_ID,
   DISCORD_SERVER_INVITE_URL,
   DONATE_URL,
+  GITHUB_REPO_URL,
   SERVER_TICK_MS,
 } from "../../config"
 import { Forest, type GameChunk, LakeChunk, Village } from "../chunks"
@@ -53,8 +55,6 @@ export class GameScene {
     this.game = game
     this.group = group
     this.possibleActions = possibleActions
-
-    this.initSpawnFlags()
   }
 
   public async play() {
@@ -142,6 +142,9 @@ export class GameScene {
     }
     if (action === "HELP") {
       return this.helpAction(player)
+    }
+    if (action === "GITHUB") {
+      return this.githubAction(player)
     }
     if (action === "DONATE") {
       return this.donateAction(player)
@@ -248,6 +251,7 @@ export class GameScene {
   }
 
   updateObjects() {
+    this.removeInactivePlayers()
     const wagon = this.getWagon()
 
     for (const obj of this.objects) {
@@ -324,7 +328,7 @@ export class GameScene {
 
   updatePolls() {
     if (this.chunkNow instanceof Village) {
-      this.generateNewPollForNewAdventure()
+      this.generatePollForNewAdventure()
     }
     for (const event of this.events) {
       if (event.type === "VOTING_FOR_NEW_ADVENTURE_STARTED") {
@@ -385,7 +389,7 @@ export class GameScene {
     }
     if (object.state === "MOVING") {
       object.speed = 0.5
-      const isMoving = object.move(object.speed)
+      const isMoving = object.move()
       object.handleChange()
 
       if (!isMoving) {
@@ -408,13 +412,40 @@ export class GameScene {
     object.live()
 
     if (object.state === "IDLE") {
-      const random = getRandomInRange(1, 120)
+      const random = getRandomInRange(1, 150)
       if (random <= 1) {
-        const randObj = this.findRandomNearWagonFlag()
+        const randObj = this.getWagon().findRandomNearFlag()
         if (!randObj) {
           return
         }
         object.setTarget(randObj)
+      }
+      object.handleChange()
+      return
+    }
+    if (object.state === "MOVING") {
+      const isMoving = object.move()
+      object.handleChange()
+
+      if (!isMoving && object.target) {
+        if (object.target instanceof Tree) {
+          void object.startChopping()
+          return
+        }
+        if (object.target instanceof Stone) {
+          void object.startMining()
+          return
+        }
+        if (
+          object.target instanceof Flag &&
+          object.target.type === "OUT_OF_SCREEN"
+        ) {
+          this.removeObject(object)
+          return
+        }
+
+        object.state = "IDLE"
+        return
       }
     }
   }
@@ -464,18 +495,24 @@ export class GameScene {
     }
 
     if (object.state === "MOVING") {
-      const isMoving = object.move(1)
+      const isMoving = object.move()
       if (!isMoving) {
-        if (object.target?.id === "SPAWN_LEFT") {
-          // Destroy
-          const index = this.objects.indexOf(object)
-          this.objects.splice(index, 1)
+        if (
+          object.target instanceof Flag &&
+          object.target.type === "OUT_OF_SCREEN"
+        ) {
+          this.removeObject(object)
         }
 
         object.state = "IDLE"
         return
       }
     }
+  }
+
+  removeObject(object: GameObject) {
+    const index = this.objects.indexOf(object)
+    this.objects.splice(index, 1)
   }
 
   getAvailableCommands() {
@@ -525,16 +562,36 @@ export class GameScene {
     }
   }
 
+  public findActivePlayers() {
+    return this.objects.filter((obj) => obj instanceof Player) as Player[]
+  }
+
+  public removeInactivePlayers() {
+    const players = this.findActivePlayers()
+    for (const player of players) {
+      const checkTime = getDateMinusMinutes(8)
+      if (player.lastActionAt.getTime() <= checkTime.getTime()) {
+        if (
+          player.target instanceof Flag &&
+          player.target.type === "OUT_OF_SCREEN"
+        ) {
+          continue
+        }
+
+        player.target = this.getWagon().findRandomOutFlag()
+        player.state = "MOVING"
+      }
+    }
+  }
+
   async initPlayer(id: string) {
-    const instance = new Player({ id })
+    const instance = new Player({ id, x: -100, y: -100 })
     await instance.init()
     await instance.initInventoryFromDB()
 
-    const wagon = this.getWagon()
-    if (wagon) {
-      instance.x = wagon.x - 250
-      instance.y = wagon.y
-    }
+    const flag = this.getWagon().findRandomOutFlag()
+    instance.x = flag.x
+    instance.y = flag.y
 
     return instance
   }
@@ -959,13 +1016,9 @@ export class GameScene {
     const wagon = this.getWagon()
 
     for (let i = 0; i < count; i++) {
-      const x = wagon.visibilityArea.endX
-      const y = getRandomInRange(
-        wagon.visibilityArea.startY,
-        wagon.visibilityArea.endY,
-      )
+      const flag = wagon.findRandomOutFlag()
 
-      this.objects.push(new Raider({ x, y }))
+      this.objects.push(new Raider({ x: flag.x, y: flag.y }))
     }
   }
 
@@ -984,10 +1037,7 @@ export class GameScene {
   }
 
   public stopRaid() {
-    const flag = this.findSpawnFlag("SPAWN_LEFT")
-    if (!flag) {
-      return
-    }
+    const flag = this.getWagon().findRandomOutFlag()
 
     for (const obj of this.objects) {
       if (obj instanceof Raider) {
@@ -1005,7 +1055,20 @@ export class GameScene {
     }
     return {
       ok: true,
-      message: `${player.userName}, это интерактивная игра-чат, в которой может участвовать любой зритель! Пиши команды (примеры на экране) для управления своим героем. Вступай в наше комьюнити: ${DISCORD_SERVER_INVITE_URL}`,
+      message: `${player.userName}, это интерактивная игра-чат, в которой может участвовать любой зритель! Пиши команды (примеры на экране) для управления своим юнитом. Вступай в наше комьюнити: ${DISCORD_SERVER_INVITE_URL}`,
+    }
+  }
+
+  public githubAction(player: Player) {
+    if (!this.checkIfActionIsPossible("GITHUB")) {
+      return {
+        ok: false,
+        message: null,
+      }
+    }
+    return {
+      ok: true,
+      message: `${player.userName}, код игры находится в репозитории: ${GITHUB_REPO_URL}`,
     }
   }
 
@@ -1395,15 +1458,6 @@ export class GameScene {
     }
   }
 
-  findRandomNearWagonFlag() {
-    const wagon = this.getWagon()
-    if (!wagon) {
-      return undefined
-    }
-
-    return wagon.nearFlags[Math.floor(Math.random() * wagon.nearFlags.length)]
-  }
-
   findRandomMovementFlag() {
     const flags = this.chunkNow?.objects.filter(
       (f) => f instanceof Flag && f.type === "MOVEMENT",
@@ -1426,31 +1480,16 @@ export class GameScene {
       : undefined
   }
 
-  initSpawnFlags() {
-    const spawnLeftFlag = new Flag({
-      x: -300,
-      y: 620,
-      id: "SPAWN_LEFT",
-      type: "SPAWN_LEFT",
-    })
-    const spawnRightFlag = new Flag({
-      x: 2700,
-      y: 620,
-      id: "SPAWN_RIGHT",
-      type: "SPAWN_RIGHT",
-    })
-    this.objects.push(spawnLeftFlag, spawnRightFlag)
-  }
+  generatePollForNewAdventure() {
+    const random = getRandomInRange(1, 1500)
+    if (random !== 1) {
+      return
+    }
 
-  findSpawnFlag(id: "SPAWN_LEFT" | "SPAWN_RIGHT") {
-    return this.objects.find((f) => f.id === id)
-  }
-
-  generateNewPollForNewAdventure() {
     const votingEvents = this.events.filter(
       (e) => e.type === "VOTING_FOR_NEW_ADVENTURE_STARTED",
     )
-    if (votingEvents.length >= 3) {
+    if (votingEvents.length >= 4) {
       return
     }
 
@@ -1462,6 +1501,9 @@ export class GameScene {
       return
     }
 
+    const votesToSuccess =
+      this.findActivePlayers().length >= 2 ? this.findActivePlayers().length : 2
+
     this.initEvent({
       type: "VOTING_FOR_NEW_ADVENTURE_STARTED",
       title: "Новый квест",
@@ -1469,7 +1511,7 @@ export class GameScene {
       poll: {
         votes: [],
         status: "STARTED",
-        votesToSuccess: 4,
+        votesToSuccess,
         id: this.generatePollId(),
       },
     })
@@ -1487,7 +1529,7 @@ export class GameScene {
     return id
   }
 
-  findActivePollAndVote(pollId: string, player: { id: string }) {
+  findActivePollAndVote(pollId: string, player: Player) {
     for (const event of this.events) {
       if (event.type === "VOTING_FOR_NEW_ADVENTURE_STARTED") {
         if (event.poll?.id === pollId) {
