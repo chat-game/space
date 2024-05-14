@@ -28,7 +28,7 @@
   "homepage": "https://github.com/hmbanan666/royal-madness-twitch-game#readme",
   "dependencies": {
     "@paralleldrive/cuid2": "2.2.2",
-    "@prisma/client": "5.13.0",
+    "@prisma/client": "5.14.0",
     "@twurple/api": "7.1.0",
     "@twurple/auth": "7.1.0",
     "@twurple/chat": "7.1.0",
