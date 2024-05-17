@@ -124,7 +124,7 @@ export class BotService {
       action: "START_RAID",
       userId,
       userName,
-      viewerCount,
+      params: [viewerCount.toString()],
     })
   }
 

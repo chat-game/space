@@ -44,6 +44,29 @@ export interface IGameSkill {
   xpNextLvl: number
 }
 
+export interface IGameQuest {
+  id: string
+  type: "MAIN" | "SIDE"
+  tasks: IGameQuestTask[]
+  status: "INACTIVE" | "ACTIVE" | "FAILED" | "SUCCESS"
+  creatorId: string
+  chunks?: number
+  limitSeconds?: number
+}
+
+export interface IGameQuestTask {
+  id: string
+  description: string
+  status: "CHECK_AT_FINISH" | "ACTIVE" | "DONE" | "FAILED"
+  progressNow: number | boolean
+  progressToSuccess: number | boolean
+  updateProgress: (progressToSuccess?: number | boolean) => {
+    status: "ACTIVE" | "DONE" | "FAILED"
+    progressNow?: number | boolean
+    progressToSuccess?: number | boolean
+  }
+}
+
 export interface IGameChunk {
   id: string
   title: string
@@ -101,6 +124,7 @@ export type IGameObjectEntity =
   | "LAKE"
   | "FLAG"
   | "AREA"
+  | "TRADER"
   | "COURIER"
   | "FARMER"
   | "MECHANIC"
@@ -117,8 +141,9 @@ export interface WebSocketMessage {
     | "SCENE_CHANGING_STARTED"
     | "COUNTDOWN_NEXT_WAVE_STARTED"
     | "SCENE_CHANGED"
-    | "CREATING_NEW_ADVENTURE_STARTED"
     | "VOTING_FOR_NEW_ADVENTURE_STARTED"
+    | "VILLAGE_QUEST_STARTED"
+    | "ADVENTURE_QUEST_STARTED"
   object?: Partial<IGameObject>
 }
 
@@ -130,9 +155,15 @@ export interface IGameObjectWagon extends IGameObject {
     startY: number
     endY: number
   }
+  cargoType: "CHEST" | undefined
 }
 
-export type IGameObjectBuildingType = "CAMPFIRE" | "WAREHOUSE" | "WAGON_STOP"
+export type IGameObjectBuildingType =
+  | "CAMPFIRE"
+  | "WAREHOUSE"
+  | "WAGON_STOP"
+  | "STORE"
+  | "CONSTRUCTION_AREA"
 
 export interface IGameObjectBuilding extends IGameObject {
   inventory: IGameInventory
@@ -142,7 +173,11 @@ export interface IGameBuildingCampfire extends IGameObjectBuilding {}
 
 export interface IGameBuildingWarehouse extends IGameObjectBuilding {}
 
+export interface IGameBuildingStore extends IGameObjectBuilding {}
+
 export interface IGameBuildingWagonStop extends IGameObjectBuilding {}
+
+export interface IGameBuildingConstructionArea extends IGameObjectBuilding {}
 
 export interface IGameObjectFlag extends IGameObject {
   type:
@@ -186,11 +221,12 @@ export interface IGameObjectStone extends IGameObject {
 }
 
 export interface IGameObjectUnit extends IGameObject {
+  userName: string
   coins: number
   inventory: IGameInventory
   visual: {
     head: "1"
-    hairstyle: "BOLD" | "CLASSIC" | "COAL_LONG"
+    hairstyle: "BOLD" | "CLASSIC" | "COAL_LONG" | "ORANGE_WITH_BEARD"
     top:
       | "VIOLET_SHIRT"
       | "BLACK_SHIRT"
@@ -203,6 +239,8 @@ export interface IGameObjectUnit extends IGameObject {
   }
 }
 
+export interface IGameObjectTrader extends IGameObjectUnit {}
+
 export interface IGameObjectCourier extends IGameObjectUnit {}
 
 export interface IGameObjectFarmer extends IGameObjectUnit {}
@@ -213,13 +251,12 @@ export interface IGameObjectPlayer extends IGameObjectUnit {
   reputation: number
   villainPoints: number
   refuellerPoints: number
-  userName: string
+  raiderPoints: number
   skills: IGameSkill[]
   lastActionAt: Date
 }
 
 export interface IGameObjectRaider extends IGameObjectUnit {
-  userName: string
   colorIndex: number
 }
 
@@ -247,10 +284,11 @@ export interface IGameEvent {
   status: "STARTED" | "STOPPED"
   endsAt: Date
   poll?: IGamePoll
+  quest?: IGameQuest
 }
 
 export interface IGamePoll {
-  status: "STARTED" | "STOPPED"
+  status: "ACTIVE" | "SUCCESS" | "FINISHED"
   id: string
   votesToSuccess: number
   votes: { id: string; userName: string }[]
@@ -286,6 +324,7 @@ export interface PlayerTitle {
     | "RICH"
     | "FAMOUS"
     | "VIEWER"
+    | "RAIDER"
     | "VILLAIN"
     | "REFUELLER"
     | "WOODSMAN"
@@ -306,4 +345,5 @@ export type GraphicsContainerType =
   | "WAGON_WHEEL"
   | "WAGON_ENGINE"
   | "WAGON_ENGINE_CLOUD"
+  | "WAGON_CARGO"
   | "FIRE_PARTICLE"

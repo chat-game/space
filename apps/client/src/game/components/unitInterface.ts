@@ -48,6 +48,7 @@ export class UnitInterface extends GraphicsContainer {
       (item) => item.type === "PICKAXE",
     )
 
+    this.drawUserName()
     this.drawCoins()
     this.drawWood()
     this.drawStone()
@@ -60,6 +61,7 @@ export class UnitInterface extends GraphicsContainer {
 
   rebuild() {
     this.children = []
+    this.drawUserName()
     this.drawCoins()
     this.drawWood()
     this.drawStone()
@@ -141,6 +143,32 @@ export class UnitInterface extends GraphicsContainer {
         }
       }
     }
+  }
+
+  drawUserName() {
+    const container = new GraphicsContainer({ type: "INTERFACE" })
+
+    const basicText = new Text({
+      text: this.unit.userName,
+      style: {
+        fontFamily: "Noto Serif",
+        fontSize: 14,
+        fontWeight: "500",
+        fill: 0x2e222f,
+        align: "center",
+      },
+    })
+
+    const graphics = new Graphics()
+    graphics.roundRect(-6, -2, basicText.width + 12, basicText.height + 4, 8)
+    graphics.fill(0xffffff)
+
+    container.addChild(graphics, basicText)
+
+    container.x = -container.width / 2 + 24
+    container.y = -84
+
+    this.addChild(container)
   }
 
   drawCoins() {

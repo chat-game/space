@@ -22,8 +22,8 @@ interface IUnitOptions {
 export class Unit extends GameObjectContainer implements IGameObjectUnit {
   public inventory!: IGameInventory
   public visual!: IGameObjectUnit["visual"]
+  public userName!: IGameObjectUnit["userName"]
   public coins = 0
-  public speed = 0
   public dialogue!: IGameObjectUnit["dialogue"]
 
   public interface!: UnitInterface
@@ -36,8 +36,8 @@ export class Unit extends GameObjectContainer implements IGameObjectUnit {
     super({ game, ...object })
     this.update(object)
 
-    this.animationMovingLeft = AssetsManager.getAnimatedSpriteHeroLeft()
-    this.animationMovingRight = AssetsManager.getAnimatedSpriteHeroRight()
+    this.animationMovingRight = AssetsManager.getAnimatedSpriteHero("RIGHT")
+    this.animationMovingLeft = AssetsManager.getAnimatedSpriteHero("LEFT")
 
     this.init()
   }
@@ -121,6 +121,7 @@ export class Unit extends GameObjectContainer implements IGameObjectUnit {
     this.interface.animate()
     this.dialogueInterface.animate()
 
+    this.showToolInHand()
     this.handleSoundByState()
 
     if (this.target && this.target instanceof Flag) {
@@ -167,11 +168,21 @@ export class Unit extends GameObjectContainer implements IGameObjectUnit {
     }
   }
 
+  showToolInHand() {
+    if (this.state === "CHOPPING") {
+      this.interface.showAxeInHand()
+    }
+    if (this.state === "MINING") {
+      this.interface.showPickaxeInHand()
+    }
+  }
+
   update(object: IGameObjectUnit) {
     super.update(object)
 
     this.zIndex = Math.round(object.y + 1)
 
+    this.userName = object.userName
     this.inventory = object.inventory
     this.visual = object.visual
     this.coins = object.coins
@@ -187,6 +198,7 @@ export class Unit extends GameObjectContainer implements IGameObjectUnit {
       }
 
       this.game.audio.playHandPunch()
+      return
     }
 
     if (this.state === "MINING") {
@@ -196,6 +208,7 @@ export class Unit extends GameObjectContainer implements IGameObjectUnit {
       }
 
       this.game.audio.playHandPunch()
+      return
     }
   }
 }

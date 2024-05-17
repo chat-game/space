@@ -12,6 +12,7 @@ export class Building
   implements IGameObjectBuilding
 {
   public inventory!: IGameObjectBuilding["inventory"]
+  public speed: IGameObjectBuilding["speed"] = 0
 
   constructor({ game, object }: IBuildingOptions) {
     super({ game, ...object })

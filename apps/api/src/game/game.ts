@@ -16,8 +16,7 @@ interface HandleChatCommandOptions {
   action: IGameSceneAction
   userId: string // Twitch
   userName: string // Twitch
-  viewerCount?: number
-  params?: string[]
+  params?: string[] // May have viewersCount or text
 }
 
 interface HandleChatCommandResponse {
@@ -39,17 +38,11 @@ export class Game {
     action,
     userId,
     userName,
-    viewerCount,
     params,
   }: HandleChatCommandOptions): Promise<HandleChatCommandResponse> {
     const player = await this.repository.findOrCreatePlayer(userId, userName)
 
-    if (action === "START_RAID") {
-      // Raid must be in all rooms!
-      return this.scene.startRaidAction(viewerCount)
-    }
-
-    return this.scene.handleAction(action, player.id, params)
+    return this.scene.actionService.handle(action, player.id, params)
   }
 
   public initScene(scene: GameSceneType) {

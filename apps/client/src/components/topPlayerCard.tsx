@@ -22,12 +22,12 @@ export const TopPlayerCard = ({
   return (
     <div
       key={player.id}
-      className={`w-fit min-w-48 h-auto px-4 pt-4 pb-2 text-xl text-primary bg-primary border-primary border-b-[6px] rounded-2xl ${borderColor}`}
+      className={`relative w-fit min-w-48 h-auto px-4 pt-2 pb-2 text-xl text-primary bg-primary border-primary border-b-[6px] rounded-2xl ${borderColor}`}
     >
-      <div className="-mt-16 -mb-2">
+      <div className="absolute left-1 -top-7">
         <PlayerFullBody player={player} />
       </div>
-      <p className="font-bold">{player.userName}</p>
+      <p className="pl-12 font-bold">{player.userName}</p>
       <p className="text-base">
         {title.title}! {points}
       </p>
@@ -44,6 +44,9 @@ function getBorderColorByType(type: PlayerTitle["type"]) {
   }
   if (type === "VIEWER") {
     return "border-violet-4"
+  }
+  if (type === "RAIDER") {
+    return "border-coal-3"
   }
   if (type === "VILLAIN") {
     return "border-red-4"

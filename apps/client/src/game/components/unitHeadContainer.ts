@@ -26,16 +26,30 @@ export class UnitHeadContainer extends GraphicsContainer {
     const sprite = Sprite.from(spriteIndex)
     sprite.anchor.set(0.5, 1)
 
+    if (direction === "LEFT") {
+      // Flip horizontally
+      sprite.scale.x = -1
+    }
+
     const container = new UnitHeadContainer({ direction, visual })
     container.addChild(sprite)
 
     return container
   }
 
+  static createWithBothDirections(
+    spriteIndex: string,
+    visual: IGameObjectUnit["visual"]["head"],
+  ) {
+    const containers = []
+
+    containers.push(UnitHeadContainer.create(spriteIndex, "LEFT", visual))
+    containers.push(UnitHeadContainer.create(spriteIndex, "RIGHT", visual))
+
+    return containers
+  }
+
   static getAll() {
-    return [
-      UnitHeadContainer.create("unitHead1Left", "LEFT", "1"),
-      UnitHeadContainer.create("unitHead1Right", "RIGHT", "1"),
-    ]
+    return [...UnitHeadContainer.createWithBothDirections("unitHead1", "1")]
   }
 }

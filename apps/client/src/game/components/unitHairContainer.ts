@@ -26,18 +26,43 @@ export class UnitHairContainer extends GraphicsContainer {
     const sprite = Sprite.from(spriteIndex)
     sprite.anchor.set(0.5, 1)
 
+    if (direction === "LEFT") {
+      // Flip horizontally
+      sprite.scale.x = -1
+    }
+
     const container = new UnitHairContainer({ direction, visual })
     container.addChild(sprite)
 
     return container
   }
 
+  static createWithBothDirections(
+    spriteIndex: string,
+    visual: IGameObjectUnit["visual"]["hairstyle"],
+  ) {
+    const containers = []
+
+    containers.push(UnitHairContainer.create(spriteIndex, "LEFT", visual))
+    containers.push(UnitHairContainer.create(spriteIndex, "RIGHT", visual))
+
+    return containers
+  }
+
   static getAll() {
     return [
-      UnitHairContainer.create("unitHairClassicLeft", "LEFT", "CLASSIC"),
-      UnitHairContainer.create("unitHairClassicRight", "RIGHT", "CLASSIC"),
-      UnitHairContainer.create("unitHairCoalLongLeft", "LEFT", "COAL_LONG"),
-      UnitHairContainer.create("unitHairCoalLongRight", "RIGHT", "COAL_LONG"),
+      ...UnitHairContainer.createWithBothDirections(
+        "unitHairClassic",
+        "CLASSIC",
+      ),
+      ...UnitHairContainer.createWithBothDirections(
+        "unitHairCoalLong",
+        "COAL_LONG",
+      ),
+      ...UnitHairContainer.createWithBothDirections(
+        "unitHairOrangeWithBeard",
+        "ORANGE_WITH_BEARD",
+      ),
     ]
   }
 }

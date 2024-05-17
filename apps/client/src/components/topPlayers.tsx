@@ -20,6 +20,11 @@ export const TopPlayersBlock = () => {
             title={{ title: "Зритель", type: "VIEWER" }}
           />
           <TopPlayerCard
+            player={playersWithResult.raider?.player}
+            points={`${playersWithResult.raider?.points} зрителей`}
+            title={{ title: "Рейдер", type: "RAIDER" }}
+          />
+          <TopPlayerCard
             player={playersWithResult.rich?.player}
             points={`${playersWithResult.rich?.points} монет`}
             title={{ title: "Богач", type: "RICH" }}
@@ -31,7 +36,7 @@ export const TopPlayersBlock = () => {
           />
           <TopPlayerCard
             player={playersWithResult.famous?.player}
-            points={`${playersWithResult.famous?.points} репутации`}
+            points={`${playersWithResult.famous?.points} очков`}
             title={{ title: "Филантроп", type: "FAMOUS" }}
           />
           <TopPlayerCard

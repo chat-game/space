@@ -1,6 +1,7 @@
 import { Sprite } from "pixi.js"
 import type { IGameObjectWagon } from "../../../../../packages/api-sdk/src"
 import type { GraphicsContainer } from "../components/graphicsContainer"
+import { WagonCargoContainer } from "../components/wagonCargoContainer.ts"
 import { WagonEngineCloudsContainer } from "../components/wagonEngineCloudsContainer"
 import { WagonEngineContainer } from "../components/wagonEngineContainer"
 import { WagonWheelContainer } from "../components/wagonWheelContainer"
@@ -13,9 +14,9 @@ interface IWagonOptions {
 }
 
 export class Wagon extends GameObjectContainer implements IGameObjectWagon {
-  public speed!: number
   public fuel!: number
   public visibilityArea!: IGameObjectWagon["visibilityArea"]
+  public cargoType: IGameObjectWagon["cargoType"]
 
   public children: GraphicsContainer[] = []
 
@@ -35,6 +36,9 @@ export class Wagon extends GameObjectContainer implements IGameObjectWagon {
     spriteBase.anchor.set(0.5, 1)
     spriteBase.scale = 0.75
 
+    const cargo = WagonCargoContainer.create()
+    cargo.scale = 0.75
+
     const engine = WagonEngineContainer.create("wagonEngine1", "RIGHT")
     engine.scale = 0.75
 
@@ -45,7 +49,7 @@ export class Wagon extends GameObjectContainer implements IGameObjectWagon {
 
     const clouds = new WagonEngineCloudsContainer()
 
-    this.addChild(spriteBase, engine, spriteSide, wheel1, wheel2, clouds)
+    this.addChild(spriteBase, engine, cargo, spriteSide, wheel1, wheel2, clouds)
   }
 
   animate() {
@@ -54,6 +58,7 @@ export class Wagon extends GameObjectContainer implements IGameObjectWagon {
 
       this.drawWheels(container)
       this.drawEngine(container)
+      this.drawCargo(container)
 
       if (container instanceof WagonEngineCloudsContainer) {
         container.animate(this.speed)
@@ -91,6 +96,21 @@ export class Wagon extends GameObjectContainer implements IGameObjectWagon {
     }
   }
 
+  drawCargo(container: GraphicsContainer) {
+    if (container instanceof WagonCargoContainer) {
+      if (this.cargoType === "CHEST") {
+        container.visible = true
+        for (const c of container.children) {
+          c.visible = true
+        }
+      }
+
+      if (!this.cargoType) {
+        container.visible = false
+      }
+    }
+  }
+
   handleSoundByState() {
     if (this.state === "MOVING") {
       this.game.audio.playWagonMovingSound()
@@ -102,5 +122,6 @@ export class Wagon extends GameObjectContainer implements IGameObjectWagon {
 
     this.speed = object.speed
     this.fuel = object.fuel
+    this.cargoType = object.cargoType
   }
 }

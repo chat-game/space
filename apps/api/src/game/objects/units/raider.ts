@@ -9,7 +9,6 @@ interface IRaiderOptions {
 }
 
 export class Raider extends Unit implements IGameObjectRaider {
-  public userName = ""
   public colorIndex = 0
 
   constructor({ x, y }: IRaiderOptions) {
@@ -28,6 +27,7 @@ export class Raider extends Unit implements IGameObjectRaider {
     })
 
     this.speed = 1.5
+    this.userName = "Рейдер"
   }
 
   live() {

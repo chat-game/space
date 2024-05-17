@@ -26,26 +26,37 @@ export class UnitTopContainer extends GraphicsContainer {
     const sprite = Sprite.from(spriteIndex)
     sprite.anchor.set(0.5, 1)
 
+    if (direction === "LEFT") {
+      // Flip horizontally
+      sprite.scale.x = -1
+    }
+
     const container = new UnitTopContainer({ direction, visual })
     container.addChild(sprite)
 
     return container
   }
 
+  static createWithBothDirections(
+    spriteIndex: string,
+    visual: IGameObjectUnit["visual"]["top"],
+  ) {
+    const containers = []
+
+    containers.push(UnitTopContainer.create(spriteIndex, "LEFT", visual))
+    containers.push(UnitTopContainer.create(spriteIndex, "RIGHT", visual))
+
+    return containers
+  }
+
   static getAll() {
     return [
-      UnitTopContainer.create("violetTopLeft", "LEFT", "VIOLET_SHIRT"),
-      UnitTopContainer.create("violetTopRight", "RIGHT", "VIOLET_SHIRT"),
-      UnitTopContainer.create("blackTopLeft", "LEFT", "BLACK_SHIRT"),
-      UnitTopContainer.create("blackTopRight", "RIGHT", "BLACK_SHIRT"),
-      UnitTopContainer.create("greenTopLeft", "LEFT", "GREEN_SHIRT"),
-      UnitTopContainer.create("greenTopRight", "RIGHT", "GREEN_SHIRT"),
-      UnitTopContainer.create("blueTopLeft", "LEFT", "BLUE_SHIRT"),
-      UnitTopContainer.create("blueTopRight", "RIGHT", "BLUE_SHIRT"),
-      UnitTopContainer.create("darkSilverTopLeft", "LEFT", "DARK_SILVER_SHIRT"),
-      UnitTopContainer.create(
-        "darkSilverTopRight",
-        "RIGHT",
+      ...UnitTopContainer.createWithBothDirections("violetTop", "VIOLET_SHIRT"),
+      ...UnitTopContainer.createWithBothDirections("blackTop", "BLACK_SHIRT"),
+      ...UnitTopContainer.createWithBothDirections("greenTop", "GREEN_SHIRT"),
+      ...UnitTopContainer.createWithBothDirections("blueTop", "BLUE_SHIRT"),
+      ...UnitTopContainer.createWithBothDirections(
+        "darkSilverTop",
         "DARK_SILVER_SHIRT",
       ),
     ]

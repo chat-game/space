@@ -17,6 +17,7 @@ interface IUnitOptions {
 }
 
 export class Unit extends GameObject implements IGameObjectUnit {
+  public userName!: IGameObjectUnit["userName"]
   public inventory!: Inventory
   public visual!: IGameObjectUnit["visual"]
   public coins: IGameObjectUnit["coins"]
@@ -88,11 +89,6 @@ export class Unit extends GameObject implements IGameObjectUnit {
 
       this.target.chop()
     }
-  }
-
-  async stopChopping(tree: Tree) {
-    this.state = "IDLE"
-    await this.inventory.addOrCreateItem("WOOD", tree.resource)
   }
 
   checkAndBreakAxe() {

@@ -33,6 +33,13 @@ export class Tree extends GameObjectContainer implements IGameObjectTree {
     const sprite = this.getSpriteByType()
     if (sprite) {
       sprite.anchor.set(0.5, 1)
+
+      // Some random to flip horizontally
+      const random = getRandomInRange(1, 2)
+      if (random === 1) {
+        sprite.scale.x = -1
+      }
+
       this.addChild(sprite)
     }
   }

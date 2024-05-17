@@ -9,6 +9,7 @@ export interface TopPlayersResponse {
   famous: PlayerWithPoints | null
   rich: PlayerWithPoints | null
   viewer: PlayerWithPoints | null
+  raider: PlayerWithPoints | null
   woodsman: PlayerWithPoints | null
   miner: PlayerWithPoints | null
   villain: PlayerWithPoints | null

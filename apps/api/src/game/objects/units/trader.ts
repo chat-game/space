@@ -1,29 +1,31 @@
 import { createId } from "@paralleldrive/cuid2"
-import type { IGameObjectMechanic } from "../../../../../../packages/api-sdk/src"
+import type { IGameObjectTrader } from "../../../../../../packages/api-sdk/src"
 import { Unit } from "./unit"
 
-interface IMechanicOptions {
+interface ITraderOptions {
   x: number
   y: number
 }
 
-export class Mechanic extends Unit implements IGameObjectMechanic {
-  constructor({ x, y }: IMechanicOptions) {
+export class Trader extends Unit implements IGameObjectTrader {
+  constructor({ x, y }: ITraderOptions) {
     const id = createId()
 
     super({
       id,
       x,
       y,
-      entity: "MECHANIC",
+      entity: "TRADER",
       visual: {
         head: "1",
         hairstyle: "COAL_LONG",
-        top: "DARK_SILVER_SHIRT",
+        top: "GREEN_SHIRT",
       },
     })
 
-    this.userName = "Механик"
+    this.speed = 1
+    this.minDistance = 5
+    this.userName = "Торговец"
   }
 
   live() {

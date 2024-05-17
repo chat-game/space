@@ -39,6 +39,7 @@ model Player {
   viewerPoints    Int       @default(0)
   villainPoints   Int       @default(0)
   refuellerPoints Int       @default(0)
+  raiderPoints    Int       @default(0)
   inventoryId     String
   commands        Command[]
 }

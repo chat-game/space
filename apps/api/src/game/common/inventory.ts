@@ -35,6 +35,10 @@ export class Inventory implements IGameInventory {
     }
 
     this.items.splice(itemIndex, 1)
+
+    if (this.saveInDb) {
+      await this.destroyItemInDB(id)
+    }
   }
 
   public async reduceOrDestroyItem(type: ItemType, amount: number) {
@@ -52,7 +56,10 @@ export class Inventory implements IGameInventory {
       return true
     }
 
-    this.decrementAmountOfItemInDB(item.id, amount)
+    if (this.saveInDb) {
+      await this.decrementAmountOfItemInDB(item.id, amount)
+    }
+
     item.amount -= amount
     return true
   }

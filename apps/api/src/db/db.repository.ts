@@ -13,17 +13,6 @@ export class DBRepository {
     return db.village.findFirst()
   }
 
-  findActivePlayers() {
-    const milliseconds = 20 * 60 * 1000
-    const gte = new Date(new Date().getTime() - milliseconds)
-
-    return this.db.player.findMany({
-      where: {
-        lastActionAt: { gte },
-      },
-    })
-  }
-
   async findTopPlayers() {
     const famous = await db.player.findFirst({
       orderBy: { reputation: "desc" },
@@ -33,6 +22,9 @@ export class DBRepository {
     })
     const viewer = await db.player.findFirst({
       orderBy: { viewerPoints: "desc" },
+    })
+    const raider = await db.player.findFirst({
+      orderBy: { raiderPoints: "desc" },
     })
     const villain = await db.player.findFirst({
       orderBy: { villainPoints: "desc" },
@@ -55,6 +47,10 @@ export class DBRepository {
       viewer: {
         player: viewer,
         points: viewer?.viewerPoints,
+      },
+      raider: {
+        player: raider,
+        points: raider?.raiderPoints,
       },
       villain: {
         player: villain,
@@ -168,40 +164,5 @@ export class DBRepository {
         viewerPoints: { increment },
       },
     })
-  }
-
-  addWoodToVillage(increment: number) {
-    return db.village.updateMany({
-      data: {
-        wood: { increment },
-      },
-    })
-  }
-
-  async addStoneToVillage(amount: number) {
-    await db.village.updateMany({
-      data: {
-        stone: {
-          increment: amount,
-        },
-      },
-    })
-
-    // Global target
-    const village = await this.findVillage()
-    if (village?.globalTargetSuccess && village?.globalTarget) {
-      const plusToTarget =
-        village.globalTargetSuccess >= village.globalTarget + amount
-          ? amount
-          : 0
-
-      await db.village.updateMany({
-        data: {
-          globalTarget: {
-            increment: plusToTarget,
-          },
-        },
-      })
-    }
   }
 }

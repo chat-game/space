@@ -17,14 +17,6 @@ export class DefenceScene extends GameScene {
     super({
       game,
       group,
-      possibleActions: [
-        "CHOP",
-        "MINE",
-        "START_CHANGING_SCENE",
-        "CREATE_NEW_PLAYER",
-        "HELP",
-        "DONATE",
-      ],
     })
 
     void this.init()

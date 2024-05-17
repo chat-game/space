@@ -7,9 +7,12 @@ import {
 import { Flag, Stone, Tree } from "../objects"
 import { Building } from "../objects/buildings/building"
 import { Campfire } from "../objects/buildings/campfire"
+import { ConstructionArea } from "../objects/buildings/constructionArea"
+import { Store } from "../objects/buildings/store"
 import { WagonStop } from "../objects/buildings/wagonStop"
 import { Warehouse } from "../objects/buildings/warehouse"
 import { VillageCourier, VillageFarmer } from "../objects/units"
+import { BuildScript } from "../scripts/buildScript"
 import { ChopTreeScript } from "../scripts/chopTreeScript"
 import { MoveToRandomTargetScript } from "../scripts/moveToRandomTargetScript"
 import { PlaceItemInWarehouseScript } from "../scripts/placeItemInWarehouseScript"
@@ -43,111 +46,139 @@ export class Village extends GameChunk implements IGameVillageChunk {
     super.live()
 
     for (const object of this.objects) {
-      // Check if NPC is without Script
-      if (object.entity === "FARMER" && !object.script) {
-        const target = this.checkIfNeedToPlantTree()
-        if (target) {
-          const plantNewTreeFunc = () => {
-            this.plantNewTree(target)
-          }
-
-          object.script = new PlantNewTreeScript({
-            object,
-            target,
-            plantNewTreeFunc,
-          })
-          continue
-        }
-
-        // No Trees needed?
-        const random = getRandomInRange(1, 300)
-        if (random <= 1) {
-          const target = this.getRandomMovementFlagInVillage()
-          if (!target) {
-            return
-          }
-          object.script = new MoveToRandomTargetScript({
-            object,
-            target,
-          })
-          continue
-        }
+      if (object instanceof VillageFarmer && !object.script) {
+        this.addTaskToFarmer(object)
+        continue
       }
 
-      if (
-        object instanceof VillageCourier &&
-        object.entity === "COURIER" &&
-        !object.script
-      ) {
-        const random = getRandomInRange(1, 200)
-        if (random !== 1) {
-          continue
-        }
-
-        // If unit have smth in inventory
-        const item = object.inventory.checkIfAlreadyHaveItem("WOOD")
-        if (item) {
-          const target = this.getWarehouse()
-          if (!target) {
-            continue
-          }
-
-          const placeItemFunc = () => {
-            if (object.target instanceof Building) {
-              void object.target.inventory.addOrCreateItem(
-                item.type,
-                item.amount,
-              )
-              void object.inventory.destroyItem(item.id)
-            }
-          }
-          object.script = new PlaceItemInWarehouseScript({
-            object,
-            target,
-            placeItemFunc,
-          })
-
-          continue
-        }
-
-        // If there is an available tree
-        const availableTree = this.getAvailableTree()
-        if (availableTree) {
-          const chopTreeFunc = (): boolean => {
-            object.chopTree()
-            if (!object.target || object.target.state === "DESTROYED") {
-              object.state = "IDLE"
-              if (object.target instanceof Tree) {
-                void object.inventory.addOrCreateItem(
-                  "WOOD",
-                  object.target?.resource,
-                )
-              }
-              return true
-            }
-            return false
-          }
-
-          object.script = new ChopTreeScript({
-            object,
-            target: availableTree,
-            chopTreeFunc,
-          })
-
-          continue
-        }
-
-        const target = this.getRandomMovementFlagInVillage()
-        if (!target) {
-          return
-        }
-        object.script = new MoveToRandomTargetScript({
-          object,
-          target,
-        })
+      if (object instanceof VillageCourier && !object.script) {
+        this.addTaskToCourier(object)
+        continue
       }
 
       void object.live()
+    }
+  }
+
+  addTaskToCourier(object: VillageCourier) {
+    const random = getRandomInRange(1, 200)
+    if (random !== 1) {
+      return
+    }
+
+    // Need to build Store
+    const warehouse = this.getWarehouse()
+    const store = this.getStore()
+    const wood = warehouse?.getItemByType("WOOD")
+    if (wood?.amount && wood.amount >= 50 && !store) {
+      // Let's build!
+      const target = this.getConstructionArea()
+      if (!target) {
+        return
+      }
+
+      const buildFunc = (): boolean => {
+        warehouse?.inventory.reduceOrDestroyItem("WOOD", 50)
+        this.buildStore()
+
+        return true
+      }
+      object.script = new BuildScript({
+        object,
+        target,
+        buildFunc,
+      })
+
+      return
+    }
+
+    // If unit have smth in inventory
+    const item = object.inventory.checkIfAlreadyHaveItem("WOOD")
+    if (item) {
+      const target = this.getWarehouse()
+      if (!target) {
+        return
+      }
+
+      const placeItemFunc = () => {
+        if (object.target instanceof Building) {
+          void object.target.inventory.addOrCreateItem(item.type, item.amount)
+          void object.inventory.destroyItem(item.id)
+        }
+      }
+      object.script = new PlaceItemInWarehouseScript({
+        object,
+        target,
+        placeItemFunc,
+      })
+
+      return
+    }
+
+    // If there is an available tree
+    const availableTree = this.getAvailableTree()
+    if (availableTree) {
+      const chopTreeFunc = (): boolean => {
+        object.chopTree()
+        if (!object.target || object.target.state === "DESTROYED") {
+          object.state = "IDLE"
+          if (object.target instanceof Tree) {
+            void object.inventory.addOrCreateItem(
+              "WOOD",
+              object.target?.resource,
+            )
+          }
+          return true
+        }
+        return false
+      }
+
+      object.script = new ChopTreeScript({
+        object,
+        target: availableTree,
+        chopTreeFunc,
+      })
+
+      return
+    }
+
+    const target = this.getRandomMovementFlagInVillage()
+    if (!target) {
+      return
+    }
+    object.script = new MoveToRandomTargetScript({
+      object,
+      target,
+    })
+  }
+
+  addTaskToFarmer(object: VillageFarmer) {
+    const target = this.checkIfNeedToPlantTree()
+    if (target) {
+      const plantNewTreeFunc = () => {
+        this.plantNewTree(target)
+      }
+
+      object.script = new PlantNewTreeScript({
+        object,
+        target,
+        plantNewTreeFunc,
+      })
+      return
+    }
+
+    // No Trees needed?
+    const random = getRandomInRange(1, 300)
+    if (random <= 1) {
+      const target = this.getRandomMovementFlagInVillage()
+      if (!target) {
+        return
+      }
+      object.script = new MoveToRandomTargetScript({
+        object,
+        target,
+      })
+      return
     }
   }
 
@@ -221,8 +252,8 @@ export class Village extends GameChunk implements IGameVillageChunk {
     )
     this.objects.push(
       new Warehouse({
-        x: this.center.x + 300,
-        y: this.center.y - 120,
+        x: this.center.x + 270,
+        y: this.center.y - 150,
       }),
     )
     this.objects.push(
@@ -231,11 +262,45 @@ export class Village extends GameChunk implements IGameVillageChunk {
         y: this.center.y + 220,
       }),
     )
+    this.objects.push(
+      new ConstructionArea({
+        x: this.center.x + 400,
+        y: this.center.y + 250,
+      }),
+    )
+  }
+
+  buildStore() {
+    const constructionArea = this.getConstructionArea()
+    if (!constructionArea) {
+      return
+    }
+
+    constructionArea.state = "DESTROYED"
+    constructionArea.handleChange()
+
+    this.removeObject(constructionArea)
+    this.objects.push(
+      new Store({
+        x: constructionArea.x,
+        y: constructionArea.y,
+      }),
+    )
   }
 
   getWarehouse() {
     return this.objects.find((b) => b instanceof Warehouse) as
       | Warehouse
+      | undefined
+  }
+
+  getStore() {
+    return this.objects.find((b) => b instanceof Store) as Store | undefined
+  }
+
+  getConstructionArea() {
+    return this.objects.find((b) => b instanceof ConstructionArea) as
+      | ConstructionArea
       | undefined
   }
 
@@ -297,25 +362,11 @@ export class Village extends GameChunk implements IGameVillageChunk {
       y: flag.y,
       resource: 1,
       size: 12,
+      health: 20,
       variant: this.area.theme,
     })
 
     flag.target = tree
     this.objects.push(tree)
-  }
-
-  getAvailableTree(): Tree | undefined {
-    const trees = this.objects.filter(
-      (obj) =>
-        obj instanceof Tree &&
-        obj.state !== "DESTROYED" &&
-        !obj.isReserved &&
-        obj.isReadyToChop,
-    )
-    if (!trees || !trees.length) {
-      return undefined
-    }
-
-    return trees[Math.floor(Math.random() * trees.length)] as Tree
   }
 }

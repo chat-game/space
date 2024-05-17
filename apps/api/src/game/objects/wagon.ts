@@ -4,6 +4,7 @@ import {
   getMinusOrPlus,
   getRandomInRange,
 } from "../../../../../packages/api-sdk/src"
+import { Inventory } from "../common"
 import { Flag } from "./flag"
 import { GameObject } from "./gameObject"
 import { Mechanic } from "./units"
@@ -16,7 +17,9 @@ interface IWagonOptions {
 export class Wagon extends GameObject implements IGameObjectWagon {
   public fuel: number
   public visibilityArea!: IGameObjectWagon["visibilityArea"]
+  public cargoType: IGameObjectWagon["cargoType"]
 
+  public cargo: Inventory | undefined
   public mechanic!: Mechanic
   public serverDataArea!: IGameObjectWagon["visibilityArea"]
   public collisionArea!: IGameObjectWagon["visibilityArea"]
@@ -65,6 +68,18 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     }
 
     this.fuel -= this.speed * 2
+  }
+
+  refuel(woodAmount: number) {
+    if (woodAmount < 0) {
+      return
+    }
+
+    this.fuel += woodAmount * 5 * 40
+  }
+
+  emptyFuel() {
+    this.fuel = 0
   }
 
   updateVisibilityArea() {
@@ -216,5 +231,20 @@ export class Wagon extends GameObject implements IGameObjectWagon {
 
   public findRandomOutFlag() {
     return this.outFlags[Math.floor(Math.random() * this.outFlags.length)]
+  }
+
+  public setCargo() {
+    this.cargo = new Inventory({
+      id: createId(),
+      saveInDb: false,
+      objectId: this.id,
+    })
+    void this.cargo.addOrCreateItem("WOOD", 100)
+    this.cargoType = "CHEST"
+  }
+
+  public emptyCargo() {
+    this.cargo = undefined
+    this.cargoType = undefined
   }
 }

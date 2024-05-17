@@ -13,20 +13,6 @@ export class VillageScene extends GameScene {
     super({
       game,
       group,
-      possibleActions: [
-        "HELP",
-        "CHOP",
-        "MINE",
-        "GIFT",
-        "SELL",
-        "BUY",
-        "DONATE",
-        "START_GROUP_BUILD",
-        "DISBAND_GROUP",
-        "JOIN_GROUP",
-        "START_CHANGING_SCENE",
-        "CREATE_NEW_PLAYER",
-      ],
     })
 
     void this.init()

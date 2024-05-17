@@ -2,12 +2,11 @@ import { createId } from "@paralleldrive/cuid2"
 import {
   type GameSceneType,
   type IGameEvent,
-  type IGameObjectPlayer,
   type IGamePoll,
+  type IGameQuest,
   getDatePlusSeconds,
 } from "../../../../../packages/api-sdk/src"
 import { sendMessage } from "../../websocket/websocket.server"
-import { Village } from "../chunks"
 import type { Game } from "../game"
 
 interface IEventOptions {
@@ -17,6 +16,7 @@ interface IEventOptions {
   secondsToEnd: number
   scene?: GameSceneType
   poll?: IGamePoll
+  quest?: IGameQuest
 }
 
 export class Event implements IGameEvent {
@@ -25,13 +25,22 @@ export class Event implements IGameEvent {
   public type: IGameEvent["type"]
   public status: IGameEvent["status"]
   public scene?: GameSceneType
-  public endsAt: Date
-  public deletesAt: Date
+  public endsAt!: Date
+  public deletesAt!: Date
   public poll: IGamePoll | undefined
+  public quest: IGameQuest | undefined
 
   public game: Game
 
-  constructor({ game, title, type, secondsToEnd, scene, poll }: IEventOptions) {
+  constructor({
+    game,
+    title,
+    type,
+    secondsToEnd,
+    scene,
+    poll,
+    quest,
+  }: IEventOptions) {
     this.game = game
 
     this.id = createId()
@@ -39,9 +48,10 @@ export class Event implements IGameEvent {
     this.type = type
     this.scene = scene
     this.poll = poll
-    this.endsAt = getDatePlusSeconds(secondsToEnd)
-    this.deletesAt = getDatePlusSeconds(secondsToEnd + 30)
+    this.quest = quest
     this.status = "STARTED"
+
+    this.setEndsAtPlusSeconds(secondsToEnd)
 
     sendMessage(type)
   }
@@ -71,35 +81,15 @@ export class Event implements IGameEvent {
       console.log("Next wave!")
     }
     if (this.type === "VOTING_FOR_NEW_ADVENTURE_STARTED") {
-      if (!this.poll) {
-        return
-      }
-      if (this.poll.votes.length >= this.poll.votesToSuccess) {
-        this.game.scene.initEvent({
-          type: "CREATING_NEW_ADVENTURE_STARTED",
-          title: "Начинаем приключение!",
-          secondsToEnd: 10,
-        })
-      }
+      //
     }
-    if (this.type === "CREATING_NEW_ADVENTURE_STARTED") {
-      const village = this.game.scene.chunkNow
-      if (village instanceof Village) {
-        this.game.scene.generateAdventure(village, 3)
-      }
+    if (this.type === "VILLAGE_QUEST_STARTED") {
+      //
     }
   }
 
-  public vote(player: IGameObjectPlayer): boolean {
-    if (!this.poll) {
-      return false
-    }
-
-    if (this.poll.votes.find((v) => v.id === player.id)) {
-      return false
-    }
-
-    this.poll.votes.push({ id: player.id, userName: player.userName })
-    return true
+  public setEndsAtPlusSeconds(seconds: number) {
+    this.endsAt = getDatePlusSeconds(seconds)
+    this.deletesAt = getDatePlusSeconds(seconds + 30)
   }
 }

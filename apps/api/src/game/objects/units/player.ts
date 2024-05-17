@@ -22,7 +22,7 @@ export class Player extends Unit implements IGameObjectPlayer {
   public reputation = 0
   public villainPoints = 0
   public refuellerPoints = 0
-  public userName = ""
+  public raiderPoints = 0
   public lastActionAt: IGameObjectPlayer["lastActionAt"] = new Date()
   public health = 100
 
@@ -64,6 +64,7 @@ export class Player extends Unit implements IGameObjectPlayer {
         if (this.target instanceof Tree) {
           void this.inventory.addOrCreateItem("WOOD", this.target?.resource)
         }
+        this.handleChange()
       }
       return
     }
@@ -194,6 +195,20 @@ export class Player extends Unit implements IGameObjectPlayer {
     })
   }
 
+  addRaiderPoints(amount: number) {
+    this.raiderPoints += amount
+    this.handleChange()
+
+    return db.player.update({
+      where: { id: this.id },
+      data: {
+        raiderPoints: {
+          increment: amount,
+        },
+      },
+    })
+  }
+
   async buyItemFromDealer(type: ItemType, price: number, amount: number) {
     const item = await this.inventory.tryGetItemInDB(type)
     if (item) {
@@ -222,6 +237,7 @@ export class Player extends Unit implements IGameObjectPlayer {
     this.reputation = player.reputation
     this.villainPoints = player.villainPoints
     this.refuellerPoints = player.refuellerPoints
+    this.raiderPoints = player.raiderPoints
     this.inventoryId = player.inventoryId
   }
 

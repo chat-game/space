@@ -13,6 +13,7 @@ export class GameObjectContainer extends Container implements IGameObject {
   public entity!: IGameObject["entity"]
   public target: IGameObject["target"]
   public health!: IGameObject["health"]
+  public speed!: IGameObject["speed"]
   public isVisibleOnClient!: IGameObject["isVisibleOnClient"]
 
   public game: Game
@@ -36,6 +37,7 @@ export class GameObjectContainer extends Container implements IGameObject {
     this.state = object.state
     this.direction = object.direction
     this.health = object.health
+    this.speed = object.speed
     this.target = object.target
     this.isVisibleOnClient = object.isVisibleOnClient
   }

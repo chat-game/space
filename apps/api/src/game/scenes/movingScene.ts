@@ -13,20 +13,6 @@ export class MovingScene extends GameScene {
     super({
       game,
       group,
-      possibleActions: [
-        "HELP",
-        "REFUEL",
-        "CHOP",
-        "MINE",
-        "DONATE",
-        "START_GROUP_BUILD",
-        "DISBAND_GROUP",
-        "JOIN_GROUP",
-        "START_CHANGING_SCENE",
-        "CREATE_NEW_PLAYER",
-        "START_CREATING_NEW_ADVENTURE",
-        "SHOW_MESSAGE",
-      ],
     })
 
     void this.init()

@@ -66,7 +66,7 @@ export const InterfaceLayer = () => {
       </div>
 
       <div className="z-10 fixed top-4 left-4">
-        <div className="w-72 h-auto px-4 py-4 bg-primary text-primary border-primary border-b-4 rounded-2xl">
+        <div className="w-[360px] h-auto px-4 py-4 bg-primary text-primary border-primary border-b-4 rounded-2xl">
           <div className="flex flex-row gap-1 items-start">
             <img
               src={"/discord.svg"}

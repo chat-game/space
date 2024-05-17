@@ -5,8 +5,8 @@ import { GraphicsContainer } from "./graphicsContainer"
 export class BuildingInterface extends GraphicsContainer {
   public building: IGameObjectBuilding
 
-  public wood = 0
-  public stone = 0
+  public wood: number | undefined
+  public stone: number | undefined
 
   constructor(building: IGameObjectBuilding) {
     super({ type: "INTERFACE" })
@@ -51,17 +51,17 @@ export class BuildingInterface extends GraphicsContainer {
     )?.amount
 
     if (wood !== this.wood || stone !== this.stone) {
-      this.wood = wood ?? 0
-      this.stone = stone ?? 0
+      this.wood = wood
+      this.stone = stone
       this.rebuild()
     }
 
-    this.wood = wood ?? 0
-    this.stone = stone ?? 0
+    this.wood = wood
+    this.stone = stone
   }
 
   drawWood() {
-    if (this.wood <= 0) {
+    if (!this.wood || this.wood <= 0) {
       return
     }
 
@@ -92,7 +92,7 @@ export class BuildingInterface extends GraphicsContainer {
   }
 
   drawStone() {
-    if (this.stone <= 0) {
+    if (!this.stone || this.stone <= 0) {
       return
     }
 

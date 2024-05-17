@@ -8,7 +8,6 @@ interface IRaiderOptions {
 }
 
 export class Raider extends Unit implements IGameObjectRaider {
-  userName!: string
   colorIndex!: number
 
   constructor({ game, object }: IRaiderOptions) {

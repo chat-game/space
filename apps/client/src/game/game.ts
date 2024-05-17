@@ -1,6 +1,8 @@
 import { Container } from "pixi.js"
 import type {
   IGameBuildingCampfire,
+  IGameBuildingConstructionArea,
+  IGameBuildingStore,
   IGameBuildingWagonStop,
   IGameBuildingWarehouse,
   IGameObject,
@@ -14,6 +16,7 @@ import type {
   IGameObjectRabbit,
   IGameObjectRaider,
   IGameObjectStone,
+  IGameObjectTrader,
   IGameObjectTree,
   IGameObjectWagon,
   IGameObjectWolf,
@@ -30,9 +33,18 @@ import {
   Wolf,
 } from "./objects"
 import { Campfire } from "./objects/buildings/campfire"
+import { ConstructionArea } from "./objects/buildings/constructionArea"
+import { Store } from "./objects/buildings/store"
 import { WagonStop } from "./objects/buildings/wagonStop"
 import { Warehouse } from "./objects/buildings/warehouse"
-import { Courier, Farmer, Mechanic, Player, Raider } from "./objects/units"
+import {
+  Courier,
+  Farmer,
+  Mechanic,
+  Player,
+  Raider,
+  Trader,
+} from "./objects/units"
 import { Wagon } from "./objects/wagon"
 import {
   AssetsManager,
@@ -40,7 +52,7 @@ import {
   SceneManager,
   WebSocketManager,
 } from "./utils"
-import { BackgroundGenerator } from "./utils/generators/background.ts"
+import { BackgroundGenerator } from "./utils/generators/background"
 
 export class Game extends Container {
   public children: GameObjectContainer[] = []
@@ -81,6 +93,7 @@ export class Game extends Container {
 
     this.scene.app.ticker.add(() => {
       this.animateObjects()
+      this.removeDestroyedObjects()
 
       const wagon = this.children.find((child) => child instanceof Wagon)
       if (wagon) {
@@ -215,6 +228,18 @@ export class Game extends Container {
     }
   }
 
+  initTrader(object: IGameObjectTrader) {
+    const unit = new Trader({ game: this, object })
+    this.addChild(unit)
+  }
+
+  updateTrader(object: IGameObjectTrader) {
+    const unit = this.findObject(object.id)
+    if (unit instanceof Trader) {
+      unit.update(object)
+    }
+  }
+
   initMechanic(object: IGameObjectMechanic) {
     const unit = new Mechanic({ game: this, object })
     this.addChild(unit)
@@ -311,6 +336,30 @@ export class Game extends Container {
     }
   }
 
+  initStore(object: IGameBuildingStore) {
+    const building = new Store({ game: this, object })
+    this.addChild(building)
+  }
+
+  updateStore(object: IGameBuildingStore) {
+    const building = this.findObject(object.id)
+    if (building instanceof Store) {
+      building.update(object)
+    }
+  }
+
+  initConstructionArea(object: IGameBuildingConstructionArea) {
+    const building = new ConstructionArea({ game: this, object })
+    this.addChild(building)
+  }
+
+  updateConstructionArea(object: IGameBuildingConstructionArea) {
+    const building = this.findObject(object.id)
+    if (building instanceof ConstructionArea) {
+      building.update(object)
+    }
+  }
+
   initFlag(object: IGameObjectFlag) {
     const flag = new Flag({ game: this, object })
     this.addChild(flag)
@@ -334,6 +383,16 @@ export class Game extends Container {
   animateObjects() {
     for (const object of this.children) {
       object.animate()
+    }
+  }
+
+  removeDestroyedObjects() {
+    for (const object of this.children) {
+      if (object.state === "DESTROYED") {
+        const index = this.children.indexOf(object)
+        this.children.splice(index, 1)
+        return
+      }
     }
   }
 
@@ -381,6 +440,10 @@ export class Game extends Container {
         this.initFarmer(object as IGameObjectFarmer)
         return
       }
+      if (object.entity === "TRADER") {
+        this.initTrader(object as IGameObjectTrader)
+        return
+      }
       if (object.entity === "MECHANIC") {
         this.initMechanic(object as IGameObjectMechanic)
         return
@@ -411,6 +474,14 @@ export class Game extends Container {
       }
       if (object.entity === "WAGON_STOP") {
         this.initWagonStop(object as IGameBuildingWagonStop)
+        return
+      }
+      if (object.entity === "STORE") {
+        this.initStore(object as IGameBuildingStore)
+        return
+      }
+      if (object.entity === "CONSTRUCTION_AREA") {
+        this.initConstructionArea(object as IGameBuildingConstructionArea)
         return
       }
       if (object.entity === "FLAG") {
@@ -448,6 +519,10 @@ export class Game extends Container {
       this.updateFarmer(object as IGameObjectFarmer)
       return
     }
+    if (object.entity === "TRADER") {
+      this.updateTrader(object as IGameObjectTrader)
+      return
+    }
     if (object.entity === "MECHANIC") {
       this.updateMechanic(object as IGameObjectMechanic)
       return
@@ -480,6 +555,14 @@ export class Game extends Container {
       this.updateWagonStop(object as IGameBuildingWagonStop)
       return
     }
+    if (object.entity === "STORE") {
+      this.updateStore(object as IGameBuildingStore)
+      return
+    }
+    if (object.entity === "CONSTRUCTION_AREA") {
+      this.updateConstructionArea(object as IGameBuildingConstructionArea)
+      return
+    }
     if (object.entity === "FLAG") {
       this.updateFlag(object as IGameObjectFlag)
       return
@@ -493,7 +576,7 @@ export class Game extends Container {
     if (event === "GROUP_FORM_STARTED") {
       this.audio.playRaidSound()
     }
-    if (event === "CREATING_NEW_ADVENTURE_STARTED") {
+    if (event === "ADVENTURE_QUEST_STARTED") {
       this.audio.playRaidSound()
     }
     if (event === "SCENE_CHANGED") {

@@ -1,5 +1,7 @@
 import { createId } from "@paralleldrive/cuid2"
 import type { IGameObjectCourier } from "../../../../../../packages/api-sdk/src"
+import { generateUnitUserName } from "../../common/generators/unitName"
+import { generateUnitTop } from "../../common/generators/unitTop"
 import { Unit } from "./unit"
 
 interface ICourierOptions {
@@ -19,12 +21,13 @@ export class VillageCourier extends Unit implements IGameObjectCourier {
       visual: {
         head: "1",
         hairstyle: "BOLD",
-        top: "BLUE_SHIRT",
+        top: generateUnitTop(),
       },
     })
 
     this.speed = 2.5
     this.minDistance = 15
+    this.userName = generateUnitUserName()
   }
 
   live() {

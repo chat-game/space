@@ -7,7 +7,10 @@ import {
   Texture,
   TilingSprite,
 } from "pixi.js"
-import { getRandomInRange } from "../../../../../packages/api-sdk/src"
+import {
+  type IGameObjectUnit,
+  getRandomInRange,
+} from "../../../../../packages/api-sdk/src"
 import campfireAnimation1 from "../assets/images/animation/campfire/1.png"
 import campfireAnimation2 from "../assets/images/animation/campfire/2.png"
 import campfireAnimation3 from "../assets/images/animation/campfire/3.png"
@@ -16,12 +19,6 @@ import campfireAnimation5 from "../assets/images/animation/campfire/5.png"
 import fireParticle1 from "../assets/images/animation/campfire/particle-1.png"
 import fireParticle2 from "../assets/images/animation/campfire/particle-2.png"
 import fireParticle3 from "../assets/images/animation/campfire/particle-3.png"
-import heroLeft1 from "../assets/images/animation/hero-moving-left/1.png"
-import heroLeft2 from "../assets/images/animation/hero-moving-left/2.png"
-import heroLeft3 from "../assets/images/animation/hero-moving-left/3.png"
-import heroLeft4 from "../assets/images/animation/hero-moving-left/4.png"
-import heroLeft5 from "../assets/images/animation/hero-moving-left/5.png"
-import heroLeft6 from "../assets/images/animation/hero-moving-left/6.png"
 import heroRight1 from "../assets/images/animation/hero-moving-right/1.png"
 import heroRight2 from "../assets/images/animation/hero-moving-right/2.png"
 import heroRight3 from "../assets/images/animation/hero-moving-right/3.png"
@@ -29,6 +26,8 @@ import heroRight4 from "../assets/images/animation/hero-moving-right/4.png"
 import heroRight5 from "../assets/images/animation/hero-moving-right/5.png"
 import heroRight6 from "../assets/images/animation/hero-moving-right/6.png"
 import campfire1 from "../assets/images/buildings/camp-fire-1.png"
+import constructionArea1 from "../assets/images/buildings/construction-1.png"
+import store1 from "../assets/images/buildings/store.png"
 import wagonStop1 from "../assets/images/buildings/wagon-stop-1.png"
 import warehouse1 from "../assets/images/buildings/warehouse-1.png"
 import coin1 from "../assets/images/icons/coin-1.png"
@@ -65,22 +64,16 @@ import tree5Stone from "../assets/images/objects/tree/5/stone.png"
 import tree5Teal from "../assets/images/objects/tree/5/teal.png"
 import tree5Toxic from "../assets/images/objects/tree/5/toxic.png"
 import tree5Violet from "../assets/images/objects/tree/5/violet.png"
-import unitHairClassicLeft from "../assets/images/unit/hairstyle/hair-classic-left.png"
 import unitHairClassicRight from "../assets/images/unit/hairstyle/hair-classic-right.png"
-import unitHairCoalLongLeft from "../assets/images/unit/hairstyle/hair-coal-long-left.png"
 import unitHairCoalLongRight from "../assets/images/unit/hairstyle/hair-coal-long-right.png"
-import unitHead1Left from "../assets/images/unit/head/head-1-left.png"
+import unitHairOrangeWithBeard from "../assets/images/unit/hairstyle/orange-with-beard.png"
 import unitHead1Right from "../assets/images/unit/head/head-1-right.png"
-import blackTopLeft from "../assets/images/unit/top/black-top-left.png"
 import blackTopRight from "../assets/images/unit/top/black-top-right.png"
-import blueTopLeft from "../assets/images/unit/top/blue-top-left.png"
 import blueTopRight from "../assets/images/unit/top/blue-top-right.png"
-import darkSilverTopLeft from "../assets/images/unit/top/dark-silver-top-left.png"
 import darkSilverTopRight from "../assets/images/unit/top/dark-silver-top-right.png"
-import greenTopLeft from "../assets/images/unit/top/green-top-left.png"
 import greenTopRight from "../assets/images/unit/top/green-top-right.png"
-import violetTopLeft from "../assets/images/unit/top/violet-top-left.png"
 import violetTopRight from "../assets/images/unit/top/violet-top-right.png"
+import chest1 from "../assets/images/wagon/chest-1.png"
 import wagonEngineCloud1 from "../assets/images/wagon/clouds/1.png"
 import wagonEngineCloud2 from "../assets/images/wagon/clouds/2.png"
 import wagonEngineCloud3 from "../assets/images/wagon/clouds/3.png"
@@ -125,6 +118,8 @@ export abstract class AssetsManager {
     { alias: "fireParticle3", src: fireParticle3 },
     { alias: "warehouse1", src: warehouse1 },
     { alias: "wagonStop1", src: wagonStop1 },
+    { alias: "store1", src: store1 },
+    { alias: "constructionArea1", src: constructionArea1 },
     { alias: "flag1", src: flag1 },
     { alias: "flag2", src: flag2 },
     { alias: "wagonWheel1", src: wagonWheel1 },
@@ -135,6 +130,7 @@ export abstract class AssetsManager {
     { alias: "wagonEngineCloud2", src: wagonEngineCloud2 },
     { alias: "wagonEngineCloud3", src: wagonEngineCloud3 },
     { alias: "wagonEngineCloud4", src: wagonEngineCloud4 },
+    { alias: "chest1", src: chest1 },
     { alias: "coin1", src: coin1 },
   ]
 
@@ -145,37 +141,22 @@ export abstract class AssetsManager {
     { alias: "heroRight4", src: heroRight4 },
     { alias: "heroRight5", src: heroRight5 },
     { alias: "heroRight6", src: heroRight6 },
-    { alias: "heroLeft1", src: heroLeft1 },
-    { alias: "heroLeft2", src: heroLeft2 },
-    { alias: "heroLeft3", src: heroLeft3 },
-    { alias: "heroLeft4", src: heroLeft4 },
-    { alias: "heroLeft5", src: heroLeft5 },
-    { alias: "heroLeft6", src: heroLeft6 },
   ]
 
-  static headAssets = [
-    { alias: "unitHead1Left", src: unitHead1Left },
-    { alias: "unitHead1Right", src: unitHead1Right },
-  ]
+  static headAssets = [{ alias: "unitHead1", src: unitHead1Right }]
 
   static hairAssets = [
-    { alias: "unitHairClassicLeft", src: unitHairClassicLeft },
-    { alias: "unitHairClassicRight", src: unitHairClassicRight },
-    { alias: "unitHairCoalLongLeft", src: unitHairCoalLongLeft },
-    { alias: "unitHairCoalLongRight", src: unitHairCoalLongRight },
+    { alias: "unitHairClassic", src: unitHairClassicRight },
+    { alias: "unitHairCoalLong", src: unitHairCoalLongRight },
+    { alias: "unitHairOrangeWithBeard", src: unitHairOrangeWithBeard },
   ]
 
   static topAssets = [
-    { alias: "violetTopLeft", src: violetTopLeft },
-    { alias: "violetTopRight", src: violetTopRight },
-    { alias: "blackTopLeft", src: blackTopLeft },
-    { alias: "blackTopRight", src: blackTopRight },
-    { alias: "greenTopLeft", src: greenTopLeft },
-    { alias: "greenTopRight", src: greenTopRight },
-    { alias: "blueTopLeft", src: blueTopLeft },
-    { alias: "blueTopRight", src: blueTopRight },
-    { alias: "darkSilverTopLeft", src: darkSilverTopLeft },
-    { alias: "darkSilverTopRight", src: darkSilverTopRight },
+    { alias: "violetTop", src: violetTopRight },
+    { alias: "blackTop", src: blackTopRight },
+    { alias: "greenTop", src: greenTopRight },
+    { alias: "blueTop", src: blueTopRight },
+    { alias: "darkSilverTop", src: darkSilverTopRight },
   ]
 
   static treeAssets = [
@@ -265,7 +246,7 @@ export abstract class AssetsManager {
     await Assets.load(AssetsManager.treeAssets)
   }
 
-  public static getAnimatedSpriteHeroRight() {
+  public static getAnimatedSpriteHero(direction: IGameObjectUnit["direction"]) {
     const images = [
       "heroRight1",
       "heroRight2",
@@ -284,27 +265,10 @@ export abstract class AssetsManager {
     const animation = new AnimatedSprite(textureArray)
     animation.anchor.set(0.5, 1)
 
-    return animation
-  }
-
-  public static getAnimatedSpriteHeroLeft() {
-    const images = [
-      "heroLeft1",
-      "heroLeft2",
-      "heroLeft3",
-      "heroLeft4",
-      "heroLeft5",
-      "heroLeft6",
-    ]
-    const textureArray = []
-
-    for (const image of images) {
-      const texture = Texture.from(image)
-      textureArray.push(texture)
+    if (direction === "LEFT") {
+      // Flip horizontally
+      animation.scale.x = -1
     }
-
-    const animation = new AnimatedSprite(textureArray)
-    animation.anchor.set(0.5, 1)
 
     return animation
   }

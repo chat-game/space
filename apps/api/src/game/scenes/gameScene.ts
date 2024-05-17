@@ -6,21 +6,14 @@ import {
   type IGameChunkTheme,
   type IGameEvent,
   type IGamePoll,
+  type IGameQuest,
   type IGameRoute,
-  type IGameSceneAction,
-  type ItemType,
   getDateMinusMinutes,
   getRandomInRange,
 } from "../../../../../packages/api-sdk/src"
-import {
-  ADMIN_PLAYER_ID,
-  DISCORD_SERVER_INVITE_URL,
-  DONATE_URL,
-  GITHUB_REPO_URL,
-  SERVER_TICK_MS,
-} from "../../config"
+import { SERVER_TICK_MS } from "../../config"
 import { Forest, type GameChunk, LakeChunk, Village } from "../chunks"
-import { Event, Group, Route } from "../common"
+import { Event, type Group, Route } from "../common"
 import type { Game } from "../game"
 import {
   Flag,
@@ -32,11 +25,15 @@ import {
   type Wolf,
 } from "../objects"
 import { Player, Raider } from "../objects/units"
+import { Trader } from "../objects/units/trader"
+import { ChopTreeScript } from "../scripts/chopTreeScript"
+import { MoveToRandomTargetScript } from "../scripts/moveToRandomTargetScript"
+import { ActionService } from "../services/actionService"
+import { EventService } from "../services/eventService"
 
 interface IGameSceneOptions {
   game: Game
   group: Group | undefined
-  possibleActions: IGameSceneAction[]
 }
 
 export class GameScene {
@@ -48,125 +45,32 @@ export class GameScene {
   public chunks: GameChunk[] = []
   public chunkNow: GameChunk | undefined
   public route: Route | undefined
-  public possibleActions: IGameSceneAction[] = []
 
-  constructor({ game, group, possibleActions }: IGameSceneOptions) {
+  // Services
+  public actionService: ActionService
+  public eventService: EventService
+
+  constructor({ game, group }: IGameSceneOptions) {
     this.id = createId()
     this.game = game
     this.group = group
-    this.possibleActions = possibleActions
+
+    this.actionService = new ActionService({ scene: this })
+    this.eventService = new EventService({ scene: this })
   }
 
   public async play() {
     return setInterval(() => {
-      this.updateEvents()
+      this.eventService.update()
       this.updateObjects()
       this.updateRoute()
       this.updateChunks()
       this.updateChunkNow()
-      this.updatePolls()
     }, SERVER_TICK_MS)
   }
 
   destroy() {
     this.objects = []
-  }
-
-  public async handleAction(
-    action: IGameSceneAction,
-    playerId: string,
-    params?: string[],
-  ) {
-    const player = await this.findOrCreatePlayer(playerId)
-    if (!player) {
-      return {
-        ok: false,
-        message: "Тебя нет в активной игре :(",
-      }
-    }
-
-    if (action === "SHOW_MESSAGE") {
-      return this.showMessageAction(player, params)
-    }
-    if (action === "REFUEL") {
-      return this.refuelAction(player, params)
-    }
-    if (action === "CHOP") {
-      return this.chopAction(player)
-    }
-    if (action === "MINE") {
-      return this.mineAction(player)
-    }
-    if (action === "START_CHANGING_SCENE") {
-      // Admin only
-      if (player.id !== ADMIN_PLAYER_ID) {
-        return {
-          ok: false,
-          message: null,
-        }
-      }
-      return this.startChangingSceneAction(player, params)
-    }
-    if (action === "START_GROUP_BUILD") {
-      // Admin only
-      if (player.id !== ADMIN_PLAYER_ID) {
-        return {
-          ok: false,
-          message: null,
-        }
-      }
-      return this.startGroupBuildAction(player, params)
-    }
-    if (action === "DISBAND_GROUP") {
-      // Admin only
-      if (player.id !== ADMIN_PLAYER_ID) {
-        return {
-          ok: false,
-          message: null,
-        }
-      }
-      return this.disbandGroupAction()
-    }
-    if (action === "START_CREATING_NEW_ADVENTURE") {
-      // Admin only
-      if (player.id !== ADMIN_PLAYER_ID) {
-        return {
-          ok: false,
-          message: null,
-        }
-      }
-      return this.startCreatingNewAdventureAction()
-    }
-    if (action === "JOIN_GROUP") {
-      return this.joinGroupAction(player, params)
-    }
-    if (action === "HELP") {
-      return this.helpAction(player)
-    }
-    if (action === "GITHUB") {
-      return this.githubAction(player)
-    }
-    if (action === "DONATE") {
-      return this.donateAction(player)
-    }
-    if (action === "GIFT") {
-      return this.giftAction(player, params)
-    }
-    if (action === "SELL") {
-      return this.sellAction(player, params)
-    }
-    if (action === "BUY") {
-      return this.buyAction(player, params)
-    }
-
-    return {
-      ok: false,
-      message: null,
-    }
-  }
-
-  checkIfActionIsPossible(action: IGameSceneAction) {
-    return this.possibleActions.find((a) => a === action)
   }
 
   initEvent({
@@ -175,15 +79,25 @@ export class GameScene {
     secondsToEnd,
     scene,
     poll,
+    quest,
   }: {
     title: string
     type: IGameEvent["type"]
     secondsToEnd: number
     scene?: GameSceneType
     poll?: IGamePoll
+    quest?: IGameQuest
   }) {
     this.events.push(
-      new Event({ game: this.game, title, type, secondsToEnd, scene, poll }),
+      new Event({
+        game: this.game,
+        title,
+        type,
+        secondsToEnd,
+        scene,
+        poll,
+        quest,
+      }),
     )
   }
 
@@ -195,6 +109,7 @@ export class GameScene {
       status: event.status,
       endsAt: event.endsAt,
       poll: event.poll,
+      quest: event.quest,
     }))
   }
 
@@ -228,7 +143,7 @@ export class GameScene {
   getInfo(): GetSceneResponse {
     return {
       id: this.id,
-      commands: this.getAvailableCommands(),
+      commands: this.actionService.getAvailableCommands(),
       events: this.getEvents(),
       group: this.group,
       wagon: this.getWagon(),
@@ -237,24 +152,13 @@ export class GameScene {
     }
   }
 
-  updateEvents() {
-    for (const event of this.events) {
-      const status = event.checkStatus()
-
-      if (status === "STOPPED") {
-        event.handleEnding()
-
-        const index = this.events.indexOf(event)
-        this.events.splice(index, 1)
-      }
-    }
-  }
-
   updateObjects() {
     this.removeInactivePlayers()
     const wagon = this.getWagon()
 
     for (const obj of this.objects) {
+      this.removeDestroyedObject(obj)
+
       obj.isVisibleOnClient = wagon.checkIfPointInVisibilityArea({
         x: obj.x,
         y: obj.y,
@@ -266,6 +170,10 @@ export class GameScene {
 
       if (obj instanceof Wagon) {
         this.updateWagon(obj)
+        continue
+      }
+      if (obj instanceof Trader) {
+        this.updateTrader(obj)
         continue
       }
       if (obj instanceof Player) {
@@ -283,9 +191,7 @@ export class GameScene {
 
   updateRoute() {
     if (!this.route?.flags || this.route.flags.length <= 0) {
-      // Route is over
-      this.route = undefined
-      return
+      return this.finishAdventure()
     }
 
     for (const flag of this.route.flags) {
@@ -297,6 +203,12 @@ export class GameScene {
     const wagon = this.getWagon()
 
     for (const chunk of this.chunks) {
+      for (const object of chunk.objects) {
+        if (object.state === "DESTROYED") {
+          chunk.removeObject(object)
+        }
+      }
+
       chunk.isVisibleOnClient = wagon.checkIfPointInVisibilityArea({
         x: chunk.center.x,
         y: chunk.center.y,
@@ -324,26 +236,33 @@ export class GameScene {
         this.chunkNow = chunk
       }
     }
+
+    if (this.chunkNow instanceof Village) {
+      const store = this.chunkNow.getStore()
+      const trader = this.getTrader()
+      if (store?.id && !trader?.id) {
+        this.generateNewTrader()
+      }
+    }
   }
 
-  updatePolls() {
-    if (this.chunkNow instanceof Village) {
-      this.generatePollForNewAdventure()
-    }
-    for (const event of this.events) {
-      if (event.type === "VOTING_FOR_NEW_ADVENTURE_STARTED") {
-        if (!event.poll) {
-          continue
-        }
-        if (event.poll?.votes.length >= event.poll?.votesToSuccess) {
-          event.status = "STOPPED"
+  getTrader() {
+    return this.objects.find((obj) => obj instanceof Trader) as
+      | Trader
+      | undefined
+  }
 
-          for (const event of this.game.scene.events) {
-            if (event.type === "VOTING_FOR_NEW_ADVENTURE_STARTED") {
-              event.status = "STOPPED"
-            }
-          }
-        }
+  updateTrader(object: Trader) {
+    object.live()
+
+    if (!object.script) {
+      const random = getRandomInRange(1, 150)
+      if (random <= 1) {
+        const target = this.getWagon().findRandomNearFlag()
+        object.script = new MoveToRandomTargetScript({
+          object,
+          target,
+        })
       }
     }
   }
@@ -483,6 +402,35 @@ export class GameScene {
   updateRaider(object: Raider) {
     object.live()
 
+    if (!object.script) {
+      // If there is an available tree
+      const availableTree = this.chunkNow?.getAvailableTree()
+      if (availableTree) {
+        const chopTreeFunc = (): boolean => {
+          object.chopTree()
+          if (!object.target || object.target.state === "DESTROYED") {
+            object.state = "IDLE"
+            if (object.target instanceof Tree) {
+              void object.inventory.addOrCreateItem(
+                "WOOD",
+                object.target?.resource,
+              )
+            }
+            return true
+          }
+          return false
+        }
+
+        object.script = new ChopTreeScript({
+          object,
+          target: availableTree,
+          chopTreeFunc,
+        })
+
+        return
+      }
+    }
+
     if (object.state === "IDLE") {
       const random = getRandomInRange(1, 100)
       if (random <= 1) {
@@ -515,41 +463,9 @@ export class GameScene {
     this.objects.splice(index, 1)
   }
 
-  getAvailableCommands() {
-    const commands: string[] = []
-    for (const action of this.possibleActions) {
-      if (action === "HELP") {
-        commands.push("!помощь")
-      }
-      if (action === "REFUEL") {
-        commands.push("!заправить [кол-во]")
-      }
-      if (action === "CHOP") {
-        commands.push("!рубить")
-      }
-      if (action === "MINE") {
-        commands.push("!добыть")
-      }
-      if (action === "BUY") {
-        commands.push("!купить [название]")
-      }
-      if (action === "SELL") {
-        commands.push("!продать [название]")
-      }
-      if (action === "GIFT") {
-        commands.push("!подарить [название]")
-      }
-      if (action === "DONATE") {
-        commands.push("!донат")
-      }
-    }
-
-    return commands
-  }
-
   async findOrCreatePlayer(id: string) {
     const player = this.findPlayer(id)
-    if (!player && this.checkIfActionIsPossible("CREATE_NEW_PLAYER")) {
+    if (!player && this.actionService.isActionPossible("CREATE_NEW_PLAYER")) {
       return this.createPlayer(id)
     }
     return player
@@ -584,6 +500,12 @@ export class GameScene {
     }
   }
 
+  removeDestroyedObject(obj: GameObject) {
+    if (obj.state === "DESTROYED") {
+      this.removeObject(obj)
+    }
+  }
+
   async initPlayer(id: string) {
     const instance = new Player({ id, x: -100, y: -100 })
     await instance.init()
@@ -606,85 +528,8 @@ export class GameScene {
     return player
   }
 
-  async showMessageAction(player: Player, params?: string[]) {
-    if (!this.checkIfActionIsPossible("SHOW_MESSAGE")) {
-      return {
-        ok: false,
-        message: null,
-      }
-    }
-
-    if (!params || !params[0]) {
-      return {
-        ok: false,
-        message: null,
-      }
-    }
-
-    const message = params[0]
-    player.addMessage(message)
-
-    return {
-      ok: true,
-      message: null,
-    }
-  }
-
-  async refuelAction(player: Player, params?: string[]) {
-    if (!this.checkIfActionIsPossible("REFUEL")) {
-      return {
-        ok: false,
-        message: "Сейчас этого сделать нельзя.",
-      }
-    }
-
-    if (!params) {
-      return {
-        ok: false,
-        message: "Не указана цель.",
-      }
-    }
-
-    const count = this.getCountFromChatCommand(params[0])
-    if (!count) {
-      return {
-        ok: false,
-        message: "Неверно указано количество.",
-      }
-    }
-
-    const items = player.inventory?.items ?? []
-    const itemExist = items.find((item) => item.type === "WOOD")
-    if (!itemExist) {
-      return {
-        ok: false,
-        message: `${player.userName}, у тебя нет древесины.`,
-      }
-    }
-
-    const isSuccess = await player.inventory?.reduceOrDestroyItem(
-      itemExist.type,
-      count,
-    )
-    if (!isSuccess) {
-      return {
-        ok: false,
-        message: `${player.userName}, недостаточно древесины.`,
-      }
-    }
-
-    await player.addRefuellerPoints(count)
-
-    this.refuelWagon(count)
-
-    return {
-      ok: true,
-      message: `${player.userName}, ты помог заправить Машину.`,
-    }
-  }
-
   async stealFuelAction(playerId: string) {
-    this.emptyWagonFuel()
+    this.getWagon().emptyFuel()
 
     const player = await this.findOrCreatePlayer(playerId)
     if (!player) {
@@ -697,245 +542,6 @@ export class GameScene {
       ok: true,
       message: `${player.userName}, а ты Злодей!`,
     }
-  }
-
-  async chopAction(player: Player) {
-    if (!this.checkIfActionIsPossible("CHOP")) {
-      return {
-        ok: false,
-        message: "Сейчас этого сделать нельзя.",
-      }
-    }
-    if (player.state === "CHOPPING") {
-      return {
-        ok: false,
-        message: `${player.userName}, ты пока занят(а).`,
-      }
-    }
-
-    const tree = this.getTreeToChop()
-    if (!tree) {
-      return {
-        ok: false,
-        message: `${player.userName}, нет свободного дерева.`,
-      }
-    }
-
-    player.setTarget(tree)
-
-    return {
-      ok: true,
-      message: null,
-    }
-  }
-
-  async mineAction(player: Player) {
-    if (!this.checkIfActionIsPossible("MINE")) {
-      return {
-        ok: false,
-        message: "Сейчас этого сделать нельзя.",
-      }
-    }
-    if (player.state === "MINING") {
-      return {
-        ok: false,
-        message: `${player.userName}, ты пока занят(а).`,
-      }
-    }
-
-    const stone = this.getStoneToMine()
-    if (!stone) {
-      return {
-        ok: false,
-        message: `${player.userName}, нет свободного камня.`,
-      }
-    }
-
-    player.setTarget(stone)
-
-    return {
-      ok: true,
-      message: null,
-    }
-  }
-
-  disbandGroupAction() {
-    if (!this.checkIfActionIsPossible("DISBAND_GROUP")) {
-      return {
-        ok: false,
-        message: "Сейчас этого сделать нельзя.",
-      }
-    }
-
-    this.group?.disband()
-    this.group = undefined
-
-    return {
-      ok: true,
-      message: "Группа расформирована!",
-    }
-  }
-
-  startCreatingNewAdventureAction() {
-    if (!this.checkIfActionIsPossible("START_CREATING_NEW_ADVENTURE")) {
-      return {
-        ok: false,
-        message: "Сейчас этого сделать нельзя.",
-      }
-    }
-
-    this.initEvent({
-      type: "CREATING_NEW_ADVENTURE_STARTED",
-      title: "Генерируем приключение",
-      secondsToEnd: 15,
-    })
-
-    return {
-      ok: true,
-      message: "Началось создание новых локаций...",
-    }
-  }
-
-  startChangingSceneAction(_: Player, params?: string[]) {
-    if (!this.checkIfActionIsPossible("START_CHANGING_SCENE")) {
-      return {
-        ok: false,
-        message: "Сейчас этого сделать нельзя.",
-      }
-    }
-
-    if (!params) {
-      return {
-        ok: false,
-        message: "Не указана цель.",
-      }
-    }
-
-    const scene = this.getSceneTypeFromChatCommand(params[1])
-    if (!scene) {
-      return {
-        ok: false,
-        message: "Неверно указана цель. В деревню, на защиту.",
-      }
-    }
-
-    this.initEvent({
-      type: "SCENE_CHANGING_STARTED",
-      title: "Меняем локацию",
-      scene,
-      secondsToEnd: 10,
-    })
-
-    return {
-      ok: true,
-      message: "Переходим в другую локацию...",
-    }
-  }
-
-  startGroupBuildAction(player: Player, params?: string[]) {
-    if (!this.checkIfActionIsPossible("START_GROUP_BUILD")) {
-      return {
-        ok: false,
-        message: "Сейчас этого сделать нельзя.",
-      }
-    }
-
-    if (!params) {
-      return {
-        ok: false,
-        message: "Не указана цель.",
-      }
-    }
-
-    const scene = this.getSceneTypeFromChatCommand(params[1])
-    if (!scene) {
-      return {
-        ok: false,
-        message: "Неверно указана цель. В деревню, на защиту.",
-      }
-    }
-
-    this.group = new Group({ creator: player, target: scene })
-
-    this.initEvent({
-      type: "GROUP_FORM_STARTED",
-      title: "Идет набор в группу!",
-      scene,
-      secondsToEnd: 120,
-    })
-
-    return {
-      ok: true,
-      message: "Начинаем собирать группу!",
-    }
-  }
-
-  getSceneTypeFromChatCommand(text: string): GameSceneType | null {
-    if (text === "деревня" || text === "деревню") {
-      return "VILLAGE"
-    }
-    if (text === "защиту" || text === "защита") {
-      return "DEFENCE"
-    }
-
-    return null
-  }
-
-  getCountFromChatCommand(text: string): number | null {
-    if (typeof Number(text) === "number" && Number(text) > 0) {
-      return Math.round(Number(text))
-    }
-
-    return null
-  }
-
-  joinGroupAction(player: Player, params?: string[]) {
-    if (!this.checkIfActionIsPossible("JOIN_GROUP")) {
-      return {
-        ok: false,
-        message: "Сейчас этого сделать нельзя.",
-      }
-    }
-
-    if (!params) {
-      return {
-        ok: false,
-        message: "Не передан id голосования.",
-      }
-    }
-
-    const voteStatus = this.findActivePollAndVote(params[0], player)
-    if (voteStatus === "VOTED_ALREADY") {
-      return {
-        ok: false,
-        message: "Ты уже проголосовал.",
-      }
-    }
-    if (voteStatus === "VOTE_NOT_FOUND") {
-      return {
-        ok: false,
-        message: null,
-      }
-    }
-
-    return {
-      ok: true,
-      message: `${player.userName}, ты проголосовал(а)!`,
-    }
-  }
-
-  refuelWagon(woodAmount: number) {
-    if (woodAmount < 0) {
-      return
-    }
-
-    const wagon = this.getWagon()
-    wagon.fuel += woodAmount * 5 * 40
-  }
-
-  emptyWagonFuel() {
-    const wagon = this.getWagon()
-    wagon.fuel = 0
   }
 
   getTreeToChop() {
@@ -1022,20 +628,6 @@ export class GameScene {
     }
   }
 
-  public startRaidAction(raidersCount = 0) {
-    this.initEvent({
-      title: "Начался рейд!",
-      type: "RAID_STARTED",
-      secondsToEnd: 60 * 5,
-    })
-    this.initRaiders(raidersCount)
-
-    return {
-      ok: true,
-      message: null,
-    }
-  }
-
   public stopRaid() {
     const flag = this.getWagon().findRandomOutFlag()
 
@@ -1044,272 +636,6 @@ export class GameScene {
         obj.moveOutOfScene(flag)
       }
     }
-  }
-
-  public helpAction(player: Player) {
-    if (!this.checkIfActionIsPossible("HELP")) {
-      return {
-        ok: false,
-        message: null,
-      }
-    }
-    return {
-      ok: true,
-      message: `${player.userName}, это интерактивная игра-чат, в которой может участвовать любой зритель! Пиши команды (примеры на экране) для управления своим юнитом. Вступай в наше комьюнити: ${DISCORD_SERVER_INVITE_URL}`,
-    }
-  }
-
-  public githubAction(player: Player) {
-    if (!this.checkIfActionIsPossible("GITHUB")) {
-      return {
-        ok: false,
-        message: null,
-      }
-    }
-    return {
-      ok: true,
-      message: `${player.userName}, код игры находится в репозитории: ${GITHUB_REPO_URL}`,
-    }
-  }
-
-  public donateAction(player: Player) {
-    if (!this.checkIfActionIsPossible("DONATE")) {
-      return {
-        ok: false,
-        message: null,
-      }
-    }
-    return {
-      ok: true,
-      message: `${player.userName}, поддержи игру: ${DONATE_URL}`,
-    }
-  }
-
-  public async giftAction(player: Player, params: string[] | undefined) {
-    if (!this.checkIfActionIsPossible("GIFT")) {
-      return {
-        ok: false,
-        message: null,
-      }
-    }
-
-    if (!params) {
-      return {
-        ok: false,
-        message: `${player.userName}, укажи конкретнее, например: !подарить древесину`,
-      }
-    }
-
-    const item = this.getItemTypeFromChatCommand(params[0])
-    if (!item) {
-      return {
-        ok: false,
-        message: `${player.userName}, укажи конкретнее, например: !подарить древесину`,
-      }
-    }
-
-    const items = player.inventory?.items ?? []
-
-    if (item === "WOOD") {
-      const itemExist = items.find((item) => item.type === "WOOD")
-      if (!itemExist) {
-        return {
-          ok: false,
-          message: `${player.userName}, у тебя нет древесины.`,
-        }
-      }
-
-      await this.game.repository.addWoodToVillage(itemExist.amount)
-      await player.addReputation(itemExist.amount)
-      await player.inventory?.destroyItemInDB(itemExist.id)
-
-      return {
-        ok: true,
-        message: `${player.userName}, ты подарил(а) деревне всю древесину! Твоя репутация возросла.`,
-      }
-    }
-    if (item === "STONE") {
-      const itemExist = items.find((item) => item.type === "STONE")
-      if (!itemExist) {
-        return {
-          ok: false,
-          message: `${player.userName}, у тебя нет камня.`,
-        }
-      }
-
-      await this.game.repository.addStoneToVillage(itemExist.amount)
-      await player.addReputation(itemExist.amount)
-      await player.inventory?.destroyItemInDB(itemExist.id)
-
-      return {
-        ok: true,
-        message: `${player.userName}, ты подарил(а) деревне все камни! Твоя репутация возросла.`,
-      }
-    }
-
-    return {
-      ok: false,
-      message: `${player.userName}, укажи конкретнее, например: !подарить древесину`,
-    }
-  }
-
-  async sellAction(player: Player, params: string[] | undefined) {
-    if (!this.checkIfActionIsPossible("SELL")) {
-      return {
-        ok: false,
-        message: null,
-      }
-    }
-
-    if (!params) {
-      return {
-        ok: false,
-        message: `${player.userName}, укажи конкретнее, например: !продать древесину`,
-      }
-    }
-
-    const item = this.getItemTypeFromChatCommand(params[0])
-    if (!item) {
-      return {
-        ok: false,
-        message: `${player.userName}, укажи конкретнее, например: !продать древесину`,
-      }
-    }
-
-    const items = player.inventory?.items ?? []
-
-    if (item === "WOOD") {
-      const itemExist = items.find((item) => item.type === "WOOD")
-      if (!itemExist) {
-        return {
-          ok: false,
-          message: `${player.userName}, у тебя нет древесины.`,
-        }
-      }
-
-      await player.updateCoins(itemExist.amount)
-      await player.inventory?.destroyItemInDB(itemExist.id)
-
-      return {
-        ok: true,
-        message: `${player.userName}, ты продал(а) всю древесину торговцу!`,
-      }
-    }
-    if (item === "STONE") {
-      const itemExist = items.find((item) => item.type === "STONE")
-      if (!itemExist) {
-        return {
-          ok: false,
-          message: `${player.userName}, у тебя нет камня.`,
-        }
-      }
-
-      await player.updateCoins(itemExist.amount)
-      await player.inventory?.destroyItemInDB(itemExist.id)
-
-      return {
-        ok: true,
-        message: `${player.userName}, ты продал(а) все камни торговцу!`,
-      }
-    }
-
-    return {
-      ok: false,
-      message: `${player.userName}, укажи конкретнее, например: !продать древесину`,
-    }
-  }
-
-  async buyAction(player: Player, params: string[] | undefined) {
-    if (!this.checkIfActionIsPossible("BUY")) {
-      return {
-        ok: false,
-        message: null,
-      }
-    }
-
-    if (!params) {
-      return {
-        ok: false,
-        message: `${player.userName}, укажи конкретнее, например: !купить топор`,
-      }
-    }
-
-    const item = this.getItemTypeFromChatCommand(params[0])
-    if (!item) {
-      return {
-        ok: false,
-        message: `${player.userName}, укажи конкретнее, например: !купить топор`,
-      }
-    }
-
-    const items = player.inventory?.items ?? []
-
-    if (item === "AXE") {
-      const itemExist = items.find((item) => item.type === "AXE")
-      if (itemExist) {
-        return {
-          ok: false,
-          message: `${player.userName}, у тебя уже есть топор.`,
-        }
-      }
-
-      const result = await player.buyItemFromDealer("AXE", 10, 1)
-      if (!result) {
-        return {
-          ok: false,
-          message: `${player.userName}, неа.`,
-        }
-      }
-
-      return {
-        ok: true,
-        message: `${player.userName}, ты купил(а) топор у торговца!`,
-      }
-    }
-    if (item === "PICKAXE") {
-      const itemExist = items.find((item) => item.type === "PICKAXE")
-      if (itemExist) {
-        return {
-          ok: false,
-          message: `${player.userName}, у тебя уже есть кирка.`,
-        }
-      }
-
-      const result = await player.buyItemFromDealer("PICKAXE", 10, 1)
-      if (!result) {
-        return {
-          ok: false,
-          message: `${player.userName}, неа.`,
-        }
-      }
-
-      return {
-        ok: true,
-        message: `${player.userName}, ты купил(а) кирку у торговца!`,
-      }
-    }
-
-    return {
-      ok: false,
-      message: `${player.userName}, укажи конкретнее, например: !купить топор`,
-    }
-  }
-
-  getItemTypeFromChatCommand(text: string): ItemType | null {
-    if (text === "древесину" || text === "древесина") {
-      return "WOOD"
-    }
-    if (text === "камень" || text === "камни") {
-      return "STONE"
-    }
-    if (text === "топор") {
-      return "AXE"
-    }
-    if (text === "кирка" || text === "кирку") {
-      return "PICKAXE"
-    }
-
-    return null
   }
 
   generateRandomVillage({
@@ -1371,6 +697,11 @@ export class GameScene {
 
     this.generateChunks({ x: villageOutPoint.x, y: villageOutPoint.y }, chunks)
     this.markObjectsAsOnWagonPath(this.route)
+  }
+
+  finishAdventure() {
+    this.route = undefined
+    this.getWagon().emptyCargo()
   }
 
   generateChunks(startPoint: { x: number; y: number }, amount: number) {
@@ -1480,68 +811,13 @@ export class GameScene {
       : undefined
   }
 
-  generatePollForNewAdventure() {
-    const random = getRandomInRange(1, 1500)
-    if (random !== 1) {
-      return
-    }
-
-    const votingEvents = this.events.filter(
-      (e) => e.type === "VOTING_FOR_NEW_ADVENTURE_STARTED",
+  generateNewTrader() {
+    const target = this.getWagon().findRandomOutFlag()
+    this.objects.push(
+      new Trader({
+        x: target.x,
+        y: target.y,
+      }),
     )
-    if (votingEvents.length >= 4) {
-      return
-    }
-
-    const creatingEvent = this.events.find(
-      (e) => e.type === "CREATING_NEW_ADVENTURE_STARTED",
-    )
-
-    if (creatingEvent || this.route) {
-      return
-    }
-
-    const votesToSuccess =
-      this.findActivePlayers().length >= 2 ? this.findActivePlayers().length : 2
-
-    this.initEvent({
-      type: "VOTING_FOR_NEW_ADVENTURE_STARTED",
-      title: "Новый квест",
-      secondsToEnd: 180,
-      poll: {
-        votes: [],
-        status: "STARTED",
-        votesToSuccess,
-        id: this.generatePollId(),
-      },
-    })
-  }
-
-  generatePollId(): string {
-    const id = getRandomInRange(10, 99).toString()
-    for (const event of this.events) {
-      if (event.type === "VOTING_FOR_NEW_ADVENTURE_STARTED") {
-        if (event.poll?.id === id) {
-          return this.generatePollId()
-        }
-      }
-    }
-    return id
-  }
-
-  findActivePollAndVote(pollId: string, player: Player) {
-    for (const event of this.events) {
-      if (event.type === "VOTING_FOR_NEW_ADVENTURE_STARTED") {
-        if (event.poll?.id === pollId) {
-          const voted = event.vote(player)
-          if (!voted) {
-            return "VOTED_ALREADY"
-          }
-          return "VOTE_SUCCESS"
-        }
-      }
-    }
-
-    return "VOTE_NOT_FOUND"
   }
 }

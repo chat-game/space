@@ -4,7 +4,7 @@ import {
   type IGameChunkTheme,
   getRandomInRange,
 } from "../../../../../packages/api-sdk/src"
-import { Area, type GameObject } from "../objects"
+import { Area, type GameObject, Tree } from "../objects"
 
 interface IGameChunkOptions {
   center: IGameChunk["center"]
@@ -103,5 +103,25 @@ export class GameChunk implements IGameChunk {
     }
 
     return false
+  }
+
+  removeObject(object: GameObject) {
+    const index = this.objects.indexOf(object)
+    this.objects.splice(index, 1)
+  }
+
+  getAvailableTree(): Tree | undefined {
+    const trees = this.objects.filter(
+      (obj) =>
+        obj instanceof Tree &&
+        obj.state !== "DESTROYED" &&
+        !obj.isReserved &&
+        obj.isReadyToChop,
+    )
+    if (!trees || !trees.length) {
+      return undefined
+    }
+
+    return trees[Math.floor(Math.random() * trees.length)] as Tree
   }
 }

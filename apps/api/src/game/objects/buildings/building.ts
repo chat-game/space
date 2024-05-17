@@ -2,6 +2,7 @@ import { createId } from "@paralleldrive/cuid2"
 import type {
   IGameObjectBuilding,
   IGameObjectBuildingType,
+  ItemType,
 } from "../../../../../../packages/api-sdk/src"
 import { Inventory } from "../../common"
 import { GameObject } from "../gameObject"
@@ -37,5 +38,9 @@ export class Building extends GameObject implements IGameObjectBuilding {
       id: createId(),
       saveInDb: false,
     })
+  }
+
+  public getItemByType(type: ItemType) {
+    return this.inventory.items.find((item) => item.type === type)
   }
 }
