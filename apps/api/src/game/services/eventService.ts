@@ -1,5 +1,10 @@
+import type {
+  GameSceneType,
+  IGameEvent,
+  IGameQuestTask,
+} from "../../../../../packages/api-sdk/src"
 import { Village } from "../chunks"
-import type { Event } from "../common"
+import { Event } from "../common"
 import type { GameScene } from "../scenes"
 import { PollService } from "./pollService"
 import { QuestService } from "./questService"
@@ -9,6 +14,7 @@ interface IEventServiceOptions {
 }
 
 export class EventService {
+  public events: Event[] = []
   public questService: QuestService
   public pollService: PollService
   public scene: GameScene
@@ -20,57 +26,156 @@ export class EventService {
   }
 
   public update() {
-    for (const event of this.scene.events) {
+    for (const event of this.events) {
       const status = event.checkStatus()
 
       if (status === "STOPPED") {
-        event.handleEnding()
-
-        const index = this.scene.events.indexOf(event)
-        this.scene.events.splice(index, 1)
+        this.handleEnding(event)
+        this.destroy(event)
       }
 
-      this.updateClosedPollsWithQuest(event)
+      this.updateSuccessPollsWithQuest(event)
       this.updateClosedQuests(event)
-
-      // Check closed Quest
-      if (event.status === "STARTED" && event.quest) {
-        if (
-          event.quest.status === "FAILED" ||
-          event.quest.status === "SUCCESS"
-        ) {
-          //
-          event.status = "STOPPED"
-        }
-      }
     }
 
     this.pollService.update()
     this.questService.update()
   }
 
-  private updateClosedPollsWithQuest(event: Event) {
-    if (
-      event.poll?.status !== "SUCCESS" ||
-      !event.quest ||
-      event.quest.status !== "INACTIVE"
-    ) {
+  public init({
+    title,
+    type,
+    secondsToEnd,
+    scene,
+    poll,
+    quest,
+    offers,
+  }: {
+    title: IGameEvent["title"]
+    type: IGameEvent["type"]
+    secondsToEnd: number
+    scene?: GameSceneType
+    poll?: IGameEvent["poll"]
+    quest?: IGameEvent["quest"]
+    offers?: IGameEvent["offers"]
+  }) {
+    const event = new Event({
+      title,
+      type,
+      secondsToEnd,
+      scene,
+      poll,
+      quest,
+      offers,
+    })
+
+    this.events.push(event)
+  }
+
+  public getEvents(): IGameEvent[] {
+    return this.events.map((event) => ({
+      id: event.id,
+      title: event.title,
+      type: event.type,
+      status: event.status,
+      endsAt: event.endsAt,
+      poll: event.poll,
+      quest: event.quest,
+      offers: event.offers,
+    }))
+  }
+
+  private handleEnding(event: Event) {
+    if (event.type === "SCENE_CHANGING_STARTED" && event.scene) {
+      this.scene.game.initScene(event.scene)
+    }
+    if (event.type === "GROUP_FORM_STARTED" && event.scene) {
+      this.scene.game.initScene(event.scene)
+    }
+    if (event.type === "RAID_STARTED") {
+      this.scene.stopRaid()
+    }
+    if (event.type === "TRADE_STARTED") {
+      //
+    }
+  }
+
+  private destroy(event: Event) {
+    const index = this.events.indexOf(event)
+    this.events.splice(index, 1)
+  }
+
+  private destroyAllEventsWithPoll() {
+    for (const event of this.events) {
+      if (event.poll) {
+        this.destroy(event)
+      }
+    }
+  }
+
+  private updateSuccessPollsWithQuest(event: Event) {
+    if (event.poll?.status !== "SUCCESS" || !event.quest) {
       return
     }
 
-    event.quest.status = "ACTIVE"
-    event.type = "ADVENTURE_QUEST_STARTED"
-    event.title = "Путешествие"
-    event.setEndsAtPlusSeconds(event.quest.limitSeconds ?? 9999999)
+    const updateProgress1: IGameQuestTask["updateProgress"] = () => {
+      if (
+        !this.scene.wagonService.routeService.route?.flags &&
+        this.events.find((e) => e.type === "MAIN_QUEST_STARTED")
+      ) {
+        return {
+          status: "SUCCESS",
+        }
+      }
 
-    // Cargo
-    this.scene.getWagon().setCargo()
+      const items =
+        this.scene.wagonService.wagon.cargo?.checkIfAlreadyHaveItem("WOOD")
+      if (!items) {
+        return {
+          status: "FAILED",
+          progressNow: 0,
+        }
+      }
 
-    if (this.scene.chunkNow instanceof Village) {
-      this.scene.generateAdventure(this.scene.chunkNow, event.quest.chunks ?? 3)
+      return {
+        status: "ACTIVE",
+        progressNow: items.amount,
+      }
     }
 
-    // Close other votes
+    const tasks = [
+      this.questService.createTask({
+        updateProgress: updateProgress1,
+        description: "Перевезти в сохранности груз",
+        progressNow: 100,
+        progressToSuccess: 60,
+      }),
+    ]
+
+    this.init({
+      title: "Путешествие",
+      type: "MAIN_QUEST_STARTED",
+      secondsToEnd: event.quest.conditions.limitSeconds ?? 9999999,
+      quest: {
+        ...event.quest,
+        status: "ACTIVE",
+        tasks,
+      },
+    })
+
+    // Cargo
+    this.scene.wagonService.wagon.setCargo()
+
+    if (this.scene.chunkNow instanceof Village) {
+      this.scene.wagonService.routeService.generateAdventure(
+        this.scene.chunkNow,
+        event.quest.conditions.chunks ?? 3,
+      )
+    }
+
+    this.scene.tradeService.traderIsMovingWithWagon = true
+
+    this.destroyAllEventsWithPoll()
   }
 
   private updateClosedQuests(event: Event) {

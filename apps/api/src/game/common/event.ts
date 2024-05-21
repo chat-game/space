@@ -2,21 +2,18 @@ import { createId } from "@paralleldrive/cuid2"
 import {
   type GameSceneType,
   type IGameEvent,
-  type IGamePoll,
-  type IGameQuest,
   getDatePlusSeconds,
 } from "../../../../../packages/api-sdk/src"
 import { sendMessage } from "../../websocket/websocket.server"
-import type { Game } from "../game"
 
 interface IEventOptions {
-  game: Game
-  title: string
+  title: IGameEvent["title"]
   type: IGameEvent["type"]
   secondsToEnd: number
   scene?: GameSceneType
-  poll?: IGamePoll
-  quest?: IGameQuest
+  poll: IGameEvent["poll"]
+  quest: IGameEvent["quest"]
+  offers: IGameEvent["offers"]
 }
 
 export class Event implements IGameEvent {
@@ -27,28 +24,26 @@ export class Event implements IGameEvent {
   public scene?: GameSceneType
   public endsAt!: Date
   public deletesAt!: Date
-  public poll: IGamePoll | undefined
-  public quest: IGameQuest | undefined
-
-  public game: Game
+  public poll?: IGameEvent["poll"]
+  public quest?: IGameEvent["quest"]
+  public offers?: IGameEvent["offers"]
 
   constructor({
-    game,
     title,
     type,
     secondsToEnd,
     scene,
     poll,
     quest,
+    offers,
   }: IEventOptions) {
-    this.game = game
-
     this.id = createId()
     this.title = title
     this.type = type
     this.scene = scene
     this.poll = poll
     this.quest = quest
+    this.offers = offers
     this.status = "STARTED"
 
     this.setEndsAtPlusSeconds(secondsToEnd)
@@ -65,27 +60,6 @@ export class Event implements IGameEvent {
     }
 
     return this.status
-  }
-
-  public handleEnding() {
-    if (this.type === "SCENE_CHANGING_STARTED" && this.scene) {
-      this.game.initScene(this.scene)
-    }
-    if (this.type === "GROUP_FORM_STARTED" && this.scene) {
-      this.game.initScene(this.scene)
-    }
-    if (this.type === "RAID_STARTED") {
-      this.game.scene.stopRaid()
-    }
-    if (this.type === "COUNTDOWN_NEXT_WAVE_STARTED") {
-      console.log("Next wave!")
-    }
-    if (this.type === "VOTING_FOR_NEW_ADVENTURE_STARTED") {
-      //
-    }
-    if (this.type === "VILLAGE_QUEST_STARTED") {
-      //
-    }
   }
 
   public setEndsAtPlusSeconds(seconds: number) {

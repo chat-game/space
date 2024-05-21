@@ -4,7 +4,6 @@ import type {
 } from "../../../../packages/api-sdk/src"
 import { DBRepository } from "../db/db.repository"
 import { sendMessage } from "../websocket/websocket.server"
-import type { Group } from "./common"
 import {
   DefenceScene,
   type GameScene,
@@ -34,7 +33,7 @@ export class Game {
     this.initScene("MOVING")
   }
 
-  public async handleChatCommand({
+  public async handleActionFromChat({
     action,
     userId,
     userName,
@@ -46,34 +45,22 @@ export class Game {
   }
 
   public initScene(scene: GameSceneType) {
-    const { group } = this.prepareSceneBeforeChange()
-
-    if (scene === "MOVING") {
-      this.scene = new MovingScene({ game: this, group: undefined })
-      return
-    }
-    if (scene === "VILLAGE") {
-      this.scene = new VillageScene({ game: this, group: undefined })
-      return
-    }
-    if (scene === "DEFENCE") {
-      this.scene = new DefenceScene({ game: this, group })
-      return
-    }
-  }
-
-  public prepareSceneBeforeChange() {
-    let group: Group | undefined
-    if (this.scene?.group) {
-      group = this.scene.group
-    }
     if (this.scene) {
       this.scene.destroy()
     }
     sendMessage("SCENE_CHANGED")
 
-    return {
-      group,
+    if (scene === "MOVING") {
+      this.scene = new MovingScene({ game: this })
+      return
+    }
+    if (scene === "VILLAGE") {
+      this.scene = new VillageScene({ game: this })
+      return
+    }
+    if (scene === "DEFENCE") {
+      this.scene = new DefenceScene({ game: this })
+      return
     }
   }
 }

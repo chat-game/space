@@ -38,7 +38,7 @@ export class Village extends GameChunk implements IGameVillageChunk {
     this.initStones(5)
 
     this.initCourier()
-    this.initFarmer()
+    this.initFarmer(2)
     this.initBuildings()
   }
 
@@ -70,7 +70,7 @@ export class Village extends GameChunk implements IGameVillageChunk {
     const warehouse = this.getWarehouse()
     const store = this.getStore()
     const wood = warehouse?.getItemByType("WOOD")
-    if (wood?.amount && wood.amount >= 50 && !store) {
+    if (wood?.amount && wood.amount >= 25 && !store) {
       // Let's build!
       const target = this.getConstructionArea()
       if (!target) {
@@ -78,7 +78,7 @@ export class Village extends GameChunk implements IGameVillageChunk {
       }
 
       const buildFunc = (): boolean => {
-        warehouse?.inventory.reduceOrDestroyItem("WOOD", 50)
+        warehouse?.inventory.reduceOrDestroyItem("WOOD", 25)
         this.buildStore()
 
         return true
@@ -233,14 +233,16 @@ export class Village extends GameChunk implements IGameVillageChunk {
     )
   }
 
-  initFarmer() {
-    const randomPoint = this.getRandomPoint()
-    this.objects.push(
-      new VillageFarmer({
-        x: randomPoint.x,
-        y: randomPoint.y,
-      }),
-    )
+  initFarmer(count = 1) {
+    for (let i = 0; i < count; i++) {
+      const randomPoint = this.getRandomPoint()
+      this.objects.push(
+        new VillageFarmer({
+          x: randomPoint.x,
+          y: randomPoint.y,
+        }),
+      )
+    }
   }
 
   initBuildings() {

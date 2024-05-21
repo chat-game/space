@@ -1,22 +1,19 @@
 import { getRandomInRange } from "../../../../../packages/api-sdk/src"
-import type { Group } from "../common"
 import type { Game } from "../game"
 import { Stone, Tree } from "../objects"
 import { GameScene } from "./gameScene"
 
 interface IDefenceSceneOptions {
   game: Game
-  group: Group | undefined
 }
 
 export class DefenceScene extends GameScene {
   public wood!: number
   public stone!: number
 
-  constructor({ game, group }: IDefenceSceneOptions) {
+  constructor({ game }: IDefenceSceneOptions) {
     super({
       game,
-      group,
     })
 
     void this.init()
@@ -29,12 +26,6 @@ export class DefenceScene extends GameScene {
 
     this.wood = 0
     this.stone = 0
-
-    this.initEvent({
-      type: "COUNTDOWN_NEXT_WAVE_STARTED",
-      title: "Скоро будет волна",
-      secondsToEnd: 60 * 5,
-    })
 
     void this.play()
   }

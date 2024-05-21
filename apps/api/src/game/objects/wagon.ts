@@ -1,11 +1,6 @@
 import { createId } from "@paralleldrive/cuid2"
-import {
-  type IGameObjectWagon,
-  getMinusOrPlus,
-  getRandomInRange,
-} from "../../../../../packages/api-sdk/src"
+import type { IGameObjectWagon } from "../../../../../packages/api-sdk/src"
 import { Inventory } from "../common"
-import { Flag } from "./flag"
 import { GameObject } from "./gameObject"
 import { Mechanic } from "./units"
 
@@ -23,20 +18,17 @@ export class Wagon extends GameObject implements IGameObjectWagon {
   public mechanic!: Mechanic
   public serverDataArea!: IGameObjectWagon["visibilityArea"]
   public collisionArea!: IGameObjectWagon["visibilityArea"]
-  public nearFlags: Flag[] = []
-  public outFlags: Flag[] = []
 
   constructor({ x, y }: IWagonOptions) {
     const finalId = createId()
 
     super({ id: finalId, x, y, entity: "WAGON", isVisibleOnClient: true })
 
+    this.needToSendDataToClient = true
     this.speed = 0
     this.fuel = 2000
     this.updateVisibilityArea()
     this.updateServerDataArea()
-    this.initNearFlags()
-    this.initOutFlags(10)
     this.initMechanic()
   }
 
@@ -44,7 +36,6 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     this.updateVisibilityArea()
     this.updateServerDataArea()
     this.updateCollisionArea()
-    this.updateFlags()
     this.updateMechanic()
     this.consumeFuel()
 
@@ -156,81 +147,6 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     this.mechanic.direction = "LEFT"
     this.mechanic.x = this.x - 50
     this.mechanic.y = this.y - 48
-  }
-
-  initNearFlags() {
-    const flag1 = new Flag({
-      type: "WAGON_NEAR_MOVEMENT",
-      x: this.x - 300,
-      y: this.y,
-      offsetX: -300,
-      offsetY: 0,
-    })
-    const flag2 = new Flag({
-      type: "WAGON_NEAR_MOVEMENT",
-      x: this.x - 200,
-      y: this.y + 50,
-      offsetX: -200,
-      offsetY: 50,
-    })
-    const flag3 = new Flag({
-      type: "WAGON_NEAR_MOVEMENT",
-      x: this.x - 100,
-      y: this.y + 100,
-      offsetX: -100,
-      offsetY: 100,
-    })
-    const flag4 = new Flag({
-      type: "WAGON_NEAR_MOVEMENT",
-      x: this.x,
-      y: this.y + 200,
-      offsetX: 0,
-      offsetY: 200,
-    })
-    this.nearFlags.push(flag1, flag2, flag3, flag4)
-  }
-
-  updateFlags() {
-    for (const flag of this.nearFlags) {
-      flag.x = this.x + flag.offsetX
-      flag.y = this.y + flag.offsetY
-    }
-    for (const flag of this.outFlags) {
-      flag.x = this.x + flag.offsetX
-      flag.y = this.y + flag.offsetY
-    }
-  }
-
-  public findRandomNearFlag() {
-    return this.nearFlags[Math.floor(Math.random() * this.nearFlags.length)]
-  }
-
-  initOutFlags(count: number) {
-    for (let i = 0; i < count; i++) {
-      this.outFlags.push(this.generateRandomOutFlag())
-    }
-  }
-
-  generateRandomOutFlag() {
-    const minOffsetX = 1800
-    const minOffsetY = 1200
-
-    const offsetX =
-      getRandomInRange(minOffsetX, minOffsetX * 1.5) * getMinusOrPlus()
-    const offsetY =
-      getRandomInRange(minOffsetY, minOffsetY * 1.5) * getMinusOrPlus()
-
-    return new Flag({
-      type: "OUT_OF_SCREEN",
-      x: this.x + offsetX,
-      y: this.y + offsetY,
-      offsetX,
-      offsetY,
-    })
-  }
-
-  public findRandomOutFlag() {
-    return this.outFlags[Math.floor(Math.random() * this.outFlags.length)]
   }
 
   public setCargo() {

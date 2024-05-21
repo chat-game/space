@@ -21,7 +21,7 @@ export class BotService {
         createBotCommand(
           command,
           async (params, { userId, userName, reply }) => {
-            const result = await this.game.handleChatCommand({
+            const result = await this.game.handleActionFromChat({
               action,
               userId,
               userName,
@@ -46,8 +46,8 @@ export class BotService {
     return this.buildCommand(["собрать"], "START_GROUP_BUILD")
   }
 
-  public commandJoinGroup() {
-    return this.buildCommand(["го"], "JOIN_GROUP")
+  public commandVote() {
+    return this.buildCommand(["го"], "VOTE")
   }
 
   public commandDisbandGroup() {
@@ -74,16 +74,12 @@ export class BotService {
     return this.buildCommand(["подарить"], "GIFT")
   }
 
-  public commandSell() {
-    return this.buildCommand(["продать"], "SELL")
-  }
-
-  public commandBuy() {
-    return this.buildCommand(["купить"], "BUY")
+  public commandTrade() {
+    return this.buildCommand(["торговать"], "TRADE")
   }
 
   public commandHelp() {
-    return this.buildCommand(["помощь"], "HELP")
+    return this.buildCommand(["помощь", "help"], "HELP")
   }
 
   public commandDonate() {
@@ -103,7 +99,7 @@ export class BotService {
     userId: string
     text: string
   }) {
-    return this.game.handleChatCommand({
+    return this.game.handleActionFromChat({
       action: "SHOW_MESSAGE",
       userId,
       userName,
@@ -120,7 +116,7 @@ export class BotService {
     userId: string
     viewerCount: number
   }) {
-    return this.game.handleChatCommand({
+    return this.game.handleActionFromChat({
       action: "START_RAID",
       userId,
       userName,
@@ -137,7 +133,12 @@ export class BotService {
     userName: string
     rewardId: string
   }) {
-    console.log("reactOnChannelRewardRedemption", userId, userName, rewardId)
+    console.log(
+      "The viewer bought a reward using channel points",
+      userId,
+      userName,
+      rewardId,
+    )
     const player = await this.game.repository.findOrCreatePlayer(
       userId,
       userName,
@@ -147,8 +148,11 @@ export class BotService {
       return
     }
     if (rewardId === TWITCH_CHANNEL_REWARDS.villainStealFuelId) {
-      await this.game.scene.stealFuelAction(player.id)
-      return
+      return this.game.handleActionFromChat({
+        action: "STEAL_FUEL",
+        userId,
+        userName,
+      })
     }
   }
 }

@@ -1,8 +1,7 @@
 import { createId } from "@paralleldrive/cuid2"
-import {
-  type IGameQuest,
-  type IGameQuestTask,
-  getRandomInRange,
+import type {
+  IGameQuest,
+  IGameQuestTask,
 } from "../../../../../packages/api-sdk/src"
 import { Village } from "../chunks"
 import type { GameScene } from "../scenes"
@@ -22,11 +21,10 @@ export class QuestService {
     this.updateAndFinishActiveQuests()
 
     if (this.scene.chunkNow instanceof Village) {
-      this.generateVillageQuest()
-      this.generatePollForNewAdventure()
+      this.generateNewSideQuest()
     }
 
-    for (const event of this.scene.events) {
+    for (const event of this.scene.eventService.events) {
       if (!event.quest) {
         continue
       }
@@ -43,60 +41,48 @@ export class QuestService {
     status,
     type,
     tasks,
-    chunks,
-    limitSeconds,
+    conditions,
     creatorId,
+    title,
+    description,
   }: Omit<IGameQuest, "id">): IGameQuest {
     return {
       id: createId(),
       status,
+      title,
+      description,
       type,
       tasks,
-      chunks,
-      limitSeconds,
+      conditions,
       creatorId,
     }
   }
 
-  public createTask(): IGameQuestTask {
-    const updateProgress1: IGameQuestTask["updateProgress"] = () => {
-      if (
-        !this.scene.route?.flags &&
-        this.scene.events.find((e) => e.type === "ADVENTURE_QUEST_STARTED")
-      ) {
-        return {
-          status: "DONE",
-        }
-      }
-
-      const items = this.scene.getWagon().cargo?.checkIfAlreadyHaveItem("WOOD")
-      if (!items) {
-        return {
-          status: "FAILED",
-          progressNow: 0,
-        }
-      }
-
-      return {
-        status: "ACTIVE",
-        progressNow: items.amount,
-      }
-    }
-
+  public createTask({
+    updateProgress,
+    progressToSuccess,
+    progressNow,
+    description,
+  }: Pick<
+    IGameQuestTask,
+    "description" | "progressToSuccess" | "progressNow" | "updateProgress"
+  >): IGameQuestTask {
     return {
       id: createId(),
       status: "ACTIVE",
-      description: "Перевезти в сохранности груз",
-      progressNow: 100,
-      progressToSuccess: 60,
-      updateProgress: updateProgress1,
+      description,
+      progressNow,
+      progressToSuccess,
+      updateProgress,
     }
   }
 
   private updateQuestActiveTask(task: IGameQuestTask) {
     const progress = task.updateProgress(task.progressToSuccess)
 
-    task.status = progress.status
+    if (typeof progress.status !== "undefined") {
+      task.status = progress.status
+    }
     if (typeof progress.progressNow !== "undefined") {
       task.progressNow = progress.progressNow
     }
@@ -106,7 +92,7 @@ export class QuestService {
   }
 
   private updateAndFinishActiveQuests() {
-    for (const event of this.scene.events) {
+    for (const event of this.scene.eventService.events) {
       if (!event.quest || event.quest.status !== "ACTIVE") {
         continue
       }
@@ -114,7 +100,8 @@ export class QuestService {
       // Tasks done?
       if (!event.quest.tasks.find((t) => t.status === "ACTIVE")) {
         //
-        this.scene.getWagon().emptyCargo()
+        this.scene.wagonService.wagon.emptyCargo()
+        this.scene.tradeService.traderIsMovingWithWagon = false
 
         if (!event.quest.tasks.find((t) => t.status === "FAILED")) {
           // Reward
@@ -127,7 +114,7 @@ export class QuestService {
     }
   }
 
-  private generateVillageQuest() {
+  private generateNewSideQuest() {
     if (!this.scene.chunkNow) {
       return
     }
@@ -139,27 +126,22 @@ export class QuestService {
       }
     }
 
-    const villageQuests = this.scene.events.filter(
-      (e) => e.type === "VILLAGE_QUEST_STARTED",
+    const sideQuests = this.scene.eventService.events.filter(
+      (e) => e.type === "SIDE_QUEST_STARTED",
     )
-    if (villageQuests.length >= 1) {
+    if (sideQuests.length >= 1) {
       return
     }
 
-    const updateProgress1: IGameQuestTask["updateProgress"] = (
-      progressToSuccess,
-    ) => {
+    const updateProgress1: IGameQuestTask["updateProgress"] = () => {
       if (this.scene.chunkNow instanceof Village) {
         const warehouse = this.scene.chunkNow.getWarehouse()
         if (warehouse) {
           const wood = warehouse.getItemByType("WOOD")
           if (wood?.amount) {
-            if (
-              typeof progressToSuccess === "number" &&
-              wood.amount >= progressToSuccess
-            ) {
+            if (wood.amount >= 25) {
               return {
-                status: "DONE",
+                status: "SUCCESS",
                 progressNow: wood.amount,
               }
             }
@@ -182,7 +164,7 @@ export class QuestService {
         const store = this.scene.chunkNow.getStore()
         if (store) {
           return {
-            status: "DONE",
+            status: "SUCCESS",
             progressNow: true,
           }
         }
@@ -197,15 +179,19 @@ export class QuestService {
     const quest: IGameQuest = {
       id: createId(),
       type: "SIDE",
+      title: "Нет Торгового поста",
+      description:
+        "Местным жителям нужна помощь. Ожидается прибытие торговцев.",
       status: "ACTIVE",
       creatorId: "1",
+      conditions: {},
       tasks: [
         {
           id: createId(),
           status: "ACTIVE",
-          description: "Накопить 50 древесины на складе",
+          description: "Накопить 25 древесины на складе",
           progressNow: 0,
-          progressToSuccess: 50,
+          progressToSuccess: 25,
           updateProgress: updateProgress1,
         },
         {
@@ -219,66 +205,11 @@ export class QuestService {
       ],
     }
 
-    this.scene.initEvent({
-      type: "VILLAGE_QUEST_STARTED",
+    this.scene.eventService.init({
+      type: "SIDE_QUEST_STARTED",
       title: "Нет Торгового поста",
       secondsToEnd: 9999999,
       quest,
-    })
-  }
-
-  generatePollForNewAdventure() {
-    const trader = this.scene.getTrader()
-    if (!trader) {
-      return
-    }
-
-    if (this.scene.chunkNow instanceof Village) {
-      const store = this.scene.chunkNow.getStore()
-      if (!store) {
-        return
-      }
-    }
-
-    const random = getRandomInRange(1, 1500)
-    if (random !== 1) {
-      return
-    }
-
-    const votingEvents = this.scene.events.filter(
-      (e) => e.type === "VOTING_FOR_NEW_ADVENTURE_STARTED",
-    )
-    if (votingEvents.length >= 1) {
-      return
-    }
-
-    const adventureEvents = this.scene.events.filter(
-      (e) => e.type === "ADVENTURE_QUEST_STARTED",
-    )
-    if (adventureEvents.length >= 1) {
-      return
-    }
-
-    const votesToSuccess =
-      this.scene.findActivePlayers().length >= 2
-        ? this.scene.findActivePlayers().length
-        : 2
-
-    const tasks = [this.createTask()]
-
-    this.scene.initEvent({
-      type: "VOTING_FOR_NEW_ADVENTURE_STARTED",
-      title: "Торговец предлагает квест",
-      secondsToEnd: 180,
-      quest: this.create({
-        status: "INACTIVE",
-        type: "MAIN",
-        tasks: tasks,
-        chunks: 3,
-        limitSeconds: 3000,
-        creatorId: trader.id,
-      }),
-      poll: this.scene.eventService.pollService.create(votesToSuccess),
     })
   }
 }

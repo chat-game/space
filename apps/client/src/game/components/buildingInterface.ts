@@ -1,4 +1,4 @@
-import { Sprite, Text } from "pixi.js"
+import { Sprite } from "pixi.js"
 import type { IGameObjectBuilding } from "../../../../../packages/api-sdk/src"
 import { GraphicsContainer } from "./graphicsContainer"
 
@@ -32,7 +32,7 @@ export class BuildingInterface extends GraphicsContainer {
   }
 
   rebuild() {
-    this.children = []
+    this.children.splice(0, this.children.length)
     this.drawWood()
     this.drawStone()
   }
@@ -71,19 +71,19 @@ export class BuildingInterface extends GraphicsContainer {
     woodSprite.width = 48
     woodSprite.height = 48
 
-    const basicText = new Text({
-      text: this.wood,
-      style: {
-        fontSize: 16,
-        fill: 0xfef3c7,
-        align: "left",
-      },
-    })
+    // const basicText = new Text({
+    //   text: this.wood,
+    //   style: {
+    //     fontSize: 16,
+    //     fill: 0xfef3c7,
+    //     align: "left",
+    //   },
+    // })
+    //
+    // basicText.x = 14
+    // basicText.y = 26
 
-    basicText.x = 14
-    basicText.y = 26
-
-    container.addChild(woodSprite, basicText)
+    container.addChild(woodSprite)
 
     container.x = -50
     container.y = -74
@@ -102,19 +102,19 @@ export class BuildingInterface extends GraphicsContainer {
     sprite.width = 48
     sprite.height = 48
 
-    const basicText = new Text({
-      text: this.stone,
-      style: {
-        fontSize: 16,
-        fill: 0xfef3c7,
-        align: "left",
-      },
-    })
+    // const basicText = new Text({
+    //   text: this.stone,
+    //   style: {
+    //     fontSize: 16,
+    //     fill: 0xfef3c7,
+    //     align: "left",
+    //   },
+    // })
+    //
+    // basicText.x = 14
+    // basicText.y = 26
 
-    basicText.x = 14
-    basicText.y = 26
-
-    container.addChild(sprite, basicText)
+    container.addChild(sprite)
 
     container.x = 4
     container.y = -74

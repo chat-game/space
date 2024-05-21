@@ -1,6 +1,8 @@
 import { RefreshingAuthProvider } from "@twurple/auth"
 import { Bot, type BotCommand } from "@twurple/easy-bot"
 import { PubSubClient } from "@twurple/pubsub"
+import type { TwitchAccessTokenResponse } from "../../../../packages/api-sdk/src"
+import { DBRepository } from "../db/db.repository"
 import type { Game } from "../game/game"
 import { BotService } from "./bot.service"
 
@@ -9,28 +11,72 @@ export class BotController {
   private readonly userId = process.env.TWITCH_CHANNEL_ID as string
   private readonly clientId = process.env.TWITCH_CLIENT_ID as string
   private readonly clientSecret = process.env.TWITCH_SECRET_ID as string
+  private readonly code = process.env.TWITCH_OAUTH_CODE as string
+  private readonly redirectUrl = "http://localhost:3000"
 
   private readonly service: BotService
+  private readonly repository: DBRepository
 
   constructor(game: Game) {
     this.service = new BotService(game)
+    this.repository = new DBRepository()
+  }
+
+  private async obtainTwitchAccessToken() {
+    try {
+      const response = await fetch(
+        `https://id.twitch.tv/oauth2/token?client_id=${this.clientId}&client_secret=${this.clientSecret}&code=${this.code}&grant_type=authorization_code&redirect_uri=${this.redirectUrl}`,
+        {
+          method: "POST",
+        },
+      )
+      return (await response.json()) as TwitchAccessTokenResponse
+    } catch (err) {
+      console.error("obtainTwitchAccessToken", err)
+      return null
+    }
+  }
+
+  private async createNewAccessToken(): Promise<never> {
+    const res = await this.obtainTwitchAccessToken()
+    if (res?.access_token) {
+      await this.repository.createTwitchAccessToken({
+        userId: this.userId,
+        accessToken: res.access_token,
+        refreshToken: res.refresh_token,
+        scope: res.scope,
+        expiresIn: res.expires_in,
+        obtainmentTimestamp: new Date().getTime(),
+      })
+
+      throw new Error("Saved new access token. Restart server!")
+    }
+
+    throw new Error(
+      "No access token found and no Twitch code. See .env.example",
+    )
   }
 
   private async prepareAuthProvider() {
-    const tokenFile = Bun.file(`./apps/api/tmp/${this.userId}.token.json`)
-    const tokenData = await tokenFile.json()
+    const accessToken = await this.repository.getTwitchAccessToken(this.userId)
+    if (!accessToken) {
+      return this.createNewAccessToken()
+    }
 
     const authProvider = new RefreshingAuthProvider({
       clientId: this.clientId,
       clientSecret: this.clientSecret,
     })
 
-    authProvider.onRefresh(async (_, newTokenData) => {
-      const data = JSON.stringify(newTokenData, null, 4)
-      await Bun.write(tokenFile, data)
+    authProvider.onRefresh(async (userId, newTokenData) => {
+      await this.repository.updateTwitchAccessToken(userId, newTokenData)
     })
 
-    await authProvider.addUserForToken(tokenData, ["chat", "channel"])
+    await authProvider.addUserForToken(accessToken, [
+      "chat",
+      "channel",
+      "moderator",
+    ])
 
     return authProvider
   }
@@ -38,7 +84,7 @@ export class BotController {
   prepareBotCommands(): BotCommand[] {
     return [
       ...this.service.commandStartGroupBuild(),
-      ...this.service.commandJoinGroup(),
+      ...this.service.commandVote(),
       ...this.service.commandDisbandGroup(),
       ...this.service.commandStartChangingScene(),
       ...this.service.commandStartCreatingNewAdventure(),
@@ -46,8 +92,7 @@ export class BotController {
       ...this.service.commandChop(),
       ...this.service.commandMine(),
       ...this.service.commandGift(),
-      ...this.service.commandSell(),
-      ...this.service.commandBuy(),
+      ...this.service.commandTrade(),
       ...this.service.commandHelp(),
       ...this.service.commandDonate(),
       ...this.service.commandGithub(),
@@ -76,8 +121,7 @@ export class BotController {
       },
     })
 
-    bot.onRaid(({ broadcasterName, userName, userId, viewerCount }) => {
-      void bot.say(broadcasterName, `@${userName} устроил(а) рейд! Готовимся!`)
+    bot.onRaid(({ userName, userId, viewerCount }) => {
       void this.service.reactOnRaid({ userName, userId, viewerCount })
     })
     bot.onRaidCancel((event) => {
@@ -88,10 +132,6 @@ export class BotController {
       void this.service.reactOnMessage({ userName, userId, text })
     })
 
-    bot.onAction(({ userId, userName, isAction, text }) => {
-      console.log("action!", userId, userName, isAction, text)
-    })
-
     bot.onJoin(({ userName }) => {
       console.log(new Date().toLocaleTimeString(), "joined!", userName)
     })
@@ -99,24 +139,16 @@ export class BotController {
       console.log("left!", userName)
     })
 
-    bot.onSub(({ broadcasterName, userName }) => {
-      void bot.say(
-        broadcasterName,
-        `Thanks to @${userName} for subscribing to the channel!`,
-      )
-    })
-    bot.onResub(({ broadcasterName, userName, months }) => {
-      void bot.say(
-        broadcasterName,
-        `Thanks to @${userName} for subscribing to the channel for a total of ${months} months!`,
-      )
-    })
-    bot.onSubGift(({ broadcasterName, gifterName, userName }) => {
-      void bot.say(
-        broadcasterName,
-        `Thanks to @${gifterName} for gifting a subscription to @${userName}!`,
-      )
-    })
+    setInterval(
+      () => {
+        bot.announce(
+          this.channel,
+          "Базовые команды: !рубить, !добыть. Спасибо всем участникам сбора на клевый веб-сайт! :D",
+          "orange",
+        )
+      },
+      1000 * 60 * 30,
+    )
 
     return bot
   }

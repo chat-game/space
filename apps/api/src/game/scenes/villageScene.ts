@@ -1,18 +1,15 @@
-import type { Group } from "../common"
 import type { Game } from "../game"
 import { Rabbit, Wolf } from "../objects"
 import { GameScene } from "./gameScene"
 
 interface IVillageSceneOptions {
   game: Game
-  group: Group | undefined
 }
 
 export class VillageScene extends GameScene {
-  constructor({ game, group }: IVillageSceneOptions) {
+  constructor({ game }: IVillageSceneOptions) {
     super({
       game,
-      group,
     })
 
     void this.init()

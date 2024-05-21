@@ -7,6 +7,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model TwitchAccessToken {
+  userId              String   @id
+  accessToken         String
+  refreshToken        String?
+  scope               String[]
+  expiresIn           Int?
+  obtainmentTimestamp String
+}
+
 model Village {
   id                  String   @id
   createdAt           DateTime @default(now())

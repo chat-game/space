@@ -576,7 +576,7 @@ export class Game extends Container {
     if (event === "GROUP_FORM_STARTED") {
       this.audio.playRaidSound()
     }
-    if (event === "ADVENTURE_QUEST_STARTED") {
+    if (event === "MAIN_QUEST_STARTED") {
       this.audio.playRaidSound()
     }
     if (event === "SCENE_CHANGED") {

@@ -18,7 +18,7 @@ export class PollService {
   }
 
   public update() {
-    for (const event of this.scene.events) {
+    for (const event of this.scene.eventService.events) {
       if (!event.poll || event.poll.status !== "ACTIVE") {
         continue
       }
@@ -30,7 +30,7 @@ export class PollService {
   }
 
   public findActivePollAndVote(pollId: string, player: Player) {
-    for (const event of this.scene.events) {
+    for (const event of this.scene.eventService.events) {
       if (event.poll && event.poll?.id === pollId) {
         const voted = this.vote(event.poll, player)
         if (!voted) {
@@ -44,8 +44,12 @@ export class PollService {
   }
 
   public create(votesToSuccess: number): IGamePoll {
+    const id = this.generatePollId()
+    const commandToVote = `!го ${id}`
+
     return {
-      id: this.generatePollId(),
+      id,
+      commandToVote,
       status: "ACTIVE",
       votes: [],
       votesToSuccess,
@@ -63,7 +67,7 @@ export class PollService {
 
   private generatePollId(): string {
     const id = getRandomInRange(10, 99).toString()
-    for (const event of this.scene.events) {
+    for (const event of this.scene.eventService.events) {
       if (event.poll?.id === id) {
         return this.generatePollId()
       }

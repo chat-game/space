@@ -49,7 +49,7 @@ export class UnitInterface extends GraphicsContainer {
     )
 
     this.drawUserName()
-    this.drawCoins()
+    //this.drawCoins()
     this.drawWood()
     this.drawStone()
     this.drawAxe()
@@ -62,7 +62,7 @@ export class UnitInterface extends GraphicsContainer {
   rebuild() {
     this.children = []
     this.drawUserName()
-    this.drawCoins()
+    //this.drawCoins()
     this.drawWood()
     this.drawStone()
     this.drawAxe()
@@ -210,19 +210,19 @@ export class UnitInterface extends GraphicsContainer {
     woodSprite.width = 32
     woodSprite.height = 32
 
-    const basicText = new Text({
-      text: this.wood,
-      style: {
-        fontSize: 12,
-        fill: 0xfef3c7,
-        align: "left",
-      },
-    })
+    // const basicText = new Text({
+    //   text: this.wood,
+    //   style: {
+    //     fontSize: 12,
+    //     fill: 0xfef3c7,
+    //     align: "left",
+    //   },
+    // })
+    //
+    // basicText.x = 6
+    // basicText.y = 16
 
-    basicText.x = 6
-    basicText.y = 16
-
-    container.addChild(woodSprite, basicText)
+    container.addChild(woodSprite)
 
     container.x = -18
     container.y = -48
@@ -237,19 +237,19 @@ export class UnitInterface extends GraphicsContainer {
     woodSprite.width = 32
     woodSprite.height = 32
 
-    const basicText = new Text({
-      text: this.stone,
-      style: {
-        fontSize: 12,
-        fill: 0xfef3c7,
-        align: "left",
-      },
-    })
+    // const basicText = new Text({
+    //   text: this.stone,
+    //   style: {
+    //     fontSize: 12,
+    //     fill: 0xfef3c7,
+    //     align: "left",
+    //   },
+    // })
+    //
+    // basicText.x = 6
+    // basicText.y = 16
 
-    basicText.x = 6
-    basicText.y = 16
-
-    container.addChild(woodSprite, basicText)
+    container.addChild(woodSprite)
 
     container.x = -18
     container.y = -48

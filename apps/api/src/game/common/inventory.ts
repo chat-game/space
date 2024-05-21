@@ -1,7 +1,7 @@
 import { createId } from "@paralleldrive/cuid2"
 import type {
   IGameInventory,
-  InventoryItem,
+  IGameInventoryItem,
   ItemType,
 } from "../../../../../packages/api-sdk/src"
 import { db } from "../../db/db.client"
@@ -15,7 +15,7 @@ interface IInventoryOptions {
 export class Inventory implements IGameInventory {
   public id: string
   public objectId: string
-  public items: InventoryItem[] = []
+  public items: IGameInventoryItem[] = []
   public saveInDb: boolean
 
   constructor({ id, objectId, saveInDb }: IInventoryOptions) {
@@ -101,7 +101,7 @@ export class Inventory implements IGameInventory {
     return this.checkIfAlreadyHaveItemInDB(this.id, type)
   }
 
-  async checkAndBreakItem(item: InventoryItem, decrement: number) {
+  async checkAndBreakItem(item: IGameInventoryItem, decrement: number) {
     if (item.durability <= decrement) {
       await this.destroyItemInDB(item.id)
       await this.updateFromDB()
@@ -161,7 +161,7 @@ export class Inventory implements IGameInventory {
   }
 
   createItem(type: ItemType, amount: number) {
-    const item: InventoryItem = {
+    const item: IGameInventoryItem = {
       id: createId(),
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -177,6 +177,6 @@ export class Inventory implements IGameInventory {
     const items = await db.inventoryItem.findMany({
       where: { inventoryId: this.id },
     })
-    this.items = items as InventoryItem[]
+    this.items = items as IGameInventoryItem[]
   }
 }

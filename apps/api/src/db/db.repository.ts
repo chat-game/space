@@ -1,5 +1,8 @@
 import { createId } from "@paralleldrive/cuid2"
-import { getRandomInRange } from "../../../../packages/api-sdk/src"
+import {
+  type TwitchAccessToken,
+  getRandomInRange,
+} from "../../../../packages/api-sdk/src"
 import { db } from "./db.client"
 
 export class DBRepository {
@@ -7,6 +10,41 @@ export class DBRepository {
 
   constructor() {
     this.db = db
+  }
+
+  async getTwitchAccessToken(
+    userId: string,
+  ): Promise<TwitchAccessToken | null> {
+    const token = await db.twitchAccessToken.findUnique({
+      where: { userId },
+    })
+    if (!token) {
+      return null
+    }
+
+    return {
+      ...token,
+      obtainmentTimestamp: Number(token.obtainmentTimestamp),
+    }
+  }
+
+  updateTwitchAccessToken(userId: string, token: Partial<TwitchAccessToken>) {
+    return db.twitchAccessToken.update({
+      where: { userId },
+      data: {
+        ...token,
+        obtainmentTimestamp: token.obtainmentTimestamp?.toString(),
+      },
+    })
+  }
+
+  createTwitchAccessToken(token: TwitchAccessToken) {
+    return db.twitchAccessToken.create({
+      data: {
+        ...token,
+        obtainmentTimestamp: token.obtainmentTimestamp.toString(),
+      },
+    })
   }
 
   findVillage() {

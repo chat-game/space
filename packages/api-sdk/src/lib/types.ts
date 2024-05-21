@@ -1,15 +1,34 @@
+export interface TwitchAccessTokenResponse {
+  access_token: string
+  refresh_token: string
+  scope: string[]
+  expires_in: number
+  token_type: "bearer"
+}
+
+export interface TwitchAccessToken {
+  userId: string
+  accessToken: string
+  refreshToken: string | null
+  scope: string[]
+  expiresIn: number | null
+  obtainmentTimestamp: number
+}
+
 export type IGameSceneAction =
   | "HELP"
   | "GIFT"
-  | "SELL"
-  | "BUY"
+  | "TRADE"
   | "DONATE"
   | "REFUEL"
+  | "STEAL_FUEL"
   | "CHOP"
   | "MINE"
   | "START_GROUP_BUILD"
   | "DISBAND_GROUP"
   | "JOIN_GROUP"
+  | "START_POLL"
+  | "VOTE"
   | "START_CHANGING_SCENE"
   | "START_RAID"
   | "CREATE_NEW_PLAYER"
@@ -17,15 +36,15 @@ export type IGameSceneAction =
   | "SHOW_MESSAGE"
   | "GITHUB"
 
-export type ItemType = "WOOD" | "STONE" | "AXE" | "PICKAXE"
+export type ItemType = "WOOD" | "STONE" | "AXE" | "PICKAXE" | "COIN"
 
 export interface IGameInventory {
   id: string
   objectId: string
-  items: InventoryItem[]
+  items: IGameInventoryItem[]
 }
 
-export interface InventoryItem {
+export interface IGameInventoryItem {
   id: string
   createdAt: Date
   updatedAt: Date
@@ -47,24 +66,27 @@ export interface IGameSkill {
 export interface IGameQuest {
   id: string
   type: "MAIN" | "SIDE"
+  title: string
+  description: string
   tasks: IGameQuestTask[]
   status: "INACTIVE" | "ACTIVE" | "FAILED" | "SUCCESS"
   creatorId: string
-  chunks?: number
-  limitSeconds?: number
+  conditions: {
+    chunks?: number
+    limitSeconds?: number
+    reward?: string
+  }
 }
 
 export interface IGameQuestTask {
   id: string
   description: string
-  status: "CHECK_AT_FINISH" | "ACTIVE" | "DONE" | "FAILED"
+  status: "INACTIVE" | "ACTIVE" | "FAILED" | "SUCCESS"
   progressNow: number | boolean
   progressToSuccess: number | boolean
-  updateProgress: (progressToSuccess?: number | boolean) => {
-    status: "ACTIVE" | "DONE" | "FAILED"
-    progressNow?: number | boolean
-    progressToSuccess?: number | boolean
-  }
+  updateProgress: (
+    progressToSuccess?: IGameQuestTask["progressToSuccess"],
+  ) => Partial<IGameQuestTask>
 }
 
 export interface IGameChunk {
@@ -141,9 +163,10 @@ export interface WebSocketMessage {
     | "SCENE_CHANGING_STARTED"
     | "COUNTDOWN_NEXT_WAVE_STARTED"
     | "SCENE_CHANGED"
-    | "VOTING_FOR_NEW_ADVENTURE_STARTED"
-    | "VILLAGE_QUEST_STARTED"
-    | "ADVENTURE_QUEST_STARTED"
+    | "VOTING_FOR_NEW_MAIN_QUEST_STARTED"
+    | "MAIN_QUEST_STARTED"
+    | "SIDE_QUEST_STARTED"
+    | "TRADE_STARTED"
   object?: Partial<IGameObject>
 }
 
@@ -188,6 +211,7 @@ export interface IGameObjectFlag extends IGameObject {
     | "SPAWN_LEFT"
     | "SPAWN_RIGHT"
     | "OUT_OF_SCREEN"
+    | "TRADE_POINT"
 }
 
 export interface IGameObjectWater extends IGameObject {}
@@ -264,6 +288,15 @@ export interface IGameObjectRabbit extends IGameObject {}
 
 export interface IGameObjectWolf extends IGameObject {}
 
+export interface ITradeOffer {
+  id: string
+  type: "BUY" | "SELL"
+  amount: number
+  unitPrice: number
+  item: ItemType
+  commandToTrade: string
+}
+
 export interface IGameScript {
   id: string
   tasks: IGameTask[]
@@ -285,11 +318,13 @@ export interface IGameEvent {
   endsAt: Date
   poll?: IGamePoll
   quest?: IGameQuest
+  offers?: ITradeOffer[]
 }
 
 export interface IGamePoll {
   status: "ACTIVE" | "SUCCESS" | "FINISHED"
   id: string
+  commandToVote: string
   votesToSuccess: number
   votes: { id: string; userName: string }[]
 }
@@ -301,14 +336,14 @@ export interface GetSceneResponse {
   commands: string[]
   chunk: IGameChunk | null
   events: IGameEvent[]
-  group: IGameGroup | undefined
-  wagon: IGameObjectWagon | undefined
+  group: IGameGroup
+  wagon: IGameObjectWagon
   route: IGameRoute | null
+  warehouseItems: IGameInventoryItem[] | undefined
 }
 
 export interface IGameGroup {
   id: string
-  target: GameSceneType
   players: IGameObjectPlayer[]
 }
 

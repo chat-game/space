@@ -1,19 +1,15 @@
 import { createId } from "@paralleldrive/cuid2"
 import {
-  type GameSceneType,
   type GetSceneResponse,
   type IGameChunk,
   type IGameChunkTheme,
-  type IGameEvent,
-  type IGamePoll,
-  type IGameQuest,
-  type IGameRoute,
+  type IGameInventoryItem,
   getDateMinusMinutes,
   getRandomInRange,
 } from "../../../../../packages/api-sdk/src"
 import { SERVER_TICK_MS } from "../../config"
-import { Forest, type GameChunk, LakeChunk, Village } from "../chunks"
-import { Event, type Group, Route } from "../common"
+import { type GameChunk, Village } from "../chunks"
+import { Group, Route } from "../common"
 import type { Game } from "../game"
 import {
   Flag,
@@ -21,49 +17,50 @@ import {
   type Rabbit,
   Stone,
   Tree,
-  Wagon,
   type Wolf,
 } from "../objects"
 import { Player, Raider } from "../objects/units"
 import { Trader } from "../objects/units/trader"
 import { ChopTreeScript } from "../scripts/chopTreeScript"
-import { MoveToRandomTargetScript } from "../scripts/moveToRandomTargetScript"
 import { ActionService } from "../services/actionService"
 import { EventService } from "../services/eventService"
+import { TradeService } from "../services/tradeService"
+import { WagonService } from "../services/wagonService"
 
 interface IGameSceneOptions {
   game: Game
-  group: Group | undefined
 }
 
 export class GameScene {
   public id: string
   public game: Game
   public objects: GameObject[] = []
-  public group: Group | undefined
-  public events: Event[] = []
+  public group: Group
   public chunks: GameChunk[] = []
   public chunkNow: GameChunk | undefined
-  public route: Route | undefined
 
-  // Services
   public actionService: ActionService
   public eventService: EventService
+  public tradeService: TradeService
+  public wagonService: WagonService
 
-  constructor({ game, group }: IGameSceneOptions) {
+  constructor({ game }: IGameSceneOptions) {
     this.id = createId()
     this.game = game
-    this.group = group
+    this.group = new Group()
 
     this.actionService = new ActionService({ scene: this })
     this.eventService = new EventService({ scene: this })
+    this.tradeService = new TradeService({ scene: this })
+    this.wagonService = new WagonService({ scene: this })
   }
 
   public async play() {
     return setInterval(() => {
       this.eventService.update()
+      this.tradeService.update()
+      this.wagonService.update()
       this.updateObjects()
-      this.updateRoute()
       this.updateChunks()
       this.updateChunkNow()
     }, SERVER_TICK_MS)
@@ -71,46 +68,6 @@ export class GameScene {
 
   destroy() {
     this.objects = []
-  }
-
-  initEvent({
-    title,
-    type,
-    secondsToEnd,
-    scene,
-    poll,
-    quest,
-  }: {
-    title: string
-    type: IGameEvent["type"]
-    secondsToEnd: number
-    scene?: GameSceneType
-    poll?: IGamePoll
-    quest?: IGameQuest
-  }) {
-    this.events.push(
-      new Event({
-        game: this.game,
-        title,
-        type,
-        secondsToEnd,
-        scene,
-        poll,
-        quest,
-      }),
-    )
-  }
-
-  getEvents(): IGameEvent[] {
-    return this.events.map((event) => ({
-      id: event.id,
-      title: event.title,
-      type: event.type,
-      status: event.status,
-      endsAt: event.endsAt,
-      poll: event.poll,
-      quest: event.quest,
-    }))
   }
 
   getChunkNow(): IGameChunk | null {
@@ -128,33 +85,33 @@ export class GameScene {
     }
   }
 
-  getRoute(): IGameRoute | null {
-    if (!this.route) {
-      return null
+  getWarehouseItems(): IGameInventoryItem[] | undefined {
+    if (this.chunkNow instanceof Village) {
+      const warehouse = this.chunkNow.getWarehouse()
+      if (warehouse) {
+        return warehouse.inventory.items
+      }
     }
 
-    return {
-      startPoint: this.route.startPoint,
-      endPoint: this.route.endPoint,
-      chunks: this.route.chunks,
-    }
+    return undefined
   }
 
   getInfo(): GetSceneResponse {
     return {
       id: this.id,
       commands: this.actionService.getAvailableCommands(),
-      events: this.getEvents(),
+      events: this.eventService.getEvents(),
       group: this.group,
-      wagon: this.getWagon(),
+      wagon: this.wagonService.wagon,
       chunk: this.getChunkNow(),
-      route: this.getRoute(),
+      route: this.wagonService.routeService.getRoute(),
+      warehouseItems: this.getWarehouseItems(),
     }
   }
 
   updateObjects() {
     this.removeInactivePlayers()
-    const wagon = this.getWagon()
+    const wagon = this.wagonService.wagon
 
     for (const obj of this.objects) {
       this.removeDestroyedObject(obj)
@@ -168,12 +125,8 @@ export class GameScene {
         y: obj.y,
       })
 
-      if (obj instanceof Wagon) {
-        this.updateWagon(obj)
-        continue
-      }
       if (obj instanceof Trader) {
-        this.updateTrader(obj)
+        this.tradeService.updateTrader(obj)
         continue
       }
       if (obj instanceof Player) {
@@ -189,18 +142,8 @@ export class GameScene {
     }
   }
 
-  updateRoute() {
-    if (!this.route?.flags || this.route.flags.length <= 0) {
-      return this.finishAdventure()
-    }
-
-    for (const flag of this.route.flags) {
-      void flag.live()
-    }
-  }
-
   updateChunks() {
-    const wagon = this.getWagon()
+    const wagon = this.wagonService.wagon
 
     for (const chunk of this.chunks) {
       for (const object of chunk.objects) {
@@ -225,7 +168,7 @@ export class GameScene {
   updateChunkNow() {
     this.chunkNow = undefined
 
-    const wagon = this.getWagon()
+    const wagon = this.wagonService.wagon
 
     for (const chunk of this.chunks) {
       const isWagonOnThisChunk = chunk.checkIfPointIsInArea({
@@ -236,95 +179,6 @@ export class GameScene {
         this.chunkNow = chunk
       }
     }
-
-    if (this.chunkNow instanceof Village) {
-      const store = this.chunkNow.getStore()
-      const trader = this.getTrader()
-      if (store?.id && !trader?.id) {
-        this.generateNewTrader()
-      }
-    }
-  }
-
-  getTrader() {
-    return this.objects.find((obj) => obj instanceof Trader) as
-      | Trader
-      | undefined
-  }
-
-  updateTrader(object: Trader) {
-    object.live()
-
-    if (!object.script) {
-      const random = getRandomInRange(1, 150)
-      if (random <= 1) {
-        const target = this.getWagon().findRandomNearFlag()
-        object.script = new MoveToRandomTargetScript({
-          object,
-          target,
-        })
-      }
-    }
-  }
-
-  getWagon() {
-    return this.objects.find((obj) => obj instanceof Wagon) as Wagon
-  }
-
-  updateWagon(object: Wagon) {
-    const collisionObjects =
-      this.chunkNow?.objects.filter(
-        (obj) => obj.isOnWagonPath && obj.state !== "DESTROYED",
-      ) ?? []
-    for (const collisionObject of collisionObjects) {
-      const isInArea = object.checkIfPointInCollisionArea({
-        x: collisionObject.x,
-        y: collisionObject.y,
-      })
-      if (isInArea) {
-        object.state = "WAITING"
-        object.speed = 0
-        object.handleChange()
-        return
-      }
-    }
-
-    if (object.fuel <= 1) {
-      object.state = "WAITING"
-      object.speed = 0
-      object.handleChange()
-      return
-    }
-
-    if (object.state === "WAITING") {
-      object.state = "IDLE"
-    }
-    if (object.state === "IDLE") {
-      const target = this.route?.getNextFlag()
-      if (target) {
-        object.target = target
-        object.state = "MOVING"
-      }
-    }
-    if (object.state === "MOVING") {
-      object.speed = 0.5
-      const isMoving = object.move()
-      object.handleChange()
-
-      if (!isMoving) {
-        if (
-          object.target instanceof Flag &&
-          object.target.type === "WAGON_MOVEMENT"
-        ) {
-          this.route?.removeFlag(object.target)
-          object.target = undefined
-          object.state = "IDLE"
-          object.speed = 0
-        }
-      }
-    }
-
-    object.live()
   }
 
   updatePlayer(object: Player) {
@@ -333,7 +187,7 @@ export class GameScene {
     if (object.state === "IDLE") {
       const random = getRandomInRange(1, 150)
       if (random <= 1) {
-        const randObj = this.getWagon().findRandomNearFlag()
+        const randObj = this.wagonService.findRandomNearFlag()
         if (!randObj) {
           return
         }
@@ -494,8 +348,10 @@ export class GameScene {
           continue
         }
 
-        player.target = this.getWagon().findRandomOutFlag()
+        player.target = this.wagonService.findRandomOutFlag()
         player.state = "MOVING"
+
+        this.group.remove(player)
       }
     }
   }
@@ -511,7 +367,7 @@ export class GameScene {
     await instance.init()
     await instance.initInventoryFromDB()
 
-    const flag = this.getWagon().findRandomOutFlag()
+    const flag = this.wagonService.findRandomOutFlag()
     instance.x = flag.x
     instance.y = flag.y
 
@@ -528,22 +384,6 @@ export class GameScene {
     return player
   }
 
-  async stealFuelAction(playerId: string) {
-    this.getWagon().emptyFuel()
-
-    const player = await this.findOrCreatePlayer(playerId)
-    if (!player) {
-      return
-    }
-
-    await player.addVillainPoints(1)
-
-    return {
-      ok: true,
-      message: `${player.userName}, а ты Злодей!`,
-    }
-  }
-
   getTreeToChop() {
     // Part 1: Check trees on Wagon Path
     const onlyOnPath = this.chunkNow?.objects.filter(
@@ -554,8 +394,10 @@ export class GameScene {
         obj.isOnWagonPath,
     )
     if (onlyOnPath && onlyOnPath.length > 0) {
-      const wagon = this.getWagon()
-      return this.determineNearestObject(wagon, onlyOnPath) as Tree
+      return this.determineNearestObject(
+        this.wagonService.wagon,
+        onlyOnPath,
+      ) as Tree
     }
 
     // Part 2: Check nearest free tree
@@ -567,8 +409,7 @@ export class GameScene {
         obj.isReadyToChop,
     )
     if (other && other.length > 0) {
-      const wagon = this.getWagon()
-      return this.determineNearestObject(wagon, other) as Tree
+      return this.determineNearestObject(this.wagonService.wagon, other) as Tree
     }
   }
 
@@ -582,8 +423,10 @@ export class GameScene {
         obj.isOnWagonPath,
     )
     if (onlyOnPath && onlyOnPath.length > 0) {
-      const wagon = this.getWagon()
-      return this.determineNearestObject(wagon, onlyOnPath) as Stone
+      return this.determineNearestObject(
+        this.wagonService.wagon,
+        onlyOnPath,
+      ) as Stone
     }
 
     // Part 2: Check nearest free
@@ -592,8 +435,10 @@ export class GameScene {
         obj instanceof Stone && obj.state !== "DESTROYED" && !obj.isReserved,
     )
     if (other && other.length > 0) {
-      const wagon = this.getWagon()
-      return this.determineNearestObject(wagon, other) as Stone
+      return this.determineNearestObject(
+        this.wagonService.wagon,
+        other,
+      ) as Stone
     }
   }
 
@@ -619,145 +464,20 @@ export class GameScene {
   }
 
   initRaiders(count: number) {
-    const wagon = this.getWagon()
-
     for (let i = 0; i < count; i++) {
-      const flag = wagon.findRandomOutFlag()
+      const flag = this.wagonService.findRandomOutFlag()
 
       this.objects.push(new Raider({ x: flag.x, y: flag.y }))
     }
   }
 
   public stopRaid() {
-    const flag = this.getWagon().findRandomOutFlag()
+    const flag = this.wagonService.findRandomOutFlag()
 
     for (const obj of this.objects) {
       if (obj instanceof Raider) {
         obj.moveOutOfScene(flag)
       }
-    }
-  }
-
-  generateRandomVillage({
-    center,
-    width,
-    height,
-    theme,
-  }: {
-    center: { x: number; y: number }
-    width: number
-    height: number
-    theme: IGameChunkTheme
-  }) {
-    const village = new Village({ width, height, center, theme })
-    this.chunks.push(village)
-    return village
-  }
-
-  generateRandomForest({
-    center,
-    width,
-    height,
-    theme,
-  }: {
-    center: { x: number; y: number }
-    width: number
-    height: number
-    theme: IGameChunkTheme
-  }) {
-    const forest = new Forest({ width, height, center, theme })
-    this.chunks.push(forest)
-    return forest
-  }
-
-  generateRandomLake({
-    center,
-    width,
-    height,
-    theme,
-  }: {
-    center: { x: number; y: number }
-    width: number
-    height: number
-    theme: IGameChunkTheme
-  }) {
-    const lake = new LakeChunk({ width, height, center, theme })
-    this.chunks.push(lake)
-    return lake
-  }
-
-  generateAdventure(village: Village, chunks: number) {
-    const wagonStartPoint = village.getWagonStopPoint()
-    const villageOutPoint = village.getRandomOutPointOnRight()
-
-    this.route = new Route()
-    this.route.addGlobalFlag(wagonStartPoint)
-    this.route.startPoint = wagonStartPoint
-    this.route.addChunk(village)
-
-    this.generateChunks({ x: villageOutPoint.x, y: villageOutPoint.y }, chunks)
-    this.markObjectsAsOnWagonPath(this.route)
-  }
-
-  finishAdventure() {
-    this.route = undefined
-    this.getWagon().emptyCargo()
-  }
-
-  generateChunks(startPoint: { x: number; y: number }, amount: number) {
-    let outPoint = startPoint
-
-    for (let i = 1; i <= amount; i++) {
-      const chunk = this.generateRandomChunk(outPoint)
-      if (!chunk) {
-        continue
-      }
-
-      outPoint = chunk.getRandomOutPointOnRight()
-      this.route?.addGlobalFlag(outPoint)
-      this.route?.addChunk(chunk)
-    }
-
-    // Generate last chunk
-    const finalVillage = this.generateRandomVillage({
-      center: { x: outPoint.x + 2500 / 2, y: outPoint.y },
-      width: 2500,
-      height: 2000,
-      theme: this.getRandomTheme(),
-    })
-    const stopPoint = finalVillage.getWagonStopPoint()
-    this.route?.addGlobalFlag(stopPoint)
-    this.route?.addChunk(finalVillage)
-    this.route?.setEndPoint(stopPoint)
-  }
-
-  generateRandomChunk(startPoint: { x: number; y: number }) {
-    const random = getRandomInRange(1, 2)
-
-    const width = getRandomInRange(1500, 2500)
-    const height = getRandomInRange(2200, 3000)
-    const center = {
-      x: startPoint.x + width / 2,
-      y: startPoint.y,
-    }
-
-    switch (random) {
-      case 1:
-        return this.generateRandomForest({
-          center: center,
-          width: width,
-          height: height,
-          theme: this.getRandomTheme(),
-        })
-      case 2:
-        return this.generateRandomLake({
-          center: center,
-          width: width,
-          height: height,
-          theme: this.getRandomTheme(),
-        })
-      default:
-        return undefined
     }
   }
 
@@ -771,22 +491,6 @@ export class GameScene {
       "TOXIC",
     ]
     return themes[Math.floor(Math.random() * themes.length)]
-  }
-
-  markObjectsAsOnWagonPath(route: Route) {
-    for (const chunk of this.chunks) {
-      for (const object of chunk.objects) {
-        if (object instanceof Tree || object instanceof Stone) {
-          const isOnPath = route.checkIfPointIsOnWagonPath({
-            x: object.x,
-            y: object.y,
-          })
-          if (isOnPath) {
-            object.isOnWagonPath = true
-          }
-        }
-      }
-    }
   }
 
   findRandomMovementFlag() {
@@ -809,15 +513,5 @@ export class GameScene {
     return flags.length > 0
       ? flags[Math.floor(Math.random() * flags.length)]
       : undefined
-  }
-
-  generateNewTrader() {
-    const target = this.getWagon().findRandomOutFlag()
-    this.objects.push(
-      new Trader({
-        x: target.x,
-        y: target.y,
-      }),
-    )
   }
 }

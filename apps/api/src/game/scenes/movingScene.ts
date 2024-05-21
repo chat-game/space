@@ -1,18 +1,14 @@
-import type { Group } from "../common"
 import type { Game } from "../game"
-import { Wagon } from "../objects"
 import { GameScene } from "./gameScene"
 
 interface IMovingSceneOptions {
   game: Game
-  group: Group | undefined
 }
 
 export class MovingScene extends GameScene {
-  constructor({ game, group }: IMovingSceneOptions) {
+  constructor({ game }: IMovingSceneOptions) {
     super({
       game,
-      group,
     })
 
     void this.init()
@@ -22,7 +18,7 @@ export class MovingScene extends GameScene {
     const village = this.initStartingVillage()
     const wagonStartPoint = village.getWagonStopPoint()
 
-    this.initWagon(wagonStartPoint)
+    this.wagonService.initWagon(wagonStartPoint)
     await this.initGroupPlayers()
 
     void this.play()
@@ -39,12 +35,15 @@ export class MovingScene extends GameScene {
         y: Math.round(height / 2),
       },
     }
-    return this.generateRandomVillage({
+    const village = this.wagonService.routeService.generateRandomVillage({
       center: area.center,
       width: area.width,
       height: area.height,
       theme: this.getRandomTheme(),
     })
+    this.chunks.push(village)
+
+    return village
   }
 
   async initGroupPlayers() {
@@ -56,10 +55,5 @@ export class MovingScene extends GameScene {
       const instance = await this.initPlayer(player.id)
       this.objects.push(instance)
     }
-  }
-
-  initWagon({ x, y }: { x: number; y: number }) {
-    const wagon = new Wagon({ x, y })
-    this.objects.push(wagon)
   }
 }

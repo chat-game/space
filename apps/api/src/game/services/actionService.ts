@@ -62,10 +62,14 @@ export class ActionService {
       "CHOP",
       "MINE",
       "GIFT",
+      "TRADE",
       "DONATE",
       "START_GROUP_BUILD",
       "DISBAND_GROUP",
       "JOIN_GROUP",
+      "START_POLL",
+      "VOTE",
+      "STEAL_FUEL",
       "START_CHANGING_SCENE",
       "CREATE_NEW_PLAYER",
       "START_CREATING_NEW_ADVENTURE",
@@ -83,6 +87,8 @@ export class ActionService {
     if (!player) {
       return ANSWER.NO_PLAYER_ERROR
     }
+
+    this.scene.group.join(player)
 
     if (action === "SHOW_MESSAGE") {
       return this.showMessageAction(player, params)
@@ -120,8 +126,11 @@ export class ActionService {
       }
       return this.disbandGroupAction()
     }
-    if (action === "JOIN_GROUP") {
-      return this.joinGroupAction(player, params)
+    if (action === "VOTE") {
+      return this.voteAction(player, params)
+    }
+    if (action === "STEAL_FUEL") {
+      return this.stealFuelAction(player)
     }
     if (action === "HELP") {
       return this.helpAction(player)
@@ -135,11 +144,8 @@ export class ActionService {
     if (action === "GIFT") {
       return this.giftAction(player, params)
     }
-    if (action === "SELL") {
-      return this.sellAction(player, params)
-    }
-    if (action === "BUY") {
-      return this.buyAction(player, params)
+    if (action === "TRADE") {
+      return this.tradeAction(player, params)
     }
 
     return ANSWER.ERROR
@@ -160,12 +166,6 @@ export class ActionService {
       if (action === "MINE") {
         commands.push("!добыть")
       }
-      if (action === "BUY") {
-        commands.push("!купить [название]")
-      }
-      if (action === "SELL") {
-        commands.push("!продать [название]")
-      }
       if (action === "GIFT") {
         commands.push("!подарить [название] [кол-во]")
       }
@@ -185,7 +185,7 @@ export class ActionService {
     // First param is raidersCount
     const raidersCount = params ? Number(params[0]) : 0
 
-    this.scene.initEvent({
+    this.scene.eventService.init({
       title: "Начался рейд!",
       type: "RAID_STARTED",
       secondsToEnd: 60 * 5,
@@ -211,6 +211,21 @@ export class ActionService {
     player.addMessage(message)
 
     return ANSWER.OK
+  }
+
+  private async stealFuelAction(player: Player) {
+    if (!this.isActionPossible("STEAL_FUEL")) {
+      return ANSWER.CANT_DO_THIS_NOW_ERROR
+    }
+
+    this.scene.wagonService.wagon.emptyFuel()
+
+    await player.addVillainPoints(1)
+
+    return {
+      ok: true,
+      message: `${player.userName}, а ты Злодей!`,
+    }
   }
 
   private async refuelAction(player: Player, params?: string[]) {
@@ -249,7 +264,7 @@ export class ActionService {
 
     await player.addRefuellerPoints(count)
 
-    this.scene.getWagon().refuel(count)
+    this.scene.wagonService.wagon.refuel(count)
 
     return {
       ok: true,
@@ -327,7 +342,7 @@ export class ActionService {
       return ANSWER.NO_TARGET_ERROR
     }
 
-    this.scene.initEvent({
+    this.scene.eventService.init({
       type: "SCENE_CHANGING_STARTED",
       title: "Меняем локацию",
       scene,
@@ -362,9 +377,9 @@ export class ActionService {
       return ANSWER.NO_TARGET_ERROR
     }
 
-    this.scene.group = new Group({ creator: player, target: scene })
+    this.scene.group = new Group()
 
-    this.scene.initEvent({
+    this.scene.eventService.init({
       type: "GROUP_FORM_STARTED",
       title: "Идет набор в группу!",
       scene,
@@ -380,7 +395,6 @@ export class ActionService {
     }
 
     this.scene.group?.disband()
-    this.scene.group = undefined
 
     return {
       ok: true,
@@ -388,8 +402,8 @@ export class ActionService {
     }
   }
 
-  private joinGroupAction(player: Player, params?: string[]) {
-    if (!this.isActionPossible("JOIN_GROUP")) {
+  private voteAction(player: Player, params?: string[]) {
+    if (!this.isActionPossible("VOTE")) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
 
@@ -422,7 +436,7 @@ export class ActionService {
 
     return {
       ok: true,
-      message: `${player.userName}, это интерактивная игра-чат, в которой может участвовать любой зритель! Пиши команды (примеры на экране) для управления своим юнитом. Вступай в наше комьюнити: ${DISCORD_SERVER_INVITE_URL}`,
+      message: `${player.userName}, это интерактивная игра-чат, в которой может участвовать любой зритель! Базовые команды: !рубить, !добыть. Остальные команды появляются в событиях (на экране справа). Вступай в наше комьюнити: ${DISCORD_SERVER_INVITE_URL}`,
     }
   }
 
@@ -538,139 +552,38 @@ export class ActionService {
     return null
   }
 
-  private async sellAction(player: Player, params: string[] | undefined) {
-    if (!this.isActionPossible("SELL")) {
+  private async tradeAction(player: Player, params: string[] | undefined) {
+    if (!this.isActionPossible("TRADE")) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
 
     if (!params) {
+      return ANSWER.NO_TARGET_ERROR
+    }
+
+    const amount = this.getAmountFromChatCommand(params[1])
+    if (!amount) {
+      return ANSWER.WRONG_AMOUNT_ERROR
+    }
+
+    const status = await this.scene.tradeService.findActiveOfferAndTrade(
+      params[0],
+      amount,
+      player,
+    )
+    if (status === "OFFER_ERROR") {
       return {
         ok: false,
-        message: `${player.userName}, укажи конкретнее, например: !продать древесину`,
+        message: "Что-то не так. Сделка не состоялась",
       }
     }
-
-    const item = this.getItemTypeFromChatCommand(params[0])
-    if (!item) {
-      return {
-        ok: false,
-        message: `${player.userName}, укажи конкретнее, например: !продать древесину`,
-      }
-    }
-
-    const items = player.inventory?.items ?? []
-
-    if (item === "WOOD") {
-      const itemExist = items.find((item) => item.type === "WOOD")
-      if (!itemExist) {
-        return {
-          ok: false,
-          message: `${player.userName}, у тебя нет древесины.`,
-        }
-      }
-
-      await player.updateCoins(itemExist.amount)
-      await player.inventory?.destroyItemInDB(itemExist.id)
-
-      return {
-        ok: true,
-        message: `${player.userName}, ты продал(а) всю древесину торговцу!`,
-      }
-    }
-    if (item === "STONE") {
-      const itemExist = items.find((item) => item.type === "STONE")
-      if (!itemExist) {
-        return {
-          ok: false,
-          message: `${player.userName}, у тебя нет камня.`,
-        }
-      }
-
-      await player.updateCoins(itemExist.amount)
-      await player.inventory?.destroyItemInDB(itemExist.id)
-
-      return {
-        ok: true,
-        message: `${player.userName}, ты продал(а) все камни торговцу!`,
-      }
+    if (status === "OFFER_NOT_FOUND") {
+      return ANSWER.NO_TARGET_ERROR
     }
 
     return {
-      ok: false,
-      message: `${player.userName}, укажи конкретнее, например: !продать древесину`,
-    }
-  }
-
-  private async buyAction(player: Player, params: string[] | undefined) {
-    if (!this.isActionPossible("BUY")) {
-      return ANSWER.CANT_DO_THIS_NOW_ERROR
-    }
-
-    if (!params) {
-      return {
-        ok: false,
-        message: `${player.userName}, укажи конкретнее, например: !купить топор`,
-      }
-    }
-
-    const item = this.getItemTypeFromChatCommand(params[0])
-    if (!item) {
-      return {
-        ok: false,
-        message: `${player.userName}, укажи конкретнее, например: !купить топор`,
-      }
-    }
-
-    const items = player.inventory?.items ?? []
-
-    if (item === "AXE") {
-      const itemExist = items.find((item) => item.type === "AXE")
-      if (itemExist) {
-        return {
-          ok: false,
-          message: `${player.userName}, у тебя уже есть топор.`,
-        }
-      }
-
-      const result = await player.buyItemFromDealer("AXE", 10, 1)
-      if (!result) {
-        return {
-          ok: false,
-          message: `${player.userName}, неа.`,
-        }
-      }
-
-      return {
-        ok: true,
-        message: `${player.userName}, ты купил(а) топор у торговца!`,
-      }
-    }
-    if (item === "PICKAXE") {
-      const itemExist = items.find((item) => item.type === "PICKAXE")
-      if (itemExist) {
-        return {
-          ok: false,
-          message: `${player.userName}, у тебя уже есть кирка.`,
-        }
-      }
-
-      const result = await player.buyItemFromDealer("PICKAXE", 10, 1)
-      if (!result) {
-        return {
-          ok: false,
-          message: `${player.userName}, неа.`,
-        }
-      }
-
-      return {
-        ok: true,
-        message: `${player.userName}, ты купил(а) кирку у торговца!`,
-      }
-    }
-
-    return {
-      ok: false,
-      message: `${player.userName}, укажи конкретнее, например: !купить топор`,
+      ok: true,
+      message: `${player.userName}, успешная торговая сделка!`,
     }
   }
 }

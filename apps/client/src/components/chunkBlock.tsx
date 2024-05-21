@@ -1,3 +1,4 @@
+import { IconHome, IconRipple, IconTrees } from "@tabler/icons-react"
 import type { IGameChunk } from "../../../../packages/api-sdk/src"
 
 export const ChunkBlock = ({
@@ -9,24 +10,33 @@ export const ChunkBlock = ({
     return null
   }
 
-  const description = getChunkTypeDescription(chunk.type)
+  const chunkInfo = getChunkInfo(chunk.type)
 
   return (
-    <div className="mt-2 h-auto px-4 py-4 bg-primary text-primary border-primary border-b-4 rounded-2xl">
-      <p className="font-medium">{description}</p>
-      <p className="font-bold text-xl leading-tight">{chunk.title}</p>
+    <div className="flex flex-row gap-2 items-center text-primary">
+      {chunkInfo?.icon}
+      <p className="font-bold text-xl">{chunk.title}</p>
     </div>
   )
 }
 
-function getChunkTypeDescription(type: IGameChunk["type"]) {
+function getChunkInfo(type: IGameChunk["type"]) {
   if (type === "VILLAGE") {
-    return "Деревня"
+    return {
+      description: "Деревня",
+      icon: <IconHome />,
+    }
   }
   if (type === "FOREST") {
-    return "Лес"
+    return {
+      description: "Лес",
+      icon: <IconTrees />,
+    }
   }
   if (type === "LAKE") {
-    return "Озеро"
+    return {
+      description: "Озеро",
+      icon: <IconRipple />,
+    }
   }
 }
