@@ -24,6 +24,7 @@ export type IGameSceneAction =
   | "STEAL_FUEL"
   | "CHOP"
   | "MINE"
+  | "PLANT"
   | "START_GROUP_BUILD"
   | "DISBAND_GROUP"
   | "JOIN_GROUP"
@@ -87,6 +88,7 @@ export interface IGameQuestTask {
   updateProgress: (
     progressToSuccess?: IGameQuestTask["progressToSuccess"],
   ) => Partial<IGameQuestTask>
+  command?: string
 }
 
 export interface IGameChunk {
@@ -300,6 +302,7 @@ export interface ITradeOffer {
 export interface IGameScript {
   id: string
   tasks: IGameTask[]
+  isInterruptible: boolean
   live: () => void
 }
 

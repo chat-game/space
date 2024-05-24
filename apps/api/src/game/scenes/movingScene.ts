@@ -25,7 +25,7 @@ export class MovingScene extends GameScene {
   }
 
   initStartingVillage() {
-    const width = 3000
+    const width = 3600
     const height = 2000
     const area = {
       width,

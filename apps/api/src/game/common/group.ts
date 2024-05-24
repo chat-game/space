@@ -3,6 +3,7 @@ import type {
   IGameGroup,
   IGameObjectPlayer,
 } from "../../../../../packages/api-sdk/src"
+import type { Player } from "../objects/units"
 
 export class Group implements IGameGroup {
   id: string
@@ -12,7 +13,20 @@ export class Group implements IGameGroup {
     this.id = createId()
   }
 
-  join(player: IGameObjectPlayer): boolean {
+  public getGroup(): IGameGroup {
+    return {
+      id: this.id,
+      players: this.players.map((p) => {
+        return {
+          ...p,
+          script: undefined,
+          live: undefined,
+        }
+      }),
+    }
+  }
+
+  join(player: Player): boolean {
     const check = this.findPlayer(player.id)
     if (check) {
       return false

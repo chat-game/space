@@ -5,34 +5,32 @@ import type {
 import type { GameObject } from "../objects"
 import { Script } from "./script"
 
-interface IMoveToTradePostAndTradeScriptOptions {
+interface IMineStoneScriptOptions {
   object: GameObject
   target: IGameObject
-  startTradeFunc: () => void
+  mineStoneFunc: () => boolean
 }
 
-export class MoveToTradePostAndTradeScript extends Script {
-  constructor({
-    target,
-    object,
-    startTradeFunc,
-  }: IMoveToTradePostAndTradeScriptOptions) {
+export class MineStoneScript extends Script {
+  constructor({ target, object, mineStoneFunc }: IMineStoneScriptOptions) {
     super({ object })
 
     this.tasks = [
       this.setTarget(target),
       this.runToTarget(),
-      this.startTrade(startTradeFunc),
+      this.mineStone(mineStoneFunc),
     ]
   }
 
-  startTrade(func: () => void): IGameTask {
+  mineStone(func: () => boolean): IGameTask {
     return {
       id: "3",
       status: "IDLE",
       live: () => {
-        func()
-        this.markTaskAsDone()
+        const isFinished = func()
+        if (isFinished) {
+          this.markTaskAsDone()
+        }
       },
     }
   }

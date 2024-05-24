@@ -85,6 +85,11 @@ export class EventService {
     }))
   }
 
+  public destroy(event: Event) {
+    const index = this.events.indexOf(event)
+    this.events.splice(index, 1)
+  }
+
   private handleEnding(event: Event) {
     if (event.type === "SCENE_CHANGING_STARTED" && event.scene) {
       this.scene.game.initScene(event.scene)
@@ -96,13 +101,11 @@ export class EventService {
       this.scene.stopRaid()
     }
     if (event.type === "TRADE_STARTED") {
-      //
+      this.scene.tradeService.handleTradeIsOver()
     }
-  }
-
-  private destroy(event: Event) {
-    const index = this.events.indexOf(event)
-    this.events.splice(index, 1)
+    if (event.type === "VOTING_FOR_NEW_MAIN_QUEST_STARTED") {
+      this.scene.tradeService.handleTradeIsOver()
+    }
   }
 
   private destroyAllEventsWithPoll() {
@@ -146,14 +149,14 @@ export class EventService {
     const tasks = [
       this.questService.createTask({
         updateProgress: updateProgress1,
-        description: "Перевезти в сохранности груз",
+        description: "Transport cargo safely",
         progressNow: 100,
         progressToSuccess: 60,
       }),
     ]
 
     this.init({
-      title: "Путешествие",
+      title: "Journey",
       type: "MAIN_QUEST_STARTED",
       secondsToEnd: event.quest.conditions.limitSeconds ?? 9999999,
       quest: {

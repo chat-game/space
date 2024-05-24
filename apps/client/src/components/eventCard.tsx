@@ -13,7 +13,7 @@ import type {
   ITradeOffer,
 } from "../../../../packages/api-sdk/src"
 import { useCountdown } from "../hooks/useCountdown"
-import { ItemImage } from "./itemImage.tsx"
+import { ItemImage } from "./itemImage"
 
 export const EventCard = ({ event }: { event: IGameEvent }) => {
   const isActive = event.status === "STARTED"
@@ -44,28 +44,28 @@ function getCardInfoByType(type: IGameEvent["type"]) {
     return {
       labelBgColor: "bg-teal-500",
       cardBorderColor: "border-teal-500",
-      label: "основной квест",
+      label: "main quest",
     }
   }
   if (type === "SIDE_QUEST_STARTED") {
     return {
       labelBgColor: "bg-blue-4",
       cardBorderColor: "border-blue-4",
-      label: "дополнительный квест",
+      label: "side quest",
     }
   }
   if (type === "TRADE_STARTED") {
     return {
       labelBgColor: "bg-teal-500",
       cardBorderColor: "border-teal-500",
-      label: "торговля в деревне",
+      label: "trade in the village",
     }
   }
   if (type === "VOTING_FOR_NEW_MAIN_QUEST_STARTED") {
     return {
       labelBgColor: "bg-zinc-500",
       cardBorderColor: "border-zinc-500",
-      label: "голосование",
+      label: "poll",
     }
   }
 
@@ -75,21 +75,11 @@ function getCardInfoByType(type: IGameEvent["type"]) {
 }
 
 function getEventDescriptionByType(event: IGameEvent) {
-  if (event.type === "GROUP_FORM_STARTED") {
-    return (
-      <div>
-        <p className="text-lg leading-tight">
-          Хотите в группу? Пишите в чат команду:
-        </p>
-        <p className="mt-1 text-3xl font-bold">!го</p>
-      </div>
-    )
-  }
   if (event.type === "VOTING_FOR_NEW_MAIN_QUEST_STARTED") {
     return (
       <div>
         <p className="font-medium leading-tight">
-          Сделаем квест активным? Проголосуй командой в чате:
+          Let's make the quest active? Vote in chat:
         </p>
         <p className="mt-1 mb-2 py-1 text-2xl font-bold text-center bg-zinc-100 rounded-2xl">
           {event.poll?.commandToVote}
@@ -105,7 +95,7 @@ function getEventDescriptionByType(event: IGameEvent) {
       <div>
         <p className="font-medium leading-tight">{event.quest?.description}</p>
         <p className="mt-3 italic font-medium leading-tight">
-          Необходимо выполнить следующее:
+          You need to do the following:
         </p>
       </div>
     )
@@ -125,7 +115,7 @@ const EventTimer = ({ endsAt }: { endsAt: Date }) => {
 
   return (
     <p className="mt-3 text-center text-sm italic">
-      Заканчивается через {showHours}
+      Ends in {showHours}
       {showMinutes}:{showSeconds}
     </p>
   )
@@ -163,7 +153,7 @@ const PollProgressBar = ({
     <>
       <div className="mt-2 relative w-full h-8 p-1 bg-zinc-100 text-primary rounded-2xl">
         <div className="absolute w-full flex flex-row justify-center">
-          Голосов: {poll.votes.length} из {poll.votesToSuccess}
+          Votes: {poll.votes.length} of {poll.votesToSuccess}
         </div>
         <div
           className="h-6 bg-green-300 border-b-2 border-green-600 rounded-2xl"
@@ -197,6 +187,10 @@ const QuestConditions = ({ quest }: { quest: IGameQuest | undefined }) => {
     return null
   }
 
+  if (quest.status === "ACTIVE") {
+    return null
+  }
+
   const minutes = quest.conditions.limitSeconds
     ? Math.round(quest.conditions.limitSeconds / 60)
     : null
@@ -205,11 +199,11 @@ const QuestConditions = ({ quest }: { quest: IGameQuest | undefined }) => {
     <div className="mt-3 flex flex-row gap-6 justify-center">
       <div className="flex flex-row gap-1.5">
         <IconClockHour3 stroke={1.5} />
-        до {minutes} минут
+        up to {minutes} minutes
       </div>
       <div className="flex flex-row gap-1.5">
         <IconMap2 stroke={1.5} />
-        Обычные локации
+        Common locations
       </div>
     </div>
   )
@@ -238,6 +232,14 @@ const QuestTask = ({ task }: { task: IGameQuestTask }) => {
         <p>{task.description}</p>
       </div>
 
+      {task.status === "ACTIVE" && task.command && (
+        <div className="mt-1">
+          <p className="mb-2 py-1 text-xl font-bold text-center bg-zinc-100 rounded-2xl">
+            {task.command}
+          </p>
+        </div>
+      )}
+
       <QuestTaskProgressBar task={task} />
     </div>
   )
@@ -265,7 +267,7 @@ const QuestTaskProgressBar = ({ task }: { task: IGameQuestTask }) => {
   return (
     <div className="relative w-full h-8 p-1 bg-zinc-100 rounded-2xl">
       <div className="absolute w-full flex flex-row justify-center">
-        {task.progressNow} из {task.progressToSuccess}
+        {task.progressNow} of {task.progressToSuccess}
       </div>
       <div
         className="h-6 bg-green-300 border-b-2 border-green-600 rounded-2xl"
@@ -294,16 +296,18 @@ const TradeOffer = ({ offer }: { offer: ITradeOffer }) => {
       <div className="mt-2 py-2 pl-2 border-l-4 border-zinc-200 rounded-l-2xl">
         <div className="flex flex-row gap-1 items-center">
           <ItemImage type={offer.item} />
-          <p className="text-lg">1 за {offer.unitPrice}</p>
+          <p className="text-lg">1 for {offer.unitPrice}</p>
           <ItemImage type={"COIN"} />
         </div>
 
-        <div className="italic">Осталось {offer.amount} ед.</div>
+        <div className="italic">{offer.amount} units left</div>
 
         <div className="mt-2">
-          <p className="font-medium leading-tight">Пиши команду в чат:</p>
+          <p className="font-medium leading-tight">
+            Write a command to the chat:
+          </p>
           <p className="mt-1 mb-2 text-xl font-bold">
-            {offer.commandToTrade} [кол-во]
+            {offer.commandToTrade} [quantity]
           </p>
         </div>
       </div>
@@ -313,9 +317,9 @@ const TradeOffer = ({ offer }: { offer: ITradeOffer }) => {
 
 function getTradeOfferType(offer: ITradeOffer) {
   if (offer.type === "BUY") {
-    return "Покупка"
+    return "Buying"
   }
   if (offer.type === "SELL") {
-    return "Продажа"
+    return "Selling"
   }
 }

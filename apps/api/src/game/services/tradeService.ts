@@ -7,7 +7,8 @@ import { Flag } from "../objects"
 import type { Player } from "../objects/units"
 import { Trader } from "../objects/units/trader"
 import type { GameScene } from "../scenes"
-import { MoveToRandomTargetScript } from "../scripts/moveToRandomTargetScript"
+import { MoveOffScreenAndSelfDestroyScript } from "../scripts/moveOffScreenAndSelfDestroyScript"
+import { MoveToTargetScript } from "../scripts/moveToTargetScript"
 import { MoveToTradePostAndTradeScript } from "../scripts/moveToTradePostAndTradeScript"
 
 interface ITradeServiceOptions {
@@ -16,12 +17,14 @@ interface ITradeServiceOptions {
 
 export class TradeService {
   public offers: ITradeOffer[] = []
+  public tradeWasSuccessful: boolean
   public traderIsMovingWithWagon: boolean
   public scene: GameScene
 
   constructor({ scene }: ITradeServiceOptions) {
     this.scene = scene
     this.traderIsMovingWithWagon = false
+    this.tradeWasSuccessful = false
   }
 
   public update() {
@@ -93,7 +96,7 @@ export class TradeService {
         const random = getRandomInRange(1, 150)
         if (random <= 1) {
           const target = this.scene.wagonService.findRandomNearFlag()
-          object.script = new MoveToRandomTargetScript({
+          object.script = new MoveToTargetScript({
             object,
             target,
           })
@@ -102,17 +105,69 @@ export class TradeService {
       }
 
       // Moving to Trade
-      if (this.scene.chunkNow instanceof Village) {
-        const target = this.getTradePointFlag()
-        if (target) {
-          object.script = new MoveToTradePostAndTradeScript({
-            object,
-            target,
-          })
-          return
+      if (this.checkIfNeedToStartTrade()) {
+        if (this.scene.chunkNow instanceof Village) {
+          const target = this.getTradePointFlag()
+          if (target) {
+            const startTradeFunc = () => {
+              this.scene.eventService.init({
+                title: "Trade in progress",
+                type: "TRADE_STARTED",
+                secondsToEnd: 60 * 6,
+                offers: this.offers,
+              })
+            }
+
+            object.script = new MoveToTradePostAndTradeScript({
+              object,
+              target,
+              startTradeFunc,
+            })
+            return
+          }
         }
       }
     }
+  }
+
+  public handleTradeIsOver() {
+    const trader = this.getTrader()
+    if (!trader) {
+      return
+    }
+
+    const target = this.scene.wagonService.findRandomOutFlag()
+    const selfDestroyFunc = () => {
+      this.scene.removeObject(trader)
+    }
+
+    trader.script = new MoveOffScreenAndSelfDestroyScript({
+      object: trader,
+      target,
+      selfDestroyFunc,
+    })
+
+    this.removeTrade()
+  }
+
+  public removeTrade() {
+    this.offers = []
+    for (const event of this.scene.eventService.events) {
+      if (event.type === "TRADE_STARTED") {
+        this.scene.eventService.destroy(event)
+      }
+    }
+  }
+
+  private checkIfNeedToStartTrade(): boolean {
+    if (this.tradeWasSuccessful) {
+      return false
+    }
+
+    const activeTrade = this.scene.eventService.events.find(
+      (e) => e.type === "TRADE_STARTED",
+    )
+    return !activeTrade
   }
 
   private getTradePointFlag() {
@@ -154,6 +209,8 @@ export class TradeService {
   private checkClosedOffers() {
     for (const offer of this.offers) {
       if (offer.amount === 0) {
+        this.tradeWasSuccessful = true
+        this.removeTrade()
         this.generateNewMainQuest()
       }
     }
@@ -172,7 +229,7 @@ export class TradeService {
 
     for (let i = 1; i <= offersAmount; i++) {
       const id = this.generateId()
-      const commandToTrade = `!торговать ${id}`
+      const commandToTrade = `!trade ${id}`
 
       const offer: ITradeOffer = {
         id,
@@ -187,13 +244,7 @@ export class TradeService {
     }
 
     this.offers.push(...offers)
-
-    this.scene.eventService.init({
-      title: "Идет торговля",
-      type: "TRADE_STARTED",
-      secondsToEnd: 60 * 25,
-      offers,
-    })
+    this.tradeWasSuccessful = false
   }
 
   private generateId(startId = 1): string {
@@ -239,17 +290,18 @@ export class TradeService {
 
     this.scene.eventService.init({
       type: "VOTING_FOR_NEW_MAIN_QUEST_STARTED",
-      title: "Торговец предлагает квест",
+      title: "The merchant offers a quest",
       secondsToEnd: 180,
       quest: this.scene.eventService.questService.create({
         status: "INACTIVE",
         type: "MAIN",
-        title: "Перевезти груз в деревню Б",
-        description: "Торговец переживает за сохранность вещей в сундуке.",
+        title: "Transport cargo to a neighboring village",
+        description:
+          "The merchant is worried about the safety of the items in the chest.",
         creatorId: trader.id,
         tasks: [],
         conditions: {
-          chunks: 3,
+          chunks: getRandomInRange(3, 5),
           limitSeconds: 3000,
         },
       }),

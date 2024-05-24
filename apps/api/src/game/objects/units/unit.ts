@@ -6,6 +6,7 @@ import {
 } from "../../../../../../packages/api-sdk/src"
 import { Inventory } from "../../common"
 import { GameObject } from "../gameObject"
+import { Stone } from "../stone"
 import { Tree } from "../tree"
 
 interface IUnitOptions {
@@ -35,9 +36,10 @@ export class Unit extends GameObject implements IGameObjectUnit {
   }
 
   live() {
+    this.handleMessages()
+
     if (this.script) {
-      this.script.live()
-      return
+      return this.script.live()
     }
   }
 
@@ -84,20 +86,31 @@ export class Unit extends GameObject implements IGameObjectUnit {
 
   public chopTree() {
     if (this.target instanceof Tree && this.target.state !== "DESTROYED") {
+      this.direction = "RIGHT"
       this.state = "CHOPPING"
-      this.checkAndBreakAxe()
+      this.checkAndBreakTool("AXE")
 
       this.target.chop()
     }
   }
 
-  checkAndBreakAxe() {
-    const axe = this.inventory.items.find((item) => item.type === "AXE")
-    if (axe) {
+  public mineStone() {
+    if (this.target instanceof Stone && this.target.state !== "DESTROYED") {
+      this.direction = "RIGHT"
+      this.state = "MINING"
+      this.checkAndBreakTool("PICKAXE")
+
+      this.target.mine()
+    }
+  }
+
+  checkAndBreakTool(type: "AXE" | "PICKAXE") {
+    const tool = this.inventory.items.find((item) => item.type === type)
+    if (tool) {
       //this.target.health -= 0.16
       const random = getRandomInRange(1, 40)
       if (random <= 1) {
-        void this.inventory.checkAndBreakItem(axe, 1)
+        void this.inventory.checkAndBreakItem(tool, 1)
       }
     }
   }

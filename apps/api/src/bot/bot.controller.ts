@@ -1,7 +1,8 @@
 import { RefreshingAuthProvider } from "@twurple/auth"
-import { Bot, type BotCommand } from "@twurple/easy-bot"
+import { Bot } from "@twurple/easy-bot"
 import { PubSubClient } from "@twurple/pubsub"
 import type { TwitchAccessTokenResponse } from "../../../../packages/api-sdk/src"
+import { DONATE_URL } from "../config"
 import { DBRepository } from "../db/db.repository"
 import type { Game } from "../game/game"
 import { BotService } from "./bot.service"
@@ -81,31 +82,13 @@ export class BotController {
     return authProvider
   }
 
-  prepareBotCommands(): BotCommand[] {
-    return [
-      ...this.service.commandStartGroupBuild(),
-      ...this.service.commandVote(),
-      ...this.service.commandDisbandGroup(),
-      ...this.service.commandStartChangingScene(),
-      ...this.service.commandStartCreatingNewAdventure(),
-      ...this.service.commandRefuel(),
-      ...this.service.commandChop(),
-      ...this.service.commandMine(),
-      ...this.service.commandGift(),
-      ...this.service.commandTrade(),
-      ...this.service.commandHelp(),
-      ...this.service.commandDonate(),
-      ...this.service.commandGithub(),
-    ]
-  }
-
   public async serve() {
     const authProvider = await this.prepareAuthProvider()
 
     const pubSubClient = new PubSubClient({ authProvider })
 
     pubSubClient.onRedemption(this.userId, ({ userId, userName, rewardId }) => {
-      this.service.reactOnChannelRewardRedemption({
+      this.service.handleChannelRewardRedemption({
         userId,
         userName,
         rewardId,
@@ -115,26 +98,30 @@ export class BotController {
     const bot = new Bot({
       authProvider,
       channels: [this.channel],
-      commands: this.prepareBotCommands(),
       chatClientOptions: {
         requestMembershipEvents: true,
       },
     })
 
     bot.onRaid(({ userName, userId, viewerCount }) => {
-      void this.service.reactOnRaid({ userName, userId, viewerCount })
-    })
-    bot.onRaidCancel((event) => {
-      console.log("raid canceled!", event)
+      void this.service.handleRaid({ userName, userId, viewerCount })
     })
 
-    bot.onMessage(({ userId, userName, text }) => {
-      void this.service.reactOnMessage({ userName, userId, text })
+    bot.onMessage(async (message) => {
+      const replyText = await this.service.handleMessage({
+        userId: message.userId,
+        userName: message.userName,
+        text: message.text,
+      })
+      if (replyText) {
+        await message.reply(replyText)
+      }
     })
 
     bot.onJoin(({ userName }) => {
       console.log(new Date().toLocaleTimeString(), "joined!", userName)
     })
+
     bot.onLeave(({ userName }) => {
       console.log("left!", userName)
     })
@@ -143,11 +130,11 @@ export class BotController {
       () => {
         bot.announce(
           this.channel,
-          "Базовые команды: !рубить, !добыть. Спасибо всем участникам сбора на клевый веб-сайт! :D",
+          `Basic commands: !chop, !mine, !help. Thanks to everyone who contributed for a cool website! :D ${DONATE_URL}`,
           "orange",
         )
       },
-      1000 * 60 * 30,
+      1000 * 60 * 15,
     )
 
     return bot

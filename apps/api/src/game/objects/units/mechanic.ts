@@ -23,7 +23,7 @@ export class Mechanic extends Unit implements IGameObjectMechanic {
       },
     })
 
-    this.userName = "Механик"
+    this.userName = "Mechanic"
   }
 
   live() {

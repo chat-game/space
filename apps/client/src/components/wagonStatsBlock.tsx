@@ -14,14 +14,13 @@ export const WagonStatsBlock = ({
   const fuelInSeconds = Math.round(wagon.fuel / 40)
   const fuelInMinutes = Math.round(fuelInSeconds / 60)
 
-  // speedInMeters > 0 ? `${speedInMeters} м/сек` : "[стоп]"
-  const showSpeed = `${speedInMeters} м/сек`
+  const showSpeed = `${speedInMeters} m/sec`
   const showFuelTime =
     fuelInSeconds > 0
-      ? fuelInMinutes <= 3
-        ? `${fuelInSeconds} сек`
-        : `≈ ${fuelInMinutes} мин`
-      : "[нет топлива]"
+      ? fuelInMinutes < 1
+        ? `${fuelInSeconds} sec`
+        : `≈ ${fuelInMinutes} min`
+      : "[no fuel!]"
 
   return (
     <div className="flex flex-row flex-nowrap gap-6 items-center text-primary">

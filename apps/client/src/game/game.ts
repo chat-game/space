@@ -110,16 +110,34 @@ export class Game extends Container {
   }
 
   moveCameraToWagon(wagon: Wagon) {
+    const cameraMaxSpeed = 0.3
     const columnWidth = this.scene.app.screen.width / 6
-    const leftPadding =
+    let leftPadding =
       wagon.direction === "LEFT" ? columnWidth * 4 : columnWidth * 2
+
+    if (wagon.speed === 0) {
+      leftPadding = columnWidth * 3
+    }
 
     const topPadding = this.scene.app.screen.height / 2
 
     this.cameraPerfectX = -wagon.x + this.cameraOffsetX + leftPadding
     this.cameraPerfectY = -wagon.y + this.cameraOffsetY + topPadding
 
-    this.cameraX = this.cameraPerfectX
+    const module = this.cameraPerfectX - this.cameraX > 0 ? 1 : -1
+    const bufferX = Math.abs(this.cameraPerfectX - this.cameraX)
+    const addToX = bufferX > cameraMaxSpeed ? cameraMaxSpeed : bufferX
+
+    // If first load
+    if (Math.abs(-wagon.x - this.cameraX) > 3000) {
+      this.cameraX = this.cameraPerfectX
+    }
+
+    // Animation
+    if (this.cameraX !== this.cameraPerfectX) {
+      this.cameraX += addToX * module
+    }
+
     this.cameraY = this.cameraPerfectY
 
     if (Math.abs(this.cameraOffsetX) >= 20) {

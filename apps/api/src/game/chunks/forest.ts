@@ -16,7 +16,7 @@ interface IForestOptions {
 export class Forest extends GameChunk implements IGameForestChunk {
   constructor({ width, height, center, theme }: IForestOptions) {
     super({
-      title: "Роскошный Лес",
+      title: "Grand Wood",
       type: "FOREST",
       width,
       height,

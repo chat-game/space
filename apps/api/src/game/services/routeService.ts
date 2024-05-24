@@ -22,11 +22,19 @@ export class RouteService {
 
   public update() {
     if (!this.route?.flags || this.route.flags.length <= 0) {
-      return this.finishAdventure()
+      if (
+        this.scene.eventService.events.find(
+          (e) => e.type === "MAIN_QUEST_STARTED",
+        )
+      ) {
+        return this.finishAdventure()
+      }
     }
 
-    for (const flag of this.route.flags) {
-      void flag.live()
+    if (this.route) {
+      for (const flag of this.route.flags) {
+        void flag.live()
+      }
     }
   }
 
@@ -188,7 +196,15 @@ export class RouteService {
   }
 
   finishAdventure() {
+    console.log("Adventure finished!", new Date())
     this.route = undefined
     this.scene.wagonService.wagon.emptyCargo()
+    this.scene.tradeService.traderIsMovingWithWagon = false
+    this.scene.tradeService.handleTradeIsOver()
+
+    if (this.scene.chunkNow?.id) {
+      const id = this.scene.chunkNow.id
+      this.scene.chunks = this.scene.chunks.filter((chunk) => chunk.id === id)
+    }
   }
 }

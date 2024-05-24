@@ -17,7 +17,7 @@ export const WarehouseBlock = ({
     <div className="flex flex-row gap-3 items-center text-primary">
       <div className="flex flex-row gap-2 items-center">
         <IconBuildingWarehouse />
-        <p>На складе</p>
+        <p>Warehouse</p>
       </div>
 
       <div className="flex flex-row gap-2 items-center">{showItems}</div>

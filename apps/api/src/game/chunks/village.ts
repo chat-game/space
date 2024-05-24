@@ -14,7 +14,7 @@ import { Warehouse } from "../objects/buildings/warehouse"
 import { VillageCourier, VillageFarmer } from "../objects/units"
 import { BuildScript } from "../scripts/buildScript"
 import { ChopTreeScript } from "../scripts/chopTreeScript"
-import { MoveToRandomTargetScript } from "../scripts/moveToRandomTargetScript"
+import { MoveToTargetScript } from "../scripts/moveToTargetScript"
 import { PlaceItemInWarehouseScript } from "../scripts/placeItemInWarehouseScript"
 import { PlantNewTreeScript } from "../scripts/plantNewTreeScript"
 import { GameChunk } from "./gameChunk"
@@ -32,13 +32,13 @@ export class Village extends GameChunk implements IGameVillageChunk {
 
     this.title = this.getRandomTitle()
 
-    this.initFlags("RESOURCE", 40)
+    this.initFlags("RESOURCE", 80)
     this.initFlags("MOVEMENT", 30)
     this.initTrees(20)
     this.initStones(5)
 
-    this.initCourier()
-    this.initFarmer(2)
+    this.initCourier(3)
+    this.initFarmer(3)
     this.initBuildings()
   }
 
@@ -146,7 +146,7 @@ export class Village extends GameChunk implements IGameVillageChunk {
     if (!target) {
       return
     }
-    object.script = new MoveToRandomTargetScript({
+    object.script = new MoveToTargetScript({
       object,
       target,
     })
@@ -174,7 +174,7 @@ export class Village extends GameChunk implements IGameVillageChunk {
       if (!target) {
         return
       }
-      object.script = new MoveToRandomTargetScript({
+      object.script = new MoveToTargetScript({
         object,
         target,
       })
@@ -223,14 +223,16 @@ export class Village extends GameChunk implements IGameVillageChunk {
     }
   }
 
-  initCourier() {
-    const randomPoint = this.getRandomPoint()
-    this.objects.push(
-      new VillageCourier({
-        x: randomPoint.x,
-        y: randomPoint.y,
-      }),
-    )
+  initCourier(count = 1) {
+    for (let i = 0; i < count; i++) {
+      const randomPoint = this.getRandomPoint()
+      this.objects.push(
+        new VillageCourier({
+          x: randomPoint.x,
+          y: randomPoint.y,
+        }),
+      )
+    }
   }
 
   initFarmer(count = 1) {
@@ -317,11 +319,21 @@ export class Village extends GameChunk implements IGameVillageChunk {
 
   getRandomEmptyResourceFlagInVillage() {
     const flags = this.objects.filter(
-      (f) => f instanceof Flag && f.type === "RESOURCE" && !f.target,
+      (f) =>
+        f instanceof Flag &&
+        f.type === "RESOURCE" &&
+        !f.target &&
+        !f.isReserved,
     )
     return flags.length > 0
       ? (flags[Math.floor(Math.random() * flags.length)] as Flag)
       : undefined
+  }
+
+  getResourceFlagInVillageAmount() {
+    return this.objects.filter(
+      (f) => f instanceof Flag && f.type === "RESOURCE",
+    ).length
   }
 
   getRandomMovementFlagInVillage() {
@@ -335,16 +347,16 @@ export class Village extends GameChunk implements IGameVillageChunk {
 
   getRandomTitle() {
     const titles = [
-      "Ветреный Пик",
-      "Зеленая Роща",
-      "Дубовый Берег",
-      "Лесная Гавань",
-      "Эльфийский Лес",
-      "Каменная Застава",
-      "Арбузный Рай",
-      "Магическая Долина",
-      "Королевское Пристанище",
-      "Призрачный Утес",
+      "Windy Peak",
+      "Green Grove",
+      "Oak Coast",
+      "Forest Harbor",
+      "Elven Forest",
+      "Stone Outpost",
+      "Watermelon Paradise",
+      "Magic Valley",
+      "Royal Haven",
+      "Phantom Cliff",
     ]
     return titles[Math.floor(Math.random() * titles.length)]
   }
@@ -369,6 +381,20 @@ export class Village extends GameChunk implements IGameVillageChunk {
     })
 
     flag.target = tree
+    flag.isReserved = false
     this.objects.push(tree)
+  }
+
+  getTreesAmount() {
+    return this.objects.filter(
+      (obj) => obj instanceof Tree && obj.state !== "DESTROYED",
+    ).length
+  }
+
+  checkIfThereAreNotEnoughTrees() {
+    const max = this.getResourceFlagInVillageAmount()
+    const now = this.getTreesAmount()
+
+    return now < max / 3
   }
 }

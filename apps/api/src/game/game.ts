@@ -41,7 +41,7 @@ export class Game {
   }: HandleChatCommandOptions): Promise<HandleChatCommandResponse> {
     const player = await this.repository.findOrCreatePlayer(userId, userName)
 
-    return this.scene.actionService.handle(action, player.id, params)
+    return this.scene.actionService.handleAction(action, player.id, params)
   }
 
   public initScene(scene: GameSceneType) {

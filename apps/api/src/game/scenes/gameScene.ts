@@ -22,6 +22,8 @@ import {
 import { Player, Raider } from "../objects/units"
 import { Trader } from "../objects/units/trader"
 import { ChopTreeScript } from "../scripts/chopTreeScript"
+import { MoveOffScreenAndSelfDestroyScript } from "../scripts/moveOffScreenAndSelfDestroyScript"
+import { MoveToTargetScript } from "../scripts/moveToTargetScript"
 import { ActionService } from "../services/actionService"
 import { EventService } from "../services/eventService"
 import { TradeService } from "../services/tradeService"
@@ -101,7 +103,7 @@ export class GameScene {
       id: this.id,
       commands: this.actionService.getAvailableCommands(),
       events: this.eventService.getEvents(),
-      group: this.group,
+      group: this.group.getGroup(),
       wagon: this.wagonService.wagon,
       chunk: this.getChunkNow(),
       route: this.wagonService.routeService.getRoute(),
@@ -184,41 +186,19 @@ export class GameScene {
   updatePlayer(object: Player) {
     object.live()
 
+    if (object.script) {
+      return
+    }
+
     if (object.state === "IDLE") {
       const random = getRandomInRange(1, 150)
       if (random <= 1) {
-        const randObj = this.wagonService.findRandomNearFlag()
-        if (!randObj) {
-          return
-        }
-        object.setTarget(randObj)
-      }
-      object.handleChange()
-      return
-    }
-    if (object.state === "MOVING") {
-      const isMoving = object.move()
-      object.handleChange()
+        const target = this.wagonService.findRandomNearFlag()
 
-      if (!isMoving && object.target) {
-        if (object.target instanceof Tree) {
-          void object.startChopping()
-          return
-        }
-        if (object.target instanceof Stone) {
-          void object.startMining()
-          return
-        }
-        if (
-          object.target instanceof Flag &&
-          object.target.type === "OUT_OF_SCREEN"
-        ) {
-          this.removeObject(object)
-          return
-        }
-
-        object.state = "IDLE"
-        return
+        object.script = new MoveToTargetScript({
+          object,
+          target,
+        })
       }
     }
   }
@@ -256,33 +236,35 @@ export class GameScene {
   updateRaider(object: Raider) {
     object.live()
 
-    if (!object.script) {
-      // If there is an available tree
-      const availableTree = this.chunkNow?.getAvailableTree()
-      if (availableTree) {
-        const chopTreeFunc = (): boolean => {
-          object.chopTree()
-          if (!object.target || object.target.state === "DESTROYED") {
-            object.state = "IDLE"
-            if (object.target instanceof Tree) {
-              void object.inventory.addOrCreateItem(
-                "WOOD",
-                object.target?.resource,
-              )
-            }
-            return true
+    if (object.script) {
+      return
+    }
+
+    // If there is an available tree
+    const availableTree = this.chunkNow?.getAvailableTree()
+    if (availableTree) {
+      const chopTreeFunc = (): boolean => {
+        object.chopTree()
+        if (!object.target || object.target.state === "DESTROYED") {
+          object.state = "IDLE"
+          if (object.target instanceof Tree) {
+            void object.inventory.addOrCreateItem(
+              "WOOD",
+              object.target?.resource,
+            )
           }
-          return false
+          return true
         }
-
-        object.script = new ChopTreeScript({
-          object,
-          target: availableTree,
-          chopTreeFunc,
-        })
-
-        return
+        return false
       }
+
+      object.script = new ChopTreeScript({
+        object,
+        target: availableTree,
+        chopTreeFunc,
+      })
+
+      return
     }
 
     if (object.state === "IDLE") {
@@ -293,21 +275,6 @@ export class GameScene {
           return
         }
         object.setTarget(randomObj)
-      }
-    }
-
-    if (object.state === "MOVING") {
-      const isMoving = object.move()
-      if (!isMoving) {
-        if (
-          object.target instanceof Flag &&
-          object.target.type === "OUT_OF_SCREEN"
-        ) {
-          this.removeObject(object)
-        }
-
-        object.state = "IDLE"
-        return
       }
     }
   }
@@ -341,17 +308,21 @@ export class GameScene {
     for (const player of players) {
       const checkTime = getDateMinusMinutes(8)
       if (player.lastActionAt.getTime() <= checkTime.getTime()) {
-        if (
-          player.target instanceof Flag &&
-          player.target.type === "OUT_OF_SCREEN"
-        ) {
+        if (player.script) {
           continue
         }
 
-        player.target = this.wagonService.findRandomOutFlag()
-        player.state = "MOVING"
+        const target = this.wagonService.findRandomOutFlag()
+        const selfDestroyFunc = () => {
+          this.group.remove(player)
+          this.removeObject(player)
+        }
 
-        this.group.remove(player)
+        player.script = new MoveOffScreenAndSelfDestroyScript({
+          target,
+          object: player,
+          selfDestroyFunc,
+        })
       }
     }
   }
@@ -472,11 +443,18 @@ export class GameScene {
   }
 
   public stopRaid() {
-    const flag = this.wagonService.findRandomOutFlag()
+    for (const object of this.objects) {
+      if (object instanceof Raider) {
+        const target = this.wagonService.findRandomOutFlag()
+        const selfDestroyFunc = () => {
+          this.removeObject(object)
+        }
 
-    for (const obj of this.objects) {
-      if (obj instanceof Raider) {
-        obj.moveOutOfScene(flag)
+        object.script = new MoveOffScreenAndSelfDestroyScript({
+          target,
+          object,
+          selfDestroyFunc,
+        })
       }
     }
   }

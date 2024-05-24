@@ -1,6 +1,5 @@
 import { createId } from "@paralleldrive/cuid2"
 import type { IGameObjectRaider } from "../../../../../../packages/api-sdk/src"
-import type { GameObject } from "../gameObject"
 import { Unit } from "./unit"
 
 interface IRaiderOptions {
@@ -27,7 +26,7 @@ export class Raider extends Unit implements IGameObjectRaider {
     })
 
     this.speed = 1.5
-    this.userName = "Рейдер"
+    this.userName = "Raider"
   }
 
   live() {
@@ -43,10 +42,5 @@ export class Raider extends Unit implements IGameObjectRaider {
     }
 
     this.sendMessageObjectUpdated(prepared)
-  }
-
-  moveOutOfScene(target: GameObject) {
-    this.target = target
-    this.state = "MOVING"
   }
 }

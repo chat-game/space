@@ -1,5 +1,3 @@
-import { type BotCommand, createBotCommand } from "@twurple/easy-bot"
-import type { IGameSceneAction } from "../../../../packages/api-sdk/src"
 import { TWITCH_CHANNEL_REWARDS } from "../config"
 import type { Game } from "../game/game"
 
@@ -10,87 +8,7 @@ export class BotService {
     this.game = game
   }
 
-  private buildCommand(
-    commandName: string[],
-    action: IGameSceneAction,
-  ): BotCommand[] {
-    const commands = []
-
-    for (const command of commandName) {
-      commands.push(
-        createBotCommand(
-          command,
-          async (params, { userId, userName, reply }) => {
-            const result = await this.game.handleActionFromChat({
-              action,
-              userId,
-              userName,
-              params,
-            })
-            if (result.message) {
-              void reply(result.message)
-            }
-          },
-        ),
-      )
-    }
-
-    return commands
-  }
-
-  public commandStartChangingScene() {
-    return this.buildCommand(["вернуться"], "START_CHANGING_SCENE")
-  }
-
-  public commandStartGroupBuild() {
-    return this.buildCommand(["собрать"], "START_GROUP_BUILD")
-  }
-
-  public commandVote() {
-    return this.buildCommand(["го"], "VOTE")
-  }
-
-  public commandDisbandGroup() {
-    return this.buildCommand(["расформировать"], "DISBAND_GROUP")
-  }
-
-  public commandStartCreatingNewAdventure() {
-    return this.buildCommand(["путешествовать"], "START_CREATING_NEW_ADVENTURE")
-  }
-
-  public commandRefuel() {
-    return this.buildCommand(["заправить", "з"], "REFUEL")
-  }
-
-  public commandChop() {
-    return this.buildCommand(["рубить", "р"], "CHOP")
-  }
-
-  public commandMine() {
-    return this.buildCommand(["добыть", "добывать", "д"], "MINE")
-  }
-
-  public commandGift() {
-    return this.buildCommand(["подарить"], "GIFT")
-  }
-
-  public commandTrade() {
-    return this.buildCommand(["торговать"], "TRADE")
-  }
-
-  public commandHelp() {
-    return this.buildCommand(["помощь", "help"], "HELP")
-  }
-
-  public commandDonate() {
-    return this.buildCommand(["донат"], "DONATE")
-  }
-
-  public commandGithub() {
-    return this.buildCommand(["github"], "GITHUB")
-  }
-
-  public reactOnMessage({
+  async handleMessage({
     userName,
     userId,
     text,
@@ -99,7 +17,34 @@ export class BotService {
     userId: string
     text: string
   }) {
-    return this.game.handleActionFromChat({
+    const strings = text.split(" ")
+
+    const possibleCommand = strings[0].substring(1)
+    const otherStrings = strings.toSpliced(0, 1)
+    const firstChar = strings[0].charAt(0)
+
+    if (firstChar === "!") {
+      const activeAction =
+        this.game.scene.actionService.findActionByCommand(possibleCommand)
+      if (activeAction) {
+        const action = activeAction.action
+        const params = otherStrings
+
+        const result = await this.game.handleActionFromChat({
+          action,
+          userId,
+          userName,
+          params,
+        })
+        if (result.message) {
+          return result.message
+        }
+
+        return
+      }
+    }
+
+    void this.game.handleActionFromChat({
       action: "SHOW_MESSAGE",
       userId,
       userName,
@@ -107,7 +52,7 @@ export class BotService {
     })
   }
 
-  public async reactOnRaid({
+  public async handleRaid({
     userName,
     userId,
     viewerCount,
@@ -124,7 +69,7 @@ export class BotService {
     })
   }
 
-  public async reactOnChannelRewardRedemption({
+  public async handleChannelRewardRedemption({
     userId,
     userName,
     rewardId,

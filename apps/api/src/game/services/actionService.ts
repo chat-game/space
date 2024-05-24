@@ -11,9 +11,13 @@ import {
 } from "../../config"
 import { Village } from "../chunks"
 import { Group } from "../common"
+import { Stone, Tree } from "../objects"
 import type { Warehouse } from "../objects/buildings/warehouse"
 import type { Player } from "../objects/units"
 import type { GameScene } from "../scenes"
+import { ChopTreeScript } from "../scripts/chopTreeScript"
+import { MineStoneScript } from "../scripts/mineStoneScript"
+import { PlantNewTreeScript } from "../scripts/plantNewTreeScript"
 
 const ANSWER = {
   OK: {
@@ -26,24 +30,35 @@ const ANSWER = {
   },
   CANT_DO_THIS_NOW_ERROR: {
     ok: false,
-    message: "Сейчас этого сделать нельзя.",
+    message: "This cannot be done now.",
   },
   NO_PLAYER_ERROR: {
     ok: false,
-    message: "Тебя нет в активной игре :(",
+    message: "You are not in active game :(",
   },
   NO_TARGET_ERROR: {
     ok: false,
-    message: "Не указана цель.",
+    message: "No target specified.",
   },
   WRONG_AMOUNT_ERROR: {
     ok: false,
-    message: "Неверно указано количество.",
+    message: "Incorrect quantity specified.",
   },
   ALREADY_VOTED_ERROR: {
     ok: false,
-    message: "Ты уже проголосовал.",
+    message: "You've already voted.",
   },
+}
+
+interface ICommandWithAction {
+  id: string
+  action: IGameSceneAction
+  command: string
+}
+
+interface IGameAction {
+  id: string
+  action: IGameSceneAction
 }
 
 interface IActionServiceOptions {
@@ -51,34 +66,34 @@ interface IActionServiceOptions {
 }
 
 export class ActionService {
-  public possibleActions: IGameSceneAction[]
+  public possibleCommands!: ICommandWithAction[]
+  public possibleActions!: IGameAction[]
+  public activeActions!: IGameSceneAction[]
   public scene: GameScene
 
   constructor({ scene }: IActionServiceOptions) {
     this.scene = scene
-    this.possibleActions = [
-      "HELP",
-      "REFUEL",
-      "CHOP",
-      "MINE",
-      "GIFT",
-      "TRADE",
-      "DONATE",
-      "START_GROUP_BUILD",
-      "DISBAND_GROUP",
-      "JOIN_GROUP",
-      "START_POLL",
-      "VOTE",
-      "STEAL_FUEL",
-      "START_CHANGING_SCENE",
-      "CREATE_NEW_PLAYER",
-      "START_CREATING_NEW_ADVENTURE",
-      "SHOW_MESSAGE",
-      "START_RAID",
-    ]
+
+    void this.initActions()
+    void this.initCommands()
   }
 
-  public async handle(
+  async initCommands() {
+    this.possibleCommands =
+      (await this.scene.game.repository.findAllChatCommands()) as ICommandWithAction[]
+  }
+
+  async initActions() {
+    this.possibleActions =
+      (await this.scene.game.repository.findAllGameActions()) as IGameAction[]
+    this.activeActions = this.possibleActions.map((action) => action.action)
+  }
+
+  public findActionByCommand(command: string) {
+    return this.possibleCommands.find((a) => a.command === command)
+  }
+
+  public async handleAction(
     action: IGameSceneAction,
     playerId: string,
     params?: string[],
@@ -89,6 +104,7 @@ export class ActionService {
     }
 
     this.scene.group.join(player)
+    player.updateLastActionAt()
 
     if (action === "SHOW_MESSAGE") {
       return this.showMessageAction(player, params)
@@ -101,6 +117,9 @@ export class ActionService {
     }
     if (action === "MINE") {
       return this.mineAction(player)
+    }
+    if (action === "PLANT") {
+      return this.plantAction(player)
     }
     if (action === "START_RAID") {
       return this.startRaidAction(player, params)
@@ -153,7 +172,7 @@ export class ActionService {
 
   public getAvailableCommands() {
     const commands: string[] = []
-    for (const action of this.possibleActions) {
+    for (const action of this.activeActions) {
       if (action === "HELP") {
         commands.push("!помощь")
       }
@@ -178,7 +197,7 @@ export class ActionService {
   }
 
   public isActionPossible(action: IGameSceneAction): boolean {
-    return !!this.possibleActions.find((a) => a === action)
+    return !!this.activeActions.find((a) => a === action)
   }
 
   private startRaidAction(player: Player, params?: string[]) {
@@ -186,7 +205,7 @@ export class ActionService {
     const raidersCount = params ? Number(params[0]) : 0
 
     this.scene.eventService.init({
-      title: "Начался рейд!",
+      title: "The raid has started!",
       type: "RAID_STARTED",
       secondsToEnd: 60 * 5,
     })
@@ -224,7 +243,7 @@ export class ActionService {
 
     return {
       ok: true,
-      message: `${player.userName}, а ты Злодей!`,
+      message: `${player.userName}, and you're a villain!`,
     }
   }
 
@@ -247,7 +266,7 @@ export class ActionService {
     if (!itemExist) {
       return {
         ok: false,
-        message: `${player.userName}, у тебя нет древесины.`,
+        message: `${player.userName}, you don't have wood.`,
       }
     }
 
@@ -258,7 +277,7 @@ export class ActionService {
     if (!isSuccess) {
       return {
         ok: false,
-        message: `${player.userName}, недостаточно древесины.`,
+        message: `${player.userName}, not enough wood.`,
       }
     }
 
@@ -268,7 +287,7 @@ export class ActionService {
 
     return {
       ok: true,
-      message: `${player.userName}, ты помог заправить Машину.`,
+      message: `${player.userName}, you helped refuel the Wagon.`,
     }
   }
 
@@ -284,22 +303,38 @@ export class ActionService {
     if (!this.isActionPossible("CHOP")) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
-    if (player.state === "CHOPPING") {
+    if (player.script && !player.script.isInterruptible) {
       return {
         ok: false,
-        message: `${player.userName}, ты пока занят(а).`,
+        message: `${player.userName}, you're busy right now.`,
       }
     }
 
-    const tree = this.scene.getTreeToChop()
-    if (!tree) {
+    const target = this.scene.getTreeToChop()
+    if (!target) {
       return {
         ok: false,
-        message: `${player.userName}, нет свободного дерева.`,
+        message: `${player.userName}, no available tree.`,
       }
     }
 
-    player.setTarget(tree)
+    const chopTreeFunc = (): boolean => {
+      void player.chopTree()
+      if (!player.target || player.target.state === "DESTROYED") {
+        player.state = "IDLE"
+        if (player.target instanceof Tree) {
+          void player.inventory.addOrCreateItem("WOOD", player.target?.resource)
+        }
+        return true
+      }
+      return false
+    }
+
+    player.script = new ChopTreeScript({
+      object: player,
+      target,
+      chopTreeFunc,
+    })
 
     return ANSWER.OK
   }
@@ -308,24 +343,81 @@ export class ActionService {
     if (!this.isActionPossible("MINE")) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
-    if (player.state === "MINING") {
+    if (player.script && !player.script.isInterruptible) {
       return {
         ok: false,
-        message: `${player.userName}, ты пока занят(а).`,
+        message: `${player.userName}, you're busy right now.`,
       }
     }
 
-    const stone = this.scene.getStoneToMine()
-    if (!stone) {
+    const target = this.scene.getStoneToMine()
+    if (!target) {
       return {
         ok: false,
-        message: `${player.userName}, нет свободного камня.`,
+        message: `${player.userName}, there is no available stone.`,
       }
     }
 
-    player.setTarget(stone)
+    const mineStoneFunc = (): boolean => {
+      void player.mineStone()
+      if (!player.target || player.target.state === "DESTROYED") {
+        player.state = "IDLE"
+        if (player.target instanceof Stone) {
+          void player.inventory.addOrCreateItem(
+            "STONE",
+            player.target?.resource,
+          )
+        }
+        return true
+      }
+      return false
+    }
+
+    player.script = new MineStoneScript({
+      object: player,
+      target,
+      mineStoneFunc,
+    })
 
     return ANSWER.OK
+  }
+
+  private plantAction(player: Player) {
+    if (!this.isActionPossible("PLANT")) {
+      return ANSWER.CANT_DO_THIS_NOW_ERROR
+    }
+    if (player.script && !player.script.isInterruptible) {
+      return {
+        ok: false,
+        message: `${player.userName}, you're busy right now.`,
+      }
+    }
+
+    if (this.scene.chunkNow instanceof Village) {
+      const target = this.scene.chunkNow.checkIfNeedToPlantTree()
+      if (!target) {
+        return {
+          ok: false,
+          message: `${player.userName}, no space available.`,
+        }
+      }
+
+      const plantNewTreeFunc = () => {
+        if (this.scene.chunkNow instanceof Village) {
+          this.scene.chunkNow.plantNewTree(target)
+        }
+      }
+
+      player.script = new PlantNewTreeScript({
+        object: player,
+        target,
+        plantNewTreeFunc,
+      })
+
+      return ANSWER.OK
+    }
+
+    return ANSWER.ERROR
   }
 
   private startChangingSceneAction(_: Player, params?: string[]) {
@@ -344,7 +436,7 @@ export class ActionService {
 
     this.scene.eventService.init({
       type: "SCENE_CHANGING_STARTED",
-      title: "Меняем локацию",
+      title: "Changing location",
       scene,
       secondsToEnd: 10,
     })
@@ -363,7 +455,7 @@ export class ActionService {
     return null
   }
 
-  private startGroupBuildAction(player: Player, params?: string[]) {
+  private startGroupBuildAction(_: Player, params?: string[]) {
     if (!this.isActionPossible("START_GROUP_BUILD")) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
@@ -381,7 +473,7 @@ export class ActionService {
 
     this.scene.eventService.init({
       type: "GROUP_FORM_STARTED",
-      title: "Идет набор в группу!",
+      title: "The group is recruiting!",
       scene,
       secondsToEnd: 120,
     })
@@ -398,7 +490,7 @@ export class ActionService {
 
     return {
       ok: true,
-      message: "Группа расформирована!",
+      message: "The group has been disbanded!",
     }
   }
 
@@ -425,7 +517,7 @@ export class ActionService {
 
     return {
       ok: true,
-      message: `${player.userName}, ты проголосовал(а)!`,
+      message: `${player.userName}, you voted!`,
     }
   }
 
@@ -436,7 +528,7 @@ export class ActionService {
 
     return {
       ok: true,
-      message: `${player.userName}, это интерактивная игра-чат, в которой может участвовать любой зритель! Базовые команды: !рубить, !добыть. Остальные команды появляются в событиях (на экране справа). Вступай в наше комьюнити: ${DISCORD_SERVER_INVITE_URL}`,
+      message: `${player.userName}, this is an interactive chat game that any viewer can participate in! Basic commands: !chop, !mine. The remaining commands appear in events (on the right of the screen). Join our community: ${DISCORD_SERVER_INVITE_URL}`,
     }
   }
 
@@ -447,7 +539,7 @@ export class ActionService {
 
     return {
       ok: true,
-      message: `${player.userName}, код игры находится в репозитории: ${GITHUB_REPO_URL}`,
+      message: `${player.userName}, the game code is in the repository: ${GITHUB_REPO_URL}`,
     }
   }
 
@@ -457,7 +549,7 @@ export class ActionService {
     }
     return {
       ok: true,
-      message: `${player.userName}, поддержи игру: ${DONATE_URL}`,
+      message: `${player.userName}, support the game: ${DONATE_URL}`,
     }
   }
 
@@ -469,7 +561,7 @@ export class ActionService {
     if (!params) {
       return {
         ok: false,
-        message: `${player.userName}, укажи конкретнее, например: !подарить древесину 20`,
+        message: `${player.userName}, be more specific.`,
       }
     }
 
@@ -477,7 +569,7 @@ export class ActionService {
     if (!item) {
       return {
         ok: false,
-        message: `${player.userName}, укажи конкретнее, например: !подарить древесину 20`,
+        message: `${player.userName}, be more specific.`,
       }
     }
 
@@ -485,7 +577,7 @@ export class ActionService {
     if (!amount) {
       return {
         ok: false,
-        message: `${player.userName}, укажи конкретнее, например: !подарить древесину 20`,
+        message: `${player.userName}, be more specific.`,
       }
     }
 
@@ -499,7 +591,7 @@ export class ActionService {
       if (!isSuccess) {
         return {
           ok: false,
-          message: `${player.userName}, у тебя не хватает древесины.`,
+          message: `${player.userName}, you don't have enough wood.`,
         }
       }
 
@@ -508,7 +600,7 @@ export class ActionService {
 
       return {
         ok: true,
-        message: `${player.userName}, ты подарил(а) деревне древесину! Твоя репутация возросла.`,
+        message: `${player.userName}, you gave wood to the village! Your reputation has increased.`,
       }
     }
     if (item === "STONE") {
@@ -516,7 +608,7 @@ export class ActionService {
       if (!isSuccess) {
         return {
           ok: false,
-          message: `${player.userName}, у тебя не хватает камня.`,
+          message: `${player.userName}, you don't have enough stone.`,
         }
       }
 
@@ -525,27 +617,27 @@ export class ActionService {
 
       return {
         ok: true,
-        message: `${player.userName}, ты подарил(а) деревне камни! Твоя репутация возросла.`,
+        message: `${player.userName}, you gave stones to the village! Your reputation has increased.`,
       }
     }
 
     return {
       ok: false,
-      message: `${player.userName}, укажи конкретнее, например: !подарить древесину 20`,
+      message: `${player.userName}, be more specific.`,
     }
   }
 
   getItemTypeFromChatCommand(text: string): ItemType | null {
-    if (text === "древесину" || text === "древесина") {
+    if (text === "wood") {
       return "WOOD"
     }
-    if (text === "камень" || text === "камни") {
+    if (text === "stone") {
       return "STONE"
     }
-    if (text === "топор") {
+    if (text === "axe") {
       return "AXE"
     }
-    if (text === "кирка" || text === "кирку") {
+    if (text === "pickaxe") {
       return "PICKAXE"
     }
 
@@ -574,7 +666,7 @@ export class ActionService {
     if (status === "OFFER_ERROR") {
       return {
         ok: false,
-        message: "Что-то не так. Сделка не состоялась",
+        message: "Something is wrong. The deal fell through.",
       }
     }
     if (status === "OFFER_NOT_FOUND") {
@@ -583,7 +675,7 @@ export class ActionService {
 
     return {
       ok: true,
-      message: `${player.userName}, успешная торговая сделка!`,
+      message: `${player.userName}, successful trade deal!`,
     }
   }
 }

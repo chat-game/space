@@ -18,6 +18,7 @@ interface IFlagOptions {
 export class Flag extends GameObject implements IGameObjectFlag {
   public type: IGameObjectFlag["type"]
 
+  public isReserved: boolean
   public offsetX: number
   public offsetY: number
 
@@ -29,6 +30,7 @@ export class Flag extends GameObject implements IGameObjectFlag {
     super({ id: finalId, x: finalX, y: finalY, entity: "FLAG" })
 
     this.type = type
+    this.isReserved = false
     this.offsetX = offsetX ?? 0
     this.offsetY = offsetY ?? 0
   }

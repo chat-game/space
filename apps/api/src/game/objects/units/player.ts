@@ -2,13 +2,10 @@ import { createId } from "@paralleldrive/cuid2"
 import {
   type IGameObjectPlayer,
   type IGameSkill,
-  type ItemType,
   getRandomInRange,
 } from "../../../../../../packages/api-sdk/src"
 import { db } from "../../../db/db.client"
 import { Inventory, Skill } from "../../common"
-import { Stone } from "../stone"
-import { Tree } from "../tree"
 import { Unit } from "./unit"
 
 interface IPlayerOptions {
@@ -49,59 +46,8 @@ export class Player extends Unit implements IGameObjectPlayer {
   }
 
   live() {
-    this.handleMessages()
-
     super.live()
     this.handleChange()
-
-    if (this.state === "CHOPPING") {
-      if (this.target instanceof Tree) {
-        this.chopTree()
-        this.upSkillWoodsman()
-      }
-      if (this.target?.state === "DESTROYED") {
-        this.state = "IDLE"
-        if (this.target instanceof Tree) {
-          void this.inventory.addOrCreateItem("WOOD", this.target?.resource)
-        }
-        this.handleChange()
-      }
-      return
-    }
-
-    if (this.state === "MINING") {
-      if (this.target instanceof Stone) {
-        // Skill up on random
-        const random = getRandomInRange(1, 200)
-        if (random <= 1) {
-          const skill = this.skills.find((skill) => skill.type === "MINER")
-          if (skill) {
-            void skill.addXp()
-          }
-        }
-
-        // Check instrument
-        const pickaxe = this.inventory.items.find(
-          (item) => item.type === "PICKAXE",
-        )
-        if (pickaxe) {
-          this.target.health -= 0.16
-          const random = getRandomInRange(1, 40)
-          if (random <= 1) {
-            void this.inventory.checkAndBreakItem(pickaxe, 1)
-          }
-        }
-
-        this.target.mine()
-        this.handleChange()
-
-        if (this.target.health <= 0) {
-          void this.stopMining(this.target)
-        }
-      }
-
-      return
-    }
   }
 
   handleChange() {
@@ -114,30 +60,19 @@ export class Player extends Unit implements IGameObjectPlayer {
     this.sendMessageObjectUpdated(prepared)
   }
 
-  async startChopping() {
-    this.state = "CHOPPING"
-    this.direction = "RIGHT"
+  async chopTree() {
+    super.chopTree()
 
     await this.findOrCreateSkillInDB("WOODSMAN")
-
-    await this.updateLastActionAt()
+    this.upSkill("WOODSMAN")
     this.handleChange()
   }
 
-  async startMining() {
-    this.state = "MINING"
-    this.direction = "RIGHT"
+  async mineStone() {
+    super.mineStone()
 
     await this.findOrCreateSkillInDB("MINER")
-
-    await this.updateLastActionAt()
-    this.handleChange()
-  }
-
-  async stopMining(stone: Stone) {
-    this.state = "IDLE"
-    // Reward
-    await this.inventory.addOrCreateItem("STONE", stone.resource)
+    this.upSkill("MINER")
     this.handleChange()
   }
 
@@ -209,23 +144,6 @@ export class Player extends Unit implements IGameObjectPlayer {
     })
   }
 
-  async buyItemFromDealer(type: ItemType, price: number, amount: number) {
-    const item = await this.inventory.tryGetItemInDB(type)
-    if (item) {
-      return false
-    }
-
-    if (this.coins < price) {
-      return false
-    }
-
-    await this.updateCoins(-price)
-    await this.inventory.addOrCreateItem(type, amount)
-    this.handleChange()
-
-    return true
-  }
-
   public async readFromDB() {
     const player = await db.player.findUnique({ where: { id: this.id } })
     if (!player) {
@@ -286,10 +204,10 @@ export class Player extends Unit implements IGameObjectPlayer {
     return skill
   }
 
-  public upSkillWoodsman() {
+  public upSkill(type: IGameSkill["type"]) {
     const random = getRandomInRange(1, 200)
     if (random <= 1) {
-      const skill = this.skills.find((skill) => skill.type === "WOODSMAN")
+      const skill = this.skills.find((skill) => skill.type === type)
       if (skill) {
         void skill.addXp()
       }

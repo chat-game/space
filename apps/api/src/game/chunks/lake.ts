@@ -16,7 +16,7 @@ interface ILakeOptions {
 export class LakeChunk extends GameChunk implements IGameLakeChunk {
   constructor({ width, height, center, theme }: ILakeOptions) {
     super({
-      title: "Озеро с Секретом",
+      title: "Lake with a Secret",
       type: "LAKE",
       width,
       height,
@@ -27,7 +27,6 @@ export class LakeChunk extends GameChunk implements IGameLakeChunk {
     const treesToPrepare = Math.round(
       (this.area.area.endX - this.area.area.startX) / 30,
     )
-    console.log(`preparing ${treesToPrepare} trees`)
     this.initTrees(treesToPrepare)
     this.initStones(3)
     this.initLake()

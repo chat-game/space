@@ -114,6 +114,65 @@ export class QuestService {
     }
   }
 
+  private generateSecondSideQuest() {
+    const sideQuests = this.scene.eventService.events.filter(
+      (e) => e.type === "SIDE_QUEST_STARTED",
+    )
+    if (sideQuests.length >= 1) {
+      return
+    }
+
+    const updateProgress1: IGameQuestTask["updateProgress"] = () => {
+      if (this.scene.chunkNow instanceof Village) {
+        const treesAmount = this.scene.chunkNow.getTreesAmount()
+        if (treesAmount >= 30) {
+          return {
+            status: "SUCCESS",
+            progressNow: treesAmount,
+          }
+        }
+
+        return {
+          status: "ACTIVE",
+          progressNow: treesAmount,
+        }
+      }
+
+      return {
+        status: "ACTIVE",
+      }
+    }
+
+    const quest: IGameQuest = {
+      id: createId(),
+      type: "SIDE",
+      title: "The trees are running out!",
+      description:
+        "In the village, someone is actively cutting down trees. Help is needed!",
+      status: "ACTIVE",
+      creatorId: "1",
+      conditions: {},
+      tasks: [
+        {
+          id: createId(),
+          status: "ACTIVE",
+          description: "There must be 30 trees",
+          progressNow: 0,
+          progressToSuccess: 30,
+          updateProgress: updateProgress1,
+          command: "!plant",
+        },
+      ],
+    }
+
+    this.scene.eventService.init({
+      type: "SIDE_QUEST_STARTED",
+      title: "The trees are running out!",
+      secondsToEnd: 9999999,
+      quest,
+    })
+  }
+
   private generateNewSideQuest() {
     if (!this.scene.chunkNow) {
       return
@@ -122,6 +181,11 @@ export class QuestService {
     if (this.scene.chunkNow instanceof Village) {
       const store = this.scene.chunkNow.getStore()
       if (store) {
+        const notEnough = this.scene.chunkNow.checkIfThereAreNotEnoughTrees()
+        if (notEnough) {
+          return this.generateSecondSideQuest()
+        }
+
         return
       }
     }
@@ -179,9 +243,8 @@ export class QuestService {
     const quest: IGameQuest = {
       id: createId(),
       type: "SIDE",
-      title: "Нет Торгового поста",
-      description:
-        "Местным жителям нужна помощь. Ожидается прибытие торговцев.",
+      title: "No Trading Post",
+      description: "The locals need help. Traders are expected to arrive.",
       status: "ACTIVE",
       creatorId: "1",
       conditions: {},
@@ -189,15 +252,16 @@ export class QuestService {
         {
           id: createId(),
           status: "ACTIVE",
-          description: "Накопить 25 древесины на складе",
+          description: "Accumulate 25 wood in the warehouse",
           progressNow: 0,
           progressToSuccess: 25,
           updateProgress: updateProgress1,
+          command: "!donate wood [quantity]",
         },
         {
           id: createId(),
           status: "ACTIVE",
-          description: "Построить Торговый пост",
+          description: "Build Trading Post",
           progressNow: false,
           progressToSuccess: true,
           updateProgress: updateProgress2,
@@ -207,7 +271,7 @@ export class QuestService {
 
     this.scene.eventService.init({
       type: "SIDE_QUEST_STARTED",
-      title: "Нет Торгового поста",
+      title: "No Trading Post",
       secondsToEnd: 9999999,
       quest,
     })

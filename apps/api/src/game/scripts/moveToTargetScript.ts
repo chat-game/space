@@ -7,10 +7,11 @@ interface IMoveToRandomTargetScriptOptions {
   target: IGameObject
 }
 
-export class MoveToRandomTargetScript extends Script {
+export class MoveToTargetScript extends Script {
   constructor({ target, object }: IMoveToRandomTargetScriptOptions) {
     super({ object })
 
     this.tasks = [this.setTarget(target), this.runToTarget()]
+    this.isInterruptible = true
   }
 }

@@ -5,28 +5,28 @@ import type {
 import type { GameObject } from "../objects"
 import { Script } from "./script"
 
-interface IMoveToTradePostAndTradeScriptOptions {
+interface IMoveOffScreenAndSelfDestroyScriptOptions {
   object: GameObject
   target: IGameObject
-  startTradeFunc: () => void
+  selfDestroyFunc: () => void
 }
 
-export class MoveToTradePostAndTradeScript extends Script {
+export class MoveOffScreenAndSelfDestroyScript extends Script {
   constructor({
     target,
     object,
-    startTradeFunc,
-  }: IMoveToTradePostAndTradeScriptOptions) {
+    selfDestroyFunc,
+  }: IMoveOffScreenAndSelfDestroyScriptOptions) {
     super({ object })
 
     this.tasks = [
       this.setTarget(target),
       this.runToTarget(),
-      this.startTrade(startTradeFunc),
+      this.selfDestroy(selfDestroyFunc),
     ]
   }
 
-  startTrade(func: () => void): IGameTask {
+  selfDestroy(func: () => void): IGameTask {
     return {
       id: "3",
       status: "IDLE",

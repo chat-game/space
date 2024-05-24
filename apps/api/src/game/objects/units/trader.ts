@@ -1,5 +1,7 @@
 import { createId } from "@paralleldrive/cuid2"
 import type { IGameObjectTrader } from "../../../../../../packages/api-sdk/src"
+import { generateUnitUserName } from "../../common/generators/unitName"
+import { generateUnitTop } from "../../common/generators/unitTop"
 import { Unit } from "./unit"
 
 interface ITraderOptions {
@@ -19,13 +21,13 @@ export class Trader extends Unit implements IGameObjectTrader {
       visual: {
         head: "1",
         hairstyle: "COAL_LONG",
-        top: "GREEN_SHIRT",
+        top: generateUnitTop(),
       },
     })
 
     this.speed = 1
     this.minDistance = 5
-    this.userName = "Торговец"
+    this.userName = generateUnitUserName()
   }
 
   live() {

@@ -120,3 +120,14 @@ model Stone {
   progressFinishAt DateTime @default(now())
   type             String
 }
+
+model GameAction {
+  id     String @id
+  action String
+}
+
+model ChatCommand {
+  id      String @id
+  action  String
+  command String
+}

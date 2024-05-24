@@ -13,6 +13,7 @@ interface IScriptOptions {
 export class Script implements IGameScript {
   public id: string
   public tasks!: IGameScript["tasks"]
+  public isInterruptible = false
 
   public object!: GameObject
 

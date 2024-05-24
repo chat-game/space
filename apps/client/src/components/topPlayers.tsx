@@ -10,48 +10,48 @@ export const TopPlayersBlock = () => {
   return (
     <div className="flex flex-row flex-nowrap gap-2 items-end">
       <div className="w-28 px-3 py-2 font-bold text-xl leading-6 bg-primary text-primary border-primary border-b-4 rounded-2xl">
-        Топ игроков
+        Top players
       </div>
       <div className="h-fit flex flex-nowrap gap-2">
         <TopPlayerCard
           player={playersWithResult.viewer?.player}
-          points={`${playersWithResult.viewer?.points} баллов`}
-          title={{ title: "Зритель", type: "VIEWER" }}
+          points={`${playersWithResult.viewer?.points} points`}
+          title={{ title: "Viewer", type: "VIEWER" }}
         />
         <TopPlayerCard
           player={playersWithResult.raider?.player}
-          points={`${playersWithResult.raider?.points} зрителей`}
-          title={{ title: "Рейдер", type: "RAIDER" }}
+          points={`${playersWithResult.raider?.points} viewers`}
+          title={{ title: "Raider", type: "RAIDER" }}
         />
         <TopPlayerCard
           player={playersWithResult.rich?.player}
-          points={`${playersWithResult.rich?.points} монет`}
-          title={{ title: "Богач", type: "RICH" }}
+          points={`${playersWithResult.rich?.points} coins`}
+          title={{ title: "Rich", type: "RICH" }}
         />
         <TopPlayerCard
           player={playersWithResult.villain?.player}
-          points={`${playersWithResult.villain?.points} очков`}
-          title={{ title: "Злодей", type: "VILLAIN" }}
+          points={`${playersWithResult.villain?.points} points`}
+          title={{ title: "Villain", type: "VILLAIN" }}
         />
         <TopPlayerCard
           player={playersWithResult.famous?.player}
-          points={`${playersWithResult.famous?.points} очков`}
-          title={{ title: "Филантроп", type: "FAMOUS" }}
+          points={`${playersWithResult.famous?.points} points`}
+          title={{ title: "Good guy", type: "FAMOUS" }}
         />
         <TopPlayerCard
           player={playersWithResult.refueller?.player}
-          points={`${playersWithResult.refueller?.points} топлива`}
-          title={{ title: "Заправщик", type: "REFUELLER" }}
+          points={`${playersWithResult.refueller?.points} fuel`}
+          title={{ title: "Refueler", type: "REFUELLER" }}
         />
         <TopPlayerCard
           player={playersWithResult.woodsman?.player}
-          points={`${playersWithResult.woodsman?.points} уровень`}
-          title={{ title: "Дровосек", type: "WOODSMAN" }}
+          points={`${playersWithResult.woodsman?.points} level`}
+          title={{ title: "Woodman", type: "WOODSMAN" }}
         />
         <TopPlayerCard
           player={playersWithResult.miner?.player}
-          points={`${playersWithResult.miner?.points} уровень`}
-          title={{ title: "Шахтер", type: "MINER" }}
+          points={`${playersWithResult.miner?.points} level`}
+          title={{ title: "Miner", type: "MINER" }}
         />
       </div>
     </div>

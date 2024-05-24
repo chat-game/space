@@ -45,7 +45,7 @@ export class PollService {
 
   public create(votesToSuccess: number): IGamePoll {
     const id = this.generatePollId()
-    const commandToVote = `!го ${id}`
+    const commandToVote = `!go ${id}`
 
     return {
       id,
