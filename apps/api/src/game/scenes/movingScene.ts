@@ -25,14 +25,16 @@ export class MovingScene extends GameScene {
   }
 
   initStartingVillage() {
+    const initialOffsetX = 500
+    const initialOffsetY = 2000
     const width = 3600
     const height = 2000
     const area = {
       width,
       height,
       center: {
-        x: Math.round(width / 2),
-        y: Math.round(height / 2),
+        x: Math.round(width / 2 + initialOffsetX),
+        y: Math.round(height / 2 + initialOffsetY),
       },
     }
     const village = this.wagonService.routeService.generateRandomVillage({

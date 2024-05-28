@@ -1,14 +1,17 @@
 import type {
   GameSceneType,
+  IGameActionResponse,
   IGameSceneAction,
   ItemType,
 } from "../../../../../packages/api-sdk/src"
+import { ANSWER } from "../../../../../packages/api-sdk/src/lib/actionAnswer"
 import {
   ADMIN_PLAYER_ID,
   DISCORD_SERVER_INVITE_URL,
   DONATE_URL,
   GITHUB_REPO_URL,
 } from "../../config"
+import type { Action } from "../actions/action"
 import { Village } from "../chunks"
 import { Group } from "../common"
 import { Stone, Tree } from "../objects"
@@ -19,46 +22,10 @@ import { ChopTreeScript } from "../scripts/chopTreeScript"
 import { MineStoneScript } from "../scripts/mineStoneScript"
 import { PlantNewTreeScript } from "../scripts/plantNewTreeScript"
 
-const ANSWER = {
-  OK: {
-    ok: true,
-    message: null,
-  },
-  ERROR: {
-    ok: false,
-    message: null,
-  },
-  CANT_DO_THIS_NOW_ERROR: {
-    ok: false,
-    message: "This cannot be done now.",
-  },
-  NO_PLAYER_ERROR: {
-    ok: false,
-    message: "You are not in active game :(",
-  },
-  NO_TARGET_ERROR: {
-    ok: false,
-    message: "No target specified.",
-  },
-  WRONG_AMOUNT_ERROR: {
-    ok: false,
-    message: "Incorrect quantity specified.",
-  },
-  ALREADY_VOTED_ERROR: {
-    ok: false,
-    message: "You've already voted.",
-  },
-}
-
 interface ICommandWithAction {
   id: string
   action: IGameSceneAction
   command: string
-}
-
-interface IGameAction {
-  id: string
-  action: IGameSceneAction
 }
 
 interface IActionServiceOptions {
@@ -67,7 +34,7 @@ interface IActionServiceOptions {
 
 export class ActionService {
   public possibleCommands!: ICommandWithAction[]
-  public possibleActions!: IGameAction[]
+  public possibleActions!: IGameSceneAction[]
   public activeActions!: IGameSceneAction[]
   public scene: GameScene
 
@@ -84,13 +51,37 @@ export class ActionService {
   }
 
   async initActions() {
-    this.possibleActions =
-      (await this.scene.game.repository.findAllGameActions()) as IGameAction[]
-    this.activeActions = this.possibleActions.map((action) => action.action)
+    this.possibleActions = [
+      "HELP",
+      "GIFT",
+      "TRADE",
+      "DONATE",
+      "REFUEL",
+      "STEAL_FUEL",
+      "CHOP",
+      "MINE",
+      "PLANT",
+      "START_GROUP_BUILD",
+      "DISBAND_GROUP",
+      "JOIN_GROUP",
+      "START_POLL",
+      "VOTE",
+      "START_CHANGING_SCENE",
+      "START_RAID",
+      "CREATE_NEW_PLAYER",
+      "START_CREATING_NEW_ADVENTURE",
+      "SHOW_MESSAGE",
+      "GITHUB",
+    ]
+    this.activeActions = this.possibleActions
   }
 
   public findActionByCommand(command: string) {
     return this.possibleCommands.find((a) => a.command === command)
+  }
+
+  public findDynamicActionByCommand(command: string) {
+    return this.scene.eventService.findActionByCommandInQuest(command)
   }
 
   public async handleAction(
@@ -165,6 +156,27 @@ export class ActionService {
     }
     if (action === "TRADE") {
       return this.tradeAction(player, params)
+    }
+
+    return ANSWER.ERROR
+  }
+
+  public async handleDynamicAction(
+    action: Action,
+    playerId: string,
+    params: string[],
+  ): Promise<IGameActionResponse> {
+    const player = await this.scene.findOrCreatePlayer(playerId)
+    if (!player) {
+      return ANSWER.NO_PLAYER_ERROR
+    }
+
+    this.scene.group.join(player)
+    player.updateLastActionAt()
+
+    const answer = await action.live(player, params)
+    if (answer) {
+      return answer
     }
 
     return ANSWER.ERROR

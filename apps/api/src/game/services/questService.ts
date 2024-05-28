@@ -2,8 +2,13 @@ import { createId } from "@paralleldrive/cuid2"
 import type {
   IGameQuest,
   IGameQuestTask,
+  IGameQuestTaskFunc,
 } from "../../../../../packages/api-sdk/src"
+import { DonateWoodToVillageAction } from "../actions/donateWoodToVillageAction"
+import { PlantTreeAction } from "../actions/plantTreeAction"
 import { Village } from "../chunks"
+import { NoTradingPostQuest } from "../quests/noTradingPostQuest"
+import { TreesAreRunningOutQuest } from "../quests/treesAreRunningOutQuest"
 import type { GameScene } from "../scenes"
 
 interface IQuestServiceOptions {
@@ -122,7 +127,7 @@ export class QuestService {
       return
     }
 
-    const updateProgress1: IGameQuestTask["updateProgress"] = () => {
+    const taskUpdateFunc1: IGameQuestTask["updateProgress"] = () => {
       if (this.scene.chunkNow instanceof Village) {
         const treesAmount = this.scene.chunkNow.getTreesAmount()
         if (treesAmount >= 30) {
@@ -143,27 +148,13 @@ export class QuestService {
       }
     }
 
-    const quest: IGameQuest = {
-      id: createId(),
-      type: "SIDE",
-      title: "The trees are running out!",
-      description:
-        "In the village, someone is actively cutting down trees. Help is needed!",
-      status: "ACTIVE",
+    const taskAction1 = new PlantTreeAction({ scene: this.scene })
+
+    const quest = new TreesAreRunningOutQuest({
       creatorId: "1",
-      conditions: {},
-      tasks: [
-        {
-          id: createId(),
-          status: "ACTIVE",
-          description: "There must be 30 trees",
-          progressNow: 0,
-          progressToSuccess: 30,
-          updateProgress: updateProgress1,
-          command: "!plant",
-        },
-      ],
-    }
+      taskUpdateFunc1,
+      taskAction1,
+    })
 
     this.scene.eventService.init({
       type: "SIDE_QUEST_STARTED",
@@ -197,7 +188,7 @@ export class QuestService {
       return
     }
 
-    const updateProgress1: IGameQuestTask["updateProgress"] = () => {
+    const taskUpdateFunc1: IGameQuestTaskFunc = () => {
       if (this.scene.chunkNow instanceof Village) {
         const warehouse = this.scene.chunkNow.getWarehouse()
         if (warehouse) {
@@ -223,7 +214,9 @@ export class QuestService {
       }
     }
 
-    const updateProgress2: IGameQuestTask["updateProgress"] = () => {
+    const taskAction1 = new DonateWoodToVillageAction({ scene: this.scene })
+
+    const taskUpdateFunc2: IGameQuestTaskFunc = () => {
       if (this.scene.chunkNow instanceof Village) {
         const store = this.scene.chunkNow.getStore()
         if (store) {
@@ -240,34 +233,12 @@ export class QuestService {
       }
     }
 
-    const quest: IGameQuest = {
-      id: createId(),
-      type: "SIDE",
-      title: "No Trading Post",
-      description: "The locals need help. Traders are expected to arrive.",
-      status: "ACTIVE",
+    const quest = new NoTradingPostQuest({
       creatorId: "1",
-      conditions: {},
-      tasks: [
-        {
-          id: createId(),
-          status: "ACTIVE",
-          description: "Accumulate 25 wood in the warehouse",
-          progressNow: 0,
-          progressToSuccess: 25,
-          updateProgress: updateProgress1,
-          command: "!donate wood [quantity]",
-        },
-        {
-          id: createId(),
-          status: "ACTIVE",
-          description: "Build Trading Post",
-          progressNow: false,
-          progressToSuccess: true,
-          updateProgress: updateProgress2,
-        },
-      ],
-    }
+      taskUpdateFunc1,
+      taskUpdateFunc2,
+      taskAction1,
+    })
 
     this.scene.eventService.init({
       type: "SIDE_QUEST_STARTED",

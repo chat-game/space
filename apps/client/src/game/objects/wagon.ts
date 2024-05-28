@@ -1,9 +1,10 @@
 import { Sprite } from "pixi.js"
 import type { IGameObjectWagon } from "../../../../../packages/api-sdk/src"
 import type { GraphicsContainer } from "../components/graphicsContainer"
-import { WagonCargoContainer } from "../components/wagonCargoContainer.ts"
+import { WagonCargoContainer } from "../components/wagonCargoContainer"
 import { WagonEngineCloudsContainer } from "../components/wagonEngineCloudsContainer"
 import { WagonEngineContainer } from "../components/wagonEngineContainer"
+import { WagonFuelBoxContainer } from "../components/wagonFuelBoxContainer"
 import { WagonWheelContainer } from "../components/wagonWheelContainer"
 import type { Game } from "../game"
 import { GameObjectContainer } from "./gameObjectContainer"
@@ -42,6 +43,9 @@ export class Wagon extends GameObjectContainer implements IGameObjectWagon {
     const engine = WagonEngineContainer.create("wagonEngine1", "RIGHT")
     engine.scale = 0.75
 
+    const storage = WagonFuelBoxContainer.create()
+    storage.scale = 0.75
+
     const wheel1 = WagonWheelContainer.create("wagonWheel1", "RIGHT", "LEFT")
     const wheel2 = WagonWheelContainer.create("wagonWheel1", "RIGHT", "RIGHT")
     wheel1.scale = 0.75
@@ -49,7 +53,16 @@ export class Wagon extends GameObjectContainer implements IGameObjectWagon {
 
     const clouds = new WagonEngineCloudsContainer()
 
-    this.addChild(spriteBase, engine, cargo, spriteSide, wheel1, wheel2, clouds)
+    this.addChild(
+      spriteBase,
+      engine,
+      cargo,
+      spriteSide,
+      storage,
+      wheel1,
+      wheel2,
+      clouds,
+    )
   }
 
   animate() {
@@ -59,6 +72,7 @@ export class Wagon extends GameObjectContainer implements IGameObjectWagon {
       this.drawWheels(container)
       this.drawEngine(container)
       this.drawCargo(container)
+      this.drawFuel(container)
 
       if (container instanceof WagonEngineCloudsContainer) {
         container.animate(this.speed)
@@ -107,6 +121,22 @@ export class Wagon extends GameObjectContainer implements IGameObjectWagon {
 
       if (!this.cargoType) {
         container.visible = false
+      }
+    }
+  }
+
+  drawFuel(container: GraphicsContainer) {
+    let initFuel = this.fuel
+    if (container instanceof WagonFuelBoxContainer) {
+      for (const c of container.children) {
+        for (const fuelSprite of c.children) {
+          fuelSprite.visible = false
+          initFuel -= 500
+
+          if (initFuel > 500) {
+            fuelSprite.visible = true
+          }
+        }
       }
     }
   }

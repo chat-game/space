@@ -1,8 +1,10 @@
 import type {
   GameSceneType,
   IGameEvent,
+  IGameQuest,
   IGameQuestTask,
 } from "../../../../../packages/api-sdk/src"
+import type { Action } from "../actions/action"
 import { Village } from "../chunks"
 import { Event } from "../common"
 import type { GameScene } from "../scenes"
@@ -80,14 +82,49 @@ export class EventService {
       status: event.status,
       endsAt: event.endsAt,
       poll: event.poll,
-      quest: event.quest,
+      quest: this.prepareQuestData(event.quest),
       offers: event.offers,
     }))
+  }
+
+  prepareQuestData(quest: IGameQuest | undefined) {
+    if (!quest) {
+      return
+    }
+
+    const tasks = quest?.tasks.map((t) => {
+      const action = t.action
+        ? {
+            ...t.action,
+            live: undefined,
+            scene: undefined,
+          }
+        : undefined
+      return { ...t, action }
+    })
+
+    return {
+      ...quest,
+      tasks,
+    }
   }
 
   public destroy(event: Event) {
     const index = this.events.indexOf(event)
     this.events.splice(index, 1)
+  }
+
+  public findActionByCommandInQuest(command: string) {
+    for (const event of this.events) {
+      if (event.quest?.tasks) {
+        const task = event.quest.tasks.find(
+          (q) => q.action?.command === command,
+        )
+        if (task?.action) {
+          return task.action as Action
+        }
+      }
+    }
   }
 
   private handleEnding(event: Event) {

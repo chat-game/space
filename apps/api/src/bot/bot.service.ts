@@ -42,6 +42,24 @@ export class BotService {
 
         return
       }
+
+      const dynamicAction =
+        this.game.scene.actionService.findDynamicActionByCommand(
+          possibleCommand,
+        )
+      if (dynamicAction) {
+        const params = otherStrings
+
+        const result = await this.game.handleDynamicActionFromChat({
+          action: dynamicAction,
+          userId,
+          userName,
+          params,
+        })
+        if (result.message) {
+          return result.message
+        }
+      }
     }
 
     void this.game.handleActionFromChat({

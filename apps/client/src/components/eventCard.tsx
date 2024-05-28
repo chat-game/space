@@ -232,10 +232,10 @@ const QuestTask = ({ task }: { task: IGameQuestTask }) => {
         <p>{task.description}</p>
       </div>
 
-      {task.status === "ACTIVE" && task.command && (
+      {task.status === "ACTIVE" && task.action?.commandDescription && (
         <div className="mt-1">
           <p className="mb-2 py-1 text-xl font-bold text-center bg-zinc-100 rounded-2xl">
-            {task.command}
+            {task.action.commandDescription}
           </p>
         </div>
       )}

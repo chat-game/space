@@ -121,11 +121,6 @@ model Stone {
   type             String
 }
 
-model GameAction {
-  id     String @id
-  action String
-}
-
 model ChatCommand {
   id      String @id
   action  String

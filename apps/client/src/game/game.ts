@@ -83,10 +83,8 @@ export class Game extends Container {
     this.audio.playBackgroundSound()
 
     const bg = await this.bg.getGeneratedBackgroundTilingSprite()
-    bg.x = -500
-    bg.y = -500
-    bg.width = 50000
-    bg.height = 50000
+    bg.width = 100000
+    bg.height = 100000
     this.scene.app.stage.addChild(bg)
 
     this.scene.app.stage.addChild(this)
@@ -97,8 +95,10 @@ export class Game extends Container {
 
       const wagon = this.children.find((child) => child instanceof Wagon)
       if (wagon) {
-        this.moveCameraToWagon(wagon as Wagon)
+        this.changeCameraPosition(wagon as Wagon)
       }
+
+      this.moveCamera()
     })
 
     WebSocketManager.init(this)
@@ -109,46 +109,63 @@ export class Game extends Container {
     }, 1000)
   }
 
-  moveCameraToWagon(wagon: Wagon) {
-    const cameraMaxSpeed = 0.3
+  changeCameraPosition(wagon: Wagon) {
     const columnWidth = this.scene.app.screen.width / 6
+    const rowHeight = this.scene.app.screen.height / 6
+
     let leftPadding =
       wagon.direction === "LEFT" ? columnWidth * 4 : columnWidth * 2
+    let topPadding = rowHeight * 3
 
     if (wagon.speed === 0) {
       leftPadding = columnWidth * 3
+
+      if (wagon.state === "IDLE" && !wagon.cargoType) {
+        // At Village stop
+        leftPadding = columnWidth
+        topPadding = rowHeight * 4
+      }
     }
 
-    const topPadding = this.scene.app.screen.height / 2
-
-    this.cameraPerfectX = -wagon.x + this.cameraOffsetX + leftPadding
-    this.cameraPerfectY = -wagon.y + this.cameraOffsetY + topPadding
-
-    const module = this.cameraPerfectX - this.cameraX > 0 ? 1 : -1
-    const bufferX = Math.abs(this.cameraPerfectX - this.cameraX)
-    const addToX = bufferX > cameraMaxSpeed ? cameraMaxSpeed : bufferX
+    this.cameraPerfectX = -wagon.x + leftPadding
+    this.cameraPerfectY = -wagon.y + topPadding
 
     // If first load
     if (Math.abs(-wagon.x - this.cameraX) > 3000) {
       this.cameraX = this.cameraPerfectX
     }
+    if (Math.abs(-wagon.y - this.cameraY) > 3000) {
+      this.cameraY = this.cameraPerfectY
+    }
+  }
 
-    // Animation
+  moveCamera() {
+    const cameraMaxSpeed = 0.2
+    const bufferX = Math.abs(this.cameraPerfectX - this.cameraX)
+    const moduleX = this.cameraPerfectX - this.cameraX > 0 ? 1 : -1
+    const addToX = bufferX > cameraMaxSpeed ? cameraMaxSpeed : bufferX
+
     if (this.cameraX !== this.cameraPerfectX) {
-      this.cameraX += addToX * module
+      this.cameraX += addToX * moduleX
     }
 
-    this.cameraY = this.cameraPerfectY
+    const bufferY = Math.abs(this.cameraPerfectY - this.cameraY)
+    const moduleY = this.cameraPerfectY - this.cameraY > 0 ? 1 : -1
+    const addToY = bufferY > cameraMaxSpeed ? cameraMaxSpeed : bufferY
 
-    if (Math.abs(this.cameraOffsetX) >= 20) {
-      this.cameraMovementSpeedX *= -1
+    if (this.cameraY !== this.cameraPerfectY) {
+      this.cameraY += addToY * moduleY
     }
-    this.cameraOffsetX += this.cameraMovementSpeedX
 
-    if (Math.abs(this.cameraOffsetY) >= 30) {
-      this.cameraMovementSpeedY *= -1
-    }
-    this.cameraOffsetY += this.cameraMovementSpeedY
+    // if (Math.abs(this.cameraOffsetX) >= 20) {
+    //   this.cameraMovementSpeedX *= -1
+    // }
+    // this.cameraOffsetX += this.cameraMovementSpeedX
+    //
+    // if (Math.abs(this.cameraOffsetY) >= 30) {
+    //   this.cameraMovementSpeedY *= -1
+    // }
+    // this.cameraOffsetY += this.cameraMovementSpeedY
 
     this.parent.x = this.cameraX
     this.parent.y = this.cameraY

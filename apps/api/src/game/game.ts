@@ -1,9 +1,11 @@
 import type {
   GameSceneType,
+  IGameActionResponse,
   IGameSceneAction,
 } from "../../../../packages/api-sdk/src"
 import { DBRepository } from "../db/db.repository"
 import { sendMessage } from "../websocket/websocket.server"
+import type { Action } from "./actions/action"
 import {
   DefenceScene,
   type GameScene,
@@ -42,6 +44,26 @@ export class Game {
     const player = await this.repository.findOrCreatePlayer(userId, userName)
 
     return this.scene.actionService.handleAction(action, player.id, params)
+  }
+
+  public async handleDynamicActionFromChat({
+    action,
+    userId,
+    userName,
+    params,
+  }: {
+    action: Action
+    userId: string
+    userName: string
+    params: string[]
+  }): Promise<IGameActionResponse> {
+    const player = await this.repository.findOrCreatePlayer(userId, userName)
+
+    return this.scene.actionService.handleDynamicAction(
+      action,
+      player.id,
+      params,
+    )
   }
 
   public initScene(scene: GameSceneType) {

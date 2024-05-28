@@ -1,3 +1,8 @@
+## 2024-05-28
+
+- Dynamic actions and commands! Now game can manipulate with them, generating new and using in Quests
+- Wagon fuel now have own visual
+
 ## 2024-05-23
 
 - New commands parser. No static commands at server start. Now active commands in Game

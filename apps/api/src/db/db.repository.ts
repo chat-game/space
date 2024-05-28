@@ -207,8 +207,4 @@ export class DBRepository {
   findAllChatCommands() {
     return db.chatCommand.findMany()
   }
-
-  findAllGameActions() {
-    return db.gameAction.findMany()
-  }
 }

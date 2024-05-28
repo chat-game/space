@@ -15,6 +15,16 @@ export interface TwitchAccessToken {
   obtainmentTimestamp: number
 }
 
+export interface IGameAction {
+  command: string
+  commandDescription: string
+}
+
+export interface IGameActionResponse {
+  ok: boolean
+  message: string | null
+}
+
 export type IGameSceneAction =
   | "HELP"
   | "GIFT"
@@ -85,11 +95,14 @@ export interface IGameQuestTask {
   status: "INACTIVE" | "ACTIVE" | "FAILED" | "SUCCESS"
   progressNow: number | boolean
   progressToSuccess: number | boolean
-  updateProgress: (
-    progressToSuccess?: IGameQuestTask["progressToSuccess"],
-  ) => Partial<IGameQuestTask>
+  updateProgress: IGameQuestTaskFunc
   command?: string
+  action?: IGameAction
 }
+
+export type IGameQuestTaskFunc = (
+  progressToSuccess?: IGameQuestTask["progressToSuccess"],
+) => Partial<IGameQuestTask>
 
 export interface IGameChunk {
   id: string
@@ -384,4 +397,5 @@ export type GraphicsContainerType =
   | "WAGON_ENGINE"
   | "WAGON_ENGINE_CLOUD"
   | "WAGON_CARGO"
+  | "WAGON_FUEL"
   | "FIRE_PARTICLE"

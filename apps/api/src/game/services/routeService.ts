@@ -52,7 +52,7 @@ export class RouteService {
 
   generateAdventure(village: Village, chunks: number) {
     const wagonStartPoint = village.getWagonStopPoint()
-    const villageOutPoint = village.getRandomOutPointOnRight()
+    const villageOutPoint = village.getRandomOutPoint()
 
     this.route = new Route()
     this.route.addGlobalFlag(wagonStartPoint)
@@ -68,19 +68,16 @@ export class RouteService {
 
     for (let i = 1; i <= amount; i++) {
       const chunk = this.generateRandomChunk(outPoint)
-      if (!chunk) {
-        continue
-      }
-
-      outPoint = chunk.getRandomOutPointOnRight()
+      outPoint = chunk.getRandomOutPoint()
       this.route?.addGlobalFlag(outPoint)
       this.route?.addChunk(chunk)
     }
 
     // Generate last chunk
+    const finalVillageWidth = 3600
     const finalVillage = this.generateRandomVillage({
-      center: { x: outPoint.x + 2500 / 2, y: outPoint.y },
-      width: 2500,
+      center: { x: outPoint.x + finalVillageWidth / 2, y: outPoint.y },
+      width: finalVillageWidth,
       height: 2000,
       theme: this.getRandomTheme(),
     })
@@ -94,8 +91,8 @@ export class RouteService {
   generateRandomChunk(startPoint: { x: number; y: number }) {
     const random = getRandomInRange(1, 2)
 
-    const width = getRandomInRange(1500, 2500)
-    const height = getRandomInRange(2200, 3000)
+    const width = getRandomInRange(2000, 3000)
+    const height = getRandomInRange(2500, 3500)
     const center = {
       x: startPoint.x + width / 2,
       y: startPoint.y,
@@ -104,21 +101,26 @@ export class RouteService {
     switch (random) {
       case 1:
         return this.generateRandomForest({
-          center: center,
-          width: width,
-          height: height,
+          center,
+          width,
+          height,
           theme: this.getRandomTheme(),
         })
       case 2:
         return this.generateRandomLake({
-          center: center,
-          width: width,
-          height: height,
+          center,
+          width,
+          height,
           theme: this.getRandomTheme(),
         })
-      default:
-        return undefined
     }
+
+    return this.generateRandomForest({
+      center,
+      width,
+      height,
+      theme: this.getRandomTheme(),
+    })
   }
 
   markObjectsAsOnWagonPath(route: Route) {

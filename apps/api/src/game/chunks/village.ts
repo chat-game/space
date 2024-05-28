@@ -262,13 +262,13 @@ export class Village extends GameChunk implements IGameVillageChunk {
     )
     this.objects.push(
       new WagonStop({
-        x: this.center.x - 480,
-        y: this.center.y + 220,
+        x: this.center.x - 780,
+        y: this.center.y + 380,
       }),
     )
     this.objects.push(
       new ConstructionArea({
-        x: this.center.x + 400,
+        x: this.center.x + 600,
         y: this.center.y + 250,
       }),
     )

@@ -79,6 +79,9 @@ import wagonEngineCloud2 from "../assets/images/wagon/clouds/2.png"
 import wagonEngineCloud3 from "../assets/images/wagon/clouds/3.png"
 import wagonEngineCloud4 from "../assets/images/wagon/clouds/4.png"
 import wagonEngine1 from "../assets/images/wagon/engine-1.png"
+import wagonFuel1 from "../assets/images/wagon/fuel-1.png"
+import wagonFuel2 from "../assets/images/wagon/fuel-2.png"
+import wagonFuelContainer1 from "../assets/images/wagon/fuel-container.png"
 import wagonBase1 from "../assets/images/wagon/wagon-1.png"
 import wagonBase2 from "../assets/images/wagon/wagon-2.png"
 import wagonWheel1 from "../assets/images/wagon/wheel-1.png"
@@ -130,6 +133,9 @@ export abstract class AssetsManager {
     { alias: "wagonEngineCloud2", src: wagonEngineCloud2 },
     { alias: "wagonEngineCloud3", src: wagonEngineCloud3 },
     { alias: "wagonEngineCloud4", src: wagonEngineCloud4 },
+    { alias: "wagonFuelContainer1", src: wagonFuelContainer1 },
+    { alias: "wagonFuel1", src: wagonFuel1 },
+    { alias: "wagonFuel2", src: wagonFuel2 },
     { alias: "chest1", src: chest1 },
     { alias: "coin1", src: coin1 },
   ]
