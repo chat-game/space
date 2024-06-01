@@ -617,5 +617,8 @@ export class Game extends Container {
     if (event === "SCENE_CHANGED") {
       this.rebuildScene()
     }
+    if (event === "IDEA_CREATED") {
+      this.audio.playYeahSound()
+    }
   }
 }

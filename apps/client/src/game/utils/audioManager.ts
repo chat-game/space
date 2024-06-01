@@ -6,6 +6,7 @@ import handPunch1Audio from "../assets/audio/hand-punch-1.wav"
 import marchWithHorns1Audio from "../assets/audio/marching-with-horns-1.wav"
 import mine1Audio from "../assets/audio/mine-1.wav"
 import wagon1Audio from "../assets/audio/wagon-1.wav"
+import yeah1Audio from "../assets/audio/yeah-1.wav"
 
 type SoundName =
   | "chop-hit"
@@ -15,6 +16,7 @@ type SoundName =
   | "forest-background"
   | "wagon-moving"
   | "fire-burn"
+  | "yeah"
 
 export class AudioManager {
   public chop1 = new Howl({
@@ -49,6 +51,10 @@ export class AudioManager {
     src: fireBurn1Audio,
   })
 
+  public yeah1 = new Howl({
+    src: yeah1Audio,
+  })
+
   getSounds(name: SoundName): Howl[] {
     switch (name) {
       case "chop-hit":
@@ -65,6 +71,8 @@ export class AudioManager {
         return [this.wagon1]
       case "fire-burn":
         return [this.fireBurn1]
+      case "yeah":
+        return [this.yeah1]
       default:
         return []
     }
@@ -120,5 +128,12 @@ export class AudioManager {
       return
     }
     return this.play({ name: "hand-hit", volume: 0.2 })
+  }
+
+  playYeahSound() {
+    if (this.yeah1.playing()) {
+      return
+    }
+    return this.play({ name: "yeah", volume: 0.8 })
   }
 }

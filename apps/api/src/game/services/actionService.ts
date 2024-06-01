@@ -81,7 +81,15 @@ export class ActionService {
   }
 
   public findDynamicActionByCommand(command: string) {
-    return this.scene.eventService.findActionByCommandInQuest(command)
+    const quest = this.scene.eventService.findActionByCommandInQuest(command)
+    if (quest) {
+      return quest
+    }
+
+    const poll = this.scene.eventService.findActionByCommandInPoll(command)
+    if (poll) {
+      return poll
+    }
   }
 
   public async handleAction(
@@ -136,9 +144,6 @@ export class ActionService {
       }
       return this.disbandGroupAction()
     }
-    if (action === "VOTE") {
-      return this.voteAction(player, params)
-    }
     if (action === "STEAL_FUEL") {
       return this.stealFuelAction(player)
     }
@@ -156,6 +161,9 @@ export class ActionService {
     }
     if (action === "TRADE") {
       return this.tradeAction(player, params)
+    }
+    if (action === "CREATE_IDEA") {
+      return this.createIdeaAction(player, params)
     }
 
     return ANSWER.ERROR
@@ -218,6 +226,7 @@ export class ActionService {
 
     this.scene.eventService.init({
       title: "The raid has started!",
+      description: "",
       type: "RAID_STARTED",
       secondsToEnd: 60 * 5,
     })
@@ -316,18 +325,12 @@ export class ActionService {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
     if (player.script && !player.script.isInterruptible) {
-      return {
-        ok: false,
-        message: `${player.userName}, you're busy right now.`,
-      }
+      return ANSWER.BUSY_ERROR
     }
 
     const target = this.scene.getTreeToChop()
     if (!target) {
-      return {
-        ok: false,
-        message: `${player.userName}, no available tree.`,
-      }
+      return ANSWER.NO_AVAILABLE_TREE_ERROR
     }
 
     const chopTreeFunc = (): boolean => {
@@ -449,6 +452,7 @@ export class ActionService {
     this.scene.eventService.init({
       type: "SCENE_CHANGING_STARTED",
       title: "Changing location",
+      description: "",
       scene,
       secondsToEnd: 10,
     })
@@ -486,6 +490,7 @@ export class ActionService {
     this.scene.eventService.init({
       type: "GROUP_FORM_STARTED",
       title: "The group is recruiting!",
+      description: "",
       scene,
       secondsToEnd: 120,
     })
@@ -503,33 +508,6 @@ export class ActionService {
     return {
       ok: true,
       message: "The group has been disbanded!",
-    }
-  }
-
-  private voteAction(player: Player, params?: string[]) {
-    if (!this.isActionPossible("VOTE")) {
-      return ANSWER.CANT_DO_THIS_NOW_ERROR
-    }
-
-    if (!params) {
-      return ANSWER.NO_TARGET_ERROR
-    }
-
-    const voteStatus =
-      this.scene.eventService.pollService.findActivePollAndVote(
-        params[0],
-        player,
-      )
-    if (voteStatus === "VOTED_ALREADY") {
-      return ANSWER.ALREADY_VOTED_ERROR
-    }
-    if (voteStatus === "POLL_NOT_FOUND") {
-      return ANSWER.ERROR
-    }
-
-    return {
-      ok: true,
-      message: `${player.userName}, you voted!`,
     }
   }
 
@@ -689,5 +667,18 @@ export class ActionService {
       ok: true,
       message: `${player.userName}, successful trade deal!`,
     }
+  }
+
+  private createIdeaAction(player: Player, params: string[] | undefined) {
+    const text = params ? params[0] : ""
+
+    this.scene.eventService.init({
+      title: "New idea from Twitch Viewer!",
+      description: `${player.userName}: ${text}`,
+      type: "IDEA_CREATED",
+      secondsToEnd: 60 * 3,
+    })
+
+    return ANSWER.OK
   }
 }

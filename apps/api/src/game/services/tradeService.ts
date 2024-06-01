@@ -3,6 +3,7 @@ import {
   getRandomInRange,
 } from "../../../../../packages/api-sdk/src"
 import { Village } from "../chunks"
+import { Poll } from "../common"
 import { Flag } from "../objects"
 import type { Player } from "../objects/units"
 import { Trader } from "../objects/units/trader"
@@ -112,6 +113,7 @@ export class TradeService {
             const startTradeFunc = () => {
               this.scene.eventService.init({
                 title: "Trade in progress",
+                description: "",
                 type: "TRADE_STARTED",
                 secondsToEnd: 60 * 6,
                 offers: this.offers,
@@ -288,9 +290,12 @@ export class TradeService {
         ? this.scene.findActivePlayers().length
         : 1
 
+    const poll = new Poll({ votesToSuccess, scene: this.scene })
+
     this.scene.eventService.init({
       type: "VOTING_FOR_NEW_MAIN_QUEST_STARTED",
       title: "The merchant offers a quest",
+      description: "Let's make the quest active? Vote in chat.",
       secondsToEnd: 180,
       quest: this.scene.eventService.questService.create({
         status: "INACTIVE",
@@ -305,7 +310,7 @@ export class TradeService {
           limitSeconds: 3000,
         },
       }),
-      poll: this.scene.eventService.pollService.create(votesToSuccess),
+      poll,
     })
   }
 }

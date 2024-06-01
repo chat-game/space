@@ -91,16 +91,19 @@ export class BotService {
     userId,
     userName,
     rewardId,
+    message,
   }: {
     userId: string
     userName: string
     rewardId: string
+    message: string
   }) {
     console.log(
       "The viewer bought a reward using channel points",
       userId,
       userName,
       rewardId,
+      message,
     )
     const player = await this.game.repository.findOrCreatePlayer(
       userId,
@@ -115,6 +118,14 @@ export class BotService {
         action: "STEAL_FUEL",
         userId,
         userName,
+      })
+    }
+    if (rewardId === TWITCH_CHANNEL_REWARDS.addNewIdea) {
+      return this.game.handleActionFromChat({
+        action: "CREATE_IDEA",
+        userId,
+        userName,
+        params: [message],
       })
     }
   }

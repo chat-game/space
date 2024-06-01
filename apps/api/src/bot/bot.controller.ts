@@ -87,13 +87,17 @@ export class BotController {
 
     const pubSubClient = new PubSubClient({ authProvider })
 
-    pubSubClient.onRedemption(this.userId, ({ userId, userName, rewardId }) => {
-      this.service.handleChannelRewardRedemption({
-        userId,
-        userName,
-        rewardId,
-      })
-    })
+    pubSubClient.onRedemption(
+      this.userId,
+      ({ userId, userName, rewardId, message }) => {
+        this.service.handleChannelRewardRedemption({
+          userId,
+          userName,
+          rewardId,
+          message,
+        })
+      },
+    )
 
     const bot = new Bot({
       authProvider,

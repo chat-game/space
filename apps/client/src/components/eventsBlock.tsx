@@ -11,6 +11,6 @@ export const EventsBlock = ({
   const showEvents = events.map((e) => <EventCard key={e.id} event={e} />)
 
   return (
-    <div className="w-96 flex flex-col flex-nowrap gap-4">{showEvents}</div>
+    <div className="w-96 flex flex-col flex-nowrap gap-5">{showEvents}</div>
   )
 }

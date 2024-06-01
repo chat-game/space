@@ -7,6 +7,10 @@ export const ANSWER = {
     ok: true,
     message: "You gave wood to the village! Your reputation has increased.",
   },
+  VOTED_OK: {
+    ok: true,
+    message: "You voted!",
+  },
   ERROR: {
     ok: false,
     message: null,
@@ -30,6 +34,10 @@ export const ANSWER = {
   NO_SPACE_AVAILABLE_ERROR: {
     ok: false,
     message: "No space available.",
+  },
+  NO_AVAILABLE_TREE_ERROR: {
+    ok: false,
+    message: "No available tree",
   },
   WRONG_AMOUNT_ERROR: {
     ok: false,

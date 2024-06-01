@@ -1,3 +1,8 @@
+## 2024-05-29
+
+- New type of reward: with message. First usage for displaying an event with viewers idea
+- UI of events cards rework
+
 ## 2024-05-28
 
 - Dynamic actions and commands! Now game can manipulate with them, generating new and using in Quests

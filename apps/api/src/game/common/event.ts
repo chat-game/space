@@ -8,6 +8,7 @@ import { sendMessage } from "../../websocket/websocket.server"
 
 interface IEventOptions {
   title: IGameEvent["title"]
+  description: IGameEvent["description"]
   type: IGameEvent["type"]
   secondsToEnd: number
   scene?: GameSceneType
@@ -18,7 +19,8 @@ interface IEventOptions {
 
 export class Event implements IGameEvent {
   public id: string
-  public title: string
+  public title: IGameEvent["title"]
+  public description: IGameEvent["description"]
   public type: IGameEvent["type"]
   public status: IGameEvent["status"]
   public scene?: GameSceneType
@@ -30,6 +32,7 @@ export class Event implements IGameEvent {
 
   constructor({
     title,
+    description,
     type,
     secondsToEnd,
     scene,
@@ -39,6 +42,7 @@ export class Event implements IGameEvent {
   }: IEventOptions) {
     this.id = createId()
     this.title = title
+    this.description = description
     this.type = type
     this.scene = scene
     this.poll = poll

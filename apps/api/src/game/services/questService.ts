@@ -158,7 +158,8 @@ export class QuestService {
 
     this.scene.eventService.init({
       type: "SIDE_QUEST_STARTED",
-      title: "The trees are running out!",
+      title: quest.title,
+      description: quest.description,
       secondsToEnd: 9999999,
       quest,
     })
@@ -242,7 +243,8 @@ export class QuestService {
 
     this.scene.eventService.init({
       type: "SIDE_QUEST_STARTED",
-      title: "No Trading Post",
+      title: quest.title,
+      description: quest.description,
       secondsToEnd: 9999999,
       quest,
     })

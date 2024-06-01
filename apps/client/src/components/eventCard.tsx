@@ -17,20 +17,17 @@ import { ItemImage } from "./itemImage"
 
 export const EventCard = ({ event }: { event: IGameEvent }) => {
   const isActive = event.status === "STARTED"
-  const title = event.quest ? event.quest.title : event.title
-  const description = getEventDescriptionByType(event)
-  const cardInfo = getCardInfoByType(event.type)
 
   return (
     <div
-      className={`relative w-full h-auto px-4 py-4 border-b-4 rounded-2xl text-primary bg-primary ${cardInfo?.cardBorderColor} translate-x-full data-[active=true]:translate-x-0 duration-500 ease-in-out`}
+      className="relative w-full h-auto px-4 pt-4 pb-4 border-b-4 border-zinc-300 rounded-2xl text-zinc-600 bg-white translate-x-full data-[active=true]:translate-x-0 duration-500 ease-in-out"
       data-active={isActive}
     >
-      <p className="font-bold text-xl leading-tight">{title}</p>
-      {description}
+      <p className="font-bold text-xl leading-tight">{event.title}</p>
+      <p className="mb-2 font-medium leading-tight">{event.description}</p>
 
-      <QuestConditions quest={event.quest} />
       <PollProgressBar poll={event.poll} />
+      <QuestConditions quest={event.quest} />
       <QuestTasks quest={event.quest} />
       <TradeOffers offers={event.offers} />
       <EventTimer endsAt={event.endsAt} />
@@ -39,66 +36,21 @@ export const EventCard = ({ event }: { event: IGameEvent }) => {
   )
 }
 
-function getCardInfoByType(type: IGameEvent["type"]) {
+function getCardLabelByType(type: IGameEvent["type"]) {
   if (type === "MAIN_QUEST_STARTED") {
-    return {
-      labelBgColor: "bg-teal-500",
-      cardBorderColor: "border-teal-500",
-      label: "main quest",
-    }
+    return "main quest"
   }
   if (type === "SIDE_QUEST_STARTED") {
-    return {
-      labelBgColor: "bg-blue-4",
-      cardBorderColor: "border-blue-4",
-      label: "side quest",
-    }
+    return "side quest"
   }
   if (type === "TRADE_STARTED") {
-    return {
-      labelBgColor: "bg-teal-500",
-      cardBorderColor: "border-teal-500",
-      label: "trade in the village",
-    }
+    return "trade in the village"
   }
   if (type === "VOTING_FOR_NEW_MAIN_QUEST_STARTED") {
-    return {
-      labelBgColor: "bg-zinc-500",
-      cardBorderColor: "border-zinc-500",
-      label: "poll",
-    }
+    return "poll"
   }
-
-  return {
-    cardBorderColor: "border-primary",
-  }
-}
-
-function getEventDescriptionByType(event: IGameEvent) {
-  if (event.type === "VOTING_FOR_NEW_MAIN_QUEST_STARTED") {
-    return (
-      <div>
-        <p className="font-medium leading-tight">
-          Let's make the quest active? Vote in chat:
-        </p>
-        <p className="mt-1 mb-2 py-1 text-2xl font-bold text-center bg-zinc-100 rounded-2xl">
-          {event.poll?.commandToVote}
-        </p>
-      </div>
-    )
-  }
-  if (
-    event.type === "MAIN_QUEST_STARTED" ||
-    event.type === "SIDE_QUEST_STARTED"
-  ) {
-    return (
-      <div>
-        <p className="font-medium leading-tight">{event.quest?.description}</p>
-        <p className="mt-3 italic font-medium leading-tight">
-          You need to do the following:
-        </p>
-      </div>
-    )
+  if (type === "IDEA_CREATED") {
+    return "idea"
   }
 }
 
@@ -118,6 +70,18 @@ const EventTimer = ({ endsAt }: { endsAt: Date }) => {
       Ends in {showHours}
       {showMinutes}:{showSeconds}
     </p>
+  )
+}
+
+const Command = ({ command }: { command: string | undefined }) => {
+  if (!command) {
+    return null
+  }
+
+  return (
+    <div className="mt-1 py-1 text-xl font-bold text-center bg-gradient-to-r from-violet-500 via-purple-500 to-purple-400 text-white rounded-2xl">
+      {command}
+    </div>
   )
 }
 
@@ -151,15 +115,21 @@ const PollProgressBar = ({
 
   return (
     <>
-      <div className="mt-2 relative w-full h-8 p-1 bg-zinc-100 text-primary rounded-2xl">
-        <div className="absolute w-full flex flex-row justify-center">
-          Votes: {poll.votes.length} of {poll.votesToSuccess}
+      <div className="relative py-1 w-full h-fit min-h-8 bg-zinc-100 text-zinc-600 rounded-2xl">
+        <div className="relative z-20">
+          <div className="w-full h-fit px-1 text-zinc-600 rounded-2xl text-lg flex flex-row flex-nowrap gap-1 items-center justify-center leading-5">
+            Votes: {poll.votes.length} of {poll.votesToSuccess}
+          </div>
         </div>
-        <div
-          className="h-6 bg-green-300 border-b-2 border-green-600 rounded-2xl"
-          style={{ width: `${pollProgressBarWidth}%` }}
-        />
+        <div className="z-10 absolute top-0 h-full w-full">
+          <div
+            className="hidden h-full bg-purple-200 rounded-2xl"
+            style={{ width: `${pollProgressBarWidth}%` }}
+          />
+        </div>
       </div>
+
+      <Command command={poll.action.commandDescription} />
 
       <div className="mt-2 mb-1 flex flex-row flex-wrap gap-2">
         {showUserNames}
@@ -169,14 +139,12 @@ const PollProgressBar = ({
 }
 
 const CardBottomLabel = ({ type }: { type: IGameEvent["type"] }) => {
-  const info = getCardInfoByType(type)
+  const label = getCardLabelByType(type)
 
   return (
     <div className="absolute -bottom-3.5 left-0 right-0">
-      <div
-        className={`w-fit mx-auto py-0.5 px-4 lowercase text-sm text-white rounded-xl ${info?.labelBgColor}`}
-      >
-        {info?.label}
+      <div className="w-fit mx-auto py-0.5 px-4 lowercase font-semibold text-sm text-zinc-500 bg-zinc-100 rounded-xl">
+        {label}
       </div>
     </div>
   )
@@ -220,42 +188,45 @@ const QuestTasks = ({ quest }: { quest: IGameQuest | undefined }) => {
 const QuestTask = ({ task }: { task: IGameQuestTask }) => {
   const taskIcon =
     task.status === "SUCCESS" ? (
-      <IconCircleCheck stroke={1.5} className="text-green-2" />
+      <IconCircleCheck stroke={1.5} />
     ) : (
       <IconCircleDashed stroke={1.5} />
     )
 
-  return (
-    <div className="mt-2">
-      <div className="mb-1 flex flex-row gap-1 items-center font-semibold">
-        {taskIcon}
-        <p>{task.description}</p>
-      </div>
+  const isBoolean = typeof task.progressToSuccess === "boolean"
 
-      {task.status === "ACTIVE" && task.action?.commandDescription && (
-        <div className="mt-1">
-          <p className="mb-2 py-1 text-xl font-bold text-center bg-zinc-100 rounded-2xl">
-            {task.action.commandDescription}
-          </p>
+  return (
+    <div className="mb-3">
+      {isBoolean && (
+        <div className="relative w-full h-8 px-1 bg-zinc-100 text-zinc-600 text-lg rounded-2xl flex flex-row gap-1 items-center">
+          {taskIcon}
+          <p>{task.description}</p>
         </div>
       )}
 
-      <QuestTaskProgressBar task={task} />
+      {!isBoolean && <QuestTaskProgressBar task={task} />}
+
+      {task.status === "ACTIVE" && task.action?.commandDescription && (
+        <Command command={task.action.commandDescription} />
+      )}
     </div>
   )
 }
 
 const QuestTaskProgressBar = ({ task }: { task: IGameQuestTask }) => {
-  if (task.status === "SUCCESS") {
-    return null
-  }
-
   if (
     typeof task.progressNow !== "number" ||
     typeof task.progressToSuccess !== "number"
   ) {
     return null
   }
+
+  const taskIcon =
+    task.status === "SUCCESS" ? (
+      <IconCircleCheck stroke={1.5} />
+    ) : (
+      <IconCircleDashed stroke={1.5} />
+    )
 
   let progressBarWidth = Math.round(
     task.progressNow / (task.progressToSuccess / 100),
@@ -265,14 +236,20 @@ const QuestTaskProgressBar = ({ task }: { task: IGameQuestTask }) => {
   }
 
   return (
-    <div className="relative w-full h-8 p-1 bg-zinc-100 rounded-2xl">
-      <div className="absolute w-full flex flex-row justify-center">
-        {task.progressNow} of {task.progressToSuccess}
+    <div className="relative py-1 w-full h-fit min-h-8 bg-zinc-100 text-zinc-600 rounded-2xl">
+      <div className="relative z-20">
+        <div className="w-full h-fit px-1 text-zinc-600 rounded-2xl text-lg flex flex-row flex-nowrap gap-1 items-center leading-5">
+          {taskIcon}
+          <p>{task.description}</p>
+        </div>
       </div>
-      <div
-        className="h-6 bg-green-300 border-b-2 border-green-600 rounded-2xl"
-        style={{ width: `${progressBarWidth}%` }}
-      />
+      <div className="z-10 absolute top-0 h-full w-full">
+        <div
+          className="hidden h-full bg-purple-200 rounded-2xl data-[active=true]:block"
+          data-active={task.status === "ACTIVE"}
+          style={{ width: `${progressBarWidth}%` }}
+        />
+      </div>
     </div>
   )
 }

@@ -46,6 +46,7 @@ export type IGameSceneAction =
   | "START_CREATING_NEW_ADVENTURE"
   | "SHOW_MESSAGE"
   | "GITHUB"
+  | "CREATE_IDEA"
 
 export type ItemType = "WOOD" | "STONE" | "AXE" | "PICKAXE" | "COIN"
 
@@ -182,6 +183,7 @@ export interface WebSocketMessage {
     | "MAIN_QUEST_STARTED"
     | "SIDE_QUEST_STARTED"
     | "TRADE_STARTED"
+    | "IDEA_CREATED"
   object?: Partial<IGameObject>
 }
 
@@ -329,6 +331,7 @@ export interface IGameTask {
 export interface IGameEvent {
   id: string
   title: string
+  description: string
   type: WebSocketMessage["event"]
   status: "STARTED" | "STOPPED"
   endsAt: Date
@@ -340,7 +343,7 @@ export interface IGameEvent {
 export interface IGamePoll {
   status: "ACTIVE" | "SUCCESS" | "FINISHED"
   id: string
-  commandToVote: string
+  action: IGameAction
   votesToSuccess: number
   votes: { id: string; userName: string }[]
 }

@@ -1,6 +1,7 @@
 import type {
   GameSceneType,
   IGameEvent,
+  IGamePoll,
   IGameQuest,
   IGameQuestTask,
 } from "../../../../../packages/api-sdk/src"
@@ -46,6 +47,7 @@ export class EventService {
 
   public init({
     title,
+    description,
     type,
     secondsToEnd,
     scene,
@@ -54,6 +56,7 @@ export class EventService {
     offers,
   }: {
     title: IGameEvent["title"]
+    description: IGameEvent["description"]
     type: IGameEvent["type"]
     secondsToEnd: number
     scene?: GameSceneType
@@ -63,6 +66,7 @@ export class EventService {
   }) {
     const event = new Event({
       title,
+      description,
       type,
       secondsToEnd,
       scene,
@@ -78,10 +82,11 @@ export class EventService {
     return this.events.map((event) => ({
       id: event.id,
       title: event.title,
+      description: event.description,
       type: event.type,
       status: event.status,
       endsAt: event.endsAt,
-      poll: event.poll,
+      poll: this.preparePollData(event.poll),
       quest: this.prepareQuestData(event.quest),
       offers: event.offers,
     }))
@@ -109,6 +114,23 @@ export class EventService {
     }
   }
 
+  preparePollData(poll: IGamePoll | undefined) {
+    if (!poll) {
+      return
+    }
+
+    return {
+      ...poll,
+      action: {
+        ...poll.action,
+        poll: undefined,
+        live: undefined,
+        scene: undefined,
+      },
+      scene: undefined,
+    }
+  }
+
   public destroy(event: Event) {
     const index = this.events.indexOf(event)
     this.events.splice(index, 1)
@@ -123,6 +145,14 @@ export class EventService {
         if (task?.action) {
           return task.action as Action
         }
+      }
+    }
+  }
+
+  public findActionByCommandInPoll(command: string) {
+    for (const event of this.events) {
+      if (event.poll?.action && event.poll.action.command === command) {
+        return event.poll?.action as Action
       }
     }
   }
@@ -194,6 +224,7 @@ export class EventService {
 
     this.init({
       title: "Journey",
+      description: "",
       type: "MAIN_QUEST_STARTED",
       secondsToEnd: event.quest.conditions.limitSeconds ?? 9999999,
       quest: {
