@@ -1,31 +1,26 @@
 import { Sprite } from "pixi.js"
 import type { IGameBuildingStore } from "../../../../../../packages/api-sdk/src"
-import type { Game } from "../../game"
+import type { GameScene } from "../../scenes/gameScene.ts"
 import { Building } from "./building"
 
 interface IStoreOptions {
-  game: Game
-  object: IGameBuildingStore
+  scene: GameScene
+  x: number
+  y: number
 }
 
 export class Store extends Building implements IGameBuildingStore {
-  constructor({ game, object }: IStoreOptions) {
-    super({ game, object })
+  constructor({ scene, x, y }: IStoreOptions) {
+    super({ scene, x, y })
 
-    this.init()
+    this.initGraphics()
   }
 
-  init() {
+  private initGraphics() {
     const sprite = Sprite.from("store1")
     if (sprite) {
       sprite.anchor.set(0.5, 1)
       this.addChild(sprite)
     }
-  }
-
-  update(object: IGameBuildingStore) {
-    super.update(object)
-
-    this.zIndex = Math.round(object.y - 5)
   }
 }

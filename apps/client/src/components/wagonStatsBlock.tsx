@@ -10,7 +10,7 @@ export const WagonStatsBlock = ({
     return null
   }
 
-  const speedInMeters = wagon.speed
+  const speedInMeters = wagon.speedPerSecond
   const fuelInSeconds = Math.round(wagon.fuel / 40)
   const fuelInMinutes = Math.round(fuelInSeconds / 60)
 

@@ -114,7 +114,6 @@ export interface IGameChunk {
     y: number
   }
   area: IGameObjectArea
-  isVisibleOnClient: boolean
 }
 
 export type IGameChunkTheme =
@@ -140,8 +139,8 @@ export interface IGameObject {
   entity: IGameObjectEntity
   target: IGameObject | undefined
   health: number
-  speed: number
-  isVisibleOnClient: boolean
+  speedPerSecond: number
+  size: number
 }
 
 export type IGameObjectState =
@@ -251,14 +250,12 @@ export interface IGameObjectTree extends IGameObject {
   type: "1" | "2" | "3" | "4" | "5"
   variant: IGameChunkTheme
   resource: number
-  size: number
   isReadyToChop: boolean
 }
 
 export interface IGameObjectStone extends IGameObject {
   type: "1"
   resource: number
-  size: number
 }
 
 export interface IGameObjectUnit extends IGameObject {
@@ -297,9 +294,7 @@ export interface IGameObjectPlayer extends IGameObjectUnit {
   lastActionAt: Date
 }
 
-export interface IGameObjectRaider extends IGameObjectUnit {
-  colorIndex: number
-}
+export interface IGameObjectRaider extends IGameObjectUnit {}
 
 export interface IGameObjectRabbit extends IGameObject {}
 

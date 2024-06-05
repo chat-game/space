@@ -19,7 +19,8 @@ export class GameObject implements IGameObject {
   public x: number
   public y: number
   public health = 100
-  public speed = 1
+  public speedPerSecond = 1
+  public size = 1
   public isVisibleOnClient: boolean
   public entity: IGameObject["entity"]
   public direction: IGameObjectDirection = "RIGHT"
@@ -60,7 +61,9 @@ export class GameObject implements IGameObject {
 
     // Fix diagonal speed
     const finalSpeed =
-      distanceToX > 0 && distanceToY > 0 ? this.speed * 0.75 : this.speed
+      distanceToX > 0 && distanceToY > 0
+        ? this.speedPerSecond * 0.75
+        : this.speedPerSecond
 
     this.moveX(finalSpeed > distanceToX ? distanceToX : finalSpeed)
     this.moveY(finalSpeed > distanceToY ? distanceToY : finalSpeed)

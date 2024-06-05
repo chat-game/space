@@ -1,14 +1,14 @@
 import { Sprite } from "pixi.js"
 import type { IGameObjectRabbit } from "../../../../../packages/api-sdk/src"
 import type { Game } from "../game"
-import { GameObjectContainer } from "./gameObjectContainer"
+import { GameObject } from "./gameObject.ts"
 
 interface IRabbitOptions {
   game: Game
   object: IGameObjectRabbit
 }
 
-export class Rabbit extends GameObjectContainer implements IGameObjectRabbit {
+export class Rabbit extends GameObject implements IGameObjectRabbit {
   public animationAngle = 0
 
   constructor({ game, object }: IRabbitOptions) {

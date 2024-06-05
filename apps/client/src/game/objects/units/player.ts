@@ -1,13 +1,18 @@
-import type {
-  IGameObjectPlayer,
-  IGameSkill,
+import {
+  type IGameObjectPlayer,
+  type IGameSkill,
+  getRandomInRange,
 } from "../../../../../../packages/api-sdk/src"
-import type { Game } from "../../game"
+import { db } from "../../../../../api/src/db/db.client.ts"
+import { Inventory, Skill } from "../../common"
+import type { GameScene } from "../../scenes/gameScene.ts"
 import { Unit } from "./unit"
 
 interface IPlayerOptions {
-  game: Game
-  object: IGameObjectPlayer
+  scene: GameScene
+  id?: string
+  x: number
+  y: number
 }
 
 export class Player extends Unit implements IGameObjectPlayer {
@@ -15,24 +20,172 @@ export class Player extends Unit implements IGameObjectPlayer {
   villainPoints!: number
   refuellerPoints!: number
   raiderPoints!: number
-  skills!: IGameSkill[]
+  skills!: Skill[]
   lastActionAt!: IGameObjectPlayer["lastActionAt"]
 
-  constructor({ game, object }: IPlayerOptions) {
-    super({ game, object })
-    this.update(object)
+  public inventoryId?: string
 
-    this.init()
+  constructor({ scene, id, x, y }: IPlayerOptions) {
+    super({ scene, id, x, y })
+
+    this.speedPerSecond = 2
+    void this.initFromDB()
   }
 
-  update(object: IGameObjectPlayer) {
-    super.update(object)
+  async initFromDB() {
+    await this.readFromDB()
+    await this.initSkillsFromDB()
+    super.initVisual({
+      head: "1",
+      hairstyle: "CLASSIC",
+      top: "VIOLET_SHIRT",
+    })
+  }
 
-    this.reputation = object.reputation
-    this.villainPoints = object.villainPoints
-    this.refuellerPoints = object.refuellerPoints
-    this.raiderPoints = object.raiderPoints
-    this.skills = object.skills
-    this.lastActionAt = object.lastActionAt
+  async chopTree() {
+    super.chopTree()
+
+    await this.findOrCreateSkillInDB("WOODSMAN")
+    this.upSkill("WOODSMAN")
+  }
+
+  async mineStone() {
+    super.mineStone()
+
+    await this.findOrCreateSkillInDB("MINER")
+    this.upSkill("MINER")
+  }
+
+  updateCoins(amount: number) {
+    this.coins = this.coins + amount
+
+    return db.player.update({
+      where: { id: this.id },
+      data: {
+        coins: this.coins,
+      },
+    })
+  }
+
+  addReputation(amount: number) {
+    this.reputation += amount
+
+    return db.player.update({
+      where: { id: this.id },
+      data: {
+        reputation: this.reputation,
+      },
+    })
+  }
+
+  addRefuellerPoints(amount: number) {
+    if (amount < 0) {
+      return
+    }
+
+    this.refuellerPoints += amount
+
+    return db.player.update({
+      where: { id: this.id },
+      data: {
+        refuellerPoints: this.refuellerPoints,
+      },
+    })
+  }
+
+  addVillainPoints(amount: number) {
+    this.villainPoints += amount
+
+    return db.player.update({
+      where: { id: this.id },
+      data: {
+        villainPoints: {
+          increment: amount,
+        },
+      },
+    })
+  }
+
+  addRaiderPoints(amount: number) {
+    this.raiderPoints += amount
+
+    return db.player.update({
+      where: { id: this.id },
+      data: {
+        raiderPoints: {
+          increment: amount,
+        },
+      },
+    })
+  }
+
+  public async readFromDB() {
+    const player = await db.player.findUnique({ where: { id: this.id } })
+    if (!player) {
+      return
+    }
+
+    this.userName = player.userName
+    this.coins = player.coins
+    this.reputation = player.reputation
+    this.villainPoints = player.villainPoints
+    this.refuellerPoints = player.refuellerPoints
+    this.raiderPoints = player.raiderPoints
+    this.inventoryId = player.inventoryId
+  }
+
+  public updateLastActionAt() {
+    this.lastActionAt = new Date()
+    return db.player.update({
+      where: { id: this.id },
+      data: {
+        lastActionAt: new Date(),
+      },
+    })
+  }
+
+  public async initInventoryFromDB() {
+    if (!this.inventoryId) {
+      return
+    }
+
+    const inventory = new Inventory({
+      objectId: this.id,
+      id: this.inventoryId,
+      saveInDb: true,
+    })
+    await inventory.init()
+    this.inventory = inventory
+  }
+
+  public async initSkillsFromDB() {
+    this.skills = []
+    const skills = await Skill.findAllInDB(this.id)
+    for (const skill of skills) {
+      const instance = new Skill({ id: skill.id })
+      await instance.init()
+      this.skills.push(instance)
+    }
+  }
+
+  async findOrCreateSkillInDB(type: IGameSkill["type"]) {
+    const skill = this.skills.find((skill) => skill.type === type)
+    if (!skill) {
+      await Skill.createInDB(this.id, type)
+      await this.initSkillsFromDB()
+      return this.skills.find((skill) => skill.type === type) as Skill
+    }
+
+    return skill
+  }
+
+  public upSkill(type: IGameSkill["type"]) {
+    const random = getRandomInRange(1, 200)
+    if (random <= 1) {
+      const skill = this.skills.find((skill) => skill.type === type)
+      if (skill) {
+        void skill.addXp()
+      }
+    }
   }
 }

@@ -211,10 +211,10 @@ export class BackgroundGenerator {
     return [red, red + 1, red + 2, red + 3]
   }
 
-  public async getGeneratedBackgroundTilingSprite() {
+  public getGeneratedBackgroundTilingSprite() {
     const bg = this.generateRandomGridBackground({
-      width: 2560,
-      height: 1440,
+      width: 2000,
+      height: 1000,
     })
     const container = new Container()
     container.addChild(...bg)

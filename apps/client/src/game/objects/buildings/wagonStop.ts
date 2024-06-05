@@ -1,24 +1,22 @@
 import { Sprite } from "pixi.js"
-import type {
-  IGameBuildingWagonStop,
-  IGameObjectBuilding,
-} from "../../../../../../packages/api-sdk/src"
-import type { Game } from "../../game"
+import type { IGameBuildingWagonStop } from "../../../../../../packages/api-sdk/src"
+import type { GameScene } from "../../scenes/gameScene.ts"
 import { Building } from "./building"
 
 interface IWagonStopOptions {
-  game: Game
-  object: IGameBuildingWagonStop
+  scene: GameScene
+  x: number
+  y: number
 }
 
 export class WagonStop extends Building implements IGameBuildingWagonStop {
-  constructor({ game, object }: IWagonStopOptions) {
-    super({ game, object })
+  constructor({ scene, x, y }: IWagonStopOptions) {
+    super({ scene, x, y })
 
-    this.init()
+    this.initGraphics()
   }
 
-  init() {
+  private initGraphics() {
     const sprite = Sprite.from("wagonStop1")
     if (sprite) {
       sprite.anchor.set(0.5, 0.92)
@@ -26,9 +24,9 @@ export class WagonStop extends Building implements IGameBuildingWagonStop {
     }
   }
 
-  update(object: IGameObjectBuilding) {
-    super.update(object)
+  animate() {
+    super.animate()
 
-    this.zIndex = Math.round(object.y - 100)
+    this.zIndex = Math.round(this.y - 100)
   }
 }

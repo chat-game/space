@@ -1,8 +1,6 @@
 # [Twitch Chat Game] Royal Madness 👑
 
-👉 Building and playing it live: https://www.twitch.tv/hmbanan666
-
-👉 Our community: https://discord.gg/B6etUajrGZ
+📺🎮 [Building and playing it live](https://www.twitch.tv/hmbanan666)  👾 [Our community](https://discord.gg/B6etUajrGZ)
 
 ![Screen](https://github.com/hmbanan666/royal-madness-twitch-game/assets/25910785/a80009a5-ac75-4935-afd2-e1aae16285d6)
 

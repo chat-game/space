@@ -1,25 +1,26 @@
 import { Sprite } from "pixi.js"
 import type { IGameBuildingWarehouse } from "../../../../../../packages/api-sdk/src"
 import { BuildingInterface } from "../../components/buildingInterface"
-import type { Game } from "../../game"
+import type { GameScene } from "../../scenes/gameScene.ts"
 import { Building } from "./building"
 
 interface IWarehouseOptions {
-  game: Game
-  object: IGameBuildingWarehouse
+  scene: GameScene
+  x: number
+  y: number
 }
 
 export class Warehouse extends Building implements IGameBuildingWarehouse {
   public interface!: BuildingInterface
 
-  constructor({ game, object }: IWarehouseOptions) {
-    super({ game, object })
+  constructor({ scene, x, y }: IWarehouseOptions) {
+    super({ scene, x, y })
 
-    this.init()
-    this.initInterface()
+    this.initGraphics()
+    // this.initInterface()
   }
 
-  init() {
+  private initGraphics() {
     const sprite = Sprite.from("warehouse1")
     if (sprite) {
       sprite.anchor.set(0.5, 1)
@@ -27,7 +28,7 @@ export class Warehouse extends Building implements IGameBuildingWarehouse {
     }
   }
 
-  initInterface() {
+  private initInterface() {
     this.interface = new BuildingInterface(this)
     this.addChild(this.interface)
   }
@@ -35,6 +36,6 @@ export class Warehouse extends Building implements IGameBuildingWarehouse {
   animate() {
     super.animate()
 
-    this.interface.animate()
+    //this.interface.animate()
   }
 }

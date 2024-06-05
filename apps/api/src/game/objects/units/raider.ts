@@ -8,8 +8,6 @@ interface IRaiderOptions {
 }
 
 export class Raider extends Unit implements IGameObjectRaider {
-  public colorIndex = 0
-
   constructor({ x, y }: IRaiderOptions) {
     const objectId = createId()
 
@@ -25,7 +23,7 @@ export class Raider extends Unit implements IGameObjectRaider {
       },
     })
 
-    this.speed = 1.5
+    this.speedPerSecond = 1.5
     this.userName = "Raider"
   }
 

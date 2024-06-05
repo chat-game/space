@@ -1,16 +1,28 @@
 import type { IGameObjectRaider } from "../../../../../../packages/api-sdk/src"
-import type { Game } from "../../game"
+import type { GameScene } from "../../scenes/gameScene.ts"
 import { Unit } from "./unit"
 
 interface IRaiderOptions {
-  game: Game
-  object: IGameObjectRaider
+  scene: GameScene
+  x: number
+  y: number
 }
 
 export class Raider extends Unit implements IGameObjectRaider {
-  colorIndex!: number
+  constructor({ scene, x, y }: IRaiderOptions) {
+    super({
+      scene,
+      x,
+      y,
+    })
 
-  constructor({ game, object }: IRaiderOptions) {
-    super({ game, object })
+    this.speedPerSecond = 1.5
+    this.userName = "Raider"
+
+    this.initVisual({
+      head: "1",
+      hairstyle: "BOLD",
+      top: "BLACK_SHIRT",
+    })
   }
 }

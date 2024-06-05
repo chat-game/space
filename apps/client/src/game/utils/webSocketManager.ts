@@ -27,9 +27,9 @@ export abstract class WebSocketManager {
 
   public static setMessagesPerSecondHandler() {
     return setInterval(() => {
-      console.log(
-        `${WebSocketManager.messagesPerSecond} msg/s, ${WebSocketManager.kbitPerSecond} kbit/s`,
-      )
+      // console.log(
+      //   `${WebSocketManager.messagesPerSecond} msg/s, ${WebSocketManager.kbitPerSecond} kbit/s`,
+      // )
       WebSocketManager.messagesPerSecond = 0
       WebSocketManager.kbitPerSecond = 0
     }, 1000)

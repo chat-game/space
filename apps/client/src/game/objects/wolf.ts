@@ -1,14 +1,14 @@
 import { Sprite } from "pixi.js"
 import type { IGameObjectWolf } from "../../../../../packages/api-sdk/src"
 import type { Game } from "../game"
-import { GameObjectContainer } from "./gameObjectContainer"
+import { GameObject } from "./gameObject.ts"
 
 interface IWolfOptions {
   game: Game
   object: IGameObjectWolf
 }
 
-export class Wolf extends GameObjectContainer implements IGameObjectWolf {
+export class Wolf extends GameObject implements IGameObjectWolf {
   public animationAngle = 0
   public animationSlowSpeed = 0.1
 

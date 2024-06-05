@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 .env
+.env.*
+!.env.example
 *.token.json
 
 # Editor directories and files
@@ -24,3 +26,12 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+build
+.svelte-kit
+/package
+
+.vercel
+.output
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*

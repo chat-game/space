@@ -6,6 +6,7 @@ export class UnitInterface extends GraphicsContainer {
   public children: GraphicsContainer[] = []
   public unit: IGameObjectUnit
 
+  public userName = ""
   public coins = 0
   public wood = 0
   public stone = 0
@@ -49,7 +50,6 @@ export class UnitInterface extends GraphicsContainer {
     )
 
     this.drawUserName()
-    //this.drawCoins()
     this.drawWood()
     this.drawStone()
     this.drawAxe()
@@ -60,9 +60,8 @@ export class UnitInterface extends GraphicsContainer {
   }
 
   rebuild() {
-    this.children = []
+    this.removeChild(...this.children)
     this.drawUserName()
-    //this.drawCoins()
     this.drawWood()
     this.drawStone()
     this.drawAxe()
@@ -71,6 +70,7 @@ export class UnitInterface extends GraphicsContainer {
   }
 
   update() {
+    const userName = this.unit.userName
     const wood =
       this.unit.inventory.items.find((item) => item.type === "WOOD")?.amount ??
       0
@@ -85,12 +85,14 @@ export class UnitInterface extends GraphicsContainer {
     )
 
     if (
+      userName !== this.userName ||
       this.unit.coins !== this.coins ||
       wood !== this.wood ||
       stone !== this.stone ||
       haveAxe !== this.haveAxe ||
       havePickaxe !== this.havePickaxe
     ) {
+      this.userName = userName
       this.coins = this.unit.coins
       this.wood = wood
       this.stone = stone
@@ -99,6 +101,7 @@ export class UnitInterface extends GraphicsContainer {
       this.rebuild()
     }
 
+    this.userName = this.unit.userName
     this.coins = this.unit.coins
     this.wood = wood
     this.stone = stone
@@ -146,6 +149,10 @@ export class UnitInterface extends GraphicsContainer {
   }
 
   drawUserName() {
+    if (!this.unit.userName) {
+      return
+    }
+
     const container = new GraphicsContainer({ type: "INTERFACE" })
 
     const basicText = new Text({
@@ -153,52 +160,20 @@ export class UnitInterface extends GraphicsContainer {
       style: {
         fontFamily: "Noto Serif",
         fontSize: 14,
-        fontWeight: "500",
-        fill: 0x2e222f,
+        fontWeight: "600",
+        fill: 0x451a03,
         align: "center",
       },
     })
 
     const graphics = new Graphics()
-    graphics.roundRect(-6, -2, basicText.width + 12, basicText.height + 4, 8)
-    graphics.fill(0xffffff)
+    graphics.roundRect(-6, -2, basicText.width + 12, basicText.height + 4, 0)
+    graphics.fill(0xfef3c7)
 
     container.addChild(graphics, basicText)
 
     container.x = -container.width / 2 + 24
     container.y = -84
-
-    this.addChild(container)
-  }
-
-  drawCoins() {
-    const container = new GraphicsContainer({ type: "PLAYER_COINS" })
-
-    const sprite = Sprite.from("coin1")
-    sprite.width = 32
-    sprite.height = 32
-    sprite.x = -32
-    sprite.y = -9
-
-    const basicText = new Text({
-      text: this.coins,
-      style: {
-        fontFamily: "Noto Serif",
-        fontSize: 12,
-        fontWeight: "700",
-        fill: 0x0b5e65,
-        align: "center",
-      },
-    })
-
-    const graphics = new Graphics()
-    graphics.roundRect(-16, -4, basicText.width + 20, basicText.height + 8, 10)
-    graphics.fill(0x8ff8e2)
-
-    container.addChild(graphics, sprite, basicText)
-
-    container.x = 70
-    container.y = -56
 
     this.addChild(container)
   }
@@ -209,18 +184,6 @@ export class UnitInterface extends GraphicsContainer {
     const woodSprite = Sprite.from("wood1")
     woodSprite.width = 32
     woodSprite.height = 32
-
-    // const basicText = new Text({
-    //   text: this.wood,
-    //   style: {
-    //     fontSize: 12,
-    //     fill: 0xfef3c7,
-    //     align: "left",
-    //   },
-    // })
-    //
-    // basicText.x = 6
-    // basicText.y = 16
 
     container.addChild(woodSprite)
 
@@ -236,18 +199,6 @@ export class UnitInterface extends GraphicsContainer {
     const woodSprite = Sprite.from("stoneRes1")
     woodSprite.width = 32
     woodSprite.height = 32
-
-    // const basicText = new Text({
-    //   text: this.stone,
-    //   style: {
-    //     fontSize: 12,
-    //     fill: 0xfef3c7,
-    //     align: "left",
-    //   },
-    // })
-    //
-    // basicText.x = 6
-    // basicText.y = 16
 
     container.addChild(woodSprite)
 

@@ -1,14 +1,31 @@
 import type { IGameObjectFarmer } from "../../../../../../packages/api-sdk/src"
-import type { Game } from "../../game"
+import { generateUnitUserName } from "../../common/generators/unitName.ts"
+import { generateUnitTop } from "../../common/generators/unitTop.ts"
+import type { GameScene } from "../../scenes/gameScene.ts"
 import { Unit } from "./unit"
 
 interface IFarmerOptions {
-  game: Game
-  object: IGameObjectFarmer
+  scene: GameScene
+  x: number
+  y: number
 }
 
 export class Farmer extends Unit implements IGameObjectFarmer {
-  constructor({ game, object }: IFarmerOptions) {
-    super({ game, object })
+  constructor({ scene, x, y }: IFarmerOptions) {
+    super({
+      scene,
+      x,
+      y,
+    })
+
+    this.speedPerSecond = 70
+    this.minDistance = 10
+    this.userName = generateUnitUserName()
+
+    this.initVisual({
+      head: "1",
+      hairstyle: "ORANGE_WITH_BEARD",
+      top: generateUnitTop(),
+    })
   }
 }
