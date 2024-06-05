@@ -1,5 +1,4 @@
 @import "tailwindcss";
-
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wdth,wght@0,62.5..100,100..900;1,62.5..100,100..900&display=swap');
 
 :root {
@@ -80,6 +79,12 @@
     --color-rose-4: #f68181;
     --color-rose-5: #fca790;
     --color-rose-6: #fdcbb0;
+
+    --color-sand-1: #f6d7b0;
+    --color-sand-2: #f2d2a9;
+    --color-sand-3: #eccca2;
+    --color-sand-4: #e7c496;
+    --color-sand-5: #e1bf92;
 }
 
 body, html {
@@ -91,15 +96,40 @@ body, html {
 }
 
 .bg-primary {
-    background-color: var(--color-silver-5);
+    background-color: #FFE7B3;
+}
+
+.bg-accent-violet {
+    background-color: #473876;
+}
+
+.bg-progress-bar {
+    background-color: #DBB594;
+}
+
+.bg-twitch-command {
+    background-image: linear-gradient(to right, #56468B 0%, #664282 100%);
+    border: 2px solid #7D66D9;
 }
 
 .text-primary {
-    color: var(--color-silver-1);
+    color: #38352E
+}
+
+.text-accent-sand {
+    color: #FFE7B3
+}
+
+.text-secondary-sand {
+    color: #DBB594
 }
 
 .border-primary {
-    border-color: var(--color-silver-3);
+    border-color: #978365
+}
+
+.border-secondary {
+    border-color: #CBB99F
 }
 
 .bg-coal-1 {

@@ -1,48 +1,139 @@
+import { createId } from "@paralleldrive/cuid2"
 import type { AnimatedSprite } from "pixi.js"
-import type {
-  IGameInventory,
-  IGameObjectUnit,
+import {
+  type IGameObjectUnit,
+  getRandomInRange,
 } from "../../../../../../packages/api-sdk/src"
+import { Inventory } from "../../common"
 import { DialogueInterface } from "../../components/dialogueInterface"
 import type { GraphicsContainer } from "../../components/graphicsContainer"
 import { UnitHairContainer } from "../../components/unitHairContainer"
 import { UnitHeadContainer } from "../../components/unitHeadContainer"
 import { UnitInterface } from "../../components/unitInterface"
 import { UnitTopContainer } from "../../components/unitTopContainer"
-import type { Game } from "../../game"
+import type { GameScene } from "../../scenes/gameScene.ts"
 import { AssetsManager } from "../../utils"
 import { Flag } from "../flag"
-import { GameObjectContainer } from "../gameObjectContainer"
+import { GameObject } from "../gameObject.ts"
+import { Stone } from "../stone.ts"
+import { Tree } from "../tree.ts"
 
 interface IUnitOptions {
-  game: Game
-  object: IGameObjectUnit
+  scene: GameScene
+  id?: string
+  x: number
+  y: number
 }
 
-export class Unit extends GameObjectContainer implements IGameObjectUnit {
-  public inventory!: IGameInventory
+export class Unit extends GameObject implements IGameObjectUnit {
+  public inventory!: Inventory
   public visual!: IGameObjectUnit["visual"]
   public userName!: IGameObjectUnit["userName"]
   public coins = 0
   public dialogue!: IGameObjectUnit["dialogue"]
 
-  public interface!: UnitInterface
-  public dialogueInterface!: DialogueInterface
-  public children: GraphicsContainer[] = []
-  animationMovingLeft!: AnimatedSprite
-  animationMovingRight!: AnimatedSprite
+  private interface!: UnitInterface
+  private dialogueInterface!: DialogueInterface
+  children: GraphicsContainer[] = []
+  private readonly animationMovingLeft!: AnimatedSprite
+  private readonly animationMovingRight!: AnimatedSprite
 
-  constructor({ game, object }: IUnitOptions) {
-    super({ game, ...object })
-    this.update(object)
+  constructor({ scene, x, y, id }: IUnitOptions) {
+    super({ scene, x, y, id })
+
+    this.initInventory()
+    this.initVisual()
+    this.initDialogue()
+    this.coins = 0
+    this.state = "IDLE"
 
     this.animationMovingRight = AssetsManager.getAnimatedSpriteHero("RIGHT")
     this.animationMovingLeft = AssetsManager.getAnimatedSpriteHero("LEFT")
 
-    this.init()
+    this.initGraphics()
   }
 
-  init() {
+  public live() {
+    this.handleMessages()
+
+    if (this.script) {
+      return this.script.live()
+    }
+  }
+
+  private initInventory() {
+    this.inventory = new Inventory({
+      objectId: this.id,
+      id: createId(),
+      saveInDb: false,
+    })
+  }
+
+  public initVisual(visual?: IGameObjectUnit["visual"]) {
+    this.visual = visual ?? {
+      head: "1",
+      hairstyle: "CLASSIC",
+      top: "VIOLET_SHIRT",
+    }
+  }
+
+  private initDialogue() {
+    this.dialogue = {
+      messages: [],
+    }
+  }
+
+  public addMessage(message: string) {
+    const MAX_CHARS = 100
+    const messagePrepared =
+      message.trim().slice(0, MAX_CHARS) +
+      (message.length > MAX_CHARS ? "..." : "")
+
+    this.dialogue.messages.push({
+      id: createId(),
+      text: messagePrepared,
+    })
+  }
+
+  public handleMessages() {
+    const random = getRandomInRange(1, 200)
+    if (random === 1) {
+      this.dialogue.messages.splice(0, 1)
+    }
+  }
+
+  public chopTree() {
+    if (this.target instanceof Tree && this.target.state !== "DESTROYED") {
+      this.direction = "RIGHT"
+      this.state = "CHOPPING"
+      this.checkAndBreakTool("AXE")
+
+      this.target.chop()
+    }
+  }
+
+  public mineStone() {
+    if (this.target instanceof Stone && this.target.state !== "DESTROYED") {
+      this.direction = "RIGHT"
+      this.state = "MINING"
+      this.checkAndBreakTool("PICKAXE")
+
+      this.target.mine()
+    }
+  }
+
+  checkAndBreakTool(type: "AXE" | "PICKAXE") {
+    const tool = this.inventory.items.find((item) => item.type === type)
+    if (tool) {
+      //this.target.health -= 0.16
+      const random = getRandomInRange(1, 40)
+      if (random <= 1) {
+        void this.inventory.checkAndBreakItem(tool, 1)
+      }
+    }
+  }
+
+  private initGraphics() {
     const top = this.initTop()
     const head = this.initHead()
     const hair = this.initHair()
@@ -77,7 +168,11 @@ export class Unit extends GameObjectContainer implements IGameObjectUnit {
     this.dialogueInterface = new DialogueInterface(this)
   }
 
-  animate() {
+  public animate() {
+    super.animate()
+
+    this.zIndex = Math.round(this.y + 1)
+
     for (const container of this.children) {
       container.visible = false
 
@@ -177,37 +272,24 @@ export class Unit extends GameObjectContainer implements IGameObjectUnit {
     }
   }
 
-  update(object: IGameObjectUnit) {
-    super.update(object)
-
-    this.zIndex = Math.round(object.y + 1)
-
-    this.userName = object.userName
-    this.inventory = object.inventory
-    this.visual = object.visual
-    this.coins = object.coins
-    this.speed = object.speed
-    this.dialogue = object.dialogue
-  }
-
   handleSoundByState() {
     if (this.state === "CHOPPING") {
       if (this.inventory?.items.find((item) => item.type === "AXE")) {
-        this.game.audio.playChopWithAxeSound()
+        this.scene.game.audio.playSound("CHOP_HIT")
         return
       }
 
-      this.game.audio.playHandPunch()
+      this.scene.game.audio.playSound("HAND_HIT")
       return
     }
 
     if (this.state === "MINING") {
       if (this.inventory?.items.find((item) => item.type === "PICKAXE")) {
-        this.game.audio.playMineWithPickaxeSound()
+        this.scene.game.audio.playSound("MINE_HIT")
         return
       }
 
-      this.game.audio.playHandPunch()
+      this.scene.game.audio.playSound("HAND_HIT")
       return
     }
   }

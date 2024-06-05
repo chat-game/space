@@ -1,29 +1,36 @@
 import type { IGameObjectArea } from "../../../../../packages/api-sdk/src"
-import type { Game } from "../game"
-import { GameObjectContainer } from "./gameObjectContainer"
+import type { GameScene } from "../scenes/gameScene.ts"
+import { GameObject } from "./gameObject.ts"
 
 interface IAreaOptions {
-  game: Game
-  object: IGameObjectArea
+  scene: GameScene
+  theme: IGameObjectArea["theme"]
+  area: IGameObjectArea["area"]
 }
 
-export class Area extends GameObjectContainer implements IGameObjectArea {
-  public theme!: IGameObjectArea["theme"]
-  public area!: IGameObjectArea["area"]
+export class Area extends GameObject implements IGameObjectArea {
+  public theme: IGameObjectArea["theme"]
+  public area: IGameObjectArea["area"]
 
-  constructor({ game, object }: IAreaOptions) {
-    super({ game, ...object })
+  constructor({ scene, theme, area }: IAreaOptions) {
+    const x = area.startX
+    const y = area.startY
 
-    this.update(object)
-    void this.init()
+    super({ scene, x, y })
+
+    this.theme = theme
+    this.area = area
+
+    this.initGraphics()
   }
 
-  async init() {
-    this.game.bg.changePaletteByTheme(this.theme)
+  private initGraphics() {
+    this.scene.game.bg.changePaletteByTheme(this.theme)
 
-    const bg = await this.game.bg.getGeneratedBackgroundTilingSprite()
+    const bg = this.scene.game.bg.getGeneratedBackgroundTilingSprite()
     bg.width = this.area.endX - this.area.startX
     bg.height = this.area.endY - this.area.startY
+
     this.addChild(bg)
   }
 
@@ -31,13 +38,5 @@ export class Area extends GameObjectContainer implements IGameObjectArea {
     super.animate()
 
     this.zIndex = -1
-  }
-
-  update(object: IGameObjectArea) {
-    super.update(object)
-
-    this.zIndex = -1
-    this.theme = object.theme
-    this.area = object.area
   }
 }

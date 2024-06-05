@@ -1,4 +1,4 @@
-import { ColorMatrixFilter, Container, Sprite } from "pixi.js"
+import { Container, Sprite } from "pixi.js"
 import type {
   GraphicsContainerType,
   IGameObjectDirection,
@@ -34,17 +34,5 @@ export class GraphicsContainer extends Container {
     container.addChild(sprite)
 
     return container
-  }
-
-  static addFiltersToPlayersTop(
-    container: GraphicsContainer,
-    colorIndex: number,
-  ) {
-    const filterHue = new ColorMatrixFilter()
-    filterHue.hue(colorIndex, false)
-    const filterBrightness = new ColorMatrixFilter()
-    filterBrightness.brightness(0.9, false)
-
-    container.filters = [filterHue, filterBrightness]
   }
 }

@@ -1,37 +1,29 @@
 import { Sprite } from "pixi.js"
-import type {
-  IGameBuildingConstructionArea,
-  IGameObjectBuilding,
-} from "../../../../../../packages/api-sdk/src"
-import type { Game } from "../../game"
+import type { IGameBuildingConstructionArea } from "../../../../../../packages/api-sdk/src"
+import type { GameScene } from "../../scenes/gameScene"
 import { Building } from "./building"
 
 interface IConstructionAreaOptions {
-  game: Game
-  object: IGameBuildingConstructionArea
+  scene: GameScene
+  x: number
+  y: number
 }
 
 export class ConstructionArea
   extends Building
   implements IGameBuildingConstructionArea
 {
-  constructor({ game, object }: IConstructionAreaOptions) {
-    super({ game, object })
+  constructor({ scene, x, y }: IConstructionAreaOptions) {
+    super({ scene, x, y })
 
-    this.init()
+    this.initGraphics()
   }
 
-  init() {
+  private initGraphics() {
     const sprite = Sprite.from("constructionArea1")
     if (sprite) {
       sprite.anchor.set(0.5, 0.92)
       this.addChild(sprite)
     }
-  }
-
-  update(object: IGameObjectBuilding) {
-    super.update(object)
-
-    this.zIndex = Math.round(object.y - 5)
   }
 }

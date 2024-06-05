@@ -22,7 +22,7 @@ export const GroupPlayerCard = ({
     <div className="w-full h-auto px-4 py-2 bg-primary text-primary border-primary border-b-4 rounded-2xl">
       <div className="flex flex-row gap-1 items-center">
         <div>
-          <PlayerFullBody player={player} />
+          <PlayerFullBody />
         </div>
         <div>
           <p className="text-xl font-bold">{player.userName}</p>

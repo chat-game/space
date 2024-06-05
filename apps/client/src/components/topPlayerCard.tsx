@@ -25,7 +25,7 @@ export const TopPlayerCard = ({
       className={`relative w-fit min-w-48 h-auto px-4 pt-2 pb-2 text-xl text-primary bg-primary border-primary border-b-[6px] rounded-2xl ${borderColor}`}
     >
       <div className="absolute left-1 -top-7">
-        <PlayerFullBody player={player} />
+        <PlayerFullBody />
       </div>
       <p className="pl-12 font-bold">{player.userName}</p>
       <p className="text-base">

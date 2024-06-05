@@ -21,7 +21,6 @@ export class Tree extends GameObject implements IGameObjectTree {
   public type: IGameObjectTree["type"] = "1"
   public variant: IGameObjectTree["variant"] = "GREEN"
   public resource = 0
-  public size
   public minSizeToChop = 75
   public maxSize = 100
   public growSpeed

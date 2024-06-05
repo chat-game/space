@@ -29,6 +29,7 @@
   "dependencies": {
     "@paralleldrive/cuid2": "2.2.2",
     "@prisma/client": "5.14.0",
+    "@radix-ui/colors": "^3.0.0",
     "@tabler/icons-react": "3.5.0",
     "@twurple/auth": "7.1.0",
     "@twurple/easy-bot": "7.1.0",

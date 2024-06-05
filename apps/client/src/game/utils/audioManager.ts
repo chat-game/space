@@ -9,131 +9,89 @@ import wagon1Audio from "../assets/audio/wagon-1.wav"
 import yeah1Audio from "../assets/audio/yeah-1.wav"
 
 type SoundName =
-  | "chop-hit"
-  | "mine-hit"
-  | "hand-hit"
-  | "marching-with-horns"
-  | "forest-background"
-  | "wagon-moving"
-  | "fire-burn"
-  | "yeah"
+  | "CHOP_HIT"
+  | "MINE_HIT"
+  | "HAND_HIT"
+  | "MARCHING_WITH_HORNS"
+  | "FOREST_BACKGROUND"
+  | "WAGON_MOVING"
+  | "FIRE_BURN"
+  | "YEAH"
 
 export class AudioManager {
-  public chop1 = new Howl({
+  private chop1 = new Howl({
     src: chop1Audio,
   })
-
-  public mine1 = new Howl({
+  private mine1 = new Howl({
     src: mine1Audio,
     rate: 0.7,
+    volume: 0.4,
   })
-
-  public handPunch1 = new Howl({
+  private handPunch1 = new Howl({
     src: handPunch1Audio,
-    rate: 0.5,
+    volume: 0.2,
+    rate: 0.8,
   })
-
-  public marchWithHorns1 = new Howl({
+  private marchWithHorns1 = new Howl({
     src: marchWithHorns1Audio,
+    volume: 0.7,
   })
-
-  public forest1 = new Howl({
+  private forest1 = new Howl({
     src: forest1Audio,
     loop: true,
+    volume: 0.5,
   })
-
-  public wagon1 = new Howl({
+  private wagon1 = new Howl({
     src: wagon1Audio,
     rate: 0.7,
+    volume: 0.08,
   })
-
-  public fireBurn1 = new Howl({
+  private fireBurn1 = new Howl({
     src: fireBurn1Audio,
+    volume: 0.7,
   })
-
-  public yeah1 = new Howl({
+  private yeah1 = new Howl({
     src: yeah1Audio,
+    volume: 0.8,
   })
 
-  getSounds(name: SoundName): Howl[] {
+  private findSound(name: SoundName): Howl[] {
     switch (name) {
-      case "chop-hit":
+      case "CHOP_HIT":
         return [this.chop1]
-      case "mine-hit":
+      case "MINE_HIT":
         return [this.mine1]
-      case "hand-hit":
+      case "HAND_HIT":
         return [this.handPunch1]
-      case "marching-with-horns":
+      case "MARCHING_WITH_HORNS":
         return [this.marchWithHorns1]
-      case "forest-background":
-        return [this.forest1]
-      case "wagon-moving":
+      case "WAGON_MOVING":
         return [this.wagon1]
-      case "fire-burn":
+      case "FIRE_BURN":
         return [this.fireBurn1]
-      case "yeah":
+      case "YEAH":
         return [this.yeah1]
+      case "FOREST_BACKGROUND":
+        return [this.forest1]
       default:
         return []
     }
   }
 
-  play({ name, volume }: { name: SoundName; volume: number }) {
-    const sounds = this.getSounds(name)
-    if (sounds.length > 0) {
-      const sound = sounds[Math.floor(Math.random() * sounds.length)]
-      sound.volume(volume)
-      sound.play()
-    }
-  }
-
-  playBackgroundSound() {
-    return this.play({ name: "forest-background", volume: 0.5 })
-  }
-
-  playCampfireSound() {
-    if (this.fireBurn1.playing()) {
+  private play(audios: Howl[]) {
+    if (!audios.length) {
       return
     }
-    return this.play({ name: "fire-burn", volume: 0.7 })
-  }
 
-  playWagonMovingSound() {
-    if (this.wagon1.playing()) {
+    const randomAudio = audios[Math.floor(Math.random() * audios.length)]
+    if (randomAudio.playing()) {
       return
     }
-    return this.play({ name: "wagon-moving", volume: 0.08 })
+
+    randomAudio.play()
   }
 
-  playRaidSound() {
-    return this.play({ name: "marching-with-horns", volume: 0.7 })
-  }
-
-  playChopWithAxeSound() {
-    if (this.chop1.playing()) {
-      return
-    }
-    return this.play({ name: "chop-hit", volume: 0.3 })
-  }
-
-  playMineWithPickaxeSound() {
-    if (this.mine1.playing()) {
-      return
-    }
-    return this.play({ name: "mine-hit", volume: 0.4 })
-  }
-
-  playHandPunch() {
-    if (this.handPunch1.playing()) {
-      return
-    }
-    return this.play({ name: "hand-hit", volume: 0.2 })
-  }
-
-  playYeahSound() {
-    if (this.yeah1.playing()) {
-      return
-    }
-    return this.play({ name: "yeah", volume: 0.8 })
+  public playSound(name: SoundName) {
+    return this.play(this.findSound(name))
   }
 }

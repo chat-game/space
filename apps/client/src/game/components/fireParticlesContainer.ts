@@ -1,4 +1,4 @@
-import { type Container, Sprite } from "pixi.js"
+import { Sprite } from "pixi.js"
 import { getRandomInRange } from "../../../../../packages/api-sdk/src"
 import { GraphicsContainer } from "./graphicsContainer"
 
@@ -42,10 +42,6 @@ export class FireParticlesContainer extends GraphicsContainer {
     return "fireParticle3"
   }
 
-  remove(container: Container) {
-    return this.removeChild(container)
-  }
-
   animate(power = 1) {
     this.offset -= power + 1
 
@@ -63,7 +59,7 @@ export class FireParticlesContainer extends GraphicsContainer {
       container.alpha -= 0.008
 
       if (container.alpha <= 0) {
-        this.remove(container)
+        this.removeChild(container)
       }
     }
   }

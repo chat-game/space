@@ -32,7 +32,7 @@ export class Player extends Unit implements IGameObjectPlayer {
 
     super({ id: objectId, x, y, entity: "PLAYER" })
 
-    this.speed = 2
+    this.speedPerSecond = 2
   }
 
   async init() {

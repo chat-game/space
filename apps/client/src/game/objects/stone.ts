@@ -1,29 +1,39 @@
 import { Sprite } from "pixi.js"
-import type { IGameObjectStone } from "../../../../../packages/api-sdk/src"
-import type { Game } from "../game"
-import { GameObjectContainer } from "./gameObjectContainer"
+import {
+  type IGameObjectStone,
+  getRandomInRange,
+} from "../../../../../packages/api-sdk/src"
+import type { GameScene } from "../scenes/gameScene"
+import { GameObject } from "./gameObject.ts"
 
 interface IStoneOptions {
-  game: Game
-  object: IGameObjectStone
+  scene: GameScene
+  x: number
+  y: number
+  resource?: number
+  size?: number
+  health?: number
 }
 
-export class Stone extends GameObjectContainer implements IGameObjectStone {
+export class Stone extends GameObject implements IGameObjectStone {
   public type!: IGameObjectStone["type"]
   public resource!: number
-  public size!: number
 
+  public isReserved = false
   public animationAngle = 0
   public animationHighSpeed = 0.05
 
-  constructor({ game, object }: IStoneOptions) {
-    super({ game, ...object })
+  constructor({ scene, x, y, resource, size }: IStoneOptions) {
+    super({ scene, x, y })
 
-    this.update(object)
-    this.init()
+    this.state = "IDLE"
+    this.resource = resource ?? getRandomInRange(1, 5)
+    this.size = size ?? 100
+
+    this.initGraphics()
   }
 
-  init() {
+  private initGraphics() {
     const sprite = this.getSpriteByType()
     if (sprite) {
       sprite.anchor.set(0.5, 1)
@@ -37,7 +47,9 @@ export class Stone extends GameObjectContainer implements IGameObjectStone {
     }
   }
 
-  animate() {
+  public animate() {
+    super.animate()
+
     if (this.state === "DESTROYED") {
       this.visible = false
     }
@@ -56,11 +68,35 @@ export class Stone extends GameObjectContainer implements IGameObjectStone {
     this.angle = this.animationAngle
   }
 
-  update(object: IGameObjectStone) {
-    super.update(object)
+  live() {
+    if (this.state === "MINING") {
+      if (this.health <= 0) {
+        this.setAsMined()
+      }
 
-    this.type = object.type
-    this.resource = object.resource
-    this.size = object.size
+      const random = getRandomInRange(1, 20)
+      if (random <= 1 && this.health > 0) {
+        this.state = "IDLE"
+        this.isReserved = false
+      }
+
+      return
+    }
+
+    if (this.state === "DESTROYED") {
+      return
+    }
+  }
+
+  mine() {
+    this.state = "MINING"
+    this.isReserved = true
+    this.health -= 0.08
+  }
+
+  setAsMined() {
+    this.size = 0
+    this.health = 0
+    this.state = "DESTROYED"
   }
 }

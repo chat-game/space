@@ -32,7 +32,7 @@ export class BuildingInterface extends GraphicsContainer {
   }
 
   rebuild() {
-    this.children.splice(0, this.children.length)
+    this.removeChild(...this.children)
     this.drawWood()
     this.drawStone()
   }

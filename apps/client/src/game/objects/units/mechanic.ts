@@ -1,23 +1,33 @@
-import type {
-  IGameObjectMechanic,
-  IGameObjectUnit,
-} from "../../../../../../packages/api-sdk/src"
-import type { Game } from "../../game"
+import type { IGameObjectMechanic } from "../../../../../../packages/api-sdk/src"
+import type { GameScene } from "../../scenes/gameScene.ts"
 import { Unit } from "./unit"
 
 interface IMechanicOptions {
-  game: Game
-  object: IGameObjectMechanic
+  scene: GameScene
+  x: number
+  y: number
 }
 
 export class Mechanic extends Unit implements IGameObjectMechanic {
-  constructor({ game, object }: IMechanicOptions) {
-    super({ game, object })
+  constructor({ scene, x, y }: IMechanicOptions) {
+    super({
+      scene,
+      x,
+      y,
+    })
+
+    this.userName = "Mechanic"
+
+    this.initVisual({
+      head: "1",
+      hairstyle: "COAL_LONG",
+      top: "DARK_SILVER_SHIRT",
+    })
   }
 
-  update(object: IGameObjectUnit) {
-    super.update(object)
+  public animate() {
+    super.animate()
 
-    this.zIndex = Math.round(object.y + 100)
+    this.zIndex = Math.round(this.y + 100)
   }
 }

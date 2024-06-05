@@ -1,14 +1,31 @@
 import type { IGameObjectCourier } from "../../../../../../packages/api-sdk/src"
-import type { Game } from "../../game"
+import { generateUnitUserName } from "../../common/generators/unitName.ts"
+import { generateUnitTop } from "../../common/generators/unitTop.ts"
+import type { GameScene } from "../../scenes/gameScene.ts"
 import { Unit } from "./unit"
 
 interface ICourierOptions {
-  game: Game
-  object: IGameObjectCourier
+  scene: GameScene
+  x: number
+  y: number
 }
 
 export class Courier extends Unit implements IGameObjectCourier {
-  constructor({ game, object }: ICourierOptions) {
-    super({ game, object })
+  constructor({ scene, x, y }: ICourierOptions) {
+    super({
+      scene,
+      x,
+      y,
+    })
+
+    this.speedPerSecond = 100
+    this.minDistance = 15
+    this.userName = generateUnitUserName()
+
+    this.initVisual({
+      head: "1",
+      hairstyle: "BOLD",
+      top: generateUnitTop(),
+    })
   }
 }

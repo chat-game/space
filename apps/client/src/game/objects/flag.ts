@@ -1,24 +1,44 @@
 import { Sprite } from "pixi.js"
 import type { IGameObjectFlag } from "../../../../../packages/api-sdk/src"
-import type { Game } from "../game"
-import { GameObjectContainer } from "./gameObjectContainer"
+import type { GameScene } from "../scenes/gameScene.ts"
+import { GameObject } from "./gameObject.ts"
 
 interface IFlagOptions {
-  game: Game
-  object: IGameObjectFlag
+  scene: GameScene
+  x: number
+  y: number
+  type: IGameObjectFlag["type"]
+  offsetX?: number
+  offsetY?: number
 }
 
-export class Flag extends GameObjectContainer implements IGameObjectFlag {
+export class Flag extends GameObject implements IGameObjectFlag {
   public type!: IGameObjectFlag["type"]
 
-  constructor({ game, object }: IFlagOptions) {
-    super({ game, ...object })
+  public isReserved: boolean
+  public offsetX: number
+  public offsetY: number
 
-    this.update(object)
-    this.init()
+  constructor({ scene, x, y, type, offsetX, offsetY }: IFlagOptions) {
+    super({ scene, x, y })
+
+    this.type = type
+    this.isReserved = false
+    this.offsetX = offsetX ?? 0
+    this.offsetY = offsetY ?? 0
+
+    this.visible = false
+
+    this.initGraphics()
   }
 
-  init() {
+  public live() {
+    if (this.target?.state === "DESTROYED") {
+      this.removeTarget()
+    }
+  }
+
+  private initGraphics() {
     const sprite = this.getSpriteByType()
     if (sprite) {
       sprite.anchor.set(0.5, 1)
@@ -39,28 +59,22 @@ export class Flag extends GameObjectContainer implements IGameObjectFlag {
     }
   }
 
-  animate() {
-    this.visible = false
-
-    if (
-      this.type === "RESOURCE" &&
-      this.game.checkIfThisFlagIsTarget(this.id)
-    ) {
+  public animate() {
+    if (this.scene.game.checkIfThisFlagIsTarget(this.id)) {
       this.visible = true
+      return
     }
 
-    if (this.type === "WAGON_MOVEMENT" || this.type === "WAGON_NEAR_MOVEMENT") {
+    if (this.type === "WAGON_MOVEMENT") {
       this.visible = true
+      return
     }
 
     if (this.state === "DESTROYED") {
       this.visible = false
+      return
     }
-  }
 
-  update(object: IGameObjectFlag) {
-    super.update(object)
-
-    this.type = object.type
+    this.visible = false
   }
 }

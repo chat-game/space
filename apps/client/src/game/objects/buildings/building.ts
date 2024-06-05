@@ -1,33 +1,51 @@
-import type { IGameObjectBuilding } from "../../../../../../packages/api-sdk/src"
-import type { Game } from "../../game"
-import { GameObjectContainer } from "../gameObjectContainer"
+import { createId } from "@paralleldrive/cuid2"
+import type {
+  IGameObjectBuilding,
+  ItemType,
+} from "../../../../../../packages/api-sdk/src"
+import { Inventory } from "../../common"
+import type { GameScene } from "../../scenes/gameScene.ts"
+import { GameObject } from "../gameObject.ts"
 
 interface IBuildingOptions {
-  game: Game
-  object: IGameObjectBuilding
+  scene: GameScene
+  x: number
+  y: number
 }
 
-export class Building
-  extends GameObjectContainer
-  implements IGameObjectBuilding
-{
-  public inventory!: IGameObjectBuilding["inventory"]
+export class Building extends GameObject implements IGameObjectBuilding {
+  public inventory!: Inventory
 
-  constructor({ game, object }: IBuildingOptions) {
-    super({ game, ...object })
+  constructor({ scene, x, y }: IBuildingOptions) {
+    super({ scene, x, y })
 
-    this.update(object)
+    this.state = "IDLE"
+    this.initInventory()
   }
 
-  animate() {
+  public animate() {
+    super.animate()
+
+    this.zIndex = Math.round(this.y - 5)
+
     if (this.state === "DESTROYED") {
       this.visible = false
     }
   }
 
-  update(object: IGameObjectBuilding) {
-    super.update(object)
+  private initInventory() {
+    this.inventory = new Inventory({
+      objectId: this.id,
+      id: createId(),
+      saveInDb: false,
+    })
+  }
 
-    this.inventory = object.inventory
+  public getItemByType(type: ItemType) {
+    if (!this.inventory?.items) {
+      return
+    }
+
+    return this.inventory.items.find((item) => item.type === type)
   }
 }

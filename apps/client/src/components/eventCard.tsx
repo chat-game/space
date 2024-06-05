@@ -18,20 +18,27 @@ import { ItemImage } from "./itemImage"
 export const EventCard = ({ event }: { event: IGameEvent }) => {
   const isActive = event.status === "STARTED"
 
+  const label = getCardLabelByType(event.type)
+
   return (
     <div
-      className="relative w-full h-auto px-4 pt-4 pb-4 border-b-4 border-zinc-300 rounded-2xl text-zinc-600 bg-white translate-x-full data-[active=true]:translate-x-0 duration-500 ease-in-out"
-      data-active={isActive}
-    >
-      <p className="font-bold text-xl leading-tight">{event.title}</p>
-      <p className="mb-2 font-medium leading-tight">{event.description}</p>
+      className="relative w-full h-auto border-[3px] border-secondary shadow-lg translate-x-full data-[active=true]:translate-x-0 duration-500 ease-in-out"
+      data-active={isActive}>
+      <div className="bg-accent-violet px-4 py-4">
+        <p
+          className="font-bold text-xl text-center text-accent-sand leading-tight">{event.title}</p>
+        <p className="text-center text-sm text-secondary-sand">{label}</p>
+      </div>
+      <div
+        className="px-4 py-4 text-primary dark bg-primary">
+        <p className="mb-2 font-medium leading-tight">{event.description}</p>
 
-      <PollProgressBar poll={event.poll} />
-      <QuestConditions quest={event.quest} />
-      <QuestTasks quest={event.quest} />
-      <TradeOffers offers={event.offers} />
-      <EventTimer endsAt={event.endsAt} />
-      <CardBottomLabel type={event.type} />
+        <PollProgressBar poll={event.poll}/>
+        <QuestConditions quest={event.quest}/>
+        <QuestTasks quest={event.quest}/>
+        <TradeOffers offers={event.offers}/>
+        <EventTimer endsAt={event.endsAt}/>
+      </div>
     </div>
   )
 }
@@ -79,15 +86,16 @@ const Command = ({ command }: { command: string | undefined }) => {
   }
 
   return (
-    <div className="mt-1 py-1 text-xl font-bold text-center bg-gradient-to-r from-violet-500 via-purple-500 to-purple-400 text-white rounded-2xl">
+    <div
+      className="py-1 text-xl font-semibold text-center bg-twitch-command text-accent-sand">
       {command}
     </div>
   )
 }
 
 const PollProgressBar = ({
-  poll,
-}: {
+                           poll,
+                         }: {
   poll: IGamePoll | undefined
 }) => {
   if (!poll) {
@@ -107,7 +115,7 @@ const PollProgressBar = ({
         key={v.id}
         className="px-3 py-1 flex flex-row gap-1 items-center text-sm bg-zinc-100 rounded-2xl"
       >
-        <IconThumbUp stroke={1.5} size={20} />
+        <IconThumbUp stroke={1.5} size={20}/>
         <span>{v.userName}</span>
       </div>
     )
@@ -115,9 +123,11 @@ const PollProgressBar = ({
 
   return (
     <>
-      <div className="relative py-1 w-full h-fit min-h-8 bg-zinc-100 text-zinc-600 rounded-2xl">
+      <div
+        className="relative py-1 w-full h-fit min-h-8 bg-zinc-100 text-zinc-600 rounded-2xl">
         <div className="relative z-20">
-          <div className="w-full h-fit px-1 text-zinc-600 rounded-2xl text-lg flex flex-row flex-nowrap gap-1 items-center justify-center leading-5">
+          <div
+            className="w-full h-fit px-1 text-zinc-600 rounded-2xl text-lg flex flex-row flex-nowrap gap-1 items-center justify-center leading-5">
             Votes: {poll.votes.length} of {poll.votesToSuccess}
           </div>
         </div>
@@ -129,24 +139,12 @@ const PollProgressBar = ({
         </div>
       </div>
 
-      <Command command={poll.action.commandDescription} />
+      <Command command={poll.action.commandDescription}/>
 
       <div className="mt-2 mb-1 flex flex-row flex-wrap gap-2">
         {showUserNames}
       </div>
     </>
-  )
-}
-
-const CardBottomLabel = ({ type }: { type: IGameEvent["type"] }) => {
-  const label = getCardLabelByType(type)
-
-  return (
-    <div className="absolute -bottom-3.5 left-0 right-0">
-      <div className="w-fit mx-auto py-0.5 px-4 lowercase font-semibold text-sm text-zinc-500 bg-zinc-100 rounded-xl">
-        {label}
-      </div>
-    </div>
   )
 }
 
@@ -166,11 +164,11 @@ const QuestConditions = ({ quest }: { quest: IGameQuest | undefined }) => {
   return (
     <div className="mt-3 flex flex-row gap-6 justify-center">
       <div className="flex flex-row gap-1.5">
-        <IconClockHour3 stroke={1.5} />
+        <IconClockHour3 stroke={1.5}/>
         up to {minutes} minutes
       </div>
       <div className="flex flex-row gap-1.5">
-        <IconMap2 stroke={1.5} />
+        <IconMap2 stroke={1.5}/>
         Common locations
       </div>
     </div>
@@ -182,32 +180,39 @@ const QuestTasks = ({ quest }: { quest: IGameQuest | undefined }) => {
     return null
   }
 
-  return quest.tasks.map((t) => <QuestTask key={t.id} task={t} />)
+  const showTasks = quest.tasks.map((t) => <QuestTask key={t.id} task={t}/>)
+
+  return (
+    <div className="space-y-2">
+      {showTasks}
+    </div>
+  )
 }
 
 const QuestTask = ({ task }: { task: IGameQuestTask }) => {
   const taskIcon =
     task.status === "SUCCESS" ? (
-      <IconCircleCheck stroke={1.5} />
+      <IconCircleCheck stroke={1.5}/>
     ) : (
-      <IconCircleDashed stroke={1.5} />
+      <IconCircleDashed stroke={1.5}/>
     )
 
   const isBoolean = typeof task.progressToSuccess === "boolean"
 
   return (
-    <div className="mb-3">
+    <div className="space-y-1">
       {isBoolean && (
-        <div className="relative w-full h-8 px-1 bg-zinc-100 text-zinc-600 text-lg rounded-2xl flex flex-row gap-1 items-center">
+        <div
+          className="relative w-full h-8 text-primary flex flex-row gap-1 items-center">
           {taskIcon}
           <p>{task.description}</p>
         </div>
       )}
 
-      {!isBoolean && <QuestTaskProgressBar task={task} />}
+      {!isBoolean && <QuestTaskProgressBar task={task}/>}
 
       {task.status === "ACTIVE" && task.action?.commandDescription && (
-        <Command command={task.action.commandDescription} />
+        <Command command={task.action.commandDescription}/>
       )}
     </div>
   )
@@ -223,9 +228,9 @@ const QuestTaskProgressBar = ({ task }: { task: IGameQuestTask }) => {
 
   const taskIcon =
     task.status === "SUCCESS" ? (
-      <IconCircleCheck stroke={1.5} />
+      <IconCircleCheck stroke={1.5}/>
     ) : (
-      <IconCircleDashed stroke={1.5} />
+      <IconCircleDashed stroke={1.5}/>
     )
 
   let progressBarWidth = Math.round(
@@ -236,16 +241,18 @@ const QuestTaskProgressBar = ({ task }: { task: IGameQuestTask }) => {
   }
 
   return (
-    <div className="relative py-1 w-full h-fit min-h-8 bg-zinc-100 text-zinc-600 rounded-2xl">
+    <div
+      className="relative py-1 w-full h-fit min-h-8 text-primary">
       <div className="relative z-20">
-        <div className="w-full h-fit px-1 text-zinc-600 rounded-2xl text-lg flex flex-row flex-nowrap gap-1 items-center leading-5">
+        <div
+          className="w-full h-fit flex flex-row flex-nowrap gap-1 items-center leading-5">
           {taskIcon}
           <p>{task.description}</p>
         </div>
       </div>
       <div className="z-10 absolute top-0 h-full w-full">
         <div
-          className="hidden h-full bg-purple-200 rounded-2xl data-[active=true]:block"
+          className="hidden h-full bg-progress-bar data-[active=true]:block"
           data-active={task.status === "ACTIVE"}
           style={{ width: `${progressBarWidth}%` }}
         />
@@ -259,7 +266,7 @@ const TradeOffers = ({ offers }: { offers: ITradeOffer[] | undefined }) => {
     return null
   }
 
-  return offers.map((offer) => <TradeOffer key={offer.id} offer={offer} />)
+  return offers.map((offer) => <TradeOffer key={offer.id} offer={offer}/>)
 }
 
 const TradeOffer = ({ offer }: { offer: ITradeOffer }) => {
@@ -272,9 +279,9 @@ const TradeOffer = ({ offer }: { offer: ITradeOffer }) => {
       </div>
       <div className="mt-2 py-2 pl-2 border-l-4 border-zinc-200 rounded-l-2xl">
         <div className="flex flex-row gap-1 items-center">
-          <ItemImage type={offer.item} />
+          <ItemImage type={offer.item}/>
           <p className="text-lg">1 for {offer.unitPrice}</p>
-          <ItemImage type={"COIN"} />
+          <ItemImage type={"COIN"}/>
         </div>
 
         <div className="italic">{offer.amount} units left</div>

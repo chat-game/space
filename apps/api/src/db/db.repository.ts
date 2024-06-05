@@ -1,8 +1,5 @@
 import { createId } from "@paralleldrive/cuid2"
-import {
-  type TwitchAccessToken,
-  getRandomInRange,
-} from "../../../../packages/api-sdk/src"
+import type { TwitchAccessToken } from "../../../../packages/api-sdk/src"
 import { db } from "./db.client"
 
 export class DBRepository {
@@ -156,7 +153,6 @@ export class DBRepository {
     inventoryId: string
     id: string
   }) {
-    const colorIndex = getRandomInRange(0, 360)
     return db.player.create({
       data: {
         id,
@@ -164,7 +160,6 @@ export class DBRepository {
         userName,
         x: -100,
         y: 600,
-        colorIndex,
         inventoryId,
       },
     })

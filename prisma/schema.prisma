@@ -8,121 +8,86 @@ datasource db {
 }
 
 model TwitchAccessToken {
-  userId              String   @id
-  accessToken         String
-  refreshToken        String?
-  scope               String[]
-  expiresIn           Int?
-  obtainmentTimestamp String
+  userId              String   @id @map("user_id")
+  accessToken         String   @map("access_token")
+  refreshToken        String?  @map("refresh_token")
+  scope               String[] @map("scope")
+  expiresIn           Int?     @map("expires_in")
+  obtainmentTimestamp String   @map("obtainment_timestamp")
+
+  @@map("twitch_access_token")
 }
 
 model Village {
   id                  String   @id
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @default(now())
-  globalTarget        Int?
-  globalTargetSuccess Int?
-  wood                Int      @default(0)
-  stone               Int      @default(0)
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @default(now()) @map("updated_at")
+  globalTarget        Int?     @map("global_target")
+  globalTargetSuccess Int?     @map("global_target_success")
+  wood                Int      @default(0) @map("wood")
+  stone               Int      @default(0) @map("stone")
+
+  @@map("village")
 }
 
 model Player {
-  id              String    @id
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @default(now())
-  lastActionAt    DateTime  @default(now())
-  twitchId        String
-  userName        String
-  x               Int       @default(0)
-  y               Int       @default(0)
-  targetX         Int?      @default(0)
-  targetY         Int?      @default(0)
-  targetId        String?
-  isBusy          Boolean   @default(false)
-  businessType    String?
-  colorIndex      Int       @default(0)
-  handsItemType   String?
-  handsItemAmount Int       @default(0)
-  coins           Int       @default(0)
-  reputation      Int       @default(0)
-  viewerPoints    Int       @default(0)
-  villainPoints   Int       @default(0)
-  refuellerPoints Int       @default(0)
-  raiderPoints    Int       @default(0)
-  inventoryId     String
-  commands        Command[]
+  id              String   @id
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @default(now()) @map("updated_at")
+  lastActionAt    DateTime @default(now()) @map("last_action_at")
+  twitchId        String   @map("twitch_id")
+  userName        String   @map("user_name")
+  coins           Int      @default(0)
+  reputation      Int      @default(0)
+  viewerPoints    Int      @default(0) @map("viewer_points")
+  villainPoints   Int      @default(0) @map("villain_points")
+  refuellerPoints Int      @default(0) @map("refueller_points")
+  raiderPoints    Int      @default(0) @map("raider_points")
+  inventoryId     String   @map("inventory_id")
+
+  @@map("player")
 }
 
 model Skill {
   id        String   @id
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
   type      String
   lvl       Int      @default(0)
   xp        Int      @default(0)
-  xpNextLvl Int      @default(20)
-  objectId  String
+  xpNextLvl Int      @default(20) @map("xp_next_lvl")
+  objectId  String   @map("object_id")
+
+  @@map("skill")
 }
 
 model Inventory {
   id        String          @id
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @default(now())
-  objectId  String
+  createdAt DateTime        @default(now()) @map("created_at")
+  updatedAt DateTime        @default(now()) @map("updated_at")
+  objectId  String          @map("object_id")
   items     InventoryItem[]
+
+  @@map("inventory")
 }
 
 model InventoryItem {
   id          String    @id
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @default(now())
-  inventoryId String
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @default(now()) @map("updated_at")
+  inventoryId String    @map("inventory_id")
   inventory   Inventory @relation(fields: [inventoryId], references: [id])
   type        String
   amount      Int       @default(1)
   durability  Int       @default(100)
-}
 
-model Command {
-  id        String   @id
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  command   String
-  target    String?
-  playerId  String
-  player    Player   @relation(fields: [playerId], references: [id])
-}
-
-model Tree {
-  id               String   @id
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @default(now())
-  x                Int      @default(0)
-  y                Int      @default(0)
-  size             Int      @default(0)
-  resource         Int
-  isReserved       Boolean  @default(false)
-  inProgress       Boolean  @default(false)
-  progressFinishAt DateTime @default(now())
-  type             String
-}
-
-model Stone {
-  id               String   @id
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @default(now())
-  x                Int      @default(0)
-  y                Int      @default(0)
-  size             Int      @default(0)
-  resource         Int
-  isReserved       Boolean  @default(false)
-  inProgress       Boolean  @default(false)
-  progressFinishAt DateTime @default(now())
-  type             String
+  @@map("inventory_item")
 }
 
 model ChatCommand {
   id      String @id
   action  String
   command String
+
+  @@map("chat_command")
 }

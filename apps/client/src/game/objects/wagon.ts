@@ -1,34 +1,176 @@
+import { createId } from "@paralleldrive/cuid2"
 import { Sprite } from "pixi.js"
 import type { IGameObjectWagon } from "../../../../../packages/api-sdk/src"
+import { Inventory } from "../common"
 import type { GraphicsContainer } from "../components/graphicsContainer"
 import { WagonCargoContainer } from "../components/wagonCargoContainer"
 import { WagonEngineCloudsContainer } from "../components/wagonEngineCloudsContainer"
 import { WagonEngineContainer } from "../components/wagonEngineContainer"
 import { WagonFuelBoxContainer } from "../components/wagonFuelBoxContainer"
 import { WagonWheelContainer } from "../components/wagonWheelContainer"
-import type { Game } from "../game"
-import { GameObjectContainer } from "./gameObjectContainer"
+import type { GameScene } from "../scenes/gameScene.ts"
+import { GameObject } from "./gameObject.ts"
+import { Mechanic } from "./units"
 
 interface IWagonOptions {
-  game: Game
-  object: IGameObjectWagon
+  scene: GameScene
+  x: number
+  y: number
 }
 
-export class Wagon extends GameObjectContainer implements IGameObjectWagon {
+export class Wagon extends GameObject implements IGameObjectWagon {
   public fuel!: number
   public visibilityArea!: IGameObjectWagon["visibilityArea"]
   public cargoType: IGameObjectWagon["cargoType"]
 
   public children: GraphicsContainer[] = []
+  public cargo: Inventory | undefined
+  public mechanic!: Mechanic
+  public serverDataArea!: IGameObjectWagon["visibilityArea"]
+  public collisionArea!: IGameObjectWagon["visibilityArea"]
 
-  constructor({ game, object }: IWagonOptions) {
-    super({ game, ...object })
+  constructor({ scene, x, y }: IWagonOptions) {
+    super({ scene, x, y })
 
-    this.update(object)
-    this.init()
+    this.state = "IDLE"
+    this.speedPerSecond = 0
+    this.fuel = 2000
+    this.updateVisibilityArea()
+    this.updateServerDataArea()
+
+    this.initMechanic()
+    this.initGraphics()
   }
 
-  init() {
+  public live() {
+    this.updateVisibilityArea()
+    this.updateServerDataArea()
+    this.updateCollisionArea()
+    this.updateMechanic()
+    this.consumeFuel()
+
+    if (this.state === "IDLE") {
+      return
+    }
+    if (this.state === "WAITING") {
+      return
+    }
+  }
+
+  consumeFuel() {
+    if (this.speedPerSecond <= 0) {
+      return
+    }
+
+    this.fuel -= this.speedPerSecond * 2
+  }
+
+  refuel(woodAmount: number) {
+    if (woodAmount < 0) {
+      return
+    }
+
+    this.fuel += woodAmount * 5 * 40
+  }
+
+  emptyFuel() {
+    this.fuel = 0
+  }
+
+  updateVisibilityArea() {
+    const offsetX = 2560 / 2
+    const offsetY = 1440 / 2
+
+    this.visibilityArea = {
+      startX: this.x - offsetX,
+      endX: this.x + offsetX,
+      startY: this.y - offsetY,
+      endY: this.y + offsetY,
+    }
+  }
+
+  updateServerDataArea() {
+    const offsetX = 2560 * 1.5
+    const offsetY = 1440
+
+    this.serverDataArea = {
+      startX: this.x - offsetX,
+      endX: this.x + offsetX,
+      startY: this.y - offsetY,
+      endY: this.y + offsetY,
+    }
+  }
+
+  updateCollisionArea() {
+    const offsetX = 250
+    const offsetY = 180
+
+    this.collisionArea = {
+      startX: this.x - offsetX,
+      endX: this.x + offsetX,
+      startY: this.y - offsetY,
+      endY: this.y + offsetY,
+    }
+  }
+
+  public checkIfPointInCollisionArea(point: { x: number; y: number }) {
+    return (
+      this.collisionArea.startX < point.x &&
+      point.x < this.collisionArea.endX &&
+      this.collisionArea.startY < point.y &&
+      point.y < this.collisionArea.endY
+    )
+  }
+
+  public checkIfPointInVisibilityArea(point: { x: number; y: number }) {
+    return (
+      this.visibilityArea.startX < point.x &&
+      point.x < this.visibilityArea.endX &&
+      this.visibilityArea.startY < point.y &&
+      point.y < this.visibilityArea.endY
+    )
+  }
+
+  public checkIfPointInServerDataArea(point: { x: number; y: number }) {
+    return (
+      this.serverDataArea.startX < point.x &&
+      point.x < this.serverDataArea.endX &&
+      this.serverDataArea.startY < point.y &&
+      point.y < this.serverDataArea.endY
+    )
+  }
+
+  initMechanic() {
+    this.mechanic = new Mechanic({
+      scene: this.scene,
+      x: this.x,
+      y: this.y,
+    })
+  }
+
+  updateMechanic() {
+    this.mechanic.live()
+    this.mechanic.direction = "LEFT"
+    this.mechanic.x = this.x - 50
+    this.mechanic.y = this.y - 48
+  }
+
+  public setCargo() {
+    this.cargo = new Inventory({
+      id: createId(),
+      saveInDb: false,
+      objectId: this.id,
+    })
+    void this.cargo.addOrCreateItem("WOOD", 100)
+    this.cargoType = "CHEST"
+  }
+
+  public emptyCargo() {
+    this.cargo = undefined
+    this.cargoType = undefined
+  }
+
+  private initGraphics() {
     const spriteSide = Sprite.from("wagonBase1")
     spriteSide.anchor.set(0.5, 1)
     spriteSide.scale = 0.75
@@ -65,7 +207,9 @@ export class Wagon extends GameObjectContainer implements IGameObjectWagon {
     )
   }
 
-  animate() {
+  public animate() {
+    super.animate()
+
     for (const container of this.children) {
       container.visible = true
 
@@ -75,7 +219,7 @@ export class Wagon extends GameObjectContainer implements IGameObjectWagon {
       this.drawFuel(container)
 
       if (container instanceof WagonEngineCloudsContainer) {
-        container.animate(this.speed)
+        container.animate(this.speedPerSecond)
       }
     }
 
@@ -97,7 +241,7 @@ export class Wagon extends GameObjectContainer implements IGameObjectWagon {
 
       const wheelRotation = this.direction === "LEFT" ? -1 : 1
 
-      container.angle += (wheelRotation * this.speed) / 2.5
+      container.angle += (wheelRotation * this.speedPerSecond) / 2.5
     }
   }
 
@@ -143,15 +287,7 @@ export class Wagon extends GameObjectContainer implements IGameObjectWagon {
 
   handleSoundByState() {
     if (this.state === "MOVING") {
-      this.game.audio.playWagonMovingSound()
+      this.scene.game.audio.playSound("WAGON_MOVING")
     }
-  }
-
-  update(object: IGameObjectWagon) {
-    super.update(object)
-
-    this.speed = object.speed
-    this.fuel = object.fuel
-    this.cargoType = object.cargoType
   }
 }
