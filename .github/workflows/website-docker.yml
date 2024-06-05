@@ -60,7 +60,7 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./apps/${{ env.APP_NAME }}
           file: ./apps/${{ env.APP_NAME }}/Dockerfile
           platforms: linux/amd64
           provenance: false
