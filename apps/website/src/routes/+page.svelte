@@ -11,7 +11,7 @@
 
 <section>
     <h1>
-        Chat Game!
+        Chat Game
     </h1>
 </section>
 
