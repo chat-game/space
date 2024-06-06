@@ -1,0 +1,26 @@
+name: Website – Deploy Docker Image on server
+
+on:
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: ghcr.io/${{ github.repository }}/website:main
+  CONTAINER_NAME: website-container
+
+jobs:
+  deploy:
+    name: Deploy image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install ssh keys
+        # check this thread to understand why its needed:
+        # <https://stackoverflow.com/a/70447517>
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+      - name: Connect and pull
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "docker pull ${{ env.IMAGE_NAME }} && docker restart ${{ env.CONTAINER_NAME }} && exit"
+      - name: Cleanup
+        run: rm -rf ~/.ssh

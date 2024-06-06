@@ -1,0 +1,35 @@
+services:
+
+  traefik:
+    image: traefik:v3.0
+    restart: on-failure
+    container_name: traefik
+    command:
+      #- "--log.level=DEBUG"
+      #- --api.insecure=true
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entryPoints.web.address=:80"
+      - "--entryPoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.myresolver.acme.email=hmbanan666@hotmail.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+      #- "8080:8080"
+    volumes:
+      - "./letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  website:
+    image: ghcr.io/hmbanan666/chat-game/website:main
+    restart: on-failure
+    pull_policy: always
+    container_name: website-container
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.website.rule=Host(`chatgame.space`)"
+      - "traefik.http.routers.website.entrypoints=websecure"
+      - "traefik.http.routers.website.tls.certresolver=myresolver"
