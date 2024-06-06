@@ -1,4 +1,4 @@
-name: Website – Deploy Docker Image on server
+name: App – Deploy Docker Image on server
 
 on:
   workflow_dispatch:

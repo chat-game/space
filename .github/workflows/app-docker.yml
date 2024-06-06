@@ -1,22 +1,21 @@
-name: Website – Build and Push Docker Image
+name: App – Build and Push Docker Image
 
 on:
   push:
     branches: [ "main" ]
     tags: [ 'v*.*.*' ]
     paths:
-      - "apps/website/**"
+      - "src/**"
   pull_request:
     branches: [ "main" ]
     paths:
-      - "apps/website/**"
+      - "src/**"
   workflow_dispatch:
 
 env:
-  APP_NAME: website
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
-  IMAGE_NAME: ${{ github.repository }}/website
+  IMAGE_NAME: ${{ github.repository }}/app
 
 jobs:
   docker:
@@ -64,8 +63,8 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@v5
         with:
-          context: ./apps/${{ env.APP_NAME }}
-          file: ./apps/${{ env.APP_NAME }}/Dockerfile
+          context: .
+          file: ./Dockerfile
           platforms: linux/amd64
           provenance: false
           push: ${{ github.event_name != 'pull_request' }}

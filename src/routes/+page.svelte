@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { PageServerData } from './$types';
+  import type { PageServerData } from "./$types"
 
   export let data: PageServerData
 </script>
@@ -11,7 +11,7 @@
 
 <section>
     <h1>
-        Chat Game
+        Chat Game! On App
     </h1>
 </section>
 
