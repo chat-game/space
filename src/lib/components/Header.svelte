@@ -8,7 +8,7 @@
     {#if $page.url.pathname === '/'}
         <img src={unit} alt=""/>
     {:else}
-        <a href="/static" class="logo">
+        <a href="/" class="logo">
             <img src={unit} alt=""/>
         </a>
     {/if}
@@ -16,7 +16,7 @@
     <nav>
         <ul>
             <li aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
-                <a href="/static">Главная</a>
+                <a href="/">Главная</a>
             </li>
             <li aria-current={$page.url.pathname === '/about' ? 'page' : undefined}>
                 <a href="/about">Об игре</a>

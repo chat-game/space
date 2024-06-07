@@ -30,6 +30,8 @@ services:
     restart: on-failure
     pull_policy: always
     container_name: app-container
+    env_file:
+      - .env
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.app.rule=Host(`chatgame.space`)"
