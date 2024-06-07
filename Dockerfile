@@ -22,6 +22,7 @@ COPY . .
 # [optional] tests & build
 ENV NODE_ENV=production
 # RUN bun test
+RUN bunx prisma generate
 RUN bun run build
 
 # copy dependencies and source code into final image

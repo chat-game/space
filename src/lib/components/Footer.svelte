@@ -1,5 +1,5 @@
 <script>
-    import {GITHUB_REPO_URL} from "$lib/config";
+    import {GITHUB_REPO_URL} from "$lib/config.js";
 </script>
 
 <footer>

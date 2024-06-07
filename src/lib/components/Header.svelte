@@ -1,14 +1,14 @@
 <script>
     import {page} from "$app/stores";
     import unit from '$lib/assets/website/unit-64.png';
-    import {DISCORD_SERVER_INVITE_URL} from "$lib/config";
+    import {DISCORD_SERVER_INVITE_URL} from "$lib/config.js";
 </script>
 
 <header>
     {#if $page.url.pathname === '/'}
         <img src={unit} alt=""/>
     {:else}
-        <a href="/" class="logo">
+        <a href="/static" class="logo">
             <img src={unit} alt=""/>
         </a>
     {/if}
@@ -16,7 +16,7 @@
     <nav>
         <ul>
             <li aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
-                <a href="/">Главная</a>
+                <a href="/static">Главная</a>
             </li>
             <li aria-current={$page.url.pathname === '/about' ? 'page' : undefined}>
                 <a href="/about">Об игре</a>
