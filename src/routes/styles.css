@@ -1,10 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wdth,wght@0,62.5..100,100..900;1,62.5..100,100..900&display=swap');
 
 :root {
-    --color-accent-1: #8E4EC6;
-    --color-text: #38352E;
+    --color-accent-1: #30A46C;
+    --color-text: #331E0B;
     --color-twitch: #8E4EC6;
-    --color-github: #191919
+    --color-github: #191919;
+    --color-background: #FFF7ED;
+}
+
+html {
+    font-size: 16px;
 }
 
 html, body {
@@ -14,13 +19,13 @@ html, body {
     font-weight: 500;
     font-style: normal;
     font-variation-settings: "wdth" 100;
+    background-color: var(--color-background);
     color: var(--color-text);
 }
 
 body {
     min-height: 100vh;
     margin: 0;
-    font-size: 16px;
 }
 
 h1,
@@ -31,6 +36,7 @@ p {
 }
 
 p {
+    font-size: 1rem;
     line-height: 1.5;
 }
 
@@ -73,6 +79,10 @@ button:focus:not(:focus-visible) {
 }
 
 @media (min-width: 720px) {
+    html {
+        font-size: 18px;
+    }
+
     h1 {
         font-size: 2.4rem;
     }

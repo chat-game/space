@@ -14,6 +14,7 @@
         justify-content: center;
         align-items: center;
         padding: 12px;
+        margin-top: 4em;
     }
 
     footer a {
