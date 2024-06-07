@@ -1,18 +1,28 @@
 <script lang="ts">
   import type { PageServerData } from "./$types"
+  import { TWITCH_URL } from "$lib/config";
 
   export let data: PageServerData
 </script>
 
 <svelte:head>
-    <title>Привет интернет</title>
-    <meta name="description" content="Делаю первую страницу"/>
+    <title>Интерактивная игра-чат для Twitch</title>
+    <meta name="description" content="Стример играет вместе со своей аудиторией. Либо он делает
+        перерыв, пока зрители..."/>
 </svelte:head>
 
 <section>
     <h1>
-        Chat Game! On App
+        Интерактивная игра-чат для Twitch
     </h1>
+    <h2>Группа игроков сопровождает Машину из точки А в точку Б, не зная, доберутся ли. Зрители могут использовать
+        "!команды", которые запускают динамичные действия.</h2>
+
+    <p>Стример играет вместе со своей аудиторией. Либо он делает
+        перерыв, пока зрители...</p>
+    <p>За все время создано {data.playersCount} юнитов. Присоединяйся <a href={TWITCH_URL} target="_blank"
+                                                                         class="twitch-link">на активном
+        стриме</a>!</p>
 </section>
 
 <style>
@@ -22,17 +32,20 @@
         justify-content: center;
         align-items: center;
         flex: 0.6;
+        text-align: center;
     }
 
     h1 {
         width: 100%;
+        margin-bottom: 0.25em;
     }
 
-    .welcome img {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        display: block;
+    h2 {
+        text-align: center;
+        margin-bottom: 2em;
+    }
+
+    .twitch-link {
+        color: var(--color-twitch);
     }
 </style>

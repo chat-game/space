@@ -22,5 +22,5 @@
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }],
-  "extends": "../../tsconfig.base.json"
+  "extends": "../../tsconfig.json"
 }
