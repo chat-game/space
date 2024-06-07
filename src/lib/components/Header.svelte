@@ -1,7 +1,7 @@
 <script>
     import {page} from "$app/stores";
     import unit from '$lib/assets/website/unit-64.png';
-    import {DISCORD_SERVER_INVITE_URL} from "$lib/config.js";
+    import {DISCORD_SERVER_INVITE_URL} from "$lib/config";
 </script>
 
 <header>
