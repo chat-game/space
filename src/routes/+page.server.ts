@@ -4,8 +4,8 @@ import { db } from "$lib/server/db/db.client"
 export const prerender = false
 export const ssr = true
 
-export const load: PageServerLoad = async () => {
+export const load = (async () => {
   return {
     playersCount: await db.player.count()
   }
-}
+}) satisfies PageServerLoad

@@ -7,14 +7,14 @@
 </script>
 
 <svelte:head>
-    <title>Интерактивная игра-чат для Twitch</title>
+    <title>Интерактивная чат-игра для Twitch</title>
     <meta name="description" content="Стример играет вместе со своей аудиторией. Либо он делает
         перерыв, пока зрители..."/>
 </svelte:head>
 
 <section class="hero">
     <h1>
-        Интерактивная игра-чат для Twitch
+        Интерактивная чат-игра для Twitch
     </h1>
     <h2>Группа игроков сопровождает Машину из точки А в точку Б, не зная, доберутся ли. Зрители могут использовать
         "!команды", которые запускают динамичные действия.</h2>
@@ -28,9 +28,9 @@
 
 <section>
     <p>Стример играет вместе со своей аудиторией. Либо он делает
-        перерыв, пока зрители...</p>
-    <p>За все время создано {data.playersCount} юнитов. Присоединяйся <a href={TWITCH_URL} target="_blank"
-                                                                         class="twitch-link">на активном
+        перерыв, пока зрители развлекаются или...</p>
+    <p class="mt-2">За все время создано {data.playersCount} юнитов. Присоединяйся <a href={TWITCH_URL} target="_blank"
+                                                                                      class="twitch-link">на активном
         стриме</a>!</p>
 </section>
 
@@ -82,5 +82,9 @@
     .wagon img {
         width: 60vw;
         max-width: fit-content;
+    }
+
+    .mt-2 {
+        margin-top: 1em;
     }
 </style>
