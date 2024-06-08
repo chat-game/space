@@ -1,24 +1,30 @@
 <script>
     import {page} from "$app/stores";
     import {env} from '$env/dynamic/public';
-    import {SIGNIN_REDIRECT_URL} from "$lib/config";
 
     let url = new URL("https://id.twitch.tv/oauth2/authorize")
     url.searchParams.set("client_id", env.PUBLIC_TWITCH_CLIENT_ID)
-    url.searchParams.set("redirect_uri", SIGNIN_REDIRECT_URL)
+    url.searchParams.set("redirect_uri", env.PUBLIC_SIGNIN_REDIRECT_URL)
     url.searchParams.set("response_type", "token")
     url.searchParams.set("scope", "chat:read channel:read:redemptions")
 
     let isSignedIn = !!$page.data.profile
 </script>
 
-{#if isSignedIn}
-    <div>Привет, {$page.data.profile.userName}!</div>
-{:else}
-    <a href={url.href}>Войти</a>
-{/if}
+<div class="wrapper">
+    {#if isSignedIn}
+        <div>Привет, {$page.data.profile.userName}!</div>
+    {:else}
+        <a href={url.href}>Войти</a>
+    {/if}
+</div>
 
 <style>
+    .wrapper {
+        width: fit-content;
+        margin-left: auto;
+    }
+
     a {
         padding: 0.5em 1.2em;
         color: white;

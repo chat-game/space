@@ -4,8 +4,9 @@
     --color-accent-1: #30A46C;
     --color-text: #331E0B;
     --color-twitch: #8E4EC6;
-    --color-github: #191919;
     --color-background: #FFF7ED;
+    --color-border: #DCBC9F;
+    --color-bg-accent-1: #56468B;
 }
 
 html {
@@ -30,9 +31,19 @@ body {
 
 h1,
 h2,
+h3,
+p {
+    margin: 0;
+}
+
+h1,
+h2,
 p {
     font-weight: 400;
-    margin: 0;
+}
+
+h3 {
+    font-weight: 600;
 }
 
 p {
@@ -90,4 +101,11 @@ button:focus:not(:focus-visible) {
     h2 {
         font-size: 1.5rem;
     }
+}
+
+.bg-paper {
+    background-image: url($lib/assets/website/background-paper-2.webp);
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-size: cover;
 }

@@ -6,13 +6,15 @@
 </script>
 
 <header>
-    {#if $page.url.pathname === '/'}
-        <img src={unit} alt=""/>
-    {:else}
-        <a href="/" class="logo">
+    <div class="left logo">
+        {#if $page.url.pathname === '/'}
             <img src={unit} alt=""/>
-        </a>
-    {/if}
+        {:else}
+            <a href="/">
+                <img src={unit} alt=""/>
+            </a>
+        {/if}
+    </div>
 
     <nav>
         <ul>
@@ -28,7 +30,9 @@
         </ul>
     </nav>
 
-    <Profile/>
+    <div class="right">
+        <Profile/>
+    </div>
 </header>
 
 <style>
@@ -38,6 +42,11 @@
         justify-content: space-between;
         justify-items: center;
         align-items: center;
+    }
+
+    .left, .right {
+        flex-grow: 1;
+        flex-basis: 0;
     }
 
     @keyframes skewRandom {
@@ -59,7 +68,7 @@
         transition: all 0.2s;
     }
 
-    .logo:hover {
+    .logo a:hover img {
         animation-name: skewRandom;
         animation-duration: 0.5s;
         animation-iteration-count: infinite;
@@ -99,8 +108,6 @@
         align-items: center;
         gap: 1.2em;
         list-style: none;
-        background: var(--background);
-        background-size: contain;
     }
 
     li {

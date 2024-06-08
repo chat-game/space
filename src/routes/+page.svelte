@@ -34,12 +34,6 @@
         стриме</a>!</p>
 </section>
 
-<section>
-    <p>Огромная благодарность моим зрителям за поддержку: sava5621 за вкусные шавухи, BezSovesty за помощь на
-        старте, flack_zombi за упорство в рубке деревьев, PeregonStream за крутые рейды. Спасибо tozikab_, 6alt1ca,
-        derailon, sloghniy, MaN0ol, dO_Oy, VombatDrago. Вы все крутые!</p>
-</section>
-
 <style>
     section {
         text-align: center;
