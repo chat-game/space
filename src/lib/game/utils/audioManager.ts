@@ -20,6 +20,8 @@ type SoundName =
   | "YEAH"
 
 export class AudioManager {
+  public isEnabled = false
+
   private chop1 = new Howl({
     src: chop1Audio,
   })
@@ -80,7 +82,7 @@ export class AudioManager {
   }
 
   private play(audios: Howl[]) {
-    if (!audios.length) {
+    if (!audios.length || !this.isEnabled) {
       return
     }
 
@@ -90,10 +92,6 @@ export class AudioManager {
     }
 
     randomAudio.play()
-
-    randomAudio.once("playerror", () => {
-      randomAudio.stop()
-    })
   }
 
   public playSound(name: SoundName) {

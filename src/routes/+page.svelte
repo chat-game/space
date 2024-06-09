@@ -6,14 +6,18 @@
 
   export let data: PageServerData
 
+  let game = new Game()
   let gameElement: HTMLElement
+  let showSoundSwitch = true
+
+  const handleSoundSwitchClick = () => {
+    showSoundSwitch = !showSoundSwitch
+    game.play()
+  }
 
   onMount(() => {
-    let game = new Game()
-
     const initGame = async () => {
       await game.init()
-      void game.play()
 
       gameElement?.appendChild(game.app.canvas)
       game.app.resizeTo = gameElement
@@ -43,6 +47,9 @@
 
 <div class="game-block">
     <div id="game-canvas" bind:this={gameElement}/>
+    <div class="buttons-block">
+        <button on:click={handleSoundSwitchClick} class="sound-switch" hidden={!showSoundSwitch}>Включить звук</button>
+    </div>
 </div>
 
 <section>
@@ -57,11 +64,23 @@
     #game-canvas {
         width: 100%;
         height: 28em;
+        touch-action: none;
     }
 
     .game-block {
+        position: relative;
         width: 100%;
         padding: 4em 0;
+    }
+
+    .game-block .buttons-block {
+        margin-top: 1em;
+        display: flex;
+        justify-content: center;
+    }
+
+    .buttons-block .sound-switch {
+        background: var(--color-background);
     }
 
     section {

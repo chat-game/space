@@ -79,6 +79,8 @@ export class Game extends Container {
   }
 
   public async play() {
+    this.audio.isEnabled = true;
+
     // setInterval(() => {
     //   console.log("FPS", this.app.ticker.FPS)
     //   console.log("Objects", this.children.length)
