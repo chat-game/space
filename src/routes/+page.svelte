@@ -1,9 +1,30 @@
 <script lang="ts">
   import type { PageServerData } from "./$types"
   import { TWITCH_URL } from "$lib/config";
-  import wagon from '$lib/assets/website/wagon-full.png';
+  import { Game } from "$lib/game/game";
+  import { onMount } from "svelte";
 
   export let data: PageServerData
+
+  let gameElement: HTMLElement
+
+  onMount(() => {
+    let game = new Game()
+
+    const initGame = async () => {
+      await game.init()
+      void game.play()
+
+      gameElement?.appendChild(game.app.canvas)
+      game.app.resizeTo = gameElement
+    }
+
+    void initGame()
+
+    return () => {
+      game.destroy()
+    }
+  })
 </script>
 
 <svelte:head>
@@ -20,10 +41,8 @@
         "!команды", которые запускают динамичные действия.</h2>
 </section>
 
-<div class="wagon-block">
-    <div class="wagon">
-        <img src={wagon} alt=""/>
-    </div>
+<div class="game-block">
+    <div id="game-canvas" bind:this={gameElement}/>
 </div>
 
 <section>
@@ -35,6 +54,16 @@
 </section>
 
 <style>
+    #game-canvas {
+        width: 100%;
+        height: 28em;
+    }
+
+    .game-block {
+        width: 100%;
+        padding: 4em 0;
+    }
+
     section {
         text-align: center;
         padding: 2em 1em;
@@ -59,23 +88,6 @@
 
     .twitch-link {
         color: var(--color-twitch);
-    }
-
-    .wagon-block {
-        width: 100%;
-        padding: 4em 0;
-        background-image: url($lib/assets/website/background-green.webp);
-    }
-
-    .wagon {
-        margin: 0 auto;
-        width: fit-content;
-        text-align: center;
-    }
-
-    .wagon img {
-        width: 60vw;
-        max-width: fit-content;
     }
 
     .mt-2 {

@@ -1,3 +1,7 @@
+<script>
+    import wagon from "$lib/assets/website/wagon-full.png"
+</script>
+
 <svelte:head>
     <title>Об игре | Чат-игра для Twitch</title>
     <meta name="description" content="Основная идея игры, что сделано, планы на будущее, благодарности"/>
@@ -40,6 +44,12 @@
         </div>
     </div>
 </section>
+
+<div class="wagon-block">
+    <div class="wagon">
+        <img src={wagon} alt=""/>
+    </div>
+</div>
 
 <section>
     <h3 class="mb-2">Благодарности</h3>
@@ -113,5 +123,23 @@
 
     .mt-4 {
         margin-top: 1.5em;
+    }
+
+    .wagon-block {
+        width: 100%;
+        margin: 2em 0;
+        padding: 4em 0;
+        background-image: url($lib/assets/website/background-green.webp);
+    }
+
+    .wagon {
+        margin: 0 auto;
+        width: fit-content;
+        text-align: center;
+    }
+
+    .wagon img {
+        width: 60vw;
+        max-width: fit-content;
     }
 </style>

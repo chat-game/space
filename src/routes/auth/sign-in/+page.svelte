@@ -1,7 +1,8 @@
 <script lang="ts">
   import { page } from "$app/stores";
+  import { browser } from "$app/environment";
 
-  if ($page.url.hash) {
+  if (browser && $page.url.hash) {
     void fetch('/auth/sign-in', {
       method: 'POST',
       body: JSON.stringify({ hash: $page.url.hash }),
