@@ -162,6 +162,7 @@ export class Tree extends GameObject implements IGameObjectTree {
       this.isReadyToChop = true
     }
     if (this.size >= this.maxSize) {
+      this.size = this.maxSize
       return
     }
 
