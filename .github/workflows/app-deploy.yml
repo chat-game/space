@@ -3,12 +3,28 @@ name: App – Deploy Docker Image on server
 on:
   workflow_dispatch:
 
+env:
+  APP_URL: https://chatgame.space
+
 jobs:
   deploy:
     name: Deploy image
     runs-on: ubuntu-latest
+    permissions:
+      deployments: write
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: chrnorm/deployment-action@v2
+        name: Create GitHub deployment
+        id: deployment
+        with:
+          token: '${{ github.token }}'
+          environment-url: ${{ env.APP_URL }}
+          environment: production
+
       - name: Install ssh keys
         # check this thread to understand why its needed:
         # <https://stackoverflow.com/a/70447517>
@@ -16,7 +32,27 @@ jobs:
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+
       - name: Connect and pull
         run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && docker compose pull && docker compose up -d && exit"
+
       - name: Cleanup
         run: rm -rf ~/.ssh
+
+      - name: Update deployment status (success)
+        if: success()
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: '${{ github.token }}'
+          environment-url: ${{ steps.deployment.outputs.environment_url }}
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
+          state: 'success'
+
+      - name: Update deployment status (failure)
+        if: failure()
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: '${{ github.token }}'
+          environment-url: ${{ steps.deployment.outputs.environment_url }}
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
+          state: 'failure'
