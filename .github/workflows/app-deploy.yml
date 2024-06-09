@@ -5,6 +5,7 @@ on:
 
 env:
   APP_URL: https://chatgame.space
+  APP_ENV: production
 
 jobs:
   deploy:
@@ -23,7 +24,7 @@ jobs:
         with:
           token: '${{ github.token }}'
           environment-url: ${{ env.APP_URL }}
-          environment: production
+          environment: ${{ env.APP_ENV }}
 
       - name: Install ssh keys
         # check this thread to understand why its needed:
