@@ -2,18 +2,37 @@
   import { page } from "$app/stores";
 
   if ($page.url.hash) {
-    const hash = $page.url.hash.split("#")[1]
-
     void fetch('/auth/sign-in', {
       method: 'POST',
-      body: JSON.stringify({ hash }),
+      body: JSON.stringify({ hash: $page.url.hash }),
       headers: {
         'content-type': 'application/json',
       },
-    }).then(res => res.ok && location.assign("/"))
+    }).finally(() => location.assign("/"))
   }
 </script>
 
-<div>
-    Sign In
-</div>
+<section class="hero">
+    <h1>Sign In</h1>
+    <h2>Wait a moment...</h2>
+</section>
+
+<style>
+    section {
+        text-align: center;
+        padding: 2em 1em;
+        margin: 0 auto;
+        max-width: 42em;
+    }
+
+    .hero {
+        padding-top: 4em;
+        padding-bottom: 4em;
+        max-width: 64em;
+    }
+
+    h1 {
+        width: 100%;
+        margin-bottom: 0.25em;
+    }
+</style>
