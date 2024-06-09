@@ -90,6 +90,10 @@ export class AudioManager {
     }
 
     randomAudio.play()
+
+    randomAudio.once("playerror", () => {
+      randomAudio.stop()
+    })
   }
 
   public playSound(name: SoundName) {
