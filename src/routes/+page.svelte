@@ -8,11 +8,15 @@
 
   let game = new Game()
   let gameElement: HTMLElement
-  let showSoundSwitch = true
+  let isGameReady = false
+  let isGameElementActive = false
 
-  const handleSoundSwitchClick = () => {
-    showSoundSwitch = !showSoundSwitch
+  const handleGameButtonClick = () => {
+    isGameElementActive = !isGameElementActive
     game.play()
+    setTimeout(() => {
+      game.app.resize()
+    }, 200)
   }
 
   onMount(() => {
@@ -21,6 +25,7 @@
 
       gameElement?.appendChild(game.app.canvas)
       game.app.resizeTo = gameElement
+      isGameReady = true
     }
 
     void initGame()
@@ -46,9 +51,9 @@
 </section>
 
 <div class="game-block">
-    <div id="game-canvas" bind:this={gameElement}/>
-    <div class="buttons-block">
-        <button on:click={handleSoundSwitchClick} class="sound-switch" hidden={!showSoundSwitch}>Включить звук</button>
+    <div id="game-canvas" bind:this={gameElement} data-active={isGameElementActive}/>
+    <div class="buttons-block" data-active={!isGameElementActive && isGameReady}>
+        <button on:click={handleGameButtonClick} class="show-switch">Хочу больше!</button>
     </div>
 </div>
 
@@ -65,22 +70,46 @@
         width: 100%;
         height: 28em;
         touch-action: none;
+        transition: all 0.2s;
+    }
+
+    #game-canvas[data-active="true"] {
+        height: 48em;
     }
 
     .game-block {
         position: relative;
         width: 100%;
-        padding: 4em 0;
+        margin: 4em 0;
     }
 
     .game-block .buttons-block {
-        margin-top: 1em;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
         display: flex;
         justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.2);
     }
 
-    .buttons-block .sound-switch {
-        background: var(--color-background);
+    .game-block .buttons-block[data-active="false"] {
+        visibility: hidden;
+    }
+
+    .buttons-block .show-switch {
+        background: var(--color-bg-accent-1);
+        color: var(--color-background);
+        border: 3px solid var(--color-border);
+        padding: 1.5em 2.5em;
+        font-size: 1.2rem;
+        transition: all 0.2s;
+    }
+
+    .buttons-block button:hover {
+        transform: scale(1.05);
     }
 
     section {

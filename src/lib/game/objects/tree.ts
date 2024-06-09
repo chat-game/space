@@ -26,9 +26,7 @@ export class Tree extends GameObject implements IGameObjectTree {
   private minSizeToChop = 75
   private maxSize = 100
   private growSpeedPerSecond = 0.5
-  private animationAngle = getRandomInRange(-1, 1)
-  private animationSlowSpeed = 0.04
-  private animationHighSpeed = 0.15
+  private animationSpeedPerSecond = 3
 
   constructor({
                 scene,
@@ -92,6 +90,8 @@ export class Tree extends GameObject implements IGameObjectTree {
   }
 
   private initGraphics() {
+    this.angle = getRandomInRange(-1, 1)
+
     const sprite = this.getSpriteByType()
     if (sprite) {
       sprite.anchor.set(0.5, 1)
@@ -128,19 +128,23 @@ export class Tree extends GameObject implements IGameObjectTree {
   }
 
   private shakeAnimation() {
-    if (Math.abs(this.animationAngle) >= 2.5) {
-      this.animationHighSpeed *= -1
+    if (Math.abs(this.angle) < 3) {
+      this.angle += this.animationSpeedPerSecond * 5 / this.scene.game.tick
+      return
     }
-    this.animationAngle += this.animationHighSpeed
-    this.angle = this.animationAngle
+
+    this.animationSpeedPerSecond *= -1
+    this.angle += this.animationSpeedPerSecond * 5 / this.scene.game.tick * 10
   }
 
   private shakeOnWind() {
-    if (Math.abs(this.animationAngle) >= 1.5) {
-      this.animationSlowSpeed *= -1
+    if (Math.abs(this.angle) < 1.8) {
+      this.angle += this.animationSpeedPerSecond / this.scene.game.tick
+      return
     }
-    this.animationAngle += this.animationSlowSpeed
-    this.angle = this.animationAngle
+
+    this.animationSpeedPerSecond *= -1
+    this.angle += this.animationSpeedPerSecond / this.scene.game.tick * 10
   }
 
   private checkHealth() {

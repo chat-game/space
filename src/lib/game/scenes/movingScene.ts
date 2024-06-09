@@ -28,7 +28,7 @@ export class MovingScene extends GameScene {
     const initialOffsetX = 0
     const initialOffsetY = 2000
     const width = 5000
-    const height = 1500
+    const height = 2000
     const area = {
       width,
       height,

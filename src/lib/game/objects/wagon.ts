@@ -195,7 +195,7 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     wheel1.scale = 0.75
     wheel2.scale = 0.75
 
-    const clouds = new WagonEngineCloudsContainer()
+    const clouds = new WagonEngineCloudsContainer({ wagon: this })
 
     this.addChild(
       spriteBase,

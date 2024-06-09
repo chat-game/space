@@ -77,7 +77,7 @@
         padding: 4px;
         width: 58px;
         height: 58px;
-        background-image: linear-gradient(58.2deg, rgba(40, 91, 212, 0.73) -3%, rgba(171, 53, 163, 0.45) 49.3%, rgba(255, 204, 112, 0.37) 97.7%);
+        background-image: linear-gradient(to top, #a18cd1 0%, #fbc2eb 100%);
         border: 2px solid var(--color-border);
         transition: all 0.2s;
     }

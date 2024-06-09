@@ -1,15 +1,23 @@
 import { type Container, Sprite } from "pixi.js"
 import { GraphicsContainer } from "./graphicsContainer"
 import { getRandomInRange } from "$lib/random";
+import { Wagon } from "$lib/game/objects";
+
+interface IWagonEngineCloudsContainerOptions {
+  wagon: Wagon
+}
 
 export class WagonEngineCloudsContainer extends GraphicsContainer {
-  public offset = 0
+  private offset = 0
+  private wagon: Wagon
 
-  constructor() {
+  constructor({ wagon }: IWagonEngineCloudsContainerOptions) {
     super({ type: "WAGON_ENGINE_CLOUD", direction: "LEFT" })
 
     this.x = -106
     this.y = -118
+
+    this.wagon = wagon
   }
 
   createRandom() {
@@ -53,10 +61,9 @@ export class WagonEngineCloudsContainer extends GraphicsContainer {
     for (const container of this.children) {
       container.visible = true
 
-      container.x -= speed / 3 + 0.07
-      container.y -= 0.06
-      container.scale = 0.75
-      container.alpha -= 0.005
+      container.x -= (speed / 3 + 2.5) / this.wagon.scene.game.tick
+      container.y -= 3 / this.wagon.scene.game.tick
+      container.alpha -= 0.5 / this.wagon.scene.game.tick
 
       if (container.alpha <= 0) {
         this.remove(container)
