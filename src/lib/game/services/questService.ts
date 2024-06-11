@@ -1,9 +1,9 @@
-import { createId } from "@paralleldrive/cuid2"
 import type {
   IGameQuest,
   IGameQuestTask,
   IGameQuestTaskFunc,
 } from "$lib/game/types"
+import { createId } from "@paralleldrive/cuid2"
 import { DonateWoodToVillageAction } from "../actions/donateWoodToVillageAction"
 import { PlantTreeAction } from "../actions/plantTreeAction"
 import { Village } from "../chunks"
@@ -43,14 +43,14 @@ export class QuestService {
   }
 
   public create({
-                  status,
-                  type,
-                  tasks,
-                  conditions,
-                  creatorId,
-                  title,
-                  description,
-                }: Omit<IGameQuest, "id">): IGameQuest {
+    status,
+    type,
+    tasks,
+    conditions,
+    creatorId,
+    title,
+    description,
+  }: Omit<IGameQuest, "id">): IGameQuest {
     return {
       id: createId(),
       status,
@@ -64,11 +64,11 @@ export class QuestService {
   }
 
   public createTask({
-                      updateProgress,
-                      progressToSuccess,
-                      progressNow,
-                      description,
-                    }: Pick<
+    updateProgress,
+    progressToSuccess,
+    progressNow,
+    description,
+  }: Pick<
     IGameQuestTask,
     "description" | "progressToSuccess" | "progressNow" | "updateProgress"
   >): IGameQuestTask {

@@ -1,4 +1,4 @@
-import type { IGameObject, IGameTask, } from "$lib/game/types"
+import type { IGameObject, IGameTask } from "$lib/game/types"
 import type { GameObject } from "../objects"
 import { Script } from "./script"
 

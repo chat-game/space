@@ -46,15 +46,15 @@ export class EventService {
   }
 
   public init({
-                title,
-                description,
-                type,
-                secondsToEnd,
-                scene,
-                poll,
-                quest,
-                offers,
-              }: {
+    title,
+    description,
+    type,
+    secondsToEnd,
+    scene,
+    poll,
+    quest,
+    offers,
+  }: {
     title: IGameEvent["title"]
     description: IGameEvent["description"]
     type: IGameEvent["type"]
@@ -100,10 +100,10 @@ export class EventService {
     const tasks = quest?.tasks.map((t) => {
       const action = t.action
         ? {
-          ...t.action,
-          live: undefined,
-          scene: undefined,
-        }
+            ...t.action,
+            live: undefined,
+            scene: undefined,
+          }
         : undefined
       return { ...t, action }
     })

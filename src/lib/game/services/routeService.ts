@@ -1,9 +1,9 @@
-import { type IGameChunkTheme, type IGameRoute, } from "$lib/game/types"
+import type { IGameChunkTheme, IGameRoute } from "$lib/game/types"
+import { getRandomInRange } from "$lib/random"
 import { Forest, LakeChunk, Village } from "../chunks"
 import { Route } from "../common"
 import { Stone, Tree } from "../objects"
 import type { GameScene } from "../scenes/gameScene"
-import { getRandomInRange } from "$lib/random";
 
 interface IRouteServiceOptions {
   scene: GameScene
@@ -138,12 +138,12 @@ export class RouteService {
   }
 
   generateRandomVillage({
-                          center,
-                          width,
-                          height,
-                          theme,
-                          scene,
-                        }: {
+    center,
+    width,
+    height,
+    theme,
+    scene,
+  }: {
     center: { x: number; y: number }
     width: number
     height: number
@@ -154,11 +154,11 @@ export class RouteService {
   }
 
   generateRandomForest({
-                         center,
-                         width,
-                         height,
-                         theme,
-                       }: {
+    center,
+    width,
+    height,
+    theme,
+  }: {
     center: { x: number; y: number }
     width: number
     height: number
@@ -169,18 +169,18 @@ export class RouteService {
       width,
       height,
       center,
-      theme
+      theme,
     })
     this.scene.chunks.push(forest)
     return forest
   }
 
   generateRandomLake({
-                       center,
-                       width,
-                       height,
-                       theme,
-                     }: {
+    center,
+    width,
+    height,
+    theme,
+  }: {
     center: { x: number; y: number }
     width: number
     height: number
@@ -191,7 +191,7 @@ export class RouteService {
       width,
       height,
       center,
-      theme
+      theme,
     })
     this.scene.chunks.push(lake)
     return lake

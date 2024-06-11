@@ -1,5 +1,5 @@
-import { Sprite } from "pixi.js"
 import type { IGameObjectFlag } from "$lib/game/types"
+import { Sprite } from "pixi.js"
 import type { GameScene } from "../scenes/gameScene"
 import { GameObject } from "./gameObject"
 

@@ -1,5 +1,5 @@
-import { Sprite } from "pixi.js"
 import type { IGameBuildingConstructionArea } from "$lib/game/types"
+import { Sprite } from "pixi.js"
 import type { GameScene } from "../../scenes/gameScene"
 import { Building } from "./building"
 
@@ -11,7 +11,8 @@ interface IConstructionAreaOptions {
 
 export class ConstructionArea
   extends Building
-  implements IGameBuildingConstructionArea {
+  implements IGameBuildingConstructionArea
+{
   constructor({ scene, x, y }: IConstructionAreaOptions) {
     super({ scene, x, y })
 

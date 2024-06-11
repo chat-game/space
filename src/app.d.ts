@@ -1,6 +1,6 @@
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
-import type { IProfile } from "$lib/types";
+import type { IProfile } from "$lib/types"
 
 declare global {
   namespace App {
@@ -14,5 +14,3 @@ declare global {
     // interface Platform {}
   }
 }
-
-export type {}

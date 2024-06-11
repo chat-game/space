@@ -1,5 +1,5 @@
+import type { IGameObjectDirection, IGameObjectUnit } from "$lib/game/types"
 import { Sprite } from "pixi.js"
-import type { IGameObjectDirection, IGameObjectUnit, } from "$lib/game/types"
 import { GraphicsContainer } from "./graphicsContainer"
 
 interface IUnitHeadContainerOptions {

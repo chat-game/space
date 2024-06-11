@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { PageServerData } from './$types';
-  import unitAvatar from "$lib/assets/website/unit-512.png"
+import unitAvatar from "$lib/assets/website/unit-512.png"
+import type { PageServerData } from "./$types"
 
-  export let data: PageServerData;
+export let data: PageServerData
 </script>
 
 <section class="hero">

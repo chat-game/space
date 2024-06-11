@@ -1,13 +1,12 @@
-import { Howl } from "howler"
 import chop1Audio from "$lib/assets/game/audio/chop-1.wav"
 import fireBurn1Audio from "$lib/assets/game/audio/fire-1.wav"
 import forest1Audio from "$lib/assets/game/audio/forest-1.mp3"
 import handPunch1Audio from "$lib/assets/game/audio/hand-punch-1.wav"
-import marchWithHorns1Audio
-  from "$lib/assets/game/audio/marching-with-horns-1.wav"
+import marchWithHorns1Audio from "$lib/assets/game/audio/marching-with-horns-1.wav"
 import mine1Audio from "$lib/assets/game/audio/mine-1.wav"
 import wagon1Audio from "$lib/assets/game/audio/wagon-1.wav"
 import yeah1Audio from "$lib/assets/game/audio/yeah-1.wav"
+import { Howl } from "howler"
 
 type SoundName =
   | "CHOP_HIT"

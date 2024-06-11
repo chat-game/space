@@ -1,5 +1,5 @@
-import { Sprite } from "pixi.js"
 import type { IGameBuildingWarehouse } from "$lib/game/types"
+import { Sprite } from "pixi.js"
 import { BuildingInterface } from "../../components/buildingInterface"
 import type { GameScene } from "../../scenes/gameScene.ts"
 import { Building } from "./building"

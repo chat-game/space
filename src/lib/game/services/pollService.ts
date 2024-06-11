@@ -1,4 +1,4 @@
-import type { IGameObjectPlayer, IGamePoll, } from "$lib/game/types"
+import type { IGameObjectPlayer, IGamePoll } from "$lib/game/types"
 import type { Player } from "../objects/units"
 import type { GameScene } from "../scenes/gameScene"
 

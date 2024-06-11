@@ -1,6 +1,6 @@
+import type { IGameObject, IGameScript } from "$lib/game/types"
 import { createId } from "@paralleldrive/cuid2"
 import { Container } from "pixi.js"
-import type { IGameObject, IGameScript, } from "$lib/game/types"
 import type { GameScene } from "../scenes/gameScene.ts"
 
 interface IGameObjectOptions {
@@ -43,8 +43,7 @@ export class GameObject extends Container implements IGameObject {
     this.zIndex = Math.round(this.y)
   }
 
-  live(): void {
-  }
+  live(): void {}
 
   public move() {
     const isOnTarget = this.checkIfIsOnTarget()

@@ -1,5 +1,5 @@
-import { type AnimatedSprite, Sprite } from "pixi.js"
 import type { IGameBuildingCampfire } from "$lib/game/types"
+import { type AnimatedSprite, Sprite } from "pixi.js"
 import { FireParticlesContainer } from "../../components/fireParticlesContainer"
 import type { GameScene } from "../../scenes/gameScene.ts"
 import { AssetsManager } from "../../utils"

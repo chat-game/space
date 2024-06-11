@@ -1,16 +1,16 @@
 <script lang="ts">
-  import { page } from "$app/stores";
-  import { browser } from "$app/environment";
+import { browser } from "$app/environment"
+import { page } from "$app/stores"
 
-  if (browser && $page.url.hash) {
-    void fetch('/auth/sign-in', {
-      method: 'POST',
-      body: JSON.stringify({ hash: $page.url.hash }),
-      headers: {
-        'content-type': 'application/json',
-      },
-    }).finally(() => location.assign("/"))
-  }
+if (browser && $page.url.hash) {
+  void fetch("/auth/sign-in", {
+    method: "POST",
+    body: JSON.stringify({ hash: $page.url.hash }),
+    headers: {
+      "content-type": "application/json",
+    },
+  }).finally(() => location.assign("/"))
+}
 </script>
 
 <section class="hero">

@@ -1,12 +1,12 @@
-import { Application, Container } from "pixi.js"
 import type {
+  GameSceneType,
   IGameObject,
   IGameObjectPlayer,
   IGameObjectTrader,
   WebSocketMessage,
-  GameSceneType,
 } from "$lib/game/types"
-import { type GameObject, type Wagon } from "./objects"
+import { Application, Container } from "pixi.js"
+import type { GameObject, Wagon } from "./objects"
 import { Player, Trader } from "./objects/units"
 import type { GameScene } from "./scenes/gameScene"
 import { MovingScene } from "./scenes/movingScene"
@@ -77,7 +77,7 @@ export class Game extends Container {
   }
 
   public async play() {
-    this.audio.isEnabled = true;
+    this.audio.isEnabled = true
 
     // setInterval(() => {
     //   console.log("FPS", this.app.ticker.FPS)
@@ -89,7 +89,7 @@ export class Game extends Container {
     this.audio.destroy()
     this.app.destroy()
 
-    super.destroy();
+    super.destroy()
   }
 
   private changeCameraPosition(wagon: Wagon) {

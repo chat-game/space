@@ -1,5 +1,6 @@
+import type { IGameChunkTheme } from "$lib/game/types"
+import { getRandomInRange } from "$lib/random"
 import { Application, Container, Graphics, Sprite, TilingSprite } from "pixi.js"
-import { type IGameChunkTheme } from "$lib/game/types"
 import {
   BACKGROUND_TILE_1,
   BACKGROUND_TILE_2,
@@ -7,7 +8,6 @@ import {
   BACKGROUND_TILE_4,
   BACKGROUND_TILE_5,
 } from "./backgroundImages"
-import { getRandomInRange } from "$lib/random";
 
 interface Palette {
   93: string
@@ -191,7 +191,7 @@ export class BackgroundGenerator {
           (imageData?.data[redIndex] +
             imageData?.data[greenIndex] +
             imageData?.data[blueIndex]) /
-          3,
+            3,
         )
 
         pixels.push(average)
@@ -226,9 +226,9 @@ export class BackgroundGenerator {
   }
 
   generateRandomGridBackground({
-                                 width,
-                                 height,
-                               }: {
+    width,
+    height,
+  }: {
     width: number
     height: number
   }) {

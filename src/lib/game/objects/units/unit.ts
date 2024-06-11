@@ -1,6 +1,7 @@
+import type { IGameObjectUnit } from "$lib/game/types"
+import { getRandomInRange } from "$lib/random"
 import { createId } from "@paralleldrive/cuid2"
 import type { AnimatedSprite } from "pixi.js"
-import { type IGameObjectUnit } from "$lib/game/types"
 import { Inventory } from "../../common"
 import { DialogueInterface } from "../../components/dialogueInterface"
 import type { GraphicsContainer } from "../../components/graphicsContainer"
@@ -14,7 +15,6 @@ import { Flag } from "../flag"
 import { GameObject } from "../gameObject"
 import { Stone } from "../stone"
 import { Tree } from "../tree"
-import { getRandomInRange } from "$lib/random";
 
 interface IUnitOptions {
   scene: GameScene

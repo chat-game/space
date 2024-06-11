@@ -1,8 +1,8 @@
+import type { IGameObjectPlayer, IGamePoll } from "$lib/game/types"
+import { getRandomInRange } from "$lib/random"
 import { createId } from "@paralleldrive/cuid2"
-import { type IGameObjectPlayer, type IGamePoll, } from "$lib/game/types"
 import { VoteAction } from "../actions/voteAction"
 import type { GameScene } from "../scenes/gameScene"
-import { getRandomInRange } from "$lib/random";
 
 interface IPollOptions {
   scene: GameScene

@@ -1,5 +1,5 @@
-import { createId } from "@paralleldrive/cuid2"
 import type { IGameQuestTaskFunc } from "$lib/game/types"
+import { createId } from "@paralleldrive/cuid2"
 import type { PlantTreeAction } from "../actions/plantTreeAction"
 import { Quest } from "./quest"
 
@@ -11,10 +11,10 @@ interface ITreesAreRunningOutQuestOptions {
 
 export class TreesAreRunningOutQuest extends Quest {
   constructor({
-                creatorId,
-                taskUpdateFunc1,
-                taskAction1,
-              }: ITreesAreRunningOutQuestOptions) {
+    creatorId,
+    taskUpdateFunc1,
+    taskAction1,
+  }: ITreesAreRunningOutQuestOptions) {
     super({
       type: "SIDE",
       title: "The trees are running out!",
@@ -27,9 +27,9 @@ export class TreesAreRunningOutQuest extends Quest {
   }
 
   initTasks({
-              taskUpdateFunc1,
-              taskAction1,
-            }: {
+    taskUpdateFunc1,
+    taskAction1,
+  }: {
     taskUpdateFunc1: IGameQuestTaskFunc
     taskAction1: PlantTreeAction
   }) {

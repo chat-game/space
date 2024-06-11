@@ -1,8 +1,9 @@
-import {
-  type IGameChunkTheme,
-  type IGameObjectFlag,
-  type IGameVillageChunk,
+import type {
+  IGameChunkTheme,
+  IGameObjectFlag,
+  IGameVillageChunk,
 } from "$lib/game/types"
+import { getRandomInRange } from "$lib/random"
 import { Flag, Stone, Tree } from "../objects"
 import { Campfire } from "../objects/buildings/campfire"
 import { ConstructionArea } from "../objects/buildings/constructionArea"
@@ -14,12 +15,9 @@ import type { GameScene } from "../scenes/gameScene"
 import { BuildScript } from "../scripts/buildScript"
 import { ChopTreeScript } from "../scripts/chopTreeScript"
 import { MoveToTargetScript } from "../scripts/moveToTargetScript"
-import {
-  PlaceItemInWarehouseScript
-} from "../scripts/placeItemInWarehouseScript"
+import { PlaceItemInWarehouseScript } from "../scripts/placeItemInWarehouseScript"
 import { PlantNewTreeScript } from "../scripts/plantNewTreeScript"
 import { GameChunk } from "./gameChunk"
-import { getRandomInRange } from "$lib/random";
 
 interface IVillageOptions {
   scene: GameScene

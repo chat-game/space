@@ -1,5 +1,5 @@
 <script>
-    import wagon from "$lib/assets/website/wagon-full.png"
+import wagon from "$lib/assets/website/wagon-full.png"
 </script>
 
 <svelte:head>

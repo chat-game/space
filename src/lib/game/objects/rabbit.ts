@@ -1,5 +1,5 @@
-import { Sprite } from "pixi.js"
 import type { IGameObjectRabbit } from "$lib/game/types"
+import { Sprite } from "pixi.js"
 import type { Game } from "../game"
 import { GameObject } from "./gameObject"
 

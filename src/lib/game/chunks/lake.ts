@@ -1,8 +1,8 @@
-import { type IGameChunkTheme, type IGameLakeChunk, } from "$lib/game/types"
+import type { IGameChunkTheme, IGameLakeChunk } from "$lib/game/types"
+import { getRandomInRange } from "$lib/random"
 import { Lake, Stone, Tree } from "../objects"
+import type { GameScene } from "../scenes/gameScene.ts"
 import { GameChunk } from "./gameChunk"
-import type { GameScene } from "../scenes/gameScene.ts";
-import { getRandomInRange } from "$lib/random";
 
 interface ILakeOptions {
   scene: GameScene
@@ -44,12 +44,12 @@ export class LakeChunk extends GameChunk implements IGameLakeChunk {
     const lake = new Lake({
       scene: this.scene,
       x: this.center.x - 100,
-      y: this.center.y + 400
+      y: this.center.y + 400,
     })
     const lake2 = new Lake({
       scene: this.scene,
       x: this.center.x - 600,
-      y: this.center.y + 500
+      y: this.center.y + 500,
     })
     this.objects.push(lake, lake2)
   }
@@ -78,7 +78,7 @@ export class LakeChunk extends GameChunk implements IGameLakeChunk {
         scene: this.scene,
         x: point.x,
         y: point.y,
-        resource: 1
+        resource: 1,
       })
       this.objects.push(stone)
     }

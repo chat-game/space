@@ -1,5 +1,5 @@
-import { Sprite } from "pixi.js"
 import type { IGameObjectDirection } from "$lib/game/types"
+import { Sprite } from "pixi.js"
 import { GraphicsContainer } from "./graphicsContainer"
 
 interface IWagonEngineContainerOptions {

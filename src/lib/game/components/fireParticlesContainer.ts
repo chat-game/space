@@ -1,6 +1,6 @@
+import { getRandomInRange } from "$lib/random"
 import { Sprite } from "pixi.js"
 import { GraphicsContainer } from "./graphicsContainer"
-import { getRandomInRange } from "$lib/random";
 
 interface IFireParticlesContainerOptions {
   x: number

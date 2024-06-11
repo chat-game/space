@@ -1,5 +1,5 @@
+import type { IGameObject, IGameScript, IGameTask } from "$lib/game/types"
 import { createId } from "@paralleldrive/cuid2"
-import type { IGameObject, IGameScript, IGameTask, } from "$lib/game/types"
 import type { GameObject } from "../objects"
 
 interface IScriptOptions {

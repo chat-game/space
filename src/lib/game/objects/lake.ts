@@ -1,8 +1,8 @@
 import type { IGameObjectLake } from "$lib/game/types"
+import type { GameScene } from "../scenes/gameScene"
 import { AssetsManager } from "../utils"
 import { GameObject } from "./gameObject"
-import { GameScene } from "../scenes/gameScene";
-import { Water } from "./water";
+import { Water } from "./water"
 
 interface ILakeOptions {
   scene: GameScene
@@ -21,7 +21,7 @@ export class Lake extends GameObject implements IGameObjectLake {
   }
 
   public animate() {
-    super.animate();
+    super.animate()
 
     this.zIndex = 0
   }

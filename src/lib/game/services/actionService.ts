@@ -1,3 +1,9 @@
+import {
+  ADMIN_PLAYER_ID,
+  DISCORD_SERVER_INVITE_URL,
+  DONATE_URL,
+  GITHUB_REPO_URL,
+} from "$lib/config"
 import type {
   GameSceneType,
   IGameActionResponse,
@@ -14,12 +20,6 @@ import type { GameScene } from "../scenes/gameScene"
 import { ChopTreeScript } from "../scripts/chopTreeScript"
 import { MineStoneScript } from "../scripts/mineStoneScript"
 import { PlantNewTreeScript } from "../scripts/plantNewTreeScript"
-import {
-  ADMIN_PLAYER_ID,
-  DISCORD_SERVER_INVITE_URL,
-  GITHUB_REPO_URL,
-  DONATE_URL
-} from "$lib/config";
 
 interface ICommandWithAction {
   id: string

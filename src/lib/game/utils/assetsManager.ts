@@ -1,48 +1,29 @@
-import {
-  AnimatedSprite,
-  type Application,
-  Assets,
-  Graphics,
-  Sprite,
-  Texture,
-  TilingSprite,
-} from "pixi.js"
-import { type IGameObjectUnit } from "$lib/game/types"
-import campfireAnimation1
-  from "$lib/assets/game/images/animation/campfire/1.png"
-import campfireAnimation2
-  from "$lib/assets/game/images/animation/campfire/2.png"
-import campfireAnimation3
-  from "$lib/assets/game/images/animation/campfire/3.png"
-import campfireAnimation4
-  from "$lib/assets/game/images/animation/campfire/4.png"
-import campfireAnimation5
-  from "$lib/assets/game/images/animation/campfire/5.png"
-import fireParticle1
-  from "$lib/assets/game/images/animation/campfire/particle-1.png"
-import fireParticle2
-  from "$lib/assets/game/images/animation/campfire/particle-2.png"
-import fireParticle3
-  from "$lib/assets/game/images/animation/campfire/particle-3.png"
-import heroRight1
-  from "$lib/assets/game/images/animation/hero-moving-right/1.png"
-import heroRight2
-  from "$lib/assets/game/images/animation/hero-moving-right/2.png"
-import heroRight3
-  from "$lib/assets/game/images/animation/hero-moving-right/3.png"
-import heroRight4
-  from "$lib/assets/game/images/animation/hero-moving-right/4.png"
-import heroRight5
-  from "$lib/assets/game/images/animation/hero-moving-right/5.png"
-import heroRight6
-  from "$lib/assets/game/images/animation/hero-moving-right/6.png"
+import campfireAnimation1 from "$lib/assets/game/images/animation/campfire/1.png"
+import campfireAnimation2 from "$lib/assets/game/images/animation/campfire/2.png"
+import campfireAnimation3 from "$lib/assets/game/images/animation/campfire/3.png"
+import campfireAnimation4 from "$lib/assets/game/images/animation/campfire/4.png"
+import campfireAnimation5 from "$lib/assets/game/images/animation/campfire/5.png"
+import fireParticle1 from "$lib/assets/game/images/animation/campfire/particle-1.png"
+import fireParticle2 from "$lib/assets/game/images/animation/campfire/particle-2.png"
+import fireParticle3 from "$lib/assets/game/images/animation/campfire/particle-3.png"
+import heroRight1 from "$lib/assets/game/images/animation/hero-moving-right/1.png"
+import heroRight2 from "$lib/assets/game/images/animation/hero-moving-right/2.png"
+import heroRight3 from "$lib/assets/game/images/animation/hero-moving-right/3.png"
+import heroRight4 from "$lib/assets/game/images/animation/hero-moving-right/4.png"
+import heroRight5 from "$lib/assets/game/images/animation/hero-moving-right/5.png"
+import heroRight6 from "$lib/assets/game/images/animation/hero-moving-right/6.png"
 import campfire1 from "$lib/assets/game/images/buildings/camp-fire-1.png"
-import constructionArea1
-  from "$lib/assets/game/images/buildings/construction-1.png"
+import constructionArea1 from "$lib/assets/game/images/buildings/construction-1.png"
 import store1 from "$lib/assets/game/images/buildings/store.png"
 import wagonStop1 from "$lib/assets/game/images/buildings/wagon-stop-1.png"
 import warehouse1 from "$lib/assets/game/images/buildings/warehouse-1.png"
+import rabbitLeft from "$lib/assets/game/images/creatures/rabbit1_left_64.png"
+import rabbitRight from "$lib/assets/game/images/creatures/rabbit1_right_64.png"
+import wolfLeft from "$lib/assets/game/images/creatures/wolf1_left_64.png"
+import wolfRight from "$lib/assets/game/images/creatures/wolf1_right_64.png"
 import coin1 from "$lib/assets/game/images/icons/coin-1.png"
+import stoneRes1 from "$lib/assets/game/images/icons/items/stone.png"
+import wood1 from "$lib/assets/game/images/icons/items/wood.png"
 import flag1 from "$lib/assets/game/images/objects/flag-1.png"
 import flag2 from "$lib/assets/game/images/objects/flag-2.png"
 import stone1 from "$lib/assets/game/images/objects/stone-1.png"
@@ -76,20 +57,17 @@ import tree5Stone from "$lib/assets/game/images/objects/tree/5/stone.png"
 import tree5Teal from "$lib/assets/game/images/objects/tree/5/teal.png"
 import tree5Toxic from "$lib/assets/game/images/objects/tree/5/toxic.png"
 import tree5Violet from "$lib/assets/game/images/objects/tree/5/violet.png"
-import unitHairClassicRight
-  from "$lib/assets/game/images/unit/hairstyle/hair-classic-right.png"
-import unitHairCoalLongRight
-  from "$lib/assets/game/images/unit/hairstyle/hair-coal-long-right.png"
-import unitHairOrangeWithBeard
-  from "$lib/assets/game/images/unit/hairstyle/orange-with-beard.png"
+import toolAxe1 from "$lib/assets/game/images/tools/axe1_64.png"
+import toolPickaxe1 from "$lib/assets/game/images/tools/pickaxe1_64.png"
+import unitHairClassicRight from "$lib/assets/game/images/unit/hairstyle/hair-classic-right.png"
+import unitHairCoalLongRight from "$lib/assets/game/images/unit/hairstyle/hair-coal-long-right.png"
+import unitHairOrangeWithBeard from "$lib/assets/game/images/unit/hairstyle/orange-with-beard.png"
 import unitHead1Right from "$lib/assets/game/images/unit/head/head-1-right.png"
 import blackTopRight from "$lib/assets/game/images/unit/top/black-top-right.png"
 import blueTopRight from "$lib/assets/game/images/unit/top/blue-top-right.png"
-import darkSilverTopRight
-  from "$lib/assets/game/images/unit/top/dark-silver-top-right.png"
+import darkSilverTopRight from "$lib/assets/game/images/unit/top/dark-silver-top-right.png"
 import greenTopRight from "$lib/assets/game/images/unit/top/green-top-right.png"
-import violetTopRight
-  from "$lib/assets/game/images/unit/top/violet-top-right.png"
+import violetTopRight from "$lib/assets/game/images/unit/top/violet-top-right.png"
 import chest1 from "$lib/assets/game/images/wagon/chest-1.png"
 import wagonEngineCloud1 from "$lib/assets/game/images/wagon/clouds/1.png"
 import wagonEngineCloud2 from "$lib/assets/game/images/wagon/clouds/2.png"
@@ -98,8 +76,7 @@ import wagonEngineCloud4 from "$lib/assets/game/images/wagon/clouds/4.png"
 import wagonEngine1 from "$lib/assets/game/images/wagon/engine-1.png"
 import wagonFuel1 from "$lib/assets/game/images/wagon/fuel-1.png"
 import wagonFuel2 from "$lib/assets/game/images/wagon/fuel-2.png"
-import wagonFuelContainer1
-  from "$lib/assets/game/images/wagon/fuel-container.png"
+import wagonFuelContainer1 from "$lib/assets/game/images/wagon/fuel-container.png"
 import wagonBase1 from "$lib/assets/game/images/wagon/wagon-1.png"
 import wagonBase2 from "$lib/assets/game/images/wagon/wagon-2.png"
 import wagonWheel1 from "$lib/assets/game/images/wagon/wheel-1.png"
@@ -107,15 +84,17 @@ import water1 from "$lib/assets/game/images/water/1.png"
 import water2 from "$lib/assets/game/images/water/2.png"
 import water3 from "$lib/assets/game/images/water/3.png"
 import water4 from "$lib/assets/game/images/water/4.png"
-import wood1 from "$lib/assets/game/images/icons/items/wood.png"
-import stoneRes1 from "$lib/assets/game/images/icons/items/stone.png"
-import toolAxe1 from "$lib/assets/game/images/tools/axe1_64.png"
-import toolPickaxe1 from "$lib/assets/game/images/tools/pickaxe1_64.png"
-import rabbitLeft from "$lib/assets/game/images/creatures/rabbit1_left_64.png"
-import rabbitRight from "$lib/assets/game/images/creatures/rabbit1_right_64.png"
-import wolfLeft from "$lib/assets/game/images/creatures/wolf1_left_64.png"
-import wolfRight from "$lib/assets/game/images/creatures/wolf1_right_64.png"
-import { getRandomInRange } from "$lib/random";
+import type { IGameObjectUnit } from "$lib/game/types"
+import { getRandomInRange } from "$lib/random"
+import {
+  AnimatedSprite,
+  type Application,
+  Assets,
+  Graphics,
+  Sprite,
+  Texture,
+  TilingSprite,
+} from "pixi.js"
 
 export abstract class AssetsManager {
   static assets = [
@@ -369,10 +348,10 @@ export abstract class AssetsManager {
   }
 
   public static generateRandomGridBackground({
-                                               app,
-                                               width,
-                                               height,
-                                             }: {
+    app,
+    width,
+    height,
+  }: {
     app: Application
     width: number
     height: number

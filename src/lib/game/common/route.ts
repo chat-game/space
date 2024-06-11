@@ -1,4 +1,4 @@
-import type { IGameChunk, IGameRoute, } from "$lib/game/types"
+import type { IGameChunk, IGameRoute } from "$lib/game/types"
 import { Flag } from "../objects"
 import type { GameScene } from "../scenes/gameScene"
 

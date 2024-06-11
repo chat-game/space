@@ -1,4 +1,4 @@
-import type { IGameAction, IGameActionResponse, } from "$lib/game/types"
+import type { IGameAction, IGameActionResponse } from "$lib/game/types"
 import type { Player } from "../objects/units"
 
 interface IActionOptions {

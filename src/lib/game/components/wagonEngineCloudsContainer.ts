@@ -1,7 +1,7 @@
+import type { Wagon } from "$lib/game/objects"
+import { getRandomInRange } from "$lib/random"
 import { type Container, Sprite } from "pixi.js"
 import { GraphicsContainer } from "./graphicsContainer"
-import { getRandomInRange } from "$lib/random";
-import { Wagon } from "$lib/game/objects";
 
 interface IWagonEngineCloudsContainerOptions {
   wagon: Wagon

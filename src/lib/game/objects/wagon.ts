@@ -1,12 +1,10 @@
+import type { IGameObjectWagon } from "$lib/game/types"
 import { createId } from "@paralleldrive/cuid2"
 import { Sprite } from "pixi.js"
-import type { IGameObjectWagon } from "$lib/game/types"
 import { Inventory } from "../common"
 import type { GraphicsContainer } from "../components/graphicsContainer"
 import { WagonCargoContainer } from "../components/wagonCargoContainer"
-import {
-  WagonEngineCloudsContainer
-} from "../components/wagonEngineCloudsContainer"
+import { WagonEngineCloudsContainer } from "../components/wagonEngineCloudsContainer"
 import { WagonEngineContainer } from "../components/wagonEngineContainer"
 import { WagonFuelBoxContainer } from "../components/wagonFuelBoxContainer"
 import { WagonWheelContainer } from "../components/wagonWheelContainer"

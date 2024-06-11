@@ -1,8 +1,8 @@
+import type { IGameChunk, IGameChunkTheme } from "$lib/game/types"
+import { getRandomInRange } from "$lib/random"
 import { createId } from "@paralleldrive/cuid2"
-import { type IGameChunk, type IGameChunkTheme, } from "$lib/game/types"
 import { Area, type GameObject, Tree } from "../objects"
 import type { GameScene } from "../scenes/gameScene.ts"
-import { getRandomInRange } from "$lib/random";
 
 interface IGameChunkOptions {
   center: IGameChunk["center"]
@@ -25,14 +25,14 @@ export class GameChunk implements IGameChunk {
   public objects: GameObject[] = []
 
   constructor({
-                title,
-                type,
-                theme,
-                width,
-                height,
-                center,
-                scene,
-              }: IGameChunkOptions) {
+    title,
+    type,
+    theme,
+    width,
+    height,
+    center,
+    scene,
+  }: IGameChunkOptions) {
     this.id = createId()
     this.center = center
     this.title = title
@@ -43,14 +43,13 @@ export class GameChunk implements IGameChunk {
     this.initArea({ width, height, theme })
   }
 
-  public live() {
-  }
+  public live() {}
 
   private initArea({
-                     width,
-                     height,
-                     theme,
-                   }: {
+    width,
+    height,
+    theme,
+  }: {
     width: number
     height: number
     theme: IGameChunkTheme

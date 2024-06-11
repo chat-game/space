@@ -1,18 +1,14 @@
-import { type ITradeOffer } from "$lib/game/types"
+import type { ITradeOffer } from "$lib/game/types"
+import { getRandomInRange } from "$lib/random"
 import { Village } from "../chunks"
 import { Poll } from "../common"
 import { Flag } from "../objects"
 import type { Player } from "../objects/units"
 import { Trader } from "../objects/units"
 import type { GameScene } from "../scenes/gameScene"
-import {
-  MoveOffScreenAndSelfDestroyScript
-} from "../scripts/moveOffScreenAndSelfDestroyScript"
+import { MoveOffScreenAndSelfDestroyScript } from "../scripts/moveOffScreenAndSelfDestroyScript"
 import { MoveToTargetScript } from "../scripts/moveToTargetScript"
-import {
-  MoveToTradePostAndTradeScript
-} from "../scripts/moveToTradePostAndTradeScript"
-import { getRandomInRange } from "$lib/random";
+import { MoveToTradePostAndTradeScript } from "../scripts/moveToTradePostAndTradeScript"
 
 interface ITradeServiceOptions {
   scene: GameScene

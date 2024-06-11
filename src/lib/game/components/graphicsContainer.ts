@@ -1,8 +1,8 @@
-import { Container, Sprite } from "pixi.js"
 import type {
   GraphicsContainerType,
   IGameObjectDirection,
 } from "$lib/game/types"
+import { Container, Sprite } from "pixi.js"
 
 interface IGraphicsContainerOptions {
   type: GraphicsContainerType

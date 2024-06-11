@@ -1,4 +1,4 @@
-import type { IGameObject, IGameTask, } from "$lib/game/types"
+import type { IGameObject, IGameTask } from "$lib/game/types"
 import type { GameObject } from "../objects"
 import { Script } from "./script"
 
@@ -10,10 +10,10 @@ interface IMoveToTradePostAndTradeScriptOptions {
 
 export class MoveToTradePostAndTradeScript extends Script {
   constructor({
-                target,
-                object,
-                startTradeFunc,
-              }: IMoveToTradePostAndTradeScriptOptions) {
+    target,
+    object,
+    startTradeFunc,
+  }: IMoveToTradePostAndTradeScriptOptions) {
     super({ object })
 
     this.tasks = [

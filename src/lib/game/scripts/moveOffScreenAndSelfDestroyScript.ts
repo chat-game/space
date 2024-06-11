@@ -1,4 +1,4 @@
-import type { IGameObject, IGameTask, } from "$lib/game/types"
+import type { IGameObject, IGameTask } from "$lib/game/types"
 import type { GameObject } from "../objects"
 import { Script } from "./script"
 
@@ -10,10 +10,10 @@ interface IMoveOffScreenAndSelfDestroyScriptOptions {
 
 export class MoveOffScreenAndSelfDestroyScript extends Script {
   constructor({
-                target,
-                object,
-                selfDestroyFunc,
-              }: IMoveOffScreenAndSelfDestroyScriptOptions) {
+    target,
+    object,
+    selfDestroyFunc,
+  }: IMoveOffScreenAndSelfDestroyScriptOptions) {
     super({ object })
 
     this.tasks = [

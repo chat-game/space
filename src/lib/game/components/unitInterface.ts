@@ -1,5 +1,5 @@
-import { Graphics, Sprite, Text } from "pixi.js"
 import type { IGameObjectUnit } from "$lib/game/types"
+import { Graphics, Sprite, Text } from "pixi.js"
 import { GraphicsContainer } from "./graphicsContainer"
 
 export class UnitInterface extends GraphicsContainer {

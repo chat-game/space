@@ -1,9 +1,9 @@
-import { createId } from "@paralleldrive/cuid2"
 import type {
   IGameInventory,
   IGameInventoryItem,
   ItemType,
 } from "$lib/game/types"
+import { createId } from "@paralleldrive/cuid2"
 
 interface IInventoryOptions {
   objectId: string

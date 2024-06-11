@@ -1,20 +1,23 @@
-import { json, error } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
-import { env as publicEnv } from '$env/dynamic/public';
-import jwt from "jsonwebtoken";
-import type { IProfile } from "$lib/types";
-import { env as privateEnv } from '$env/dynamic/private';
-import { StaticAuthProvider, getTokenInfo } from "@twurple/auth";
-import { ApiClient } from "@twurple/api";
-import { db } from "$lib/server/db/db.client";
-import { createId } from "@paralleldrive/cuid2";
+import { env as privateEnv } from "$env/dynamic/private"
+import { env as publicEnv } from "$env/dynamic/public"
+import { db } from "$lib/server/db/db.client"
+import type { IProfile } from "$lib/types"
+import { createId } from "@paralleldrive/cuid2"
+import { error, json } from "@sveltejs/kit"
+import { ApiClient } from "@twurple/api"
+import { StaticAuthProvider, getTokenInfo } from "@twurple/auth"
+import jwt from "jsonwebtoken"
+import type { RequestHandler } from "./$types"
 
-const findOrCreateProfile = async ({ twitchId, userName }: {
-  twitchId: string,
+const findOrCreateProfile = async ({
+  twitchId,
+  userName,
+}: {
+  twitchId: string
   userName: string
 }) => {
   const profileInDB = await db.profile.findFirst({
-    where: { twitchId }
+    where: { twitchId },
   })
   if (!profileInDB) {
     return db.profile.create({
@@ -22,7 +25,7 @@ const findOrCreateProfile = async ({ twitchId, userName }: {
         id: createId(),
         twitchId,
         userName,
-      }
+      },
     })
   }
 
@@ -45,8 +48,8 @@ const prepareJwtToken = async (accessToken: string) => {
     error(400, "Wrong userId")
   }
 
-  const authProvider = new StaticAuthProvider(clientId, accessToken);
-  const apiClient = new ApiClient({ authProvider });
+  const authProvider = new StaticAuthProvider(clientId, accessToken)
+  const apiClient = new ApiClient({ authProvider })
   const user = await apiClient.users.getUserById(tokenInfo.userId)
   if (!user) {
     error(400, "Wrong user data")
@@ -54,17 +57,17 @@ const prepareJwtToken = async (accessToken: string) => {
 
   const profileInDB = await findOrCreateProfile({
     twitchId: user.id,
-    userName: user.name
+    userName: user.name,
   })
 
   const profile: IProfile = {
     id: profileInDB.id,
     twitchToken: accessToken,
     twitchId: user.id,
-    userName: user.name
+    userName: user.name,
   }
 
-  return jwt.sign({ profile }, jwtSecret, { expiresIn: '24h' })
+  return jwt.sign({ profile }, jwtSecret, { expiresIn: "24h" })
 }
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
@@ -79,7 +82,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
   }
 
   const justString = data.hash.split("#")[1]
-  const items = new URLSearchParams(justString);
+  const items = new URLSearchParams(justString)
 
   if (items.has("access_token")) {
     const accessToken = items.get("access_token")
@@ -90,6 +93,6 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
   }
 
   return json({
-    ok: true
+    ok: true,
   })
-};
+}

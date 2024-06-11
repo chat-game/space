@@ -1,8 +1,8 @@
+import type { IGameObjectTree } from "$lib/game/types"
+import { getRandomInRange } from "$lib/random"
 import { Sprite } from "pixi.js"
-import { type IGameObjectTree } from "$lib/game/types"
 import type { GameScene } from "../scenes/gameScene"
 import { GameObject } from "./gameObject"
-import { getRandomInRange } from "$lib/random";
 
 interface ITreeOptions {
   scene: GameScene
@@ -29,15 +29,15 @@ export class Tree extends GameObject implements IGameObjectTree {
   private animationSpeedPerSecond = 3
 
   constructor({
-                scene,
-                x,
-                y,
-                resource,
-                size,
-                health,
-                type,
-                variant,
-              }: ITreeOptions) {
+    scene,
+    x,
+    y,
+    resource,
+    size,
+    health,
+    type,
+    variant,
+  }: ITreeOptions) {
     super({ scene, x, y })
 
     this.state = "IDLE"
@@ -129,12 +129,13 @@ export class Tree extends GameObject implements IGameObjectTree {
 
   private shakeAnimation() {
     if (Math.abs(this.angle) < 3) {
-      this.angle += this.animationSpeedPerSecond * 5 / this.scene.game.tick
+      this.angle += (this.animationSpeedPerSecond * 5) / this.scene.game.tick
       return
     }
 
     this.animationSpeedPerSecond *= -1
-    this.angle += this.animationSpeedPerSecond * 5 / this.scene.game.tick * 10
+    this.angle +=
+      ((this.animationSpeedPerSecond * 5) / this.scene.game.tick) * 10
   }
 
   private shakeOnWind() {
@@ -144,7 +145,7 @@ export class Tree extends GameObject implements IGameObjectTree {
     }
 
     this.animationSpeedPerSecond *= -1
-    this.angle += this.animationSpeedPerSecond / this.scene.game.tick * 10
+    this.angle += (this.animationSpeedPerSecond / this.scene.game.tick) * 10
   }
 
   private checkHealth() {

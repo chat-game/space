@@ -1,5 +1,10 @@
 <script>
-    import {DISCORD_SERVER_INVITE_URL, DONATE_URL, GITHUB_REPO_URL, TWITCH_URL} from "$lib/config";
+import {
+  DISCORD_SERVER_INVITE_URL,
+  DONATE_URL,
+  GITHUB_REPO_URL,
+  TWITCH_URL,
+} from "$lib/config"
 </script>
 
 <footer>

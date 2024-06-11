@@ -1,8 +1,8 @@
-import { type IGameChunkTheme, type IGameForestChunk, } from "$lib/game/types"
+import type { IGameChunkTheme, IGameForestChunk } from "$lib/game/types"
+import { getRandomInRange } from "$lib/random"
 import { Stone, Tree } from "../objects"
 import type { GameScene } from "../scenes/gameScene.ts"
 import { GameChunk } from "./gameChunk"
-import { getRandomInRange } from "$lib/random";
 
 interface IForestOptions {
   center: IGameForestChunk["center"]

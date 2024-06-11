@@ -1,4 +1,4 @@
-import type { IGameObject, IGameTask, } from "$lib/game/types"
+import type { IGameObject, IGameTask } from "$lib/game/types"
 import type { GameObject } from "../objects"
 import { Script } from "./script"
 
@@ -10,10 +10,10 @@ interface IPlaceItemInWarehouseScriptOptions {
 
 export class PlaceItemInWarehouseScript extends Script {
   constructor({
-                target,
-                object,
-                placeItemFunc,
-              }: IPlaceItemInWarehouseScriptOptions) {
+    target,
+    object,
+    placeItemFunc,
+  }: IPlaceItemInWarehouseScriptOptions) {
     super({ object })
 
     this.tasks = [

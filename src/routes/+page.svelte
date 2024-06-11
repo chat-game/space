@@ -1,43 +1,47 @@
 <script lang="ts">
-  import type { PageServerData } from "./$types"
-  import { TWITCH_URL } from "$lib/config";
-  import { Game } from "$lib/game/game";
-  import { onMount } from "svelte";
-  import { ruWordWithEndings } from "$lib/locale";
+import { TWITCH_URL } from "$lib/config"
+import { Game } from "$lib/game/game"
+import { ruWordWithEndings } from "$lib/locale"
+import { onMount } from "svelte"
+import type { PageServerData } from "./$types"
 
-  export let data: PageServerData
+export let data: PageServerData
 
-  let profileCount = data.count
-  let profileDesc = ruWordWithEndings(data.count, ['профиль', 'профиля', 'профилей'])
+const profileCount = data.count
+const profileDesc = ruWordWithEndings(data.count, [
+  "профиль",
+  "профиля",
+  "профилей",
+])
 
-  let game = new Game()
-  let gameElement: HTMLElement
-  let isGameReady = false
-  let isGameElementActive = false
+const game = new Game()
+let gameElement: HTMLElement
+let isGameReady = false
+let isGameElementActive = false
 
-  const handleGameButtonClick = () => {
-    isGameElementActive = !isGameElementActive
-    game.play()
-    setTimeout(() => {
-      game.app.resize()
-    }, 200)
+const handleGameButtonClick = () => {
+  isGameElementActive = !isGameElementActive
+  game.play()
+  setTimeout(() => {
+    game.app.resize()
+  }, 200)
+}
+
+onMount(() => {
+  const initGame = async () => {
+    await game.init()
+
+    gameElement?.appendChild(game.app.canvas)
+    game.app.resizeTo = gameElement
+    isGameReady = true
   }
 
-  onMount(() => {
-    const initGame = async () => {
-      await game.init()
+  void initGame()
 
-      gameElement?.appendChild(game.app.canvas)
-      game.app.resizeTo = gameElement
-      isGameReady = true
-    }
-
-    void initGame()
-
-    return () => {
-      game.destroy()
-    }
-  })
+  return () => {
+    game.destroy()
+  }
+})
 </script>
 
 <svelte:head>

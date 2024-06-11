@@ -1,8 +1,8 @@
-import { type IGameObjectPlayer, type IGameSkill } from "$lib/game/types"
+import type { IGameObjectPlayer, IGameSkill } from "$lib/game/types"
+import { getRandomInRange } from "$lib/random"
 import { Inventory, Skill } from "../../common"
 import type { GameScene } from "../../scenes/gameScene.ts"
 import { Unit } from "./unit"
-import { getRandomInRange } from "$lib/random";
 
 interface IPlayerOptions {
   scene: GameScene

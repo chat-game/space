@@ -1,10 +1,12 @@
-import { createId } from "@paralleldrive/cuid2"
-import {
-  type GetSceneResponse,
-  type IGameChunk,
-  type IGameChunkTheme,
-  type IGameInventoryItem,
+import { getDateMinusMinutes } from "$lib/date"
+import type {
+  GetSceneResponse,
+  IGameChunk,
+  IGameChunkTheme,
+  IGameInventoryItem,
 } from "$lib/game/types"
+import { getRandomInRange } from "$lib/random"
+import { createId } from "@paralleldrive/cuid2"
 import { type GameChunk, Village } from "../chunks"
 import { Group, Route } from "../common"
 import type { Game } from "../game"
@@ -18,16 +20,12 @@ import {
 } from "../objects"
 import { Player, Raider, Trader } from "../objects/units"
 import { ChopTreeScript } from "../scripts/chopTreeScript"
-import {
-  MoveOffScreenAndSelfDestroyScript
-} from "../scripts/moveOffScreenAndSelfDestroyScript"
+import { MoveOffScreenAndSelfDestroyScript } from "../scripts/moveOffScreenAndSelfDestroyScript"
 import { MoveToTargetScript } from "../scripts/moveToTargetScript"
 import { ActionService } from "../services/actionService"
 import { EventService } from "../services/eventService"
 import { TradeService } from "../services/tradeService"
 import { WagonService } from "../services/wagonService"
-import { getRandomInRange } from "$lib/random";
-import { getDateMinusMinutes } from "$lib/date";
 
 interface IGameSceneOptions {
   game: Game

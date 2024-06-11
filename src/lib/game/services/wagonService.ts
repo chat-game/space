@@ -1,7 +1,7 @@
+import { getMinusOrPlus, getRandomInRange } from "$lib/random"
 import { Flag, Wagon } from "../objects"
 import type { GameScene } from "../scenes/gameScene"
 import { RouteService } from "./routeService"
-import { getRandomInRange, getMinusOrPlus } from "$lib/random";
 
 interface IWagonServiceOptions {
   scene: GameScene

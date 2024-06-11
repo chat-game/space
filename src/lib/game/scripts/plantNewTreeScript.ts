@@ -1,4 +1,4 @@
-import type { IGameObject, IGameTask, } from "$lib/game/types"
+import type { IGameObject, IGameTask } from "$lib/game/types"
 import type { GameObject } from "../objects"
 import { Script } from "./script"
 
@@ -10,10 +10,10 @@ interface IPlantNewTreeScriptOptions {
 
 export class PlantNewTreeScript extends Script {
   constructor({
-                target,
-                object,
-                plantNewTreeFunc,
-              }: IPlantNewTreeScriptOptions) {
+    target,
+    object,
+    plantNewTreeFunc,
+  }: IPlantNewTreeScriptOptions) {
     super({ object })
 
     this.tasks = [

@@ -11,5 +11,5 @@ export const generateUnitTop = (): Partial<
 
   return availableTopsForUnits[
     Math.floor(Math.random() * availableTopsForUnits.length)
-    ]
+  ]
 }

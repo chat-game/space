@@ -1,5 +1,5 @@
+import type { IGameObjectBuilding, ItemType } from "$lib/game/types"
 import { createId } from "@paralleldrive/cuid2"
-import type { IGameObjectBuilding, ItemType, } from "$lib/game/types"
 import { Inventory } from "../../common"
 import type { GameScene } from "../../scenes/gameScene"
 import { GameObject } from "../gameObject"

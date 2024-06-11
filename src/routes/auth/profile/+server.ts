@@ -1,6 +1,6 @@
-import { json, error } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
-import { env } from '$env/dynamic/public';
+import { env } from "$env/dynamic/public"
+import { error, json } from "@sveltejs/kit"
+import type { RequestHandler } from "./$types"
 
 export const GET: RequestHandler = async ({ locals }) => {
   if (!locals.profile) {
@@ -8,7 +8,7 @@ export const GET: RequestHandler = async ({ locals }) => {
   }
 
   return json(locals.profile)
-};
+}
 
 export const DELETE: RequestHandler = async ({ cookies }) => {
   const cookieKey = env.PUBLIC_COOKIE_KEY
@@ -21,6 +21,6 @@ export const DELETE: RequestHandler = async ({ cookies }) => {
   }
 
   return json({
-    ok: true
+    ok: true,
   })
-};
+}

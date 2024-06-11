@@ -1,6 +1,6 @@
+import { getDatePlusSeconds } from "$lib/date"
+import type { GameSceneType, IGameEvent } from "$lib/game/types"
 import { createId } from "@paralleldrive/cuid2"
-import { type GameSceneType, type IGameEvent, } from "$lib/game/types"
-import { getDatePlusSeconds } from "$lib/date";
 
 interface IEventOptions {
   title: IGameEvent["title"]
@@ -27,15 +27,15 @@ export class Event implements IGameEvent {
   public offers?: IGameEvent["offers"]
 
   constructor({
-                title,
-                description,
-                type,
-                secondsToEnd,
-                scene,
-                poll,
-                quest,
-                offers,
-              }: IEventOptions) {
+    title,
+    description,
+    type,
+    secondsToEnd,
+    scene,
+    poll,
+    quest,
+    offers,
+  }: IEventOptions) {
     this.id = createId()
     this.title = title
     this.description = description

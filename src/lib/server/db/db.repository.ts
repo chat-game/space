@@ -143,11 +143,11 @@ export class DBRepository {
   }
 
   createPlayer({
-                 profileId,
-                 name,
-                 inventoryId,
-                 id,
-               }: {
+    profileId,
+    name,
+    inventoryId,
+    id,
+  }: {
     profileId: string
     name: string
     inventoryId: string
