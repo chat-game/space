@@ -136,42 +136,42 @@ export class DBRepository {
     }
   }
 
-  findPlayerByTwitchId(twitchId: string) {
+  findPlayerByProfileId(profileId: string) {
     return this.db.player.findFirst({
-      where: { twitchId },
+      where: { profileId },
     })
   }
 
   createPlayer({
-                 twitchId,
-                 userName,
+                 profileId,
+                 name,
                  inventoryId,
                  id,
                }: {
-    twitchId: string
-    userName: string
+    profileId: string
+    name: string
     inventoryId: string
     id: string
   }) {
     return db.player.create({
       data: {
         id,
-        twitchId,
-        userName,
+        profileId,
+        name,
         inventoryId,
       },
     })
   }
 
-  async findOrCreatePlayer(twitchId: string, userName: string) {
-    const player = await this.findPlayerByTwitchId(twitchId)
+  async findOrCreatePlayer(profileId: string, name: string) {
+    const player = await this.findPlayerByProfileId(profileId)
     if (!player) {
       const id = createId()
       const inventory = await this.createInventory(id)
       return this.createPlayer({
         id,
-        twitchId,
-        userName,
+        profileId,
+        name,
         inventoryId: inventory.id,
       })
     }

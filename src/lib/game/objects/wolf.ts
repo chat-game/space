@@ -1,7 +1,7 @@
 import { Sprite } from "pixi.js"
 import type { IGameObjectWolf } from "$lib/game/types"
 import type { Game } from "../game"
-import { GameObject } from "./gameObject.ts"
+import { GameObject } from "./gameObject"
 
 interface IWolfOptions {
   game: Game

@@ -1,7 +1,7 @@
 import type { IGameObjectFarmer } from "$lib/game/types"
-import { generateUnitUserName } from "../../common/generators/unitName.ts"
-import { generateUnitTop } from "../../common/generators/unitTop.ts"
-import type { GameScene } from "../../scenes/gameScene.ts"
+import { generateUnitUserName } from "../../common/generators/unitName"
+import { generateUnitTop } from "../../common/generators/unitTop"
+import type { GameScene } from "../../scenes/gameScene"
 import { Unit } from "./unit"
 
 interface IFarmerOptions {

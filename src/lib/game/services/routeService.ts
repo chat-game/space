@@ -186,7 +186,13 @@ export class RouteService {
     height: number
     theme: IGameChunkTheme
   }) {
-    const lake = new LakeChunk({ width, height, center, theme })
+    const lake = new LakeChunk({
+      scene: this.scene,
+      width,
+      height,
+      center,
+      theme
+    })
     this.scene.chunks.push(lake)
     return lake
   }

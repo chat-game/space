@@ -8,12 +8,12 @@ import { UnitHairContainer } from "../../components/unitHairContainer"
 import { UnitHeadContainer } from "../../components/unitHeadContainer"
 import { UnitInterface } from "../../components/unitInterface"
 import { UnitTopContainer } from "../../components/unitTopContainer"
-import type { GameScene } from "../../scenes/gameScene.ts"
+import type { GameScene } from "../../scenes/gameScene"
 import { AssetsManager } from "../../utils"
 import { Flag } from "../flag"
-import { GameObject } from "../gameObject.ts"
-import { Stone } from "../stone.ts"
-import { Tree } from "../tree.ts"
+import { GameObject } from "../gameObject"
+import { Stone } from "../stone"
+import { Tree } from "../tree"
 import { getRandomInRange } from "$lib/random";
 
 interface IUnitOptions {

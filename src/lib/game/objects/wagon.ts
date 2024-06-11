@@ -10,8 +10,8 @@ import {
 import { WagonEngineContainer } from "../components/wagonEngineContainer"
 import { WagonFuelBoxContainer } from "../components/wagonFuelBoxContainer"
 import { WagonWheelContainer } from "../components/wagonWheelContainer"
-import type { GameScene } from "../scenes/gameScene.ts"
-import { GameObject } from "./gameObject.ts"
+import type { GameScene } from "../scenes/gameScene"
+import { GameObject } from "./gameObject"
 import { Mechanic } from "./units"
 
 interface IWagonOptions {

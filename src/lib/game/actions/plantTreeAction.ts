@@ -1,6 +1,6 @@
 import { Village } from "../chunks"
 import type { Player } from "../objects/units"
-import type { GameScene } from "../scenes"
+import type { GameScene } from "../scenes/gameScene"
 import { PlantNewTreeScript } from "../scripts/plantNewTreeScript"
 import { Action } from "./action"
 import { ANSWER } from "$lib/game/services/actionService";

@@ -2,7 +2,7 @@ import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { db } from "$lib/server/db/db.client";
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load = (async ({ params }) => {
   const userName = params.slug
 
   const profile = await db.profile.findFirst({
@@ -15,4 +15,4 @@ export const load: PageServerLoad = async ({ params }) => {
   return {
     profile
   }
-};
+}) satisfies PageServerLoad

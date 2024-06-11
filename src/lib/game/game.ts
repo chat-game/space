@@ -1,15 +1,13 @@
 import { Application, Container } from "pixi.js"
 import type {
   IGameObject,
-  IGameObjectMechanic,
   IGameObjectPlayer,
-  IGameObjectRaider,
   IGameObjectTrader,
   WebSocketMessage,
   GameSceneType,
 } from "$lib/game/types"
 import { type GameObject, type Wagon } from "./objects"
-import { Mechanic, Player, Raider, Trader } from "./objects/units"
+import { Player, Trader } from "./objects/units"
 import type { GameScene } from "./scenes/gameScene"
 import { MovingScene } from "./scenes/movingScene"
 import { AssetsManager, AudioManager } from "./utils"
@@ -203,30 +201,6 @@ export class Game extends Container {
     }
   }
 
-  initMechanic(object: IGameObjectMechanic) {
-    const unit = new Mechanic({ game: this, object })
-    this.addChild(unit)
-  }
-
-  updateMechanic(object: IGameObjectMechanic) {
-    const unit = this.findObject(object.id)
-    if (unit instanceof Mechanic) {
-      unit.update(object)
-    }
-  }
-
-  initRaider(object: IGameObjectRaider) {
-    const raider = new Raider({ game: this, object })
-    this.addChild(raider)
-  }
-
-  updateRaider(object: IGameObjectRaider) {
-    const raider = this.findObject(object.id)
-    if (raider instanceof Raider) {
-      raider.update(object)
-    }
-  }
-
   public checkIfThisFlagIsTarget(id: string) {
     for (const obj of this.children) {
       if (obj.target?.id === id) {
@@ -276,14 +250,6 @@ export class Game extends Container {
         this.initTrader(object as IGameObjectTrader)
         return
       }
-      if (object.entity === "MECHANIC") {
-        this.initMechanic(object as IGameObjectMechanic)
-        return
-      }
-      if (object.entity === "RAIDER") {
-        this.initRaider(object as IGameObjectRaider)
-        return
-      }
       return
     }
 
@@ -293,14 +259,6 @@ export class Game extends Container {
     }
     if (object.entity === "TRADER") {
       this.updateTrader(object as IGameObjectTrader)
-      return
-    }
-    if (object.entity === "MECHANIC") {
-      this.updateMechanic(object as IGameObjectMechanic)
-      return
-    }
-    if (object.entity === "RAIDER") {
-      this.updateRaider(object as IGameObjectRaider)
       return
     }
   }

@@ -1,7 +1,7 @@
 import { Sprite } from "pixi.js"
 import { type IGameObjectStone } from "$lib/game/types"
 import type { GameScene } from "../scenes/gameScene"
-import { GameObject } from "./gameObject.ts"
+import { GameObject } from "./gameObject"
 import { getRandomInRange } from "$lib/random";
 
 interface IStoneOptions {

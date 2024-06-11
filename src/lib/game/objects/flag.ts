@@ -1,7 +1,7 @@
 import { Sprite } from "pixi.js"
 import type { IGameObjectFlag } from "$lib/game/types"
-import type { GameScene } from "../scenes/gameScene.ts"
-import { GameObject } from "./gameObject.ts"
+import type { GameScene } from "../scenes/gameScene"
+import { GameObject } from "./gameObject"
 
 interface IFlagOptions {
   scene: GameScene

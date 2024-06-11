@@ -1,6 +1,6 @@
 import type { IGameObjectArea } from "$lib/game/types"
-import type { GameScene } from "../scenes/gameScene.ts"
-import { GameObject } from "./gameObject.ts"
+import type { GameScene } from "../scenes/gameScene"
+import { GameObject } from "./gameObject"
 
 interface IAreaOptions {
   scene: GameScene

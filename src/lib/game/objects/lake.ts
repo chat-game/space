@@ -1,6 +1,6 @@
 import type { IGameObjectLake } from "$lib/game/types"
 import { AssetsManager } from "../utils"
-import { GameObject } from "./gameObject.ts"
+import { GameObject } from "./gameObject"
 import { GameScene } from "../scenes/gameScene";
 import { Water } from "./water";
 
