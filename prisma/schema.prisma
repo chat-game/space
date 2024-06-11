@@ -7,6 +7,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Profile {
+  id        String   @id
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+  twitchId  String   @map("twitch_id")
+  userName  String   @map("user_name")
+
+  @@map("profile")
+}
+
 model TwitchAccessToken {
   userId              String   @id @map("user_id")
   accessToken         String   @map("access_token")
@@ -35,8 +45,7 @@ model Player {
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @default(now()) @map("updated_at")
   lastActionAt    DateTime @default(now()) @map("last_action_at")
-  twitchId        String   @map("twitch_id")
-  userName        String   @map("user_name")
+  name            String   @map("name")
   coins           Int      @default(0)
   reputation      Int      @default(0)
   viewerPoints    Int      @default(0) @map("viewer_points")
@@ -44,6 +53,7 @@ model Player {
   refuellerPoints Int      @default(0) @map("refueller_points")
   raiderPoints    Int      @default(0) @map("raider_points")
   inventoryId     String   @map("inventory_id")
+  profileId       String   @map("profile_id")
 
   @@map("player")
 }
@@ -90,4 +100,24 @@ model ChatCommand {
   command String
 
   @@map("chat_command")
+}
+
+model Character {
+  id          String   @id
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @map("updated_at")
+  name        String
+  description String
+
+  @@map("character")
+}
+
+model Post {
+  id        String   @id
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+  authorId  String   @map("author_id")
+  text      String
+
+  @@map("post")
 }

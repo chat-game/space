@@ -24,25 +24,15 @@ export const handle: Handle = async ({ event, resolve }) => {
         error(400, "Token is not valid");
       }
 
-      // const user = await db.user.findUnique({
-      //   where: {
-      //     id: jwtUser.id,
-      //   },
-      // });
-      //
-      // if (!user) {
-      //   error(404, "User not found");
-      // }
-
       const profile = payload.profile as IProfile
 
       event.locals.profile = {
-        twitchToken: profile.twitchToken,
-        twitchId: profile.twitchId,
-        userName: profile.userName
+        ...profile
       };
     } catch (error) {
-      console.error(error);
+      if (error instanceof jwt.TokenExpiredError) {
+        event.cookies.delete(cookieKey, { path: "/" })
+      }
     }
   }
 

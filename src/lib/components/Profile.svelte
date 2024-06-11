@@ -34,7 +34,9 @@
         </button>
         {#if menuOpened}
             <div class="profile-menu">
-                <div>{$page.data.profile.userName}</div>
+                <div>
+                    <a href="/p/{$page.data.profile.userName}">{$page.data.profile.userName}</a>
+                </div>
                 <button on:click={handleSignOut}>Выйти</button>
             </div>
         {/if}
@@ -64,12 +66,12 @@
         opacity: 0.8;
     }
 
-    a {
+    .twitch a {
         color: white;
         text-decoration: none;
     }
 
-    a:hover {
+    .twitch a:hover {
         text-decoration: none;
     }
 

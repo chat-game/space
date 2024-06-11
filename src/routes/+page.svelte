@@ -3,8 +3,12 @@
   import { TWITCH_URL } from "$lib/config";
   import { Game } from "$lib/game/game";
   import { onMount } from "svelte";
+  import { ruWordWithEndings } from "$lib/locale";
 
   export let data: PageServerData
+
+  let profileCount = data.count
+  let profileDesc = ruWordWithEndings(data.count, ['профиль', 'профиля', 'профилей'])
 
   let game = new Game()
   let gameElement: HTMLElement
@@ -60,9 +64,11 @@
 <section>
     <p>Стример играет вместе со своей аудиторией. Либо он делает
         перерыв, пока зрители развлекаются или...</p>
-    <p class="mt-2">За все время создано {data.playersCount} юнитов. Присоединяйся <a href={TWITCH_URL} target="_blank"
-                                                                                      class="twitch-link">на активном
-        стриме</a>!</p>
+    <p class="mt-2">За все время
+        создано {profileCount} {profileDesc}. Присоединяйся <a
+                href={TWITCH_URL} target="_blank"
+                class="twitch-link">на активном
+            стриме</a>!</p>
 </section>
 
 <style>

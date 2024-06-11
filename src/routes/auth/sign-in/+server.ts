@@ -6,6 +6,28 @@ import type { IProfile } from "$lib/types";
 import { env as privateEnv } from '$env/dynamic/private';
 import { StaticAuthProvider, getTokenInfo } from "@twurple/auth";
 import { ApiClient } from "@twurple/api";
+import { db } from "$lib/server/db/db.client";
+import { createId } from "@paralleldrive/cuid2";
+
+const findOrCreateProfile = async ({ twitchId, userName }: {
+  twitchId: string,
+  userName: string
+}) => {
+  const profileInDB = await db.profile.findFirst({
+    where: { twitchId }
+  })
+  if (!profileInDB) {
+    return db.profile.create({
+      data: {
+        id: createId(),
+        twitchId,
+        userName,
+      }
+    })
+  }
+
+  return profileInDB
+}
 
 const prepareJwtToken = async (accessToken: string) => {
   const clientId = publicEnv.PUBLIC_TWITCH_CLIENT_ID
@@ -30,7 +52,13 @@ const prepareJwtToken = async (accessToken: string) => {
     error(400, "Wrong user data")
   }
 
+  const profileInDB = await findOrCreateProfile({
+    twitchId: user.id,
+    userName: user.name
+  })
+
   const profile: IProfile = {
+    id: profileInDB.id,
     twitchToken: accessToken,
     twitchId: user.id,
     userName: user.name

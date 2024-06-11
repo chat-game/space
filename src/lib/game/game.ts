@@ -125,10 +125,12 @@ export class Game extends Container {
   }
 
   private moveCamera() {
-    const cameraMaxSpeed = 0.2
+    const cameraSpeedPerSecond = 18
+    const cameraDistance = cameraSpeedPerSecond / this.tick
+
     const bufferX = Math.abs(this.cameraPerfectX - this.cameraX)
     const moduleX = this.cameraPerfectX - this.cameraX > 0 ? 1 : -1
-    const addToX = bufferX > cameraMaxSpeed ? cameraMaxSpeed : bufferX
+    const addToX = bufferX > cameraDistance ? cameraDistance : bufferX
 
     if (this.cameraX !== this.cameraPerfectX) {
       this.cameraX += addToX * moduleX
@@ -136,7 +138,7 @@ export class Game extends Container {
 
     const bufferY = Math.abs(this.cameraPerfectY - this.cameraY)
     const moduleY = this.cameraPerfectY - this.cameraY > 0 ? 1 : -1
-    const addToY = bufferY > cameraMaxSpeed ? cameraMaxSpeed : bufferY
+    const addToY = bufferY > cameraDistance ? cameraDistance : bufferY
 
     if (this.cameraY !== this.cameraPerfectY) {
       this.cameraY += addToY * moduleY

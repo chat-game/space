@@ -23,6 +23,9 @@
             <li aria-current={$page.url.pathname === '/about' ? 'page' : undefined}>
                 <a href="/about">Об игре</a>
             </li>
+            <li aria-current={$page.url.pathname === '/character' ? 'page' : undefined}>
+                <a href="/character">Персонажи</a>
+            </li>
         </ul>
     </nav>
 

@@ -6,6 +6,6 @@ export const ssr = true
 
 export const load = (async () => {
   return {
-    playersCount: await db.player.count()
+    count: await db.profile.count()
   }
 }) satisfies PageServerLoad
