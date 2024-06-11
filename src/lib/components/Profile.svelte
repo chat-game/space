@@ -1,7 +1,7 @@
 <script>
     import {page} from "$app/stores";
     import {env} from '$env/dynamic/public';
-    import twitchIcon from "$lib/assets/website/twitch-112.png"
+    import twitchIcon from "$lib/assets/website/icons/twitch/112.png"
 
     let url = new URL("https://id.twitch.tv/oauth2/authorize")
     url.searchParams.set("client_id", env.PUBLIC_TWITCH_CLIENT_ID)
