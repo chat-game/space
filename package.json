@@ -38,7 +38,7 @@
     "@twurple/auth": "7.1.0",
     "@twurple/easy-bot": "7.1.0",
     "@twurple/pubsub": "7.1.0",
-    "hono": "4.4.4",
+    "hono": "4.4.5",
     "howler": "2.2.4",
     "jsonwebtoken": "9.0.2",
     "pixi.js": "8.1.6",
