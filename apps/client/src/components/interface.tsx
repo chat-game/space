@@ -4,7 +4,6 @@ import { useScene } from "../hooks/useScene"
 import { ChunkBlock } from "./chunkBlock"
 import { EventsBlock } from "./eventsBlock"
 import { GroupBlock } from "./groupBlock"
-import { Loader } from "./loader"
 import { RouteBlock } from "./routeBlock"
 import { TopPlayersBlock } from "./topPlayers"
 import { WagonStatsBlock } from "./wagonStatsBlock"
@@ -15,7 +14,7 @@ export const InterfaceLayer = () => {
 
   return (
     <>
-      <Loader/>
+      {/*<Loader/>*/}
 
       <div
         className="z-10 absolute top-0 left-0 right-0 h-10 px-4 bg-primary border-b-2 border-primary shadow-lg"

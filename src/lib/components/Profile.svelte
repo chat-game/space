@@ -36,14 +36,13 @@ const handleMenuClick = () => {
             <div class="profile-menu">
                 <div>
                     <a href="/p/{$page.data.profile.userName}">{$page.data.profile.userName}</a>
+                    <a href="/play">Играть</a>
                 </div>
                 <button on:click={handleSignOut}>Выйти</button>
             </div>
         {/if}
     {:else}
-        <button class="twitch">
-            <a href={url.href}>Войти</a>
-        </button>
+      <a class="twitch" href={url.href}>Войти</a>
     {/if}
 </div>
 
@@ -55,24 +54,17 @@ const handleMenuClick = () => {
     }
 
     .twitch {
+      color: white;
+      text-decoration: none;
         padding: 0.5em 1.2em;
-        color: white;
         background-color: var(--color-twitch);
         transition: all 0.2s;
     }
 
     .twitch:hover {
+      text-decoration: none;
         transform: scale(1.04);
         opacity: 0.8;
-    }
-
-    .twitch a {
-        color: white;
-        text-decoration: none;
-    }
-
-    .twitch a:hover {
-        text-decoration: none;
     }
 
     .profile-avatar {
