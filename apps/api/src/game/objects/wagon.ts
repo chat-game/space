@@ -1,8 +1,8 @@
-import { createId } from "@paralleldrive/cuid2"
-import type { IGameObjectWagon } from "../../../../../packages/api-sdk/src"
-import { Inventory } from "../common"
-import { GameObject } from "./gameObject"
-import { Mechanic } from "./units"
+import { createId } from '@paralleldrive/cuid2'
+import type { IGameObjectWagon } from '../../../../../packages/api-sdk/src'
+import { Inventory } from '../common'
+import { GameObject } from './gameObject'
+import { Mechanic } from './units'
 
 interface IWagonOptions {
   x: number
@@ -11,18 +11,18 @@ interface IWagonOptions {
 
 export class Wagon extends GameObject implements IGameObjectWagon {
   public fuel: number
-  public visibilityArea!: IGameObjectWagon["visibilityArea"]
-  public cargoType: IGameObjectWagon["cargoType"]
+  public visibilityArea!: IGameObjectWagon['visibilityArea']
+  public cargoType: IGameObjectWagon['cargoType']
 
   public cargo: Inventory | undefined
   public mechanic!: Mechanic
-  public serverDataArea!: IGameObjectWagon["visibilityArea"]
-  public collisionArea!: IGameObjectWagon["visibilityArea"]
+  public serverDataArea!: IGameObjectWagon['visibilityArea']
+  public collisionArea!: IGameObjectWagon['visibilityArea']
 
   constructor({ x, y }: IWagonOptions) {
     const finalId = createId()
 
-    super({ id: finalId, x, y, entity: "WAGON", isVisibleOnClient: true })
+    super({ id: finalId, x, y, entity: 'WAGON', isVisibleOnClient: true })
 
     this.needToSendDataToClient = true
     this.speed = 0
@@ -39,13 +39,12 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     this.updateMechanic()
     this.consumeFuel()
 
-    if (this.state === "IDLE") {
+    if (this.state === 'IDLE') {
       this.handleChange()
       return
     }
-    if (this.state === "WAITING") {
+    if (this.state === 'WAITING') {
       this.handleChange()
-      return
     }
   }
 
@@ -109,30 +108,30 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     }
   }
 
-  public checkIfPointInCollisionArea(point: { x: number; y: number }) {
+  public checkIfPointInCollisionArea(point: { x: number, y: number }) {
     return (
-      this.collisionArea.startX < point.x &&
-      point.x < this.collisionArea.endX &&
-      this.collisionArea.startY < point.y &&
-      point.y < this.collisionArea.endY
+      this.collisionArea.startX < point.x
+      && point.x < this.collisionArea.endX
+      && this.collisionArea.startY < point.y
+      && point.y < this.collisionArea.endY
     )
   }
 
-  public checkIfPointInVisibilityArea(point: { x: number; y: number }) {
+  public checkIfPointInVisibilityArea(point: { x: number, y: number }) {
     return (
-      this.visibilityArea.startX < point.x &&
-      point.x < this.visibilityArea.endX &&
-      this.visibilityArea.startY < point.y &&
-      point.y < this.visibilityArea.endY
+      this.visibilityArea.startX < point.x
+      && point.x < this.visibilityArea.endX
+      && this.visibilityArea.startY < point.y
+      && point.y < this.visibilityArea.endY
     )
   }
 
-  public checkIfPointInServerDataArea(point: { x: number; y: number }) {
+  public checkIfPointInServerDataArea(point: { x: number, y: number }) {
     return (
-      this.serverDataArea.startX < point.x &&
-      point.x < this.serverDataArea.endX &&
-      this.serverDataArea.startY < point.y &&
-      point.y < this.serverDataArea.endY
+      this.serverDataArea.startX < point.x
+      && point.x < this.serverDataArea.endX
+      && this.serverDataArea.startY < point.y
+      && point.y < this.serverDataArea.endY
     )
   }
 
@@ -144,7 +143,7 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     this.mechanic.isVisibleOnClient = true
     this.mechanic.needToSendDataToClient = true
     this.mechanic.live()
-    this.mechanic.direction = "LEFT"
+    this.mechanic.direction = 'LEFT'
     this.mechanic.x = this.x - 50
     this.mechanic.y = this.y - 48
   }
@@ -155,8 +154,8 @@ export class Wagon extends GameObject implements IGameObjectWagon {
       saveInDb: false,
       objectId: this.id,
     })
-    void this.cargo.addOrCreateItem("WOOD", 100)
-    this.cargoType = "CHEST"
+    void this.cargo.addOrCreateItem('WOOD', 100)
+    this.cargoType = 'CHEST'
   }
 
   public emptyCargo() {

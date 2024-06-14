@@ -1,9 +1,9 @@
-import { ANSWER } from "$lib/game/services/actionService"
-import { Village } from "../chunks"
-import type { Warehouse } from "../objects/buildings/warehouse"
-import type { Player } from "../objects/units"
-import type { GameScene } from "../scenes/gameScene"
-import { Action } from "./action"
+import { Village } from '../chunks'
+import type { Warehouse } from '../objects/buildings/warehouse'
+import type { Player } from '../objects/units'
+import type { GameScene } from '../scenes/gameScene'
+import { Action } from './action'
+import { ANSWER } from '$lib/game/services/actionService'
 
 interface IDonateWoodToVillageActionOptions {
   scene: GameScene
@@ -13,7 +13,7 @@ export class DonateWoodToVillageAction extends Action {
   private scene: GameScene
 
   constructor({ scene }: IDonateWoodToVillageActionOptions) {
-    super({ command: "donate", commandDescription: "!donate [quantity]" })
+    super({ command: 'donate', commandDescription: '!donate [quantity]' })
 
     this.scene = scene
     this.live = this.initLive
@@ -30,12 +30,12 @@ export class DonateWoodToVillageAction extends Action {
       warehouse = this.scene.chunkNow.getWarehouse()
     }
 
-    const isSuccess = await player.inventory.reduceOrDestroyItem("WOOD", amount)
+    const isSuccess = await player.inventory.reduceOrDestroyItem('WOOD', amount)
     if (!isSuccess) {
       return ANSWER.NOT_ENOUGH_WOOD_ERROR
     }
 
-    await warehouse?.inventory.addOrCreateItem("WOOD", amount)
+    await warehouse?.inventory.addOrCreateItem('WOOD', amount)
     await player.addReputation(amount)
 
     return ANSWER.DONATE_WOOD_OK

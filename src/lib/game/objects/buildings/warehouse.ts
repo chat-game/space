@@ -1,8 +1,8 @@
-import type { IGameBuildingWarehouse } from "$lib/game/types"
-import { Sprite } from "pixi.js"
-import { BuildingInterface } from "../../components/buildingInterface"
-import type { GameScene } from "../../scenes/gameScene.ts"
-import { Building } from "./building"
+import { Sprite } from 'pixi.js'
+import { BuildingInterface } from '../../components/buildingInterface'
+import type { GameScene } from '../../scenes/gameScene.ts'
+import { Building } from './building'
+import type { IGameBuildingWarehouse } from '$lib/game/types'
 
 interface IWarehouseOptions {
   scene: GameScene
@@ -21,7 +21,7 @@ export class Warehouse extends Building implements IGameBuildingWarehouse {
   }
 
   private initGraphics() {
-    const sprite = Sprite.from("warehouse1")
+    const sprite = Sprite.from('warehouse1')
     if (sprite) {
       sprite.anchor.set(0.5, 1)
       this.addChild(sprite)
@@ -36,6 +36,6 @@ export class Warehouse extends Building implements IGameBuildingWarehouse {
   animate() {
     super.animate()
 
-    //this.interface.animate()
+    // this.interface.animate()
   }
 }

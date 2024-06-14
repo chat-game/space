@@ -1,16 +1,16 @@
-import type { IGameObjectArea } from "$lib/game/types"
-import type { GameScene } from "../scenes/gameScene"
-import { GameObject } from "./gameObject"
+import type { GameScene } from '../scenes/gameScene'
+import { GameObject } from './gameObject'
+import type { IGameObjectArea } from '$lib/game/types'
 
 interface IAreaOptions {
   scene: GameScene
-  theme: IGameObjectArea["theme"]
-  area: IGameObjectArea["area"]
+  theme: IGameObjectArea['theme']
+  area: IGameObjectArea['area']
 }
 
 export class Area extends GameObject implements IGameObjectArea {
-  public theme: IGameObjectArea["theme"]
-  public area: IGameObjectArea["area"]
+  public theme: IGameObjectArea['theme']
+  public area: IGameObjectArea['area']
 
   constructor({ scene, theme, area }: IAreaOptions) {
     const x = area.startX

@@ -1,7 +1,7 @@
-import { ANSWER } from "../../../../../packages/api-sdk/src/lib/actionAnswer"
-import type { Poll } from "../common"
-import type { Player } from "../objects/units"
-import { Action } from "./action"
+import { ANSWER } from '../../../../../packages/api-sdk/src/lib/actionAnswer'
+import type { Poll } from '../common'
+import type { Player } from '../objects/units'
+import { Action } from './action'
 
 interface IVoteActionOptions {
   poll: Poll
@@ -12,7 +12,7 @@ export class VoteAction extends Action {
   private readonly id: string
 
   constructor({ poll }: IVoteActionOptions) {
-    super({ command: "go", commandDescription: "!go" })
+    super({ command: 'go', commandDescription: '!go' })
 
     this.id = poll.generatePollId()
 

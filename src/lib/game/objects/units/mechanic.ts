@@ -1,6 +1,6 @@
-import type { IGameObjectMechanic } from "$lib/game/types"
-import type { GameScene } from "../../scenes/gameScene.ts"
-import { Unit } from "./unit"
+import type { GameScene } from '../../scenes/gameScene.ts'
+import { Unit } from './unit'
+import type { IGameObjectMechanic } from '$lib/game/types'
 
 interface IMechanicOptions {
   scene: GameScene
@@ -16,12 +16,12 @@ export class Mechanic extends Unit implements IGameObjectMechanic {
       y,
     })
 
-    this.userName = "Mechanic"
+    this.userName = 'Mechanic'
 
     this.initVisual({
-      head: "1",
-      hairstyle: "COAL_LONG",
-      top: "DARK_SILVER_SHIRT",
+      head: '1',
+      hairstyle: 'COAL_LONG',
+      top: 'DARK_SILVER_SHIRT',
     })
   }
 

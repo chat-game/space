@@ -1,6 +1,6 @@
-import { createId } from "@paralleldrive/cuid2"
-import type { IGameSkill } from "../../../../../packages/api-sdk/src"
-import { db } from "../../db/db.client"
+import { createId } from '@paralleldrive/cuid2'
+import type { IGameSkill } from '../../../../../packages/api-sdk/src'
+import { db } from '../../db/db.client'
 
 interface ISkillOptions {
   id: string
@@ -9,7 +9,7 @@ interface ISkillOptions {
 export class Skill implements IGameSkill {
   public id: string
   public objectId: string | null = null
-  public type!: IGameSkill["type"]
+  public type!: IGameSkill['type']
 
   public lvl = 0
   public xp = 0
@@ -59,7 +59,7 @@ export class Skill implements IGameSkill {
     }
 
     this.objectId = skill.objectId
-    this.type = skill.type as IGameSkill["type"]
+    this.type = skill.type as IGameSkill['type']
     this.lvl = skill.lvl
     this.xp = skill.xp
     this.xpNextLvl = skill.xpNextLvl
@@ -71,7 +71,7 @@ export class Skill implements IGameSkill {
     })
   }
 
-  public static createInDB(objectId: string, type: IGameSkill["type"]) {
+  public static createInDB(objectId: string, type: IGameSkill['type']) {
     return db.skill.create({
       data: {
         id: createId(),

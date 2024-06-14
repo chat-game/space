@@ -1,9 +1,9 @@
-import type { IGameChunkTheme, IGameRoute } from "$lib/game/types"
-import { getRandomInRange } from "$lib/random"
-import { Forest, LakeChunk, Village } from "../chunks"
-import { Route } from "../common"
-import { Stone, Tree } from "../objects"
-import type { GameScene } from "../scenes/gameScene"
+import { Forest, LakeChunk, Village } from '../chunks'
+import { Route } from '../common'
+import { Stone, Tree } from '../objects'
+import type { GameScene } from '../scenes/gameScene'
+import { getRandomInRange } from '$lib/random'
+import type { IGameChunkTheme, IGameRoute } from '$lib/game/types'
 
 interface IRouteServiceOptions {
   scene: GameScene
@@ -21,7 +21,7 @@ export class RouteService {
     if (!this.route?.flags || this.route.flags.length <= 0) {
       if (
         this.scene.eventService.events.find(
-          (e) => e.type === "MAIN_QUEST_STARTED",
+          (e) => e.type === 'MAIN_QUEST_STARTED',
         )
       ) {
         return this.finishAdventure()
@@ -60,7 +60,7 @@ export class RouteService {
     this.markObjectsAsOnWagonPath(this.route)
   }
 
-  generateChunks(startPoint: { x: number; y: number }, amount: number) {
+  generateChunks(startPoint: { x: number, y: number }, amount: number) {
     let outPoint = startPoint
 
     for (let i = 1; i <= amount; i++) {
@@ -86,7 +86,7 @@ export class RouteService {
     this.route?.setEndPoint(stopPoint)
   }
 
-  generateRandomChunk(startPoint: { x: number; y: number }) {
+  generateRandomChunk(startPoint: { x: number, y: number }) {
     const random = getRandomInRange(1, 2)
 
     const width = getRandomInRange(2000, 3000)
@@ -144,7 +144,7 @@ export class RouteService {
     theme,
     scene,
   }: {
-    center: { x: number; y: number }
+    center: { x: number, y: number }
     width: number
     height: number
     theme: IGameChunkTheme
@@ -159,7 +159,7 @@ export class RouteService {
     height,
     theme,
   }: {
-    center: { x: number; y: number }
+    center: { x: number, y: number }
     width: number
     height: number
     theme: IGameChunkTheme
@@ -181,7 +181,7 @@ export class RouteService {
     height,
     theme,
   }: {
-    center: { x: number; y: number }
+    center: { x: number, y: number }
     width: number
     height: number
     theme: IGameChunkTheme
@@ -199,18 +199,18 @@ export class RouteService {
 
   getRandomTheme(): IGameChunkTheme {
     const themes: IGameChunkTheme[] = [
-      "GREEN",
-      "BLUE",
-      "STONE",
-      "TEAL",
-      "VIOLET",
-      "TOXIC",
+      'GREEN',
+      'BLUE',
+      'STONE',
+      'TEAL',
+      'VIOLET',
+      'TOXIC',
     ]
     return themes[Math.floor(Math.random() * themes.length)]
   }
 
   finishAdventure() {
-    console.log("Adventure finished!", new Date())
+    console.log('Adventure finished!', new Date())
     this.route = undefined
     this.scene.wagonService.wagon.emptyCargo()
     this.scene.tradeService.traderIsMovingWithWagon = false

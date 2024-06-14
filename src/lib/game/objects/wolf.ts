@@ -1,7 +1,7 @@
-import type { IGameObjectWolf } from "$lib/game/types"
-import { Sprite } from "pixi.js"
-import type { Game } from "../game"
-import { GameObject } from "./gameObject"
+import { Sprite } from 'pixi.js'
+import type { Game } from '../game'
+import { GameObject } from './gameObject'
+import type { IGameObjectWolf } from '$lib/game/types'
 
 interface IWolfOptions {
   game: Game
@@ -20,14 +20,14 @@ export class Wolf extends GameObject implements IGameObjectWolf {
   }
 
   init() {
-    const spriteRight = Sprite.from("wolfRight")
-    const spriteLeft = Sprite.from("wolfLeft")
+    const spriteRight = Sprite.from('wolfRight')
+    const spriteLeft = Sprite.from('wolfLeft')
 
     spriteRight.anchor.set(0.5, 1)
     spriteLeft.anchor.set(0.5, 1)
 
-    spriteRight.direction = "RIGHT"
-    spriteLeft.direction = "LEFT"
+    spriteRight.direction = 'RIGHT'
+    spriteLeft.direction = 'LEFT'
 
     this.addChild(spriteRight, spriteLeft)
   }
@@ -44,7 +44,7 @@ export class Wolf extends GameObject implements IGameObjectWolf {
       sprite.visible = true
     }
 
-    if (this.state === "MOVING") {
+    if (this.state === 'MOVING') {
       this.angle = this.animationAngle
       this.shakeAnimation()
     }

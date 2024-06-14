@@ -1,11 +1,11 @@
-import { RefreshingAuthProvider } from "@twurple/auth"
-import { Bot } from "@twurple/easy-bot"
-import { PubSubClient } from "@twurple/pubsub"
-import type { TwitchAccessTokenResponse } from "../../../../packages/api-sdk/src"
-import { DONATE_URL } from "../config"
-import { DBRepository } from "../db/db.repository"
-import type { Game } from "../game/game"
-import { BotService } from "./bot.service"
+import { RefreshingAuthProvider } from '@twurple/auth'
+import { Bot } from '@twurple/easy-bot'
+import { PubSubClient } from '@twurple/pubsub'
+import type { TwitchAccessTokenResponse } from '../../../../packages/api-sdk/src'
+import { DONATE_URL } from '../config'
+import { DBRepository } from '../db/db.repository'
+import type { Game } from '../game/game'
+import { BotService } from './bot.service'
 
 export class BotController {
   private readonly channel = process.env.TWITCH_CHANNEL_NAME as string
@@ -13,7 +13,7 @@ export class BotController {
   private readonly clientId = process.env.TWITCH_CLIENT_ID as string
   private readonly clientSecret = process.env.TWITCH_SECRET_ID as string
   private readonly code = process.env.TWITCH_OAUTH_CODE as string
-  private readonly redirectUrl = "http://localhost:3000"
+  private readonly redirectUrl = 'http://localhost:3000'
 
   private readonly service: BotService
   private readonly repository: DBRepository
@@ -28,12 +28,12 @@ export class BotController {
       const response = await fetch(
         `https://id.twitch.tv/oauth2/token?client_id=${this.clientId}&client_secret=${this.clientSecret}&code=${this.code}&grant_type=authorization_code&redirect_uri=${this.redirectUrl}`,
         {
-          method: "POST",
+          method: 'POST',
         },
       )
       return (await response.json()) as TwitchAccessTokenResponse
     } catch (err) {
-      console.error("obtainTwitchAccessToken", err)
+      console.error('obtainTwitchAccessToken', err)
       return null
     }
   }
@@ -50,11 +50,11 @@ export class BotController {
         obtainmentTimestamp: new Date().getTime(),
       })
 
-      throw new Error("Saved new access token. Restart server!")
+      throw new Error('Saved new access token. Restart server!')
     }
 
     throw new Error(
-      "No access token found and no Twitch code. See .env.example",
+      'No access token found and no Twitch code. See .env.example',
     )
   }
 
@@ -74,9 +74,9 @@ export class BotController {
     })
 
     await authProvider.addUserForToken(accessToken, [
-      "chat",
-      "channel",
-      "moderator",
+      'chat',
+      'channel',
+      'moderator',
     ])
 
     return authProvider
@@ -123,11 +123,11 @@ export class BotController {
     })
 
     bot.onJoin(({ userName }) => {
-      console.log(new Date().toLocaleTimeString(), "joined!", userName)
+      console.log(new Date().toLocaleTimeString(), 'joined!', userName)
     })
 
     bot.onLeave(({ userName }) => {
-      console.log("left!", userName)
+      console.log('left!', userName)
     })
 
     setInterval(
@@ -135,7 +135,7 @@ export class BotController {
         bot.announce(
           this.channel,
           `Basic commands: !chop, !mine, !help. Thanks to everyone who contributed for a cool website! :D ${DONATE_URL}`,
-          "orange",
+          'orange',
         )
       },
       1000 * 60 * 15,

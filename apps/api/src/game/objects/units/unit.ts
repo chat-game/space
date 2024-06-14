@@ -1,28 +1,28 @@
-import { createId } from "@paralleldrive/cuid2"
+import { createId } from '@paralleldrive/cuid2'
 import {
   type IGameObject,
   type IGameObjectUnit,
   getRandomInRange,
-} from "../../../../../../packages/api-sdk/src"
-import { Inventory } from "../../common"
-import { GameObject } from "../gameObject"
-import { Stone } from "../stone"
-import { Tree } from "../tree"
+} from '../../../../../../packages/api-sdk/src'
+import { Inventory } from '../../common'
+import { GameObject } from '../gameObject'
+import { Stone } from '../stone'
+import { Tree } from '../tree'
 
 interface IUnitOptions {
-  entity: IGameObject["entity"]
+  entity: IGameObject['entity']
   id?: string
   x: number
   y: number
-  visual?: IGameObjectUnit["visual"]
+  visual?: IGameObjectUnit['visual']
 }
 
 export class Unit extends GameObject implements IGameObjectUnit {
-  public userName!: IGameObjectUnit["userName"]
+  public userName!: IGameObjectUnit['userName']
   public inventory!: Inventory
-  public visual!: IGameObjectUnit["visual"]
-  public coins: IGameObjectUnit["coins"]
-  public dialogue!: IGameObjectUnit["dialogue"]
+  public visual!: IGameObjectUnit['visual']
+  public coins: IGameObjectUnit['coins']
+  public dialogue!: IGameObjectUnit['dialogue']
 
   constructor({ entity, id, x, y, visual }: IUnitOptions) {
     const objectId = id ?? createId()
@@ -51,11 +51,11 @@ export class Unit extends GameObject implements IGameObjectUnit {
     })
   }
 
-  public initVisual(visual: IGameObjectUnit["visual"] | undefined) {
+  public initVisual(visual: IGameObjectUnit['visual'] | undefined) {
     this.visual = visual ?? {
-      head: "1",
-      hairstyle: "CLASSIC",
-      top: "VIOLET_SHIRT",
+      head: '1',
+      hairstyle: 'CLASSIC',
+      top: 'VIOLET_SHIRT',
     }
   }
 
@@ -67,9 +67,9 @@ export class Unit extends GameObject implements IGameObjectUnit {
 
   public addMessage(message: string) {
     const MAX_CHARS = 100
-    const messagePrepared =
-      message.trim().slice(0, MAX_CHARS) +
-      (message.length > MAX_CHARS ? "..." : "")
+    const messagePrepared
+      = message.trim().slice(0, MAX_CHARS)
+      + (message.length > MAX_CHARS ? '...' : '')
 
     this.dialogue.messages.push({
       id: createId(),
@@ -85,29 +85,29 @@ export class Unit extends GameObject implements IGameObjectUnit {
   }
 
   public chopTree() {
-    if (this.target instanceof Tree && this.target.state !== "DESTROYED") {
-      this.direction = "RIGHT"
-      this.state = "CHOPPING"
-      this.checkAndBreakTool("AXE")
+    if (this.target instanceof Tree && this.target.state !== 'DESTROYED') {
+      this.direction = 'RIGHT'
+      this.state = 'CHOPPING'
+      this.checkAndBreakTool('AXE')
 
       this.target.chop()
     }
   }
 
   public mineStone() {
-    if (this.target instanceof Stone && this.target.state !== "DESTROYED") {
-      this.direction = "RIGHT"
-      this.state = "MINING"
-      this.checkAndBreakTool("PICKAXE")
+    if (this.target instanceof Stone && this.target.state !== 'DESTROYED') {
+      this.direction = 'RIGHT'
+      this.state = 'MINING'
+      this.checkAndBreakTool('PICKAXE')
 
       this.target.mine()
     }
   }
 
-  checkAndBreakTool(type: "AXE" | "PICKAXE") {
+  checkAndBreakTool(type: 'AXE' | 'PICKAXE') {
     const tool = this.inventory.items.find((item) => item.type === type)
     if (tool) {
-      //this.target.health -= 0.16
+      // this.target.health -= 0.16
       const random = getRandomInRange(1, 40)
       if (random <= 1) {
         void this.inventory.checkAndBreakItem(tool, 1)

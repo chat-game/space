@@ -1,9 +1,9 @@
 import type {
   IGameObject,
   IGameTask,
-} from "../../../../../packages/api-sdk/src"
-import type { GameObject } from "../objects"
-import { Script } from "./script"
+} from '../../../../../packages/api-sdk/src'
+import type { GameObject } from '../objects'
+import { Script } from './script'
 
 interface IBuildScriptOptions {
   object: GameObject
@@ -24,8 +24,8 @@ export class BuildScript extends Script {
 
   build(func: () => boolean): IGameTask {
     return {
-      id: "3",
-      status: "IDLE",
+      id: '3',
+      status: 'IDLE',
       live: () => {
         const isFinished = func()
         if (isFinished) {

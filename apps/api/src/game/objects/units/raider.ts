@@ -1,6 +1,6 @@
-import { createId } from "@paralleldrive/cuid2"
-import type { IGameObjectRaider } from "../../../../../../packages/api-sdk/src"
-import { Unit } from "./unit"
+import { createId } from '@paralleldrive/cuid2'
+import type { IGameObjectRaider } from '../../../../../../packages/api-sdk/src'
+import { Unit } from './unit'
 
 interface IRaiderOptions {
   x: number
@@ -15,16 +15,16 @@ export class Raider extends Unit implements IGameObjectRaider {
       id: objectId,
       x,
       y,
-      entity: "RAIDER",
+      entity: 'RAIDER',
       visual: {
-        head: "1",
-        hairstyle: "BOLD",
-        top: "BLACK_SHIRT",
+        head: '1',
+        hairstyle: 'BOLD',
+        top: 'BLACK_SHIRT',
       },
     })
 
     this.speedPerSecond = 1.5
-    this.userName = "Raider"
+    this.userName = 'Raider'
   }
 
   live() {

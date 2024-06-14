@@ -1,8 +1,8 @@
-import type { IGameObjectLake } from "$lib/game/types"
-import type { GameScene } from "../scenes/gameScene"
-import { AssetsManager } from "../utils"
-import { GameObject } from "./gameObject"
-import { Water } from "./water"
+import type { GameScene } from '../scenes/gameScene'
+import { AssetsManager } from '../utils'
+import { GameObject } from './gameObject'
+import { Water } from './water'
+import type { IGameObjectLake } from '$lib/game/types'
 
 interface ILakeOptions {
   scene: GameScene
@@ -49,7 +49,7 @@ export class Lake extends GameObject implements IGameObjectLake {
 
     console.log(gridX, gridY)
 
-    //const center = { x: Math.round(width / 2), y: Math.round(height / 2) }
+    // const center = { x: Math.round(width / 2), y: Math.round(height / 2) }
 
     for (let i = 0; i < gridX; i++) {
       for (let j = 0; j < gridY; j++) {

@@ -2,18 +2,18 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "module": "ESNext",
-    "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": false,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true
+    "noPropertyAccessFromIndexSignature": false,
+    "forceConsistentCasingInFileNames": true
   },
-  "files": [],
-  "include": [],
   "references": [
     {
       "path": "./tsconfig.lib.json"
     }
-  ]
+  ],
+  "files": [],
+  "include": []
 }

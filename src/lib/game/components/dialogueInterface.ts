@@ -1,14 +1,14 @@
-import type { IGameObjectUnit } from "$lib/game/types"
-import { type Container, Graphics, Text } from "pixi.js"
-import { GraphicsContainer } from "./graphicsContainer"
+import { type Container, Graphics, Text } from 'pixi.js'
+import { GraphicsContainer } from './graphicsContainer'
+import type { IGameObjectUnit } from '$lib/game/types'
 
 export class DialogueInterface extends GraphicsContainer {
   public unit: IGameObjectUnit
-  public messages: { id: string; text: string; isShowed: boolean }[]
+  public messages: { id: string, text: string, isShowed: boolean }[]
   public showingSpeed: number
 
   constructor(unit: IGameObjectUnit) {
-    super({ type: "INTERFACE" })
+    super({ type: 'INTERFACE' })
 
     this.unit = unit
     this.messages = []
@@ -19,17 +19,17 @@ export class DialogueInterface extends GraphicsContainer {
     this.y = 0
   }
 
-  create(message: { id: string; text: string }) {
-    const container = new GraphicsContainer({ type: "INTERFACE" })
+  create(message: { id: string, text: string }) {
+    const container = new GraphicsContainer({ type: 'INTERFACE' })
 
     const basicText = new Text({
       text: message.text,
       style: {
-        fontFamily: "Noto Serif",
+        fontFamily: 'Noto Serif',
         fontSize: 16,
-        fontWeight: "500",
-        fill: 0x694f62,
-        align: "left",
+        fontWeight: '500',
+        fill: 0x694F62,
+        align: 'left',
         wordWrap: true,
         wordWrapWidth: 300,
       },
@@ -42,7 +42,7 @@ export class DialogueInterface extends GraphicsContainer {
 
     const graphics = new Graphics()
     graphics.roundRect(-rectOffsetX, -rectOffsetY, rectWidth, rectHeight, 8)
-    graphics.fill(0xffffff)
+    graphics.fill(0xFFFFFF)
 
     container.addChild(graphics, basicText)
 

@@ -1,7 +1,7 @@
-import { getMinusOrPlus, getRandomInRange } from "$lib/random"
-import { Flag, Wagon } from "../objects"
-import type { GameScene } from "../scenes/gameScene"
-import { RouteService } from "./routeService"
+import { Flag, Wagon } from '../objects'
+import type { GameScene } from '../scenes/gameScene'
+import { RouteService } from './routeService'
+import { getMinusOrPlus, getRandomInRange } from '$lib/random'
 
 interface IWagonServiceOptions {
   scene: GameScene
@@ -25,7 +25,7 @@ export class WagonService {
     this.routeService.update()
   }
 
-  public initWagon({ x, y }: { x: number; y: number }) {
+  public initWagon({ x, y }: { x: number, y: number }) {
     this.wagon = new Wagon({ scene: this.scene, x, y })
 
     this.initOutFlags()
@@ -41,9 +41,9 @@ export class WagonService {
   }
 
   private updateWagon() {
-    const collisionObjects =
-      this.scene.chunkNow?.objects.filter(
-        (obj) => obj.isOnWagonPath && obj.state !== "DESTROYED",
+    const collisionObjects
+      = this.scene.chunkNow?.objects.filter(
+        (obj) => obj.isOnWagonPath && obj.state !== 'DESTROYED',
       ) ?? []
     for (const collisionObject of collisionObjects) {
       const isInArea = this.wagon.checkIfPointInCollisionArea({
@@ -51,40 +51,40 @@ export class WagonService {
         y: collisionObject.y,
       })
       if (isInArea) {
-        this.wagon.state = "WAITING"
+        this.wagon.state = 'WAITING'
         this.wagon.speedPerSecond = 0
         return
       }
     }
 
     if (this.wagon.fuel <= 1) {
-      this.wagon.state = "WAITING"
+      this.wagon.state = 'WAITING'
       this.wagon.speedPerSecond = 0
       return
     }
 
-    if (this.wagon.state === "WAITING") {
-      this.wagon.state = "IDLE"
+    if (this.wagon.state === 'WAITING') {
+      this.wagon.state = 'IDLE'
     }
-    if (this.wagon.state === "IDLE") {
+    if (this.wagon.state === 'IDLE') {
       const target = this.routeService.route?.getNextFlag()
       if (target) {
         this.wagon.target = target
-        this.wagon.state = "MOVING"
+        this.wagon.state = 'MOVING'
       }
     }
-    if (this.wagon.state === "MOVING") {
+    if (this.wagon.state === 'MOVING') {
       this.wagon.speedPerSecond = 0.5
       const isMoving = this.wagon.move()
 
       if (!isMoving) {
         if (
-          this.wagon.target instanceof Flag &&
-          this.wagon.target.type === "WAGON_MOVEMENT"
+          this.wagon.target instanceof Flag
+          && this.wagon.target.type === 'WAGON_MOVEMENT'
         ) {
           this.routeService.route?.removeFlag(this.wagon.target)
           this.wagon.target = undefined
-          this.wagon.state = "IDLE"
+          this.wagon.state = 'IDLE'
           this.wagon.speedPerSecond = 0
         }
       }
@@ -120,14 +120,14 @@ export class WagonService {
     const minOffsetX = 1800
     const minOffsetY = 1200
 
-    const offsetX =
-      getRandomInRange(minOffsetX, minOffsetX * 1.5) * getMinusOrPlus()
-    const offsetY =
-      getRandomInRange(minOffsetY, minOffsetY * 1.5) * getMinusOrPlus()
+    const offsetX
+      = getRandomInRange(minOffsetX, minOffsetX * 1.5) * getMinusOrPlus()
+    const offsetY
+      = getRandomInRange(minOffsetY, minOffsetY * 1.5) * getMinusOrPlus()
 
     return new Flag({
       scene: this.scene,
-      type: "OUT_OF_SCREEN",
+      type: 'OUT_OF_SCREEN',
       x: this.wagon.x + offsetX,
       y: this.wagon.y + offsetY,
       offsetX,
@@ -147,7 +147,7 @@ export class WagonService {
 
     return new Flag({
       scene: this.scene,
-      type: "WAGON_NEAR_MOVEMENT",
+      type: 'WAGON_NEAR_MOVEMENT',
       x: this.wagon.x + offsetX,
       y: this.wagon.y + offsetY,
       offsetX,

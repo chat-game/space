@@ -1,21 +1,21 @@
-<script lang="ts">
-import { browser } from "$app/environment"
-import { page } from "$app/stores"
+<script lang='ts'>
+  import { browser } from '$app/environment'
+  import { page } from '$app/stores'
 
-if (browser && $page.url.hash) {
-  void fetch("/auth/sign-in", {
-    method: "POST",
-    body: JSON.stringify({ hash: $page.url.hash }),
-    headers: {
-      "content-type": "application/json",
-    },
-  }).finally(() => location.assign("/"))
-}
+  if (browser && $page.url.hash) {
+    void fetch('/auth/sign-in', {
+      method: 'POST',
+      body: JSON.stringify({ hash: $page.url.hash }),
+      headers: {
+        'content-type': 'application/json',
+      },
+    }).finally(() => location.assign('/'))
+  }
 </script>
 
-<section class="hero">
-    <h1>Sign In</h1>
-    <h2>Wait a moment...</h2>
+<section class='hero'>
+  <h1>Sign In</h1>
+  <h2>Wait a moment...</h2>
 </section>
 
 <style>

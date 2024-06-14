@@ -1,12 +1,12 @@
-import type { IGameObjectUnit } from "$lib/game/types"
+import type { IGameObjectUnit } from '$lib/game/types'
 
-export const generateUnitTop = (): Partial<
-  IGameObjectUnit["visual"]["top"]
-> => {
-  const availableTopsForUnits: IGameObjectUnit["visual"]["top"][] = [
-    "GREEN_SHIRT",
-    "BLUE_SHIRT",
-    "DARK_SILVER_SHIRT",
+export function generateUnitTop(): Partial<
+  IGameObjectUnit['visual']['top']
+> {
+  const availableTopsForUnits: IGameObjectUnit['visual']['top'][] = [
+    'GREEN_SHIRT',
+    'BLUE_SHIRT',
+    'DARK_SILVER_SHIRT',
   ]
 
   return availableTopsForUnits[

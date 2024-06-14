@@ -3,14 +3,14 @@ import type {
   IGameObjectDirection,
   IGameObjectState,
   IGameScript,
-} from "../../../../../packages/api-sdk/src"
-import { sendMessage } from "../../websocket/websocket.server"
+} from '../../../../../packages/api-sdk/src'
+import { sendMessage } from '../../websocket/websocket.server'
 
 interface IGameObjectOptions {
   id: string
   x: number
   y: number
-  entity: IGameObject["entity"]
+  entity: IGameObject['entity']
   isVisibleOnClient?: boolean
 }
 
@@ -22,10 +22,10 @@ export class GameObject implements IGameObject {
   public speedPerSecond = 1
   public size = 1
   public isVisibleOnClient: boolean
-  public entity: IGameObject["entity"]
-  public direction: IGameObjectDirection = "RIGHT"
-  public state: IGameObjectState = "IDLE"
-  public target: IGameObject["target"]
+  public entity: IGameObject['entity']
+  public direction: IGameObjectDirection = 'RIGHT'
+  public state: IGameObjectState = 'IDLE'
+  public target: IGameObject['target']
 
   public script: IGameScript | undefined
   public minDistance = 1
@@ -60,8 +60,8 @@ export class GameObject implements IGameObject {
     const distanceToY = this.getDistanceToTargetY()
 
     // Fix diagonal speed
-    const finalSpeed =
-      distanceToX > 0 && distanceToY > 0
+    const finalSpeed
+      = distanceToX > 0 && distanceToY > 0
         ? this.speedPerSecond * 0.75
         : this.speedPerSecond
 
@@ -76,12 +76,12 @@ export class GameObject implements IGameObject {
     }
 
     if (this.x < this.target.x) {
-      this.direction = "RIGHT"
+      this.direction = 'RIGHT'
       this.x += speed
     }
     if (this.x > this.target.x) {
       this.x -= speed
-      this.direction = "LEFT"
+      this.direction = 'LEFT'
     }
   }
 
@@ -99,13 +99,13 @@ export class GameObject implements IGameObject {
   }
 
   stop() {
-    this.state = "IDLE"
+    this.state = 'IDLE'
   }
 
   checkIfIsOnTarget() {
     return (
-      this.getDistanceToTargetX() + this.getDistanceToTargetY() <=
-      this.minDistance
+      this.getDistanceToTargetX() + this.getDistanceToTargetY()
+      <= this.minDistance
     )
   }
 
@@ -125,13 +125,13 @@ export class GameObject implements IGameObject {
 
   public setTarget(target: IGameObject) {
     this.target = target
-    this.state = "MOVING"
+    this.state = 'MOVING'
   }
 
   public sendMessageObjectUpdated(object: Partial<IGameObject> = this) {
     if (!this.needToSendDataToClient) {
       return
     }
-    sendMessage("OBJECT_UPDATED", object)
+    sendMessage('OBJECT_UPDATED', object)
   }
 }

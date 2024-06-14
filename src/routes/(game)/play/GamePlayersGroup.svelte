@@ -1,11 +1,11 @@
-<script lang="ts">
-import type { IGameObjectPlayer } from "$lib/game/types"
-import GamePlayerCard from "./GamePlayerCard.svelte"
+<script lang='ts'>
+  import GamePlayerCard from './GamePlayerCard.svelte'
+  import type { IGameObjectPlayer } from '$lib/game/types'
 
-let players: IGameObjectPlayer[] = []
+  const players: IGameObjectPlayer[] = []
 </script>
 
-<div class="block">
+<div class='block'>
   {#each players as player}
     <GamePlayerCard player={player} />
   {/each}

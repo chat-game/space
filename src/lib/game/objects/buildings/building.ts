@@ -1,8 +1,8 @@
-import type { IGameObjectBuilding, ItemType } from "$lib/game/types"
-import { createId } from "@paralleldrive/cuid2"
-import { Inventory } from "../../common"
-import type { GameScene } from "../../scenes/gameScene"
-import { GameObject } from "../gameObject"
+import { createId } from '@paralleldrive/cuid2'
+import { Inventory } from '../../common'
+import type { GameScene } from '../../scenes/gameScene'
+import { GameObject } from '../gameObject'
+import type { IGameObjectBuilding, ItemType } from '$lib/game/types'
 
 interface IBuildingOptions {
   scene: GameScene
@@ -16,7 +16,7 @@ export class Building extends GameObject implements IGameObjectBuilding {
   constructor({ scene, x, y }: IBuildingOptions) {
     super({ scene, x, y })
 
-    this.state = "IDLE"
+    this.state = 'IDLE'
     this.initInventory()
   }
 
@@ -25,7 +25,7 @@ export class Building extends GameObject implements IGameObjectBuilding {
 
     this.zIndex = Math.round(this.y - 5)
 
-    if (this.state === "DESTROYED") {
+    if (this.state === 'DESTROYED') {
       this.visible = false
     }
   }

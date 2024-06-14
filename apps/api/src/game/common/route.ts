@@ -1,8 +1,8 @@
 import type {
   IGameChunk,
   IGameRoute,
-} from "../../../../../packages/api-sdk/src"
-import { Flag } from "../objects"
+} from '../../../../../packages/api-sdk/src'
+import { Flag } from '../objects'
 
 interface IRoutePoint {
   x: number
@@ -40,7 +40,7 @@ export class Route implements IGameRoute {
   }
 
   public addFlag({ x, y }: IRoutePoint) {
-    const movementFlag = new Flag({ type: "WAGON_MOVEMENT", x, y })
+    const movementFlag = new Flag({ type: 'WAGON_MOVEMENT', x, y })
 
     const prevFlag = this.flags[this.flags.length - 1]
     if (prevFlag) {
@@ -93,10 +93,10 @@ export class Route implements IGameRoute {
 
   private isInArea(area: IRouteArea, point: IRoutePoint) {
     return (
-      area.startX < point.x &&
-      point.x < area.endX &&
-      area.startY < point.y &&
-      point.y < area.endY
+      area.startX < point.x
+      && point.x < area.endX
+      && area.startY < point.y
+      && point.y < area.endY
     )
   }
 
@@ -112,10 +112,10 @@ export class Route implements IGameRoute {
 
   generatePath(start: IRoutePoint, end: IRoutePoint) {
     const pathDistance = Route.getDistanceBetween2Points(start, end)
-    console.log("path", pathDistance)
+    console.log('path', pathDistance)
 
     const pointsCount = Math.round(pathDistance / 150) + 1
-    console.log("points between", pointsCount)
+    console.log('points between', pointsCount)
 
     const stepX = Math.round((end.x - start.x) / pointsCount)
     const stepY = Math.round((end.y - start.y) / pointsCount)

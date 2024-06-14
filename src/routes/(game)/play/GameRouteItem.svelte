@@ -1,9 +1,9 @@
-<script lang="ts">
-export let widthInPercent = 0
-let title = ""
+<script lang='ts'>
+  export let widthInPercent = 0
+  const title = ''
 </script>
 
-<div class="title" style={{width: `${widthInPercent}%`}}>
+<div class='title' style={{ width: `${widthInPercent}%` }}>
   {title}
 </div>
 

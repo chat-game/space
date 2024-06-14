@@ -2,12 +2,12 @@ import {
   type IGameChunkTheme,
   type IGameForestChunk,
   getRandomInRange,
-} from "../../../../../packages/api-sdk/src"
-import { Stone, Tree } from "../objects"
-import { GameChunk } from "./gameChunk"
+} from '../../../../../packages/api-sdk/src'
+import { Stone, Tree } from '../objects'
+import { GameChunk } from './gameChunk'
 
 interface IForestOptions {
-  center: IGameForestChunk["center"]
+  center: IGameForestChunk['center']
   width: number
   height: number
   theme: IGameChunkTheme
@@ -16,8 +16,8 @@ interface IForestOptions {
 export class Forest extends GameChunk implements IGameForestChunk {
   constructor({ width, height, center, theme }: IForestOptions) {
     super({
-      title: "Grand Wood",
-      type: "FOREST",
+      title: 'Grand Wood',
+      type: 'FOREST',
       width,
       height,
       center,

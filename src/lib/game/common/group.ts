@@ -1,6 +1,6 @@
-import type { IGameGroup, IGameObjectPlayer } from "$lib/game/types"
-import { createId } from "@paralleldrive/cuid2"
-import type { Player } from "../objects/units"
+import { createId } from '@paralleldrive/cuid2'
+import type { Player } from '../objects/units'
+import type { IGameGroup, IGameObjectPlayer } from '$lib/game/types'
 
 export class Group implements IGameGroup {
   id: string

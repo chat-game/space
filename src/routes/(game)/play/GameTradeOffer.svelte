@@ -1,29 +1,29 @@
-<script lang="ts">
-import type { ITradeOffer } from "$lib/game/types"
-import GameItem from "./GameItem.svelte"
+<script lang='ts'>
+  import GameItem from './GameItem.svelte'
+  import type { ITradeOffer } from '$lib/game/types'
 
-export let offer: ITradeOffer
+  export let offer: ITradeOffer
 </script>
 
-<div class="block">
-  <div class="type">
-    {#if offer.type === "BUY"}
+<div class='block'>
+  <div class='type'>
+    {#if offer.type === 'BUY'}
       Buying
-    {:else if offer.type === "SELL"}
+    {:else if offer.type === 'SELL'}
       Selling
     {/if}
   </div>
 
-  <div class="info">
-    <div class="item">
-      <GameItem type={offer.item}/>
+  <div class='info'>
+    <div class='item'>
+      <GameItem type={offer.item} />
       <p>1 for {offer.unitPrice}</p>
-      <GameItem type="COIN"/>
+      <GameItem type='COIN' />
     </div>
 
-    <div class="amount">{offer.amount} units left</div>
+    <div class='amount'>{offer.amount} units left</div>
 
-    <div class="command">
+    <div class='command'>
       <p>
         Write a command to the chat:
       </p>

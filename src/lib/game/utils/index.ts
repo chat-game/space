@@ -1,3 +1,3 @@
-export { AssetsManager } from "./assetsManager"
-export { AudioManager } from "./audioManager"
-export { WebSocketManager } from "./webSocketManager"
+export { AssetsManager } from './assetsManager'
+export { AudioManager } from './audioManager'
+export { WebSocketManager } from './webSocketManager'

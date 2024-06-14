@@ -1,61 +1,61 @@
 <script>
-import wagon from "$lib/assets/website/wagon-full.png"
+  import wagon from '$lib/assets/website/wagon-full.png'
 </script>
 
 <svelte:head>
   <title>Об игре | Чат-игра для Twitch</title>
-  <meta name="description" content="Основная идея игры, что сделано, планы на будущее, благодарности"/>
+  <meta name='description' content='Основная идея игры, что сделано, планы на будущее, благодарности' />
 </svelte:head>
 
-<section class="hero">
+<section class='hero'>
   <h1>
     Об игре
   </h1>
   <h2>Фундамент уже готов. <br>Идет большой процесс проработки деталей и создания основного геймплея.</h2>
-  <h3 class="mt-4">Ориентир - конец лета 2024.</h3>
+  <h3 class='mt-4'>Ориентир - конец лета 2024.</h3>
 </section>
 
-<section class="game-info">
-  <div class="block bg-paper">
-    <div class="header">
+<section class='game-info'>
+  <div class='block bg-paper'>
+    <div class='header'>
       <h3>Необычный input</h3>
     </div>
-    <div class="info">
+    <div class='info'>
       <p>Для создания юнита и выполнения разнообразных действий в игре требуется писать команды в Twitch чате.
         Например, написав команду "!рубить", юнит начнет рубить ближайшее дерево.</p>
     </div>
   </div>
-  <div class="block bg-paper">
-    <div class="header">
+  <div class='block bg-paper'>
+    <div class='header'>
       <h3>Генерируемые локации</h3>
     </div>
-    <div class="info">
+    <div class='info'>
       <p>Путешествуя в открытом мире, игроки встречают уникальные места. Все благодаря динамичной генерации
         чанков и глубокой работе с текстурами. Нет заранее созданной игровой карты.</p>
     </div>
   </div>
-  <div class="block bg-paper">
-    <div class="header">
+  <div class='block bg-paper'>
+    <div class='header'>
       <h3>Квесты</h3>
     </div>
-    <div class="info">
+    <div class='info'>
       <p>Основные модификаторы игры. Активные квесты меняют доступные команды для игроков. Движение Машины также
         зависит от главного активного задания.</p>
     </div>
   </div>
 </section>
 
-<div class="wagon-block">
-  <div class="wagon">
-    <img src={wagon} alt=""/>
+<div class='wagon-block'>
+  <div class='wagon'>
+    <img src={wagon} alt="" />
   </div>
 </div>
 
 <section>
-  <h3 class="mb-2">Благодарности</h3>
+  <h3 class='mb-2'>Благодарности</h3>
   <p>Спасибо моим зрителям: <b>sava5621</b> за вкусные шавухи, <b>BezSovesty</b> за помощь на
-    старте, <b>flack_zombi</b> за упорство в рубке деревьев, <b>PeregonStream</b> за крутые рейды.
-    Спасибо <b>tozikab_</b>, <b>6alt1ca</b>, <b>derailon</b>, <b>sloghniy</b>, <b>MaN0ol</b>, <b>dO_Oy</b>, <b>VombatDrago</b>,
+  старте, <b>flack_zombi</b> за упорство в рубке деревьев, <b>PeregonStream</b> за крутые рейды.
+  Спасибо <b>tozikab_</b>, <b>6alt1ca</b>, <b>derailon</b>, <b>sloghniy</b>, <b>MaN0ol</b>, <b>dO_Oy</b>, <b>VombatDrago</b>,
     <b>sleeplessness8</b>.
     <br>Вы все крутые!</p>
 </section>

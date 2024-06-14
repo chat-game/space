@@ -1,17 +1,17 @@
+import { Application, Container } from 'pixi.js'
+import type { GameObject, Wagon } from './objects'
+import { Player, Trader } from './objects/units'
+import type { GameScene } from './scenes/gameScene'
+import { MovingScene } from './scenes/movingScene'
+import { AssetsManager, AudioManager } from './utils'
+import { BackgroundGenerator } from './utils/generators/background'
 import type {
   GameSceneType,
   IGameObject,
   IGameObjectPlayer,
   IGameObjectTrader,
   WebSocketMessage,
-} from "$lib/game/types"
-import { Application, Container } from "pixi.js"
-import type { GameObject, Wagon } from "./objects"
-import { Player, Trader } from "./objects/units"
-import type { GameScene } from "./scenes/gameScene"
-import { MovingScene } from "./scenes/movingScene"
-import { AssetsManager, AudioManager } from "./utils"
-import { BackgroundGenerator } from "./utils/generators/background"
+} from '$lib/game/types'
 
 export class Game extends Container {
   public children: GameObject[] = []
@@ -40,7 +40,7 @@ export class Game extends Container {
 
   public async init() {
     await this.app.init({
-      background: "#239063",
+      background: '#239063',
       antialias: false,
       roundPixels: false,
       resolution: 1,
@@ -50,10 +50,10 @@ export class Game extends Container {
 
     // this.audio.playSound("FOREST_BACKGROUND")
 
-    //const bg = this.bg.getGeneratedBackgroundTilingSprite()
-    //bg.width = 10000
-    //bg.height = 10000
-    //this.app.stage.addChild(bg)
+    // const bg = this.bg.getGeneratedBackgroundTilingSprite()
+    // bg.width = 10000
+    // bg.height = 10000
+    // this.app.stage.addChild(bg)
 
     this.app.stage.addChild(this)
 
@@ -96,14 +96,14 @@ export class Game extends Container {
     const columnWidth = this.app.screen.width / 6
     const rowHeight = this.app.screen.height / 6
 
-    let leftPadding =
-      wagon.direction === "LEFT" ? columnWidth * 4 : columnWidth * 2
+    let leftPadding
+      = wagon.direction === 'LEFT' ? columnWidth * 4 : columnWidth * 2
     let topPadding = rowHeight * 3
 
     if (wagon.speedPerSecond === 0) {
       leftPadding = columnWidth * 3
 
-      if (wagon.state === "IDLE" && !wagon.cargoType) {
+      if (wagon.state === 'IDLE' && !wagon.cargoType) {
         // At Village stop
         leftPadding = columnWidth
         topPadding = rowHeight * 4
@@ -171,9 +171,8 @@ export class Game extends Container {
       this.scene.destroy()
     }
 
-    if (scene === "MOVING") {
+    if (scene === 'MOVING') {
       this.scene = new MovingScene({ game: this })
-      return
     }
   }
 
@@ -218,7 +217,7 @@ export class Game extends Container {
 
   removeDestroyedObjects() {
     for (const object of this.children) {
-      if (object.state === "DESTROYED") {
+      if (object.state === 'DESTROYED') {
         const index = this.children.indexOf(object)
         this.children.splice(index, 1)
         return
@@ -242,42 +241,41 @@ export class Game extends Container {
 
     const obj = this.findObject(object.id)
     if (!obj) {
-      if (object.entity === "PLAYER") {
+      if (object.entity === 'PLAYER') {
         this.initPlayer(object as IGameObjectPlayer)
         return
       }
-      if (object.entity === "TRADER") {
+      if (object.entity === 'TRADER') {
         this.initTrader(object as IGameObjectTrader)
         return
       }
       return
     }
 
-    if (object.entity === "PLAYER") {
+    if (object.entity === 'PLAYER') {
       this.updatePlayer(object as IGameObjectPlayer)
       return
     }
-    if (object.entity === "TRADER") {
+    if (object.entity === 'TRADER') {
       this.updateTrader(object as IGameObjectTrader)
-      return
     }
   }
 
-  handleMessageEvent(event: WebSocketMessage["event"]) {
-    if (event === "RAID_STARTED") {
-      this.audio.playSound("MARCHING_WITH_HORNS")
+  handleMessageEvent(event: WebSocketMessage['event']) {
+    if (event === 'RAID_STARTED') {
+      this.audio.playSound('MARCHING_WITH_HORNS')
     }
-    if (event === "GROUP_FORM_STARTED") {
-      this.audio.playSound("MARCHING_WITH_HORNS")
+    if (event === 'GROUP_FORM_STARTED') {
+      this.audio.playSound('MARCHING_WITH_HORNS')
     }
-    if (event === "MAIN_QUEST_STARTED") {
-      this.audio.playSound("MARCHING_WITH_HORNS")
+    if (event === 'MAIN_QUEST_STARTED') {
+      this.audio.playSound('MARCHING_WITH_HORNS')
     }
-    if (event === "SCENE_CHANGED") {
+    if (event === 'SCENE_CHANGED') {
       this.rebuildScene()
     }
-    if (event === "IDEA_CREATED") {
-      this.audio.playSound("YEAH")
+    if (event === 'IDEA_CREATED') {
+      this.audio.playSound('YEAH')
     }
   }
 }

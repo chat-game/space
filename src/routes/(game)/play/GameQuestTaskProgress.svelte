@@ -1,21 +1,21 @@
-<script lang="ts">
-import type { IGameQuestTask } from "$lib/game/types"
-import CircleCheck from "lucide-svelte/icons/circle-check"
-import CircleDashed from "lucide-svelte/icons/circle-dashed"
+<script lang='ts'>
+  import CircleCheck from 'lucide-svelte/icons/circle-check'
+  import CircleDashed from 'lucide-svelte/icons/circle-dashed'
+  import type { IGameQuestTask } from '$lib/game/types'
 
-export let task: IGameQuestTask
+  export let task: IGameQuestTask
 
-let progressBarWidth = Math.round(
-  task.progressNow / (task.progressToSuccess / 100),
-)
-if (progressBarWidth > 100) {
-  progressBarWidth = 100
-}
+  let progressBarWidth = Math.round(
+    task.progressNow / (task.progressToSuccess / 100),
+  )
+  if (progressBarWidth > 100) {
+    progressBarWidth = 100
+  }
 </script>
 
-<div class="block">
-  <div class="task">
-    {#if task.status === "SUCCESS"}
+<div class='block'>
+  <div class='task'>
+    {#if task.status === 'SUCCESS'}
       <CircleCheck />
     {:else}
       <CircleDashed />
@@ -23,8 +23,8 @@ if (progressBarWidth > 100) {
     <p>{task.description}</p>
   </div>
 
-  <div class="progress">
-    <div class="bar" data-active={task.status === "ACTIVE"} style={{ width: `${progressBarWidth}%` }}/>
+  <div class='progress'>
+    <div class='bar' data-active={task.status === 'ACTIVE'} style={{ width: `${progressBarWidth}%` }} />
   </div>
 </div>
 

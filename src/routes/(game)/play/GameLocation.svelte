@@ -1,11 +1,11 @@
-<script lang="ts">
-import GameChunkInfo from "./GameChunkInfo.svelte"
-import GameWarehouseInfo from "./GameWarehouseInfo.svelte"
+<script lang='ts'>
+  import GameChunkInfo from './GameChunkInfo.svelte'
+  import GameWarehouseInfo from './GameWarehouseInfo.svelte'
 </script>
 
-<div class="block">
-  <GameChunkInfo/>
-  <GameWarehouseInfo/>
+<div class='block'>
+  <GameChunkInfo />
+  <GameWarehouseInfo />
 </div>
 
 <style>

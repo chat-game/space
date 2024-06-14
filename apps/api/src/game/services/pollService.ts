@@ -1,9 +1,9 @@
 import type {
   IGameObjectPlayer,
   IGamePoll,
-} from "../../../../../packages/api-sdk/src"
-import type { Player } from "../objects/units"
-import type { GameScene } from "../scenes"
+} from '../../../../../packages/api-sdk/src'
+import type { Player } from '../objects/units'
+import type { GameScene } from '../scenes'
 
 interface IPollServiceOptions {
   scene: GameScene
@@ -18,12 +18,12 @@ export class PollService {
 
   public update() {
     for (const event of this.scene.eventService.events) {
-      if (!event.poll || event.poll.status !== "ACTIVE") {
+      if (!event.poll || event.poll.status !== 'ACTIVE') {
         continue
       }
 
       if (event.poll.votes.length >= event.poll.votesToSuccess) {
-        event.poll.status = "SUCCESS"
+        event.poll.status = 'SUCCESS'
       }
     }
   }
@@ -33,13 +33,13 @@ export class PollService {
       if (event.poll && event.poll?.id === pollId) {
         const voted = this.vote(event.poll, player)
         if (!voted) {
-          return "VOTED_ALREADY"
+          return 'VOTED_ALREADY'
         }
-        return "VOTE_SUCCESS"
+        return 'VOTE_SUCCESS'
       }
     }
 
-    return "POLL_NOT_FOUND"
+    return 'POLL_NOT_FOUND'
   }
 
   private vote(poll: IGamePoll, player: IGameObjectPlayer): boolean {

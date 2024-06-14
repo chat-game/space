@@ -1,8 +1,8 @@
+import { Container, Sprite } from 'pixi.js'
 import type {
   GraphicsContainerType,
   IGameObjectDirection,
-} from "$lib/game/types"
-import { Container, Sprite } from "pixi.js"
+} from '$lib/game/types'
 
 interface IGraphicsContainerOptions {
   type: GraphicsContainerType
@@ -11,7 +11,7 @@ interface IGraphicsContainerOptions {
 
 export class GraphicsContainer extends Container {
   public type: GraphicsContainerType
-  public direction: IGameObjectDirection = "RIGHT"
+  public direction: IGameObjectDirection = 'RIGHT'
 
   constructor({ type, direction }: IGraphicsContainerOptions) {
     super()

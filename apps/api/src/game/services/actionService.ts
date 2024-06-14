@@ -3,24 +3,24 @@ import type {
   IGameActionResponse,
   IGameSceneAction,
   ItemType,
-} from "../../../../../packages/api-sdk/src"
-import { ANSWER } from "../../../../../packages/api-sdk/src/lib/actionAnswer"
+} from '../../../../../packages/api-sdk/src'
+import { ANSWER } from '../../../../../packages/api-sdk/src/lib/actionAnswer'
 import {
   ADMIN_PLAYER_ID,
   DISCORD_SERVER_INVITE_URL,
   DONATE_URL,
   GITHUB_REPO_URL,
-} from "../../config"
-import type { Action } from "../actions/action"
-import { Village } from "../chunks"
-import { Group } from "../common"
-import { Stone, Tree } from "../objects"
-import type { Warehouse } from "../objects/buildings/warehouse"
-import type { Player } from "../objects/units"
-import type { GameScene } from "../scenes"
-import { ChopTreeScript } from "../scripts/chopTreeScript"
-import { MineStoneScript } from "../scripts/mineStoneScript"
-import { PlantNewTreeScript } from "../scripts/plantNewTreeScript"
+} from '../../config'
+import type { Action } from '../actions/action'
+import { Village } from '../chunks'
+import { Group } from '../common'
+import { Stone, Tree } from '../objects'
+import type { Warehouse } from '../objects/buildings/warehouse'
+import type { Player } from '../objects/units'
+import type { GameScene } from '../scenes'
+import { ChopTreeScript } from '../scripts/chopTreeScript'
+import { MineStoneScript } from '../scripts/mineStoneScript'
+import { PlantNewTreeScript } from '../scripts/plantNewTreeScript'
 
 interface ICommandWithAction {
   id: string
@@ -46,32 +46,32 @@ export class ActionService {
   }
 
   async initCommands() {
-    this.possibleCommands =
-      (await this.scene.game.repository.findAllChatCommands()) as ICommandWithAction[]
+    this.possibleCommands
+      = (await this.scene.game.repository.findAllChatCommands()) as ICommandWithAction[]
   }
 
   async initActions() {
     this.possibleActions = [
-      "HELP",
-      "GIFT",
-      "TRADE",
-      "DONATE",
-      "REFUEL",
-      "STEAL_FUEL",
-      "CHOP",
-      "MINE",
-      "PLANT",
-      "START_GROUP_BUILD",
-      "DISBAND_GROUP",
-      "JOIN_GROUP",
-      "START_POLL",
-      "VOTE",
-      "START_CHANGING_SCENE",
-      "START_RAID",
-      "CREATE_NEW_PLAYER",
-      "START_CREATING_NEW_ADVENTURE",
-      "SHOW_MESSAGE",
-      "GITHUB",
+      'HELP',
+      'GIFT',
+      'TRADE',
+      'DONATE',
+      'REFUEL',
+      'STEAL_FUEL',
+      'CHOP',
+      'MINE',
+      'PLANT',
+      'START_GROUP_BUILD',
+      'DISBAND_GROUP',
+      'JOIN_GROUP',
+      'START_POLL',
+      'VOTE',
+      'START_CHANGING_SCENE',
+      'START_RAID',
+      'CREATE_NEW_PLAYER',
+      'START_CREATING_NEW_ADVENTURE',
+      'SHOW_MESSAGE',
+      'GITHUB',
     ]
     this.activeActions = this.possibleActions
   }
@@ -105,64 +105,64 @@ export class ActionService {
     this.scene.group.join(player)
     player.updateLastActionAt()
 
-    if (action === "SHOW_MESSAGE") {
+    if (action === 'SHOW_MESSAGE') {
       return this.showMessageAction(player, params)
     }
-    if (action === "REFUEL") {
+    if (action === 'REFUEL') {
       return this.refuelAction(player, params)
     }
-    if (action === "CHOP") {
+    if (action === 'CHOP') {
       return this.chopAction(player)
     }
-    if (action === "MINE") {
+    if (action === 'MINE') {
       return this.mineAction(player)
     }
-    if (action === "PLANT") {
+    if (action === 'PLANT') {
       return this.plantAction(player)
     }
-    if (action === "START_RAID") {
+    if (action === 'START_RAID') {
       return this.startRaidAction(player, params)
     }
-    if (action === "START_CHANGING_SCENE") {
+    if (action === 'START_CHANGING_SCENE') {
       // Admin only
       if (player.id !== ADMIN_PLAYER_ID) {
         return ANSWER.ERROR
       }
       return this.startChangingSceneAction(player, params)
     }
-    if (action === "START_GROUP_BUILD") {
+    if (action === 'START_GROUP_BUILD') {
       // Admin only
       if (player.id !== ADMIN_PLAYER_ID) {
         return ANSWER.ERROR
       }
       return this.startGroupBuildAction(player, params)
     }
-    if (action === "DISBAND_GROUP") {
+    if (action === 'DISBAND_GROUP') {
       // Admin only
       if (player.id !== ADMIN_PLAYER_ID) {
         return ANSWER.ERROR
       }
       return this.disbandGroupAction()
     }
-    if (action === "STEAL_FUEL") {
+    if (action === 'STEAL_FUEL') {
       return this.stealFuelAction(player)
     }
-    if (action === "HELP") {
+    if (action === 'HELP') {
       return this.helpAction(player)
     }
-    if (action === "GITHUB") {
+    if (action === 'GITHUB') {
       return this.githubAction(player)
     }
-    if (action === "DONATE") {
+    if (action === 'DONATE') {
       return this.donateAction(player)
     }
-    if (action === "GIFT") {
+    if (action === 'GIFT') {
       return this.giftAction(player, params)
     }
-    if (action === "TRADE") {
+    if (action === 'TRADE') {
       return this.tradeAction(player, params)
     }
-    if (action === "CREATE_IDEA") {
+    if (action === 'CREATE_IDEA') {
       return this.createIdeaAction(player, params)
     }
 
@@ -193,23 +193,23 @@ export class ActionService {
   public getAvailableCommands() {
     const commands: string[] = []
     for (const action of this.activeActions) {
-      if (action === "HELP") {
-        commands.push("!помощь")
+      if (action === 'HELP') {
+        commands.push('!помощь')
       }
-      if (action === "REFUEL") {
-        commands.push("!заправить [кол-во]")
+      if (action === 'REFUEL') {
+        commands.push('!заправить [кол-во]')
       }
-      if (action === "CHOP") {
-        commands.push("!рубить")
+      if (action === 'CHOP') {
+        commands.push('!рубить')
       }
-      if (action === "MINE") {
-        commands.push("!добыть")
+      if (action === 'MINE') {
+        commands.push('!добыть')
       }
-      if (action === "GIFT") {
-        commands.push("!подарить [название] [кол-во]")
+      if (action === 'GIFT') {
+        commands.push('!подарить [название] [кол-во]')
       }
-      if (action === "DONATE") {
-        commands.push("!донат")
+      if (action === 'DONATE') {
+        commands.push('!донат')
       }
     }
 
@@ -225,9 +225,9 @@ export class ActionService {
     const raidersCount = params ? Number(params[0]) : 0
 
     this.scene.eventService.init({
-      title: "The raid has started!",
-      description: "",
-      type: "RAID_STARTED",
+      title: 'The raid has started!',
+      description: '',
+      type: 'RAID_STARTED',
       secondsToEnd: 60 * 5,
     })
     this.scene.initRaiders(raidersCount)
@@ -239,7 +239,7 @@ export class ActionService {
   }
 
   private async showMessageAction(player: Player, params?: string[]) {
-    if (!this.isActionPossible("SHOW_MESSAGE")) {
+    if (!this.isActionPossible('SHOW_MESSAGE')) {
       return ANSWER.ERROR
     }
 
@@ -254,7 +254,7 @@ export class ActionService {
   }
 
   private async stealFuelAction(player: Player) {
-    if (!this.isActionPossible("STEAL_FUEL")) {
+    if (!this.isActionPossible('STEAL_FUEL')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
 
@@ -269,7 +269,7 @@ export class ActionService {
   }
 
   private async refuelAction(player: Player, params?: string[]) {
-    if (!this.isActionPossible("REFUEL")) {
+    if (!this.isActionPossible('REFUEL')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
 
@@ -283,7 +283,7 @@ export class ActionService {
     }
 
     const items = player.inventory?.items ?? []
-    const itemExist = items.find((item) => item.type === "WOOD")
+    const itemExist = items.find((item) => item.type === 'WOOD')
     if (!itemExist) {
       return {
         ok: false,
@@ -313,7 +313,7 @@ export class ActionService {
   }
 
   getAmountFromChatCommand(text: string): number | null {
-    if (typeof Number(text) === "number" && Number(text) > 0) {
+    if (typeof Number(text) === 'number' && Number(text) > 0) {
       return Math.round(Number(text))
     }
 
@@ -321,7 +321,7 @@ export class ActionService {
   }
 
   private async chopAction(player: Player) {
-    if (!this.isActionPossible("CHOP")) {
+    if (!this.isActionPossible('CHOP')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
     if (player.script && !player.script.isInterruptible) {
@@ -335,10 +335,10 @@ export class ActionService {
 
     const chopTreeFunc = (): boolean => {
       void player.chopTree()
-      if (!player.target || player.target.state === "DESTROYED") {
-        player.state = "IDLE"
+      if (!player.target || player.target.state === 'DESTROYED') {
+        player.state = 'IDLE'
         if (player.target instanceof Tree) {
-          void player.inventory.addOrCreateItem("WOOD", player.target?.resource)
+          void player.inventory.addOrCreateItem('WOOD', player.target?.resource)
         }
         return true
       }
@@ -355,7 +355,7 @@ export class ActionService {
   }
 
   private async mineAction(player: Player) {
-    if (!this.isActionPossible("MINE")) {
+    if (!this.isActionPossible('MINE')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
     if (player.script && !player.script.isInterruptible) {
@@ -375,11 +375,11 @@ export class ActionService {
 
     const mineStoneFunc = (): boolean => {
       void player.mineStone()
-      if (!player.target || player.target.state === "DESTROYED") {
-        player.state = "IDLE"
+      if (!player.target || player.target.state === 'DESTROYED') {
+        player.state = 'IDLE'
         if (player.target instanceof Stone) {
           void player.inventory.addOrCreateItem(
-            "STONE",
+            'STONE',
             player.target?.resource,
           )
         }
@@ -398,7 +398,7 @@ export class ActionService {
   }
 
   private plantAction(player: Player) {
-    if (!this.isActionPossible("PLANT")) {
+    if (!this.isActionPossible('PLANT')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
     if (player.script && !player.script.isInterruptible) {
@@ -436,7 +436,7 @@ export class ActionService {
   }
 
   private startChangingSceneAction(_: Player, params?: string[]) {
-    if (!this.isActionPossible("START_CHANGING_SCENE")) {
+    if (!this.isActionPossible('START_CHANGING_SCENE')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
 
@@ -450,9 +450,9 @@ export class ActionService {
     }
 
     this.scene.eventService.init({
-      type: "SCENE_CHANGING_STARTED",
-      title: "Changing location",
-      description: "",
+      type: 'SCENE_CHANGING_STARTED',
+      title: 'Changing location',
+      description: '',
       scene,
       secondsToEnd: 10,
     })
@@ -461,18 +461,18 @@ export class ActionService {
   }
 
   getSceneTypeFromChatCommand(text: string): GameSceneType | null {
-    if (text === "деревня" || text === "деревню") {
-      return "VILLAGE"
+    if (text === 'деревня' || text === 'деревню') {
+      return 'VILLAGE'
     }
-    if (text === "защиту" || text === "защита") {
-      return "DEFENCE"
+    if (text === 'защиту' || text === 'защита') {
+      return 'DEFENCE'
     }
 
     return null
   }
 
   private startGroupBuildAction(_: Player, params?: string[]) {
-    if (!this.isActionPossible("START_GROUP_BUILD")) {
+    if (!this.isActionPossible('START_GROUP_BUILD')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
 
@@ -488,9 +488,9 @@ export class ActionService {
     this.scene.group = new Group()
 
     this.scene.eventService.init({
-      type: "GROUP_FORM_STARTED",
-      title: "The group is recruiting!",
-      description: "",
+      type: 'GROUP_FORM_STARTED',
+      title: 'The group is recruiting!',
+      description: '',
       scene,
       secondsToEnd: 120,
     })
@@ -499,7 +499,7 @@ export class ActionService {
   }
 
   private disbandGroupAction() {
-    if (!this.isActionPossible("DISBAND_GROUP")) {
+    if (!this.isActionPossible('DISBAND_GROUP')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
 
@@ -507,12 +507,12 @@ export class ActionService {
 
     return {
       ok: true,
-      message: "The group has been disbanded!",
+      message: 'The group has been disbanded!',
     }
   }
 
   private helpAction(player: Player) {
-    if (!this.isActionPossible("HELP")) {
+    if (!this.isActionPossible('HELP')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
 
@@ -523,7 +523,7 @@ export class ActionService {
   }
 
   private githubAction(player: Player) {
-    if (!this.isActionPossible("GITHUB")) {
+    if (!this.isActionPossible('GITHUB')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
 
@@ -534,7 +534,7 @@ export class ActionService {
   }
 
   private donateAction(player: Player) {
-    if (!this.isActionPossible("DONATE")) {
+    if (!this.isActionPossible('DONATE')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
     return {
@@ -544,7 +544,7 @@ export class ActionService {
   }
 
   private async giftAction(player: Player, params: string[] | undefined) {
-    if (!this.isActionPossible("GIFT")) {
+    if (!this.isActionPossible('GIFT')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
 
@@ -576,7 +576,7 @@ export class ActionService {
       warehouse = this.scene.chunkNow.getWarehouse()
     }
 
-    if (item === "WOOD") {
+    if (item === 'WOOD') {
       const isSuccess = await player.inventory.reduceOrDestroyItem(item, amount)
       if (!isSuccess) {
         return {
@@ -593,7 +593,7 @@ export class ActionService {
         message: `${player.userName}, you gave wood to the village! Your reputation has increased.`,
       }
     }
-    if (item === "STONE") {
+    if (item === 'STONE') {
       const isSuccess = await player.inventory.reduceOrDestroyItem(item, amount)
       if (!isSuccess) {
         return {
@@ -618,24 +618,24 @@ export class ActionService {
   }
 
   getItemTypeFromChatCommand(text: string): ItemType | null {
-    if (text === "wood") {
-      return "WOOD"
+    if (text === 'wood') {
+      return 'WOOD'
     }
-    if (text === "stone") {
-      return "STONE"
+    if (text === 'stone') {
+      return 'STONE'
     }
-    if (text === "axe") {
-      return "AXE"
+    if (text === 'axe') {
+      return 'AXE'
     }
-    if (text === "pickaxe") {
-      return "PICKAXE"
+    if (text === 'pickaxe') {
+      return 'PICKAXE'
     }
 
     return null
   }
 
   private async tradeAction(player: Player, params: string[] | undefined) {
-    if (!this.isActionPossible("TRADE")) {
+    if (!this.isActionPossible('TRADE')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
 
@@ -653,13 +653,13 @@ export class ActionService {
       amount,
       player,
     )
-    if (status === "OFFER_ERROR") {
+    if (status === 'OFFER_ERROR') {
       return {
         ok: false,
-        message: "Something is wrong. The deal fell through.",
+        message: 'Something is wrong. The deal fell through.',
       }
     }
-    if (status === "OFFER_NOT_FOUND") {
+    if (status === 'OFFER_NOT_FOUND') {
       return ANSWER.NO_TARGET_ERROR
     }
 
@@ -670,12 +670,12 @@ export class ActionService {
   }
 
   private createIdeaAction(player: Player, params: string[] | undefined) {
-    const text = params ? params[0] : ""
+    const text = params ? params[0] : ''
 
     this.scene.eventService.init({
-      title: "New idea from Twitch Viewer!",
+      title: 'New idea from Twitch Viewer!',
       description: `${player.userName}: ${text}`,
-      type: "IDEA_CREATED",
+      type: 'IDEA_CREATED',
       secondsToEnd: 60 * 3,
     })
 

@@ -1,30 +1,30 @@
-<script lang="ts">
-import type { IGamePoll } from "$lib/game/types"
-import ThumbsUp from "lucide-svelte/icons/thumbs-up"
-import GameCommand from "./GameCommand.svelte"
+<script lang='ts'>
+  import ThumbsUp from 'lucide-svelte/icons/thumbs-up'
+  import GameCommand from './GameCommand.svelte'
+  import type { IGamePoll } from '$lib/game/types'
 
-export let poll: IGamePoll | undefined
+  export let poll: IGamePoll | undefined
 
-let pollProgressBarWidth = Math.round(
-  poll.votes.length / (poll.votesToSuccess / 100),
-)
-if (pollProgressBarWidth > 100) {
-  pollProgressBarWidth = 100
-}
+  let pollProgressBarWidth = Math.round(
+    poll.votes.length / (poll.votesToSuccess / 100),
+  )
+  if (pollProgressBarWidth > 100) {
+    pollProgressBarWidth = 100
+  }
 </script>
 
-<div class="info">
-  <div class="progress">
+<div class='info'>
+  <div class='progress'>
     Votes: {poll.votes.length} of {poll.votesToSuccess}
   </div>
-  <div class="bar" style={{ width: `${pollProgressBarWidth}%` }}/>
+  <div class='bar' style={{ width: `${pollProgressBarWidth}%` }} />
 </div>
 
-<GameCommand command={poll.action.commandDescription}/>
+<GameCommand command={poll.action.commandDescription} />
 
-<div class="votes">
+<div class='votes'>
   {#each poll.votes as vote}
-    <div class="vote">
+    <div class='vote'>
       <ThumbsUp />
       <span>{vote.userName}</span>
     </div>

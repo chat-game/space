@@ -1,6 +1,6 @@
-import type { IGameObjectWater } from "$lib/game/types"
-import type { GameScene } from "../scenes/gameScene"
-import { GameObject } from "./gameObject"
+import type { GameScene } from '../scenes/gameScene'
+import { GameObject } from './gameObject'
+import type { IGameObjectWater } from '$lib/game/types'
 
 interface IWaterOptions {
   scene: GameScene

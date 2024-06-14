@@ -1,22 +1,22 @@
-import { createId } from "@paralleldrive/cuid2"
+import { createId } from '@paralleldrive/cuid2'
 import {
   type IGameObjectFlag,
   getRandomInRange,
-} from "../../../../../packages/api-sdk/src"
-import { MAX_X, MAX_Y, MIN_X, MIN_Y } from "../../config"
-import { GameObject } from "./gameObject"
+} from '../../../../../packages/api-sdk/src'
+import { MAX_X, MAX_Y, MIN_X, MIN_Y } from '../../config'
+import { GameObject } from './gameObject'
 
 interface IFlagOptions {
   x?: number
   y?: number
   id?: string
-  type: IGameObjectFlag["type"]
+  type: IGameObjectFlag['type']
   offsetX?: number
   offsetY?: number
 }
 
 export class Flag extends GameObject implements IGameObjectFlag {
-  public type: IGameObjectFlag["type"]
+  public type: IGameObjectFlag['type']
 
   public isReserved: boolean
   public offsetX: number
@@ -27,7 +27,7 @@ export class Flag extends GameObject implements IGameObjectFlag {
     const finalX = x ?? getRandomInRange(MIN_X, MAX_X)
     const finalY = y ?? getRandomInRange(MIN_Y, MAX_Y)
 
-    super({ id: finalId, x: finalX, y: finalY, entity: "FLAG" })
+    super({ id: finalId, x: finalX, y: finalY, entity: 'FLAG' })
 
     this.type = type
     this.isReserved = false
@@ -36,7 +36,7 @@ export class Flag extends GameObject implements IGameObjectFlag {
   }
 
   live() {
-    if (this.target && this.target.state === "DESTROYED") {
+    if (this.target && this.target.state === 'DESTROYED') {
       this.removeTarget()
     }
 

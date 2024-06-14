@@ -1,16 +1,16 @@
 import {
   type ITradeOffer,
   getRandomInRange,
-} from "../../../../../packages/api-sdk/src"
-import { Village } from "../chunks"
-import { Poll } from "../common"
-import { Flag } from "../objects"
-import type { Player } from "../objects/units"
-import { Trader } from "../objects/units/trader"
-import type { GameScene } from "../scenes"
-import { MoveOffScreenAndSelfDestroyScript } from "../scripts/moveOffScreenAndSelfDestroyScript"
-import { MoveToTargetScript } from "../scripts/moveToTargetScript"
-import { MoveToTradePostAndTradeScript } from "../scripts/moveToTradePostAndTradeScript"
+} from '../../../../../packages/api-sdk/src'
+import { Village } from '../chunks'
+import { Poll } from '../common'
+import { Flag } from '../objects'
+import type { Player } from '../objects/units'
+import { Trader } from '../objects/units/trader'
+import type { GameScene } from '../scenes'
+import { MoveOffScreenAndSelfDestroyScript } from '../scripts/moveOffScreenAndSelfDestroyScript'
+import { MoveToTargetScript } from '../scripts/moveToTargetScript'
+import { MoveToTradePostAndTradeScript } from '../scripts/moveToTradePostAndTradeScript'
 
 interface ITradeServiceOptions {
   scene: GameScene
@@ -54,13 +54,13 @@ export class TradeService {
       if (offer.id === offerId) {
         const status = await this.trade(offer, amount, player)
         if (!status) {
-          return "OFFER_ERROR"
+          return 'OFFER_ERROR'
         }
-        return "OFFER_SUCCESS"
+        return 'OFFER_SUCCESS'
       }
     }
 
-    return "OFFER_NOT_FOUND"
+    return 'OFFER_NOT_FOUND'
   }
 
   public async trade(
@@ -72,7 +72,7 @@ export class TradeService {
       return false
     }
 
-    if (offer.type === "BUY") {
+    if (offer.type === 'BUY') {
       const item = player.inventory.checkIfAlreadyHaveItem(offer.item)
       if (!item || item.amount < amount) {
         return false
@@ -112,9 +112,9 @@ export class TradeService {
           if (target) {
             const startTradeFunc = () => {
               this.scene.eventService.init({
-                title: "Trade in progress",
-                description: "",
-                type: "TRADE_STARTED",
+                title: 'Trade in progress',
+                description: '',
+                type: 'TRADE_STARTED',
                 secondsToEnd: 60 * 6,
                 offers: this.offers,
               })
@@ -125,7 +125,6 @@ export class TradeService {
               target,
               startTradeFunc,
             })
-            return
           }
         }
       }
@@ -155,7 +154,7 @@ export class TradeService {
   public removeTrade() {
     this.offers = []
     for (const event of this.scene.eventService.events) {
-      if (event.type === "TRADE_STARTED") {
+      if (event.type === 'TRADE_STARTED') {
         this.scene.eventService.destroy(event)
       }
     }
@@ -167,14 +166,14 @@ export class TradeService {
     }
 
     const activeTrade = this.scene.eventService.events.find(
-      (e) => e.type === "TRADE_STARTED",
+      (e) => e.type === 'TRADE_STARTED',
     )
     return !activeTrade
   }
 
   private getTradePointFlag() {
     return this.scene.chunkNow?.objects.find(
-      (obj) => obj instanceof Flag && obj.type === "TRADE_POINT",
+      (obj) => obj instanceof Flag && obj.type === 'TRADE_POINT',
     ) as Flag | undefined
   }
 
@@ -191,7 +190,7 @@ export class TradeService {
     const flag = new Flag({
       x: store.x + 105,
       y: store.y + 10,
-      type: "TRADE_POINT",
+      type: 'TRADE_POINT',
     })
     this.scene.chunkNow?.objects.push(flag)
   }
@@ -235,10 +234,10 @@ export class TradeService {
 
       const offer: ITradeOffer = {
         id,
-        type: "BUY",
+        type: 'BUY',
         amount: 25,
         unitPrice: 1,
-        item: "WOOD",
+        item: 'WOOD',
         commandToTrade,
       }
 
@@ -272,37 +271,37 @@ export class TradeService {
     }
 
     const votingEvents = this.scene.eventService.events.filter(
-      (e) => e.type === "VOTING_FOR_NEW_MAIN_QUEST_STARTED",
+      (e) => e.type === 'VOTING_FOR_NEW_MAIN_QUEST_STARTED',
     )
     if (votingEvents.length >= 1) {
       return
     }
 
     const adventureEvents = this.scene.eventService.events.filter(
-      (e) => e.type === "MAIN_QUEST_STARTED",
+      (e) => e.type === 'MAIN_QUEST_STARTED',
     )
     if (adventureEvents.length >= 1) {
       return
     }
 
-    const votesToSuccess =
-      this.scene.findActivePlayers().length >= 2
+    const votesToSuccess
+      = this.scene.findActivePlayers().length >= 2
         ? this.scene.findActivePlayers().length
         : 1
 
     const poll = new Poll({ votesToSuccess, scene: this.scene })
 
     this.scene.eventService.init({
-      type: "VOTING_FOR_NEW_MAIN_QUEST_STARTED",
-      title: "The merchant offers a quest",
-      description: "Let's make the quest active? Vote in chat.",
+      type: 'VOTING_FOR_NEW_MAIN_QUEST_STARTED',
+      title: 'The merchant offers a quest',
+      description: 'Let\'s make the quest active? Vote in chat.',
       secondsToEnd: 180,
       quest: this.scene.eventService.questService.create({
-        status: "INACTIVE",
-        type: "MAIN",
-        title: "Transport cargo to a neighboring village",
+        status: 'INACTIVE',
+        type: 'MAIN',
+        title: 'Transport cargo to a neighboring village',
         description:
-          "The merchant is worried about the safety of the items in the chest.",
+          'The merchant is worried about the safety of the items in the chest.',
         creatorId: trader.id,
         tasks: [],
         conditions: {

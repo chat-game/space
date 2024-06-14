@@ -1,5 +1,5 @@
-import type { IGameBuildingStore } from "../../../../../../packages/api-sdk/src"
-import { Building } from "./building"
+import type { IGameBuildingStore } from '../../../../../../packages/api-sdk/src'
+import { Building } from './building'
 
 interface IStoreOptions {
   x: number
@@ -8,6 +8,6 @@ interface IStoreOptions {
 
 export class Store extends Building implements IGameBuildingStore {
   constructor({ x, y }: IStoreOptions) {
-    super({ entity: "STORE", x, y })
+    super({ entity: 'STORE', x, y })
   }
 }

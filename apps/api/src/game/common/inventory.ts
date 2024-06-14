@@ -1,10 +1,10 @@
-import { createId } from "@paralleldrive/cuid2"
+import { createId } from '@paralleldrive/cuid2'
 import type {
   IGameInventory,
   IGameInventoryItem,
   ItemType,
-} from "../../../../../packages/api-sdk/src"
-import { db } from "../../db/db.client"
+} from '../../../../../packages/api-sdk/src'
+import { db } from '../../db/db.client'
 
 interface IInventoryOptions {
   objectId: string
@@ -168,7 +168,7 @@ export class Inventory implements IGameInventory {
       type,
       amount,
       durability: 100,
-      inventoryId: "",
+      inventoryId: '',
     }
     this.items.push(item)
   }

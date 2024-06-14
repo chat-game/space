@@ -1,6 +1,6 @@
-import { getRandomInRange } from "$lib/random"
-import { Sprite } from "pixi.js"
-import { GraphicsContainer } from "./graphicsContainer"
+import { Sprite } from 'pixi.js'
+import { GraphicsContainer } from './graphicsContainer'
+import { getRandomInRange } from '$lib/random'
 
 interface IFireParticlesContainerOptions {
   x: number
@@ -13,7 +13,7 @@ export class FireParticlesContainer extends GraphicsContainer {
   public offset = 0
 
   constructor({ x, y, areaWidth }: IFireParticlesContainerOptions) {
-    super({ type: "FIRE_PARTICLE", direction: "LEFT" })
+    super({ type: 'FIRE_PARTICLE', direction: 'LEFT' })
 
     this.x = x
     this.y = y
@@ -34,12 +34,12 @@ export class FireParticlesContainer extends GraphicsContainer {
   getRandomSpriteIndex() {
     const random = getRandomInRange(1, 1000)
     if (random <= 500) {
-      return "fireParticle1"
+      return 'fireParticle1'
     }
     if (random <= 750) {
-      return "fireParticle2"
+      return 'fireParticle2'
     }
-    return "fireParticle3"
+    return 'fireParticle3'
   }
 
   animate(power = 1) {

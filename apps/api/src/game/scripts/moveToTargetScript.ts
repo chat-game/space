@@ -1,6 +1,6 @@
-import type { IGameObject } from "../../../../../packages/api-sdk/src"
-import type { GameObject } from "../objects"
-import { Script } from "./script"
+import type { IGameObject } from '../../../../../packages/api-sdk/src'
+import type { GameObject } from '../objects'
+import { Script } from './script'
 
 interface IMoveToRandomTargetScriptOptions {
   object: GameObject

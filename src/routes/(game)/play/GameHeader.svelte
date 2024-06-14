@@ -1,13 +1,13 @@
 <script>
-import GameLocation from "./GameLocation.svelte"
-import GameWagonInfo from "./GameWagonInfo.svelte"
+  import GameLocation from './GameLocation.svelte'
+  import GameWagonInfo from './GameWagonInfo.svelte'
 </script>
 
-<div class="block bg-paper">
-  <div class="wrapper">
-    <GameLocation/>
-<!--    <GameRouteInfo nowX={0}/>-->
-    <GameWagonInfo/>
+<div class='block bg-paper'>
+  <div class='wrapper'>
+    <GameLocation />
+    <!--    <GameRouteInfo nowX={0}/> -->
+    <GameWagonInfo />
   </div>
 </div>
 

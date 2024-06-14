@@ -1,6 +1,6 @@
-import type { IGameObjectBuilding } from "$lib/game/types"
-import { Sprite } from "pixi.js"
-import { GraphicsContainer } from "./graphicsContainer"
+import { Sprite } from 'pixi.js'
+import { GraphicsContainer } from './graphicsContainer'
+import type { IGameObjectBuilding } from '$lib/game/types'
 
 export class BuildingInterface extends GraphicsContainer {
   public building: IGameObjectBuilding
@@ -9,7 +9,7 @@ export class BuildingInterface extends GraphicsContainer {
   public stone: number | undefined
 
   constructor(building: IGameObjectBuilding) {
-    super({ type: "INTERFACE" })
+    super({ type: 'INTERFACE' })
 
     this.x = 0
     this.y = 0
@@ -20,11 +20,11 @@ export class BuildingInterface extends GraphicsContainer {
   }
 
   init() {
-    this.wood =
-      this.building.inventory.items.find((item) => item.type === "WOOD")
+    this.wood
+      = this.building.inventory.items.find((item) => item.type === 'WOOD')
         ?.amount ?? 0
-    this.stone =
-      this.building.inventory.items.find((item) => item.type === "STONE")
+    this.stone
+      = this.building.inventory.items.find((item) => item.type === 'STONE')
         ?.amount ?? 0
 
     this.drawWood()
@@ -44,10 +44,10 @@ export class BuildingInterface extends GraphicsContainer {
 
   update() {
     const wood = this.building.inventory.items.find(
-      (item) => item.type === "WOOD",
+      (item) => item.type === 'WOOD',
     )?.amount
     const stone = this.building.inventory.items.find(
-      (item) => item.type === "STONE",
+      (item) => item.type === 'STONE',
     )?.amount
 
     if (wood !== this.wood || stone !== this.stone) {
@@ -65,9 +65,9 @@ export class BuildingInterface extends GraphicsContainer {
       return
     }
 
-    const container = new GraphicsContainer({ type: "PLAYER_COINS" })
+    const container = new GraphicsContainer({ type: 'PLAYER_COINS' })
 
-    const woodSprite = Sprite.from("wood1")
+    const woodSprite = Sprite.from('wood1')
     woodSprite.width = 48
     woodSprite.height = 48
 
@@ -96,9 +96,9 @@ export class BuildingInterface extends GraphicsContainer {
       return
     }
 
-    const container = new GraphicsContainer({ type: "PLAYER_COINS" })
+    const container = new GraphicsContainer({ type: 'PLAYER_COINS' })
 
-    const sprite = Sprite.from("stoneRes1")
+    const sprite = Sprite.from('stoneRes1')
     sprite.width = 48
     sprite.height = 48
 

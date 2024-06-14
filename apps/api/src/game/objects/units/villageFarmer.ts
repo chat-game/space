@@ -1,8 +1,8 @@
-import { createId } from "@paralleldrive/cuid2"
-import type { IGameObjectFarmer } from "../../../../../../packages/api-sdk/src"
-import { generateUnitUserName } from "../../common/generators/unitName"
-import { generateUnitTop } from "../../common/generators/unitTop"
-import { Unit } from "./unit"
+import { createId } from '@paralleldrive/cuid2'
+import type { IGameObjectFarmer } from '../../../../../../packages/api-sdk/src'
+import { generateUnitUserName } from '../../common/generators/unitName'
+import { generateUnitTop } from '../../common/generators/unitTop'
+import { Unit } from './unit'
 
 interface IVillageFarmerOptions {
   x: number
@@ -17,10 +17,10 @@ export class VillageFarmer extends Unit implements IGameObjectFarmer {
       id,
       x,
       y,
-      entity: "FARMER",
+      entity: 'FARMER',
       visual: {
-        head: "1",
-        hairstyle: "ORANGE_WITH_BEARD",
+        head: '1',
+        hairstyle: 'ORANGE_WITH_BEARD',
         top: generateUnitTop(),
       },
     })

@@ -1,51 +1,51 @@
-<script lang="ts">
-import type { IGameEvent } from "$lib/game/types"
-import GameEventTimer from "./GameEventTimer.svelte"
-import GamePollProgress from "./GamePollProgress.svelte"
-import GameQuestConditions from "./GameQuestConditions.svelte"
-import GameQuestTask from "./GameQuestTask.svelte"
-import GameTradeOffer from "./GameTradeOffer.svelte"
+<script lang='ts'>
+  import GameEventTimer from './GameEventTimer.svelte'
+  import GamePollProgress from './GamePollProgress.svelte'
+  import GameQuestConditions from './GameQuestConditions.svelte'
+  import GameQuestTask from './GameQuestTask.svelte'
+  import GameTradeOffer from './GameTradeOffer.svelte'
+  import type { IGameEvent } from '$lib/game/types'
 
-export let event: IGameEvent
-let isActive = event.status === "STARTED"
+  export let event: IGameEvent
+  const isActive = event.status === 'STARTED'
 
-function getCardLabelByType(type: IGameEvent["type"]) {
-  if (type === "MAIN_QUEST_STARTED") {
-    return "main quest"
+  function getCardLabelByType(type: IGameEvent['type']) {
+    if (type === 'MAIN_QUEST_STARTED') {
+      return 'main quest'
+    }
+    if (type === 'SIDE_QUEST_STARTED') {
+      return 'side quest'
+    }
+    if (type === 'TRADE_STARTED') {
+      return 'trade in the village'
+    }
+    if (type === 'VOTING_FOR_NEW_MAIN_QUEST_STARTED') {
+      return 'poll'
+    }
+    if (type === 'IDEA_CREATED') {
+      return 'idea'
+    }
   }
-  if (type === "SIDE_QUEST_STARTED") {
-    return "side quest"
-  }
-  if (type === "TRADE_STARTED") {
-    return "trade in the village"
-  }
-  if (type === "VOTING_FOR_NEW_MAIN_QUEST_STARTED") {
-    return "poll"
-  }
-  if (type === "IDEA_CREATED") {
-    return "idea"
-  }
-}
 
-const label = getCardLabelByType(event.type)
+  const label = getCardLabelByType(event.type)
 </script>
 
-<div class="block" data-active={isActive}>
-  <div class="header">
-    <p class="title">{event.title}</p>
-    <p class="label">{label}</p>
+<div class='block' data-active={isActive}>
+  <div class='header'>
+    <p class='title'>{event.title}</p>
+    <p class='label'>{label}</p>
   </div>
-  <div class="body">
-    <p class="description">{event.description}</p>
+  <div class='body'>
+    <p class='description'>{event.description}</p>
 
-    <GamePollProgress poll={event.poll}/>
-    <GameQuestConditions limitSeconds={event.quest.conditions.limitSeconds}/>
+    <GamePollProgress poll={event.poll} />
+    <GameQuestConditions limitSeconds={event.quest.conditions.limitSeconds} />
 
     {#each event.quest.tasks as task}
-      <GameQuestTask task={task}/>
+      <GameQuestTask task={task} />
     {/each}
 
-    <GameTradeOffer offer={event.offers[0]}/>
+    <GameTradeOffer offer={event.offers[0]} />
     <GameEventTimer endsAt={event.endsAt} />
   </div>
 </div>

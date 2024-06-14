@@ -1,46 +1,46 @@
-<script lang="ts">
-import type { IGameObjectPlayer, PlayerTitle } from "$lib/game/types"
-import GameUnit from "./GameUnit.svelte"
+<script lang='ts'>
+  import GameUnit from './GameUnit.svelte'
+  import type { IGameObjectPlayer, PlayerTitle } from '$lib/game/types'
 
-export let player: IGameObjectPlayer | undefined
-export let title: PlayerTitle
-export let points: string
+  export let player: IGameObjectPlayer | undefined
+  export let title: PlayerTitle
+  export let points: string
 
-function getBorderColorByType(type: PlayerTitle["type"]) {
-  if (type === "RICH") {
-    return "#12A594"
+  function getBorderColorByType(type: PlayerTitle['type']) {
+    if (type === 'RICH') {
+      return '#12A594'
+    }
+    if (type === 'FAMOUS') {
+      return '#0090FF'
+    }
+    if (type === 'VIEWER') {
+      return '#6E56CF'
+    }
+    if (type === 'RAIDER') {
+      return '#696E77'
+    }
+    if (type === 'VILLAIN') {
+      return '#E5484D'
+    }
+    if (type === 'REFUELLER') {
+      return '#63706B'
+    }
+    if (type === 'WOODSMAN') {
+      return '#30A46C'
+    }
+    if (type === 'MINER') {
+      return '#B4B4B4'
+    }
   }
-  if (type === "FAMOUS") {
-    return "#0090FF"
-  }
-  if (type === "VIEWER") {
-    return "#6E56CF"
-  }
-  if (type === "RAIDER") {
-    return "#696E77"
-  }
-  if (type === "VILLAIN") {
-    return "#E5484D"
-  }
-  if (type === "REFUELLER") {
-    return "#63706B"
-  }
-  if (type === "WOODSMAN") {
-    return "#30A46C"
-  }
-  if (type === "MINER") {
-    return "#B4B4B4"
-  }
-}
 
-let borderColor = getBorderColorByType(title.type)
+  const borderColor = getBorderColorByType(title.type)
 </script>
 
-<div class="block" style="border-color: {borderColor}">
-  <div class="player">
+<div class='block' style='border-color: {borderColor}'>
+  <div class='player'>
     <GameUnit />
   </div>
-  <p class="name">{player.userName}</p>
+  <p class='name'>{player.userName}</p>
   <p>{title.title}! {points}</p>
 </div>
 
@@ -70,4 +70,3 @@ let borderColor = getBorderColorByType(title.type)
     font-weight: 700;
   }
 </style>
-

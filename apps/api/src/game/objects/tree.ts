@@ -1,9 +1,9 @@
-import { createId } from "@paralleldrive/cuid2"
+import { createId } from '@paralleldrive/cuid2'
 import {
   type IGameObjectTree,
   getRandomInRange,
-} from "../../../../../packages/api-sdk/src"
-import { GameObject } from "./gameObject"
+} from '../../../../../packages/api-sdk/src'
+import { GameObject } from './gameObject'
 
 interface ITreeOptions {
   id?: string
@@ -13,13 +13,13 @@ interface ITreeOptions {
   size?: number
   health?: number
   growSpeed?: number
-  type?: IGameObjectTree["type"]
-  variant?: IGameObjectTree["variant"]
+  type?: IGameObjectTree['type']
+  variant?: IGameObjectTree['variant']
 }
 
 export class Tree extends GameObject implements IGameObjectTree {
-  public type: IGameObjectTree["type"] = "1"
-  public variant: IGameObjectTree["variant"] = "GREEN"
+  public type: IGameObjectTree['type'] = '1'
+  public variant: IGameObjectTree['variant'] = 'GREEN'
   public resource = 0
   public minSizeToChop = 75
   public maxSize = 100
@@ -41,9 +41,9 @@ export class Tree extends GameObject implements IGameObjectTree {
   }: ITreeOptions) {
     const objectId = id ?? createId()
 
-    super({ id: objectId, x, y, entity: "TREE" })
+    super({ id: objectId, x, y, entity: 'TREE' })
 
-    this.state = "IDLE"
+    this.state = 'IDLE'
     this.resource = resource ?? getRandomInRange(1, 5)
     this.size = size ?? 100
     this.health = health ?? 100
@@ -56,13 +56,13 @@ export class Tree extends GameObject implements IGameObjectTree {
     this.checkHealth()
 
     switch (this.state) {
-      case "IDLE":
+      case 'IDLE':
         this.handleIdleState()
         break
-      case "CHOPPING":
+      case 'CHOPPING':
         this.handleChoppingState()
         break
-      case "DESTROYED":
+      case 'DESTROYED':
         break
     }
   }
@@ -89,7 +89,7 @@ export class Tree extends GameObject implements IGameObjectTree {
   handleChoppingState() {
     const random = getRandomInRange(1, 20)
     if (random <= 1) {
-      this.state = "IDLE"
+      this.state = 'IDLE'
       this.isReserved = false
     }
   }
@@ -107,7 +107,7 @@ export class Tree extends GameObject implements IGameObjectTree {
   }
 
   public chop() {
-    this.state = "CHOPPING"
+    this.state = 'CHOPPING'
     this.isReserved = true
     this.health -= 0.08
     this.handleChange()
@@ -116,24 +116,24 @@ export class Tree extends GameObject implements IGameObjectTree {
   destroy() {
     this.size = 0
     this.health = 0
-    this.state = "DESTROYED"
+    this.state = 'DESTROYED'
     this.handleChange()
   }
 
-  getNewType(): IGameObjectTree["type"] {
-    const types: IGameObjectTree["type"][] = ["1", "2", "3", "4", "5"]
+  getNewType(): IGameObjectTree['type'] {
+    const types: IGameObjectTree['type'][] = ['1', '2', '3', '4', '5']
     const index = getRandomInRange(0, types.length - 1)
     return types[index]
   }
 
-  getNewVariant(): IGameObjectTree["variant"] {
-    const variants: IGameObjectTree["variant"][] = [
-      "GREEN",
-      "BLUE",
-      "STONE",
-      "TEAL",
-      "TOXIC",
-      "VIOLET",
+  getNewVariant(): IGameObjectTree['variant'] {
+    const variants: IGameObjectTree['variant'][] = [
+      'GREEN',
+      'BLUE',
+      'STONE',
+      'TEAL',
+      'TOXIC',
+      'VIOLET',
     ]
     const index = getRandomInRange(0, variants.length - 1)
     return variants[index]

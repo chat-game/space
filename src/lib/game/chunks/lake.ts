@@ -1,12 +1,12 @@
-import type { IGameChunkTheme, IGameLakeChunk } from "$lib/game/types"
-import { getRandomInRange } from "$lib/random"
-import { Lake, Stone, Tree } from "../objects"
-import type { GameScene } from "../scenes/gameScene.ts"
-import { GameChunk } from "./gameChunk"
+import { Lake, Stone, Tree } from '../objects'
+import type { GameScene } from '../scenes/gameScene.ts'
+import { GameChunk } from './gameChunk'
+import { getRandomInRange } from '$lib/random'
+import type { IGameChunkTheme, IGameLakeChunk } from '$lib/game/types'
 
 interface ILakeOptions {
   scene: GameScene
-  center: IGameLakeChunk["center"]
+  center: IGameLakeChunk['center']
   width: number
   height: number
   theme: IGameChunkTheme
@@ -20,8 +20,8 @@ export class LakeChunk extends GameChunk implements IGameLakeChunk {
       height,
       center,
       theme,
-      title: "Lake with a Secret",
-      type: "LAKE",
+      title: 'Lake with a Secret',
+      type: 'LAKE',
     })
 
     const treesToPrepare = Math.round(

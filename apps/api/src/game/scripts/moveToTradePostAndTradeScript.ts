@@ -1,9 +1,9 @@
 import type {
   IGameObject,
   IGameTask,
-} from "../../../../../packages/api-sdk/src"
-import type { GameObject } from "../objects"
-import { Script } from "./script"
+} from '../../../../../packages/api-sdk/src'
+import type { GameObject } from '../objects'
+import { Script } from './script'
 
 interface IMoveToTradePostAndTradeScriptOptions {
   object: GameObject
@@ -28,8 +28,8 @@ export class MoveToTradePostAndTradeScript extends Script {
 
   startTrade(func: () => void): IGameTask {
     return {
-      id: "3",
-      status: "IDLE",
+      id: '3',
+      status: 'IDLE',
       live: () => {
         func()
         this.markTaskAsDone()

@@ -1,37 +1,37 @@
 <script>
-import { page } from "$app/stores"
-import unit from "$lib/assets/website/unit-64.png"
-import Profile from "$lib/components/Profile.svelte"
+  import { page } from '$app/stores'
+  import unit from '$lib/assets/website/unit-64.png'
+  import Profile from '$lib/components/Profile.svelte'
 </script>
 
 <header>
-    <div class="left logo">
-        {#if $page.url.pathname === '/'}
-            <img src={unit} alt=""/>
-        {:else}
-            <a href="/">
-                <img src={unit} alt=""/>
-            </a>
-        {/if}
-    </div>
+  <div class='left logo'>
+    {#if $page.url.pathname === '/'}
+      <img src={unit} alt="" />
+    {:else}
+      <a href='/'>
+        <img src={unit} alt="" />
+      </a>
+    {/if}
+  </div>
 
-    <nav>
-        <ul>
-            <li aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
-                <a href="/">Главная</a>
-            </li>
-            <li aria-current={$page.url.pathname === '/about' ? 'page' : undefined}>
-                <a href="/about">Об игре</a>
-            </li>
-            <li aria-current={$page.url.pathname === '/character' ? 'page' : undefined}>
-                <a href="/character">Персонажи</a>
-            </li>
-        </ul>
-    </nav>
+  <nav>
+    <ul>
+      <li aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
+        <a href='/'>Главная</a>
+      </li>
+      <li aria-current={$page.url.pathname === '/about' ? 'page' : undefined}>
+        <a href='/about'>Об игре</a>
+      </li>
+      <li aria-current={$page.url.pathname === '/character' ? 'page' : undefined}>
+        <a href='/character'>Персонажи</a>
+      </li>
+    </ul>
+  </nav>
 
-    <div class="right">
-        <Profile/>
-    </div>
+  <div class='right'>
+    <Profile />
+  </div>
 </header>
 
 <style>

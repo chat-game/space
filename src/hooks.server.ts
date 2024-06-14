@@ -1,8 +1,8 @@
-import { env as privateEnv } from "$env/dynamic/private"
-import { env as publicEnv } from "$env/dynamic/public"
-import type { IProfile } from "$lib/types"
-import { type Handle, error } from "@sveltejs/kit"
-import jwt from "jsonwebtoken"
+import { type Handle, error } from '@sveltejs/kit'
+import jwt from 'jsonwebtoken'
+import { env as privateEnv } from '$env/dynamic/private'
+import { env as publicEnv } from '$env/dynamic/public'
+import type { IProfile } from '$lib/types'
 
 export const handle: Handle = async ({ event, resolve }) => {
   const cookieKey = publicEnv.PUBLIC_COOKIE_KEY
@@ -17,11 +17,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 
     try {
       const payload = jwt.verify(token, jwtSecret)
-      if (typeof payload === "string") {
-        error(400, "Something went wrong")
+      if (typeof payload === 'string') {
+        error(400, 'Something went wrong')
       }
       if (!payload.profile) {
-        error(400, "Token is not valid")
+        error(400, 'Token is not valid')
       }
 
       const profile = payload.profile as IProfile
@@ -31,7 +31,7 @@ export const handle: Handle = async ({ event, resolve }) => {
       }
     } catch (error) {
       if (error instanceof jwt.TokenExpiredError) {
-        event.cookies.delete(cookieKey, { path: "/" })
+        event.cookies.delete(cookieKey, { path: '/' })
       }
     }
   }

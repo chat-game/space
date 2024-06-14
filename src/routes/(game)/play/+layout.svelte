@@ -1,15 +1,15 @@
-<script lang="ts">
-import { page } from "$app/stores"
-import "$lib/styles/styles.css"
+<script lang='ts'>
+  import { page } from '$app/stores'
+  import '$lib/styles/styles.css'
 
-const isAvailable = $page.data.profile?.id === "h149p7n9g7uoggp7ns9k60iv"
+  const isAvailable = $page.data.profile?.id === 'h149p7n9g7uoggp7ns9k60iv'
 </script>
 
-<div class="app">
+<div class='app'>
   {#if isAvailable}
-    <slot/>
+    <slot />
   {:else}
-    <div class="error">Игра пока находится на стадии разработки. <a href="/">Вернуться на Главную</a></div>
+    <div class='error'>Игра пока находится на стадии разработки. <a href='/'>Вернуться на Главную</a></div>
   {/if}
 </div>
 

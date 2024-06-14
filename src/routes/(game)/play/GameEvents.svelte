@@ -1,11 +1,11 @@
-<script lang="ts">
-import type { IGameEvent } from "$lib/game/types"
-import GameEventCard from "./GameEventCard.svelte"
+<script lang='ts'>
+  import GameEventCard from './GameEventCard.svelte'
+  import type { IGameEvent } from '$lib/game/types'
 
-export let events: IGameEvent[] | undefined = []
+  export let events: IGameEvent[] = []
 </script>
 
-<div class="block">
+<div class='block'>
   {#each events as event}
     <GameEventCard event={event} />
   {/each}

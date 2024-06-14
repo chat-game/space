@@ -1,20 +1,20 @@
-import type { IGameObjectPlayer, IGamePoll } from "$lib/game/types"
-import { getRandomInRange } from "$lib/random"
-import { createId } from "@paralleldrive/cuid2"
-import { VoteAction } from "../actions/voteAction"
-import type { GameScene } from "../scenes/gameScene"
+import { createId } from '@paralleldrive/cuid2'
+import { VoteAction } from '../actions/voteAction'
+import type { GameScene } from '../scenes/gameScene'
+import { getRandomInRange } from '$lib/random'
+import type { IGameObjectPlayer, IGamePoll } from '$lib/game/types'
 
 interface IPollOptions {
   scene: GameScene
-  votesToSuccess: IGamePoll["votesToSuccess"]
+  votesToSuccess: IGamePoll['votesToSuccess']
 }
 
 export class Poll implements IGamePoll {
   public id: string
-  public status: IGamePoll["status"]
-  public action: IGamePoll["action"]
-  public votesToSuccess: IGamePoll["votesToSuccess"]
-  public votes: IGamePoll["votes"] = []
+  public status: IGamePoll['status']
+  public action: IGamePoll['action']
+  public votesToSuccess: IGamePoll['votesToSuccess']
+  public votes: IGamePoll['votes'] = []
 
   public scene: GameScene
 
@@ -22,7 +22,7 @@ export class Poll implements IGamePoll {
     this.scene = scene
 
     this.id = createId()
-    this.status = "ACTIVE"
+    this.status = 'ACTIVE'
     this.votesToSuccess = votesToSuccess
 
     this.action = new VoteAction({ poll: this })

@@ -1,9 +1,9 @@
+import { createId } from '@paralleldrive/cuid2'
 import type {
   IGameInventory,
   IGameInventoryItem,
   ItemType,
-} from "$lib/game/types"
-import { createId } from "@paralleldrive/cuid2"
+} from '$lib/game/types'
 
 interface IInventoryOptions {
   objectId: string
@@ -89,7 +89,7 @@ export class Inventory implements IGameInventory {
     await this.updateFromDB()
   }
 
-  async destroyItemInDB(id: string) {
+  async destroyItemInDB(_id: string) {
     // await db.inventoryItem.delete({
     //   where: { id },
     // })
@@ -116,7 +116,7 @@ export class Inventory implements IGameInventory {
     // })
   }
 
-  createItemInDB(inventoryId: string, type: ItemType, amount: number) {
+  createItemInDB(_inventoryId: string, _type: ItemType, _amount: number) {
     // return db.inventoryItem.create({
     //   data: {
     //     id: createId(),
@@ -127,7 +127,7 @@ export class Inventory implements IGameInventory {
     // })
   }
 
-  incrementAmountOfItemInDB(id: string, amount: number) {
+  incrementAmountOfItemInDB(_id: string, _amount: number) {
     // return db.inventoryItem.update({
     //   where: { id },
     //   data: {
@@ -138,7 +138,7 @@ export class Inventory implements IGameInventory {
     // })
   }
 
-  decrementAmountOfItemInDB(id: string, amount: number) {
+  decrementAmountOfItemInDB(_id: string, _amount: number) {
     // return db.inventoryItem.update({
     //   where: { id },
     //   data: {
@@ -149,7 +149,7 @@ export class Inventory implements IGameInventory {
     // })
   }
 
-  checkIfAlreadyHaveItemInDB(inventoryId: string, type: ItemType) {
+  checkIfAlreadyHaveItemInDB(_inventoryId: string, _type: ItemType) {
     // return db.inventoryItem.findFirst({
     //   where: { inventoryId, type },
     // })
@@ -167,7 +167,7 @@ export class Inventory implements IGameInventory {
       type,
       amount,
       durability: 100,
-      inventoryId: "",
+      inventoryId: '',
     }
     this.items.push(item)
   }

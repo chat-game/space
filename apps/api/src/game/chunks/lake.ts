@@ -2,12 +2,12 @@ import {
   type IGameChunkTheme,
   type IGameLakeChunk,
   getRandomInRange,
-} from "../../../../../packages/api-sdk/src"
-import { Lake, Stone, Tree } from "../objects"
-import { GameChunk } from "./gameChunk"
+} from '../../../../../packages/api-sdk/src'
+import { Lake, Stone, Tree } from '../objects'
+import { GameChunk } from './gameChunk'
 
 interface ILakeOptions {
-  center: IGameLakeChunk["center"]
+  center: IGameLakeChunk['center']
   width: number
   height: number
   theme: IGameChunkTheme
@@ -16,8 +16,8 @@ interface ILakeOptions {
 export class LakeChunk extends GameChunk implements IGameLakeChunk {
   constructor({ width, height, center, theme }: ILakeOptions) {
     super({
-      title: "Lake with a Secret",
-      type: "LAKE",
+      title: 'Lake with a Secret',
+      type: 'LAKE',
       width,
       height,
       center,

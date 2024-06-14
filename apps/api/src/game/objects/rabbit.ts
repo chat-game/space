@@ -1,10 +1,10 @@
-import { createId } from "@paralleldrive/cuid2"
+import { createId } from '@paralleldrive/cuid2'
 import {
   type IGameObjectRabbit,
   getRandomInRange,
-} from "../../../../../packages/api-sdk/src"
-import { MAX_X, MAX_Y, MIN_X, MIN_Y } from "../../config"
-import { GameObject } from "./gameObject"
+} from '../../../../../packages/api-sdk/src'
+import { MAX_X, MAX_Y, MIN_X, MIN_Y } from '../../config'
+import { GameObject } from './gameObject'
 
 export class Rabbit extends GameObject implements IGameObjectRabbit {
   constructor() {
@@ -12,27 +12,24 @@ export class Rabbit extends GameObject implements IGameObjectRabbit {
     const x = getRandomInRange(MIN_X, MAX_X)
     const y = getRandomInRange(MIN_Y, MAX_Y)
 
-    super({ id, x, y, entity: "RABBIT" })
+    super({ id, x, y, entity: 'RABBIT' })
 
     this.speed = 0.5
     this.minDistance = 5
   }
 
   live() {
-    if (this.state === "IDLE") {
+    if (this.state === 'IDLE') {
       return
     }
 
-    if (this.state === "MOVING") {
+    if (this.state === 'MOVING') {
       const isMoving = this.move()
       this.handleChange()
 
       if (!isMoving) {
-        this.state = "IDLE"
-        return
+        this.state = 'IDLE'
       }
-
-      return
     }
   }
 

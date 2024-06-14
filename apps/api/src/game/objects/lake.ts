@@ -1,10 +1,10 @@
-import { createId } from "@paralleldrive/cuid2"
+import { createId } from '@paralleldrive/cuid2'
 import {
   type IGameObjectLake,
   getRandomInRange,
-} from "../../../../../packages/api-sdk/src"
-import { GameObject } from "./gameObject"
-import { Water } from "./water"
+} from '../../../../../packages/api-sdk/src'
+import { GameObject } from './gameObject'
+import { Water } from './water'
 
 interface ILakeOptions {
   x: number
@@ -18,7 +18,7 @@ export class Lake extends GameObject implements IGameObjectLake {
   constructor({ id, x, y }: ILakeOptions) {
     const objectId = id ?? createId()
 
-    super({ id: objectId, x, y, entity: "LAKE" })
+    super({ id: objectId, x, y, entity: 'LAKE' })
 
     this.generate(13)
   }
@@ -44,9 +44,7 @@ export class Lake extends GameObject implements IGameObjectLake {
     const gridX = Math.ceil(width / 32)
     const gridY = Math.floor(height / 32)
 
-    console.log(gridX, gridY)
-
-    const center = { x: Math.round(width / 2), y: Math.round(height / 2) }
+    // const center = { x: Math.round(width / 2), y: Math.round(height / 2) }
 
     for (let i = 0; i < gridX; i++) {
       for (let j = 0; j < gridY; j++) {
@@ -64,12 +62,11 @@ export class Lake extends GameObject implements IGameObjectLake {
   }
 
   live() {
-    if (this.state === "IDLE") {
+    if (this.state === 'IDLE') {
       const random = getRandomInRange(1, 600)
       if (random <= 1) {
         this.handleChange()
       }
-      return
     }
   }
 

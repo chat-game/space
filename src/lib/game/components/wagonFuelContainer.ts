@@ -1,10 +1,10 @@
-import { getRandomInRange } from "$lib/random"
-import { Sprite } from "pixi.js"
-import { GraphicsContainer } from "./graphicsContainer"
+import { Sprite } from 'pixi.js'
+import { GraphicsContainer } from './graphicsContainer'
+import { getRandomInRange } from '$lib/random'
 
 export class WagonFuelContainer extends GraphicsContainer {
   constructor() {
-    super({ type: "WAGON_FUEL", direction: "RIGHT" })
+    super({ type: 'WAGON_FUEL', direction: 'RIGHT' })
 
     this.initFuelContainer()
   }
@@ -24,8 +24,8 @@ export class WagonFuelContainer extends GraphicsContainer {
   getRandomFuelSprite() {
     const random = getRandomInRange(1, 2)
     if (random === 1) {
-      return Sprite.from("wagonFuel1")
+      return Sprite.from('wagonFuel1')
     }
-    return Sprite.from("wagonFuel2")
+    return Sprite.from('wagonFuel2')
   }
 }

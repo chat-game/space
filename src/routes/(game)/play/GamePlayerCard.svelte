@@ -1,25 +1,25 @@
-<script lang="ts">
-import type { IGameObjectPlayer } from "$lib/game/types"
-import GameItem from "./GameItem.svelte"
-import GameUnit from "./GameUnit.svelte"
+<script lang='ts'>
+  import GameItem from './GameItem.svelte'
+  import GameUnit from './GameUnit.svelte'
+  import type { IGameObjectPlayer } from '$lib/game/types'
 
-export let player: IGameObjectPlayer
+  export let player: IGameObjectPlayer
 
-const wood = player.inventory.items.find((item) => item.type === "WOOD")?.amount
-const stone = player.inventory.items.find(
-  (item) => item.type === "STONE",
-)?.amount
-const coin = player.coins
+  const wood = player.inventory.items.find((item) => item.type === 'WOOD')?.amount
+  const stone = player.inventory.items.find(
+    (item) => item.type === 'STONE',
+  )?.amount
+  const coin = player.coins
 </script>
 
-<div class="block">
-  <GameUnit/>
-  <div class="info">
+<div class='block'>
+  <GameUnit />
+  <div class='info'>
     <p>{player.userName}</p>
-    <div class="inventory">
-      <GameItem type="COIN" amount={coin} />
-      <GameItem type="WOOD" amount={wood} />
-      <GameItem type="STONE" amount={stone} />
+    <div class='inventory'>
+      <GameItem type='COIN' amount={coin} />
+      <GameItem type='WOOD' amount={wood} />
+      <GameItem type='STONE' amount={stone} />
     </div>
   </div>
 </div>

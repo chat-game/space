@@ -1,8 +1,8 @@
-import { createId } from "@paralleldrive/cuid2"
-import type { IGameObjectCourier } from "../../../../../../packages/api-sdk/src"
-import { generateUnitUserName } from "../../common/generators/unitName"
-import { generateUnitTop } from "../../common/generators/unitTop"
-import { Unit } from "./unit"
+import { createId } from '@paralleldrive/cuid2'
+import type { IGameObjectCourier } from '../../../../../../packages/api-sdk/src'
+import { generateUnitUserName } from '../../common/generators/unitName'
+import { generateUnitTop } from '../../common/generators/unitTop'
+import { Unit } from './unit'
 
 interface ICourierOptions {
   x: number
@@ -17,10 +17,10 @@ export class VillageCourier extends Unit implements IGameObjectCourier {
       id,
       x,
       y,
-      entity: "COURIER",
+      entity: 'COURIER',
       visual: {
-        head: "1",
-        hairstyle: "BOLD",
+        head: '1',
+        hairstyle: 'BOLD',
         top: generateUnitTop(),
       },
     })

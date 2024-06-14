@@ -1,17 +1,17 @@
 <script>
-import Warehouse from "lucide-svelte/icons/warehouse"
-import GameItem from "./GameItem.svelte"
+  import Warehouse from 'lucide-svelte/icons/warehouse'
+  import GameItem from './GameItem.svelte'
 
-const items = []
+  const items = []
 </script>
 
-<div class="block">
-  <div class="warehouse">
-    <Warehouse/>
+<div class='block'>
+  <div class='warehouse'>
+    <Warehouse />
     <p>Warehouse</p>
   </div>
 
-  <div class="wrapper">
+  <div class='wrapper'>
     {#each items as item}
       <GameItem type={item.type} amount={item.amount} />
     {/each}

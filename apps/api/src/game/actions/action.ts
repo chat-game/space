@@ -1,12 +1,12 @@
 import type {
   IGameAction,
   IGameActionResponse,
-} from "../../../../../packages/api-sdk/src"
-import type { Player } from "../objects/units"
+} from '../../../../../packages/api-sdk/src'
+import type { Player } from '../objects/units'
 
 interface IActionOptions {
-  command: IGameAction["command"]
-  commandDescription: IGameAction["commandDescription"]
+  command: IGameAction['command']
+  commandDescription: IGameAction['commandDescription']
 }
 
 export class Action implements IGameAction {

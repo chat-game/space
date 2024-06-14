@@ -1,48 +1,48 @@
-<script lang="ts">
-import { Game } from "$lib/game/game"
-import { onMount } from "svelte"
-import GameInterface from "./GameInterface.svelte"
+<script lang='ts'>
+  import { onMount } from 'svelte'
+  import GameInterface from './GameInterface.svelte'
+  import { Game } from '$lib/game/game'
 
-const game = new Game()
-let gameElement: HTMLElement
-let isGameReady = false
-let isGameElementActive = true
+  const game = new Game()
+  let gameElement: HTMLElement
+  let isGameReady = false
+  const isGameElementActive = true
 
-const handleGameButtonClick = () => {
-  isGameElementActive = !isGameElementActive
-  game.play()
-  setTimeout(() => {
-    game.app.resize()
-  }, 200)
-}
+  // const handleGameButtonClick = () => {
+  //   isGameElementActive = !isGameElementActive
+  //   game.play()
+  //   setTimeout(() => {
+  //     game.app.resize()
+  //   }, 200)
+  // }
 
-onMount(() => {
-  const initGame = async () => {
-    await game.init()
-    void game.play()
+  onMount(() => {
+    const initGame = async () => {
+      await game.init()
+      void game.play()
 
-    gameElement?.appendChild(game.app.canvas)
-    game.app.resizeTo = gameElement
+      gameElement?.appendChild(game.app.canvas)
+      game.app.resizeTo = gameElement
 
-    setTimeout(() => {
-      isGameReady = true
-    }, 1000)
-  }
+      setTimeout(() => {
+        isGameReady = true
+      }, 1000)
+    }
 
-  void initGame()
+    void initGame()
 
-  return () => {
-    game.destroy()
-  }
-})
+    return () => {
+      game.destroy()
+    }
+  })
 </script>
 
-<div class="game-block">
-  <div id="game-canvas" bind:this={gameElement} data-active={isGameElementActive}/>
-<!--  <div class="buttons-block" data-active={!isGameElementActive && isGameReady}>-->
-<!--    <button on:click={handleGameButtonClick} class="show-switch">Хочу больше!</button>-->
-<!--  </div>-->
-  <GameInterface isGameReady={isGameReady}/>
+<div class='game-block'>
+  <div id='game-canvas' bind:this={gameElement} data-active={isGameElementActive} />
+  <!--  <div class="buttons-block" data-active={!isGameElementActive && isGameReady}> -->
+  <!--    <button on:click={handleGameButtonClick} class="show-switch">Хочу больше!</button> -->
+  <!--  </div> -->
+  <GameInterface isGameReady={isGameReady} />
 </div>
 
 <style>

@@ -1,14 +1,14 @@
 <script>
-import GameEvents from "./GameEvents.svelte"
-import GameHeader from "./GameHeader.svelte"
-import GameLoader from "./GameLoader.svelte"
-import GamePlayersGroup from "./GamePlayersGroup.svelte"
+  import GameEvents from './GameEvents.svelte'
+  import GameHeader from './GameHeader.svelte'
+  import GameLoader from './GameLoader.svelte'
+  import GamePlayersGroup from './GamePlayersGroup.svelte'
 
-export let isGameReady
+  export let isGameReady
 </script>
 
-<GameLoader show={!isGameReady}/>
-<GameHeader/>
-<GamePlayersGroup/>
-<GameEvents events={[]}/>
-<!--<GameTopPlayers/>-->
+<GameLoader show={!isGameReady} />
+<GameHeader />
+<GamePlayersGroup />
+<GameEvents events={[]} />
+<!-- <GameTopPlayers/> -->

@@ -1,6 +1,6 @@
-import type { Game } from "../game"
-import { Rabbit, Wolf } from "../objects"
-import { GameScene } from "./gameScene"
+import type { Game } from '../game'
+import { Rabbit, Wolf } from '../objects'
+import { GameScene } from './gameScene'
 
 interface IVillageSceneOptions {
   game: Game

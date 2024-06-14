@@ -1,7 +1,7 @@
-import type { IGameBuildingConstructionArea } from "$lib/game/types"
-import { Sprite } from "pixi.js"
-import type { GameScene } from "../../scenes/gameScene"
-import { Building } from "./building"
+import { Sprite } from 'pixi.js'
+import type { GameScene } from '../../scenes/gameScene'
+import { Building } from './building'
+import type { IGameBuildingConstructionArea } from '$lib/game/types'
 
 interface IConstructionAreaOptions {
   scene: GameScene
@@ -11,8 +11,7 @@ interface IConstructionAreaOptions {
 
 export class ConstructionArea
   extends Building
-  implements IGameBuildingConstructionArea
-{
+  implements IGameBuildingConstructionArea {
   constructor({ scene, x, y }: IConstructionAreaOptions) {
     super({ scene, x, y })
 
@@ -20,7 +19,7 @@ export class ConstructionArea
   }
 
   private initGraphics() {
-    const sprite = Sprite.from("constructionArea1")
+    const sprite = Sprite.from('constructionArea1')
     if (sprite) {
       sprite.anchor.set(0.5, 0.92)
       this.addChild(sprite)

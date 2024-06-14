@@ -1,9 +1,9 @@
-import type { IGameAction, IGameActionResponse } from "$lib/game/types"
-import type { Player } from "../objects/units"
+import type { Player } from '../objects/units'
+import type { IGameAction, IGameActionResponse } from '$lib/game/types'
 
 interface IActionOptions {
-  command: IGameAction["command"]
-  commandDescription: IGameAction["commandDescription"]
+  command: IGameAction['command']
+  commandDescription: IGameAction['commandDescription']
 }
 
 export class Action implements IGameAction {

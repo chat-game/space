@@ -1,20 +1,20 @@
-<script lang="ts">
-import type { IGameQuestTask } from "$lib/game/types"
-import CircleCheck from "lucide-svelte/icons/circle-check"
-import CircleDashed from "lucide-svelte/icons/circle-dashed"
-import GameCommand from "./GameCommand.svelte"
-import GameQuestTaskProgress from "./GameQuestTaskProgress.svelte"
+<script lang='ts'>
+  import CircleCheck from 'lucide-svelte/icons/circle-check'
+  import CircleDashed from 'lucide-svelte/icons/circle-dashed'
+  import GameCommand from './GameCommand.svelte'
+  import GameQuestTaskProgress from './GameQuestTaskProgress.svelte'
+  import type { IGameQuestTask } from '$lib/game/types'
 
-export let task: IGameQuestTask
+  export let task: IGameQuestTask
 
-let isBoolean = typeof task.progressToSuccess === "boolean"
-let isCommand = task.status === "ACTIVE" && task.action?.commandDescription
+  const isBoolean = typeof task.progressToSuccess === 'boolean'
+  const isCommand = task.status === 'ACTIVE' && task.action?.commandDescription
 </script>
 
-<div class="block">
+<div class='block'>
   {#if isBoolean}
-    <div class="relative w-full h-8 text-primary flex flex-row gap-1 items-center">
-      {#if task.status === "SUCCESS"}
+    <div class='relative w-full h-8 text-primary flex flex-row gap-1 items-center'>
+      {#if task.status === 'SUCCESS'}
         <CircleCheck />
       {:else}
         <CircleDashed />
@@ -22,11 +22,11 @@ let isCommand = task.status === "ACTIVE" && task.action?.commandDescription
       <p>{task.description}</p>
     </div>
   {:else}
-    <GameQuestTaskProgress task={task}/>
+    <GameQuestTaskProgress task={task} />
   {/if}
 
   {#if isCommand}
-    <GameCommand command={task.action.commandDescription}/>
+    <GameCommand command={task.action.commandDescription} />
   {/if}
 </div>
 

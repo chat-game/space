@@ -1,78 +1,78 @@
-<script lang="ts">
-import { TWITCH_URL } from "$lib/config"
-import { Game } from "$lib/game/game"
-import { ruWordWithEndings } from "$lib/locale"
-import { onMount } from "svelte"
-import type { PageServerData } from "./$types"
+<script lang='ts'>
+  import { onMount } from 'svelte'
+  import type { PageServerData } from './$types'
+  import { TWITCH_URL } from '$lib/config'
+  import { Game } from '$lib/game/game'
+  import { ruWordWithEndings } from '$lib/locale'
 
-export let data: PageServerData
+  export let data: PageServerData
 
-const profileCount = data.count
-const profileDesc = ruWordWithEndings(data.count, [
-  "профиль",
-  "профиля",
-  "профилей",
-])
+  const profileCount = data.count
+  const profileDesc = ruWordWithEndings(data.count, [
+    'профиль',
+    'профиля',
+    'профилей',
+  ])
 
-const game = new Game()
-let gameElement: HTMLElement
-let isGameReady = false
-let isGameElementActive = false
+  const game = new Game()
+  let gameElement: HTMLElement
+  let isGameReady = false
+  let isGameElementActive = false
 
-const handleGameButtonClick = () => {
-  isGameElementActive = !isGameElementActive
-  game.play()
-  setTimeout(() => {
-    game.app.resize()
-  }, 200)
-}
-
-onMount(() => {
-  const initGame = async () => {
-    await game.init()
-
-    gameElement?.appendChild(game.app.canvas)
-    game.app.resizeTo = gameElement
-    isGameReady = true
+  const handleGameButtonClick = () => {
+    isGameElementActive = !isGameElementActive
+    game.play()
+    setTimeout(() => {
+      game.app.resize()
+    }, 200)
   }
 
-  void initGame()
+  onMount(() => {
+    const initGame = async () => {
+      await game.init()
 
-  return () => {
-    game.destroy()
-  }
-})
+      gameElement?.appendChild(game.app.canvas)
+      game.app.resizeTo = gameElement
+      isGameReady = true
+    }
+
+    void initGame()
+
+    return () => {
+      game.destroy()
+    }
+  })
 </script>
 
 <svelte:head>
-    <title>Интерактивная чат-игра для Twitch</title>
-    <meta name="description" content="Стример играет вместе со своей аудиторией. Либо он делает
-        перерыв, пока зрители..."/>
+  <title>Интерактивная чат-игра для Twitch</title>
+  <meta name='description' content='Стример играет вместе со своей аудиторией. Либо он делает
+    перерыв, пока зрители...' />
 </svelte:head>
 
-<section class="hero">
-    <h1>
-        Интерактивная чат-игра для Twitch
-    </h1>
-    <h2>Группа игроков сопровождает Машину из точки А в точку Б, не зная, доберутся ли. Зрители могут использовать
-        "!команды", которые запускают динамичные действия.</h2>
+<section class='hero'>
+  <h1>
+    Интерактивная чат-игра для Twitch
+  </h1>
+  <h2>Группа игроков сопровождает Машину из точки А в точку Б, не зная, доберутся ли. Зрители могут использовать
+    "!команды", которые запускают динамичные действия.</h2>
 </section>
 
-<div class="game-block">
-    <div id="game-canvas" bind:this={gameElement} data-active={isGameElementActive}/>
-    <div class="buttons-block" data-active={!isGameElementActive && isGameReady}>
-        <button on:click={handleGameButtonClick} class="show-switch">Хочу больше!</button>
-    </div>
+<div class='game-block'>
+  <div id='game-canvas' bind:this={gameElement} data-active={isGameElementActive} />
+  <div class='buttons-block' data-active={!isGameElementActive && isGameReady}>
+    <button on:click={handleGameButtonClick} class='show-switch'>Хочу больше!</button>
+  </div>
 </div>
 
 <section>
-    <p>Стример играет вместе со своей аудиторией. Либо он делает
-        перерыв, пока зрители развлекаются или...</p>
-    <p class="mt-2">За все время
-        создано {profileCount} {profileDesc}. Присоединяйся <a
-                href={TWITCH_URL} target="_blank"
-                class="twitch-link">на активном
-            стриме</a>!</p>
+  <p>Стример играет вместе со своей аудиторией. Либо он делает
+    перерыв, пока зрители развлекаются или...</p>
+  <p class='mt-2'>За все время
+    создано {profileCount} {profileDesc}. Присоединяйся <a
+      href={TWITCH_URL} target='_blank'
+      class='twitch-link'>на активном
+      стриме</a>!</p>
 </section>
 
 <style>

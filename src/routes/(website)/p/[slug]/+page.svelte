@@ -1,12 +1,12 @@
-<script lang="ts">
-import type { PageServerData } from "./$types"
+<script lang='ts'>
+  import type { PageServerData } from './$types'
 
-export let data: PageServerData
+  export let data: PageServerData
 </script>
 
-<section class="hero">
-    <h1>{data.profile.userName}</h1>
-    <h2>Профиль игрока</h2>
+<section class='hero'>
+  <h1>{data.profile.userName}</h1>
+  <h2>Профиль игрока</h2>
 </section>
 
 <style>

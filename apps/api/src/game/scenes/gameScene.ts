@@ -1,4 +1,4 @@
-import { createId } from "@paralleldrive/cuid2"
+import { createId } from '@paralleldrive/cuid2'
 import {
   type GetSceneResponse,
   type IGameChunk,
@@ -6,11 +6,11 @@ import {
   type IGameInventoryItem,
   getDateMinusMinutes,
   getRandomInRange,
-} from "../../../../../packages/api-sdk/src"
-import { SERVER_TICK_MS } from "../../config"
-import { type GameChunk, Village } from "../chunks"
-import { Group, Route } from "../common"
-import type { Game } from "../game"
+} from '../../../../../packages/api-sdk/src'
+import { SERVER_TICK_MS } from '../../config'
+import { type GameChunk, Village } from '../chunks'
+import { Group, Route } from '../common'
+import type { Game } from '../game'
 import {
   Flag,
   type GameObject,
@@ -18,16 +18,16 @@ import {
   Stone,
   Tree,
   type Wolf,
-} from "../objects"
-import { Player, Raider } from "../objects/units"
-import { Trader } from "../objects/units/trader"
-import { ChopTreeScript } from "../scripts/chopTreeScript"
-import { MoveOffScreenAndSelfDestroyScript } from "../scripts/moveOffScreenAndSelfDestroyScript"
-import { MoveToTargetScript } from "../scripts/moveToTargetScript"
-import { ActionService } from "../services/actionService"
-import { EventService } from "../services/eventService"
-import { TradeService } from "../services/tradeService"
-import { WagonService } from "../services/wagonService"
+} from '../objects'
+import { Player, Raider } from '../objects/units'
+import { Trader } from '../objects/units/trader'
+import { ChopTreeScript } from '../scripts/chopTreeScript'
+import { MoveOffScreenAndSelfDestroyScript } from '../scripts/moveOffScreenAndSelfDestroyScript'
+import { MoveToTargetScript } from '../scripts/moveToTargetScript'
+import { ActionService } from '../services/actionService'
+import { EventService } from '../services/eventService'
+import { TradeService } from '../services/tradeService'
+import { WagonService } from '../services/wagonService'
 
 interface IGameSceneOptions {
   game: Game
@@ -149,7 +149,7 @@ export class GameScene {
 
     for (const chunk of this.chunks) {
       for (const object of chunk.objects) {
-        if (object.state === "DESTROYED") {
+        if (object.state === 'DESTROYED') {
           chunk.removeObject(object)
         }
       }
@@ -190,7 +190,7 @@ export class GameScene {
       return
     }
 
-    if (object.state === "IDLE") {
+    if (object.state === 'IDLE') {
       const random = getRandomInRange(1, 150)
       if (random <= 1) {
         const target = this.wagonService.findRandomNearFlag()
@@ -206,7 +206,7 @@ export class GameScene {
   updateRabbit(object: Rabbit) {
     object.live()
 
-    if (object.state === "IDLE") {
+    if (object.state === 'IDLE') {
       const random = getRandomInRange(1, 100)
       if (random <= 1) {
         const randomObj = this.findRandomMovementFlag()
@@ -221,7 +221,7 @@ export class GameScene {
   updateWolf(object: Wolf) {
     object.live()
 
-    if (object.state === "IDLE") {
+    if (object.state === 'IDLE') {
       const random = getRandomInRange(1, 100)
       if (random <= 1) {
         const randomObj = this.findRandomMovementFlag()
@@ -245,11 +245,11 @@ export class GameScene {
     if (availableTree) {
       const chopTreeFunc = (): boolean => {
         object.chopTree()
-        if (!object.target || object.target.state === "DESTROYED") {
-          object.state = "IDLE"
+        if (!object.target || object.target.state === 'DESTROYED') {
+          object.state = 'IDLE'
           if (object.target instanceof Tree) {
             void object.inventory.addOrCreateItem(
-              "WOOD",
+              'WOOD',
               object.target?.resource,
             )
           }
@@ -267,7 +267,7 @@ export class GameScene {
       return
     }
 
-    if (object.state === "IDLE") {
+    if (object.state === 'IDLE') {
       const random = getRandomInRange(1, 100)
       if (random <= 1) {
         const randomObj = this.findRandomMovementFlag()
@@ -286,7 +286,7 @@ export class GameScene {
 
   async findOrCreatePlayer(id: string) {
     const player = this.findPlayer(id)
-    if (!player && this.actionService.isActionPossible("CREATE_NEW_PLAYER")) {
+    if (!player && this.actionService.isActionPossible('CREATE_NEW_PLAYER')) {
       return this.createPlayer(id)
     }
     return player
@@ -328,7 +328,7 @@ export class GameScene {
   }
 
   removeDestroyedObject(obj: GameObject) {
-    if (obj.state === "DESTROYED") {
+    if (obj.state === 'DESTROYED') {
       this.removeObject(obj)
     }
   }
@@ -359,10 +359,10 @@ export class GameScene {
     // Part 1: Check trees on Wagon Path
     const onlyOnPath = this.chunkNow?.objects.filter(
       (obj) =>
-        obj instanceof Tree &&
-        obj.state !== "DESTROYED" &&
-        !obj.isReserved &&
-        obj.isOnWagonPath,
+        obj instanceof Tree
+        && obj.state !== 'DESTROYED'
+        && !obj.isReserved
+        && obj.isOnWagonPath,
     )
     if (onlyOnPath && onlyOnPath.length > 0) {
       return this.determineNearestObject(
@@ -374,10 +374,10 @@ export class GameScene {
     // Part 2: Check nearest free tree
     const other = this.chunkNow?.objects.filter(
       (obj) =>
-        obj instanceof Tree &&
-        obj.state !== "DESTROYED" &&
-        !obj.isReserved &&
-        obj.isReadyToChop,
+        obj instanceof Tree
+        && obj.state !== 'DESTROYED'
+        && !obj.isReserved
+        && obj.isReadyToChop,
     )
     if (other && other.length > 0) {
       return this.determineNearestObject(this.wagonService.wagon, other) as Tree
@@ -388,10 +388,10 @@ export class GameScene {
     // Part 1: Check on Wagon Path
     const onlyOnPath = this.chunkNow?.objects.filter(
       (obj) =>
-        obj instanceof Stone &&
-        obj.state !== "DESTROYED" &&
-        !obj.isReserved &&
-        obj.isOnWagonPath,
+        obj instanceof Stone
+        && obj.state !== 'DESTROYED'
+        && !obj.isReserved
+        && obj.isOnWagonPath,
     )
     if (onlyOnPath && onlyOnPath.length > 0) {
       return this.determineNearestObject(
@@ -403,7 +403,7 @@ export class GameScene {
     // Part 2: Check nearest free
     const other = this.chunkNow?.objects.filter(
       (obj) =>
-        obj instanceof Stone && obj.state !== "DESTROYED" && !obj.isReserved,
+        obj instanceof Stone && obj.state !== 'DESTROYED' && !obj.isReserved,
     )
     if (other && other.length > 0) {
       return this.determineNearestObject(
@@ -421,7 +421,7 @@ export class GameScene {
     objects: GameObject[],
   ) {
     let closestObject = objects[0]
-    let shortestDistance = undefined
+    let shortestDistance
 
     for (const object of objects) {
       const distance = Route.getDistanceBetween2Points(point, object)
@@ -461,19 +461,19 @@ export class GameScene {
 
   getRandomTheme(): IGameChunkTheme {
     const themes: IGameChunkTheme[] = [
-      "GREEN",
-      "BLUE",
-      "STONE",
-      "TEAL",
-      "VIOLET",
-      "TOXIC",
+      'GREEN',
+      'BLUE',
+      'STONE',
+      'TEAL',
+      'VIOLET',
+      'TOXIC',
     ]
     return themes[Math.floor(Math.random() * themes.length)]
   }
 
   findRandomMovementFlag() {
     const flags = this.chunkNow?.objects.filter(
-      (f) => f instanceof Flag && f.type === "MOVEMENT",
+      (f) => f instanceof Flag && f.type === 'MOVEMENT',
     )
     if (!flags) {
       return undefined
@@ -486,7 +486,7 @@ export class GameScene {
 
   findRandomEmptyResourceFlag() {
     const flags = this.objects.filter(
-      (f) => f instanceof Flag && f.type === "RESOURCE" && !f.target,
+      (f) => f instanceof Flag && f.type === 'RESOURCE' && !f.target,
     )
     return flags.length > 0
       ? flags[Math.floor(Math.random() * flags.length)]

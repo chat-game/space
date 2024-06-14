@@ -1,9 +1,9 @@
-import { ANSWER } from "../../../../../packages/api-sdk/src/lib/actionAnswer"
-import { Village } from "../chunks"
-import type { Player } from "../objects/units"
-import type { GameScene } from "../scenes"
-import { PlantNewTreeScript } from "../scripts/plantNewTreeScript"
-import { Action } from "./action"
+import { ANSWER } from '../../../../../packages/api-sdk/src/lib/actionAnswer'
+import { Village } from '../chunks'
+import type { Player } from '../objects/units'
+import type { GameScene } from '../scenes'
+import { PlantNewTreeScript } from '../scripts/plantNewTreeScript'
+import { Action } from './action'
 
 interface IPlantTreeActionOptions {
   scene: GameScene
@@ -13,7 +13,7 @@ export class PlantTreeAction extends Action {
   private scene: GameScene
 
   constructor({ scene }: IPlantTreeActionOptions) {
-    super({ command: "plant", commandDescription: "!plant" })
+    super({ command: 'plant', commandDescription: '!plant' })
 
     this.scene = scene
     this.live = this.initLive

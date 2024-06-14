@@ -1,6 +1,6 @@
-import { db } from "$lib/server/db/db.client"
-import { error } from "@sveltejs/kit"
-import type { PageServerLoad } from "./$types"
+import { error } from '@sveltejs/kit'
+import type { PageServerLoad } from './$types'
+import { db } from '$lib/server/db/db.client'
 
 export const load = (async ({ params }) => {
   const userName = params.slug
@@ -9,7 +9,7 @@ export const load = (async ({ params }) => {
     where: { userName },
   })
   if (!profile) {
-    error(404, "Not found")
+    error(404, 'Not found')
   }
 
   return {

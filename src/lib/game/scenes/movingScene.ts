@@ -1,5 +1,5 @@
-import type { Game } from "../game"
-import { GameScene } from "./gameScene"
+import type { Game } from '../game'
+import { GameScene } from './gameScene'
 
 interface IMovingSceneOptions {
   game: Game

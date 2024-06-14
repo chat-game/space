@@ -1,8 +1,8 @@
-import type { IGameObjectTrader } from "$lib/game/types"
-import { generateUnitUserName } from "../../common/generators/unitName"
-import { generateUnitTop } from "../../common/generators/unitTop"
-import type { GameScene } from "../../scenes/gameScene"
-import { Unit } from "./unit"
+import { generateUnitUserName } from '../../common/generators/unitName'
+import { generateUnitTop } from '../../common/generators/unitTop'
+import type { GameScene } from '../../scenes/gameScene'
+import { Unit } from './unit'
+import type { IGameObjectTrader } from '$lib/game/types'
 
 interface ITraderOptions {
   scene: GameScene
@@ -23,8 +23,8 @@ export class Trader extends Unit implements IGameObjectTrader {
     this.userName = generateUnitUserName()
 
     this.initVisual({
-      head: "1",
-      hairstyle: "COAL_LONG",
+      head: '1',
+      hairstyle: 'COAL_LONG',
       top: generateUnitTop(),
     })
   }

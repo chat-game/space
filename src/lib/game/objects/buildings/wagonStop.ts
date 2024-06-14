@@ -1,7 +1,7 @@
-import type { IGameBuildingWagonStop } from "$lib/game/types"
-import { Sprite } from "pixi.js"
-import type { GameScene } from "../../scenes/gameScene.ts"
-import { Building } from "./building"
+import { Sprite } from 'pixi.js'
+import type { GameScene } from '../../scenes/gameScene.ts'
+import { Building } from './building'
+import type { IGameBuildingWagonStop } from '$lib/game/types'
 
 interface IWagonStopOptions {
   scene: GameScene
@@ -17,7 +17,7 @@ export class WagonStop extends Building implements IGameBuildingWagonStop {
   }
 
   private initGraphics() {
-    const sprite = Sprite.from("wagonStop1")
+    const sprite = Sprite.from('wagonStop1')
     if (sprite) {
       sprite.anchor.set(0.5, 0.92)
       this.addChild(sprite)

@@ -1,7 +1,7 @@
-import type { IGameObject, IGameScript } from "$lib/game/types"
-import { createId } from "@paralleldrive/cuid2"
-import { Container } from "pixi.js"
-import type { GameScene } from "../scenes/gameScene.ts"
+import { createId } from '@paralleldrive/cuid2'
+import { Container } from 'pixi.js'
+import type { GameScene } from '../scenes/gameScene.ts'
+import type { IGameObject, IGameScript } from '$lib/game/types'
 
 interface IGameObjectOptions {
   scene: GameScene
@@ -12,13 +12,13 @@ interface IGameObjectOptions {
 
 export class GameObject extends Container implements IGameObject {
   public id: string
-  public state!: IGameObject["state"]
-  public direction: IGameObject["direction"]
-  public entity: IGameObject["entity"]
-  public target: IGameObject["target"]
-  public health!: IGameObject["health"]
-  public speedPerSecond!: IGameObject["speedPerSecond"]
-  public size!: IGameObject["size"]
+  public state!: IGameObject['state']
+  public direction: IGameObject['direction']
+  public entity: IGameObject['entity']
+  public target: IGameObject['target']
+  public health!: IGameObject['health']
+  public speedPerSecond!: IGameObject['speedPerSecond']
+  public size!: IGameObject['size']
 
   public scene: GameScene
   public script: IGameScript | undefined
@@ -33,8 +33,8 @@ export class GameObject extends Container implements IGameObject {
     this.id = id ?? createId()
     this.x = x ?? 0
     this.y = y ?? 0
-    this.entity = "TREE"
-    this.direction = "RIGHT"
+    this.entity = 'TREE'
+    this.direction = 'RIGHT'
 
     this.scene.game.addChild(this)
   }
@@ -75,12 +75,12 @@ export class GameObject extends Container implements IGameObject {
     }
 
     if (this.x < this.target.x) {
-      this.direction = "RIGHT"
+      this.direction = 'RIGHT'
       this.x += speed
     }
     if (this.x > this.target.x) {
       this.x -= speed
-      this.direction = "LEFT"
+      this.direction = 'LEFT'
     }
   }
 
@@ -98,20 +98,20 @@ export class GameObject extends Container implements IGameObject {
   }
 
   stop() {
-    this.state = "IDLE"
+    this.state = 'IDLE'
   }
 
   public destroy() {
     super.destroy()
     this.size = 0
     this.health = 0
-    this.state = "DESTROYED"
+    this.state = 'DESTROYED'
   }
 
   checkIfIsOnTarget() {
     return (
-      this.getDistanceToTargetX() + this.getDistanceToTargetY() <=
-      this.minDistance
+      this.getDistanceToTargetX() + this.getDistanceToTargetY()
+      <= this.minDistance
     )
   }
 
@@ -131,7 +131,7 @@ export class GameObject extends Container implements IGameObject {
 
   public setTarget(target: IGameObject) {
     this.target = target
-    this.state = "MOVING"
+    this.state = 'MOVING'
   }
 
   public removeTarget() {

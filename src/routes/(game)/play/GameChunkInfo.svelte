@@ -1,20 +1,20 @@
-<script lang="ts">
-import type { IGameChunk } from "$lib/game/types"
-import Home from "lucide-svelte/icons/home"
-import TreeDeciduous from "lucide-svelte/icons/tree-deciduous"
-import Waves from "lucide-svelte/icons/waves"
+<script lang='ts'>
+  import Home from 'lucide-svelte/icons/home'
+  import TreeDeciduous from 'lucide-svelte/icons/tree-deciduous'
+  import Waves from 'lucide-svelte/icons/waves'
+  import type { IGameChunk } from '$lib/game/types'
 
-const type: IGameChunk["type"] = "LAKE"
-const title = "Template Village"
+  export let type: IGameChunk['type']
+  export let title
 </script>
 
-<div class="block">
-  {#if type === "VILLAGE"}
-    <Home/>
-  {:else if type === "FOREST"}
-    <TreeDeciduous/>
-  {:else if type === "LAKE"}
-    <Waves/>
+<div class='block'>
+  {#if type === 'VILLAGE'}
+    <Home />
+  {:else if type === 'FOREST'}
+    <TreeDeciduous />
+  {:else if type === 'LAKE'}
+    <Waves />
   {/if}
 
   <p>{title}</p>

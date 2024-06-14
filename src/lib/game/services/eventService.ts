@@ -1,16 +1,16 @@
+import type { Action } from '../actions/action'
+import { Village } from '../chunks'
+import { Event } from '../common'
+import type { GameScene } from '../scenes/gameScene'
+import { PollService } from './pollService'
+import { QuestService } from './questService'
 import type {
   GameSceneType,
   IGameEvent,
   IGamePoll,
   IGameQuest,
   IGameQuestTask,
-} from "$lib/game/types"
-import type { Action } from "../actions/action"
-import { Village } from "../chunks"
-import { Event } from "../common"
-import type { GameScene } from "../scenes/gameScene"
-import { PollService } from "./pollService"
-import { QuestService } from "./questService"
+} from '$lib/game/types'
 
 interface IEventServiceOptions {
   scene: GameScene
@@ -32,7 +32,7 @@ export class EventService {
     for (const event of this.events) {
       const status = event.checkStatus()
 
-      if (status === "STOPPED") {
+      if (status === 'STOPPED') {
         this.handleEnding(event)
         this.destroy(event)
       }
@@ -55,14 +55,14 @@ export class EventService {
     quest,
     offers,
   }: {
-    title: IGameEvent["title"]
-    description: IGameEvent["description"]
-    type: IGameEvent["type"]
+    title: IGameEvent['title']
+    description: IGameEvent['description']
+    type: IGameEvent['type']
     secondsToEnd: number
     scene?: GameSceneType
-    poll?: IGameEvent["poll"]
-    quest?: IGameEvent["quest"]
-    offers?: IGameEvent["offers"]
+    poll?: IGameEvent['poll']
+    quest?: IGameEvent['quest']
+    offers?: IGameEvent['offers']
   }) {
     const event = new Event({
       title,
@@ -158,19 +158,19 @@ export class EventService {
   }
 
   private handleEnding(event: Event) {
-    if (event.type === "SCENE_CHANGING_STARTED" && event.scene) {
+    if (event.type === 'SCENE_CHANGING_STARTED' && event.scene) {
       this.scene.game.initScene(event.scene)
     }
-    if (event.type === "GROUP_FORM_STARTED" && event.scene) {
+    if (event.type === 'GROUP_FORM_STARTED' && event.scene) {
       this.scene.game.initScene(event.scene)
     }
-    if (event.type === "RAID_STARTED") {
+    if (event.type === 'RAID_STARTED') {
       this.scene.stopRaid()
     }
-    if (event.type === "TRADE_STARTED") {
+    if (event.type === 'TRADE_STARTED') {
       this.scene.tradeService.handleTradeIsOver()
     }
-    if (event.type === "VOTING_FOR_NEW_MAIN_QUEST_STARTED") {
+    if (event.type === 'VOTING_FOR_NEW_MAIN_QUEST_STARTED') {
       this.scene.tradeService.handleTradeIsOver()
     }
   }
@@ -184,31 +184,31 @@ export class EventService {
   }
 
   private updateSuccessPollsWithQuest(event: Event) {
-    if (event.poll?.status !== "SUCCESS" || !event.quest) {
+    if (event.poll?.status !== 'SUCCESS' || !event.quest) {
       return
     }
 
-    const updateProgress1: IGameQuestTask["updateProgress"] = () => {
+    const updateProgress1: IGameQuestTask['updateProgress'] = () => {
       if (
-        !this.scene.wagonService.routeService.route?.flags &&
-        this.events.find((e) => e.type === "MAIN_QUEST_STARTED")
+        !this.scene.wagonService.routeService.route?.flags
+        && this.events.find((e) => e.type === 'MAIN_QUEST_STARTED')
       ) {
         return {
-          status: "SUCCESS",
+          status: 'SUCCESS',
         }
       }
 
-      const items =
-        this.scene.wagonService.wagon.cargo?.checkIfAlreadyHaveItem("WOOD")
+      const items
+        = this.scene.wagonService.wagon.cargo?.checkIfAlreadyHaveItem('WOOD')
       if (!items) {
         return {
-          status: "FAILED",
+          status: 'FAILED',
           progressNow: 0,
         }
       }
 
       return {
-        status: "ACTIVE",
+        status: 'ACTIVE',
         progressNow: items.amount,
       }
     }
@@ -216,20 +216,20 @@ export class EventService {
     const tasks = [
       this.questService.createTask({
         updateProgress: updateProgress1,
-        description: "Transport cargo safely",
+        description: 'Transport cargo safely',
         progressNow: 100,
         progressToSuccess: 60,
       }),
     ]
 
     this.init({
-      title: "Journey",
-      description: "",
-      type: "MAIN_QUEST_STARTED",
+      title: 'Journey',
+      description: '',
+      type: 'MAIN_QUEST_STARTED',
       secondsToEnd: event.quest.conditions.limitSeconds ?? 9999999,
       quest: {
         ...event.quest,
-        status: "ACTIVE",
+        status: 'ACTIVE',
         tasks,
       },
     })
@@ -250,10 +250,10 @@ export class EventService {
   }
 
   private updateClosedQuests(event: Event) {
-    if (event.status === "STARTED" && event.quest) {
-      if (event.quest.status === "FAILED" || event.quest.status === "SUCCESS") {
+    if (event.status === 'STARTED' && event.quest) {
+      if (event.quest.status === 'FAILED' || event.quest.status === 'SUCCESS') {
         //
-        event.status = "STOPPED"
+        event.status = 'STOPPED'
       }
     }
   }

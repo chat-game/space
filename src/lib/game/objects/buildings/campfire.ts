@@ -1,9 +1,9 @@
-import type { IGameBuildingCampfire } from "$lib/game/types"
-import { type AnimatedSprite, Sprite } from "pixi.js"
-import { FireParticlesContainer } from "../../components/fireParticlesContainer"
-import type { GameScene } from "../../scenes/gameScene.ts"
-import { AssetsManager } from "../../utils"
-import { Building } from "./building"
+import { type AnimatedSprite, Sprite } from 'pixi.js'
+import { FireParticlesContainer } from '../../components/fireParticlesContainer'
+import type { GameScene } from '../../scenes/gameScene.ts'
+import { AssetsManager } from '../../utils'
+import { Building } from './building'
+import type { IGameBuildingCampfire } from '$lib/game/types'
 
 interface ICampfireOptions {
   scene: GameScene
@@ -33,7 +33,7 @@ export class Campfire extends Building implements IGameBuildingCampfire {
   }
 
   private initGraphics() {
-    const sprite = Sprite.from("campfire1")
+    const sprite = Sprite.from('campfire1')
     sprite.anchor.set(0.5, 1)
 
     this.fireAnimation = AssetsManager.getAnimatedSpriteCampfire()
@@ -51,8 +51,8 @@ export class Campfire extends Building implements IGameBuildingCampfire {
       return
     }
 
-    if (this.state === "IDLE") {
-      this.scene.game.audio.playSound("FIRE_BURN")
+    if (this.state === 'IDLE') {
+      this.scene.game.audio.playSound('FIRE_BURN')
     }
   }
 }

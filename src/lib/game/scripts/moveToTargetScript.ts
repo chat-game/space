@@ -1,6 +1,6 @@
-import type { IGameObject } from "$lib/game/types"
-import type { GameObject } from "../objects"
-import { Script } from "./script"
+import type { GameObject } from '../objects'
+import { Script } from './script'
+import type { IGameObject } from '$lib/game/types'
 
 interface IMoveToRandomTargetScriptOptions {
   object: GameObject

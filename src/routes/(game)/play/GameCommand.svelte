@@ -1,8 +1,8 @@
 <script>
-export let command
+  export let command
 </script>
 
-<div class="block">
+<div class='block'>
   {command}
 </div>
 

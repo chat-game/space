@@ -1,12 +1,12 @@
 <script>
-import unitAvatar from "$lib/assets/website/unit-512.png"
+  import unitAvatar from '$lib/assets/website/unit-512.png'
 
-export let show = true
+  export let show = true
 </script>
 
-<div class="loader-block" data-active={show}>
-  <div class="image-block animate-bounce">
-    <img src={unitAvatar} alt="" width={256} height={256}/>
+<div class='loader-block' data-active={show}>
+  <div class='image-block animate-bounce'>
+    <img src={unitAvatar} alt="" width={256} height={256} />
   </div>
 </div>
 

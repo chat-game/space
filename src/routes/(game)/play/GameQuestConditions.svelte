@@ -1,18 +1,18 @@
-<script lang="ts">
-import Clock3 from "lucide-svelte/icons/clock-3"
-import Map from "lucide-svelte/icons/map"
+<script lang='ts'>
+  import Clock3 from 'lucide-svelte/icons/clock-3'
+  import Map from 'lucide-svelte/icons/map'
 
-export let limitSeconds: number | undefined
+  export let limitSeconds: number | undefined
 
-const minutes = limitSeconds ? Math.round(limitSeconds / 60) : null
+  const minutes = limitSeconds ? Math.round(limitSeconds / 60) : null
 </script>
 
-<div class="block">
-  <div class="condition">
+<div class='block'>
+  <div class='condition'>
     <Clock3 />
     up to {minutes} minutes
   </div>
-  <div class="condition">
+  <div class='condition'>
     <Map />
     Common locations
   </div>

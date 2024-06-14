@@ -1,7 +1,7 @@
-import type { IGameObjectRabbit } from "$lib/game/types"
-import { Sprite } from "pixi.js"
-import type { Game } from "../game"
-import { GameObject } from "./gameObject"
+import { Sprite } from 'pixi.js'
+import type { Game } from '../game'
+import { GameObject } from './gameObject'
+import type { IGameObjectRabbit } from '$lib/game/types'
 
 interface IRabbitOptions {
   game: Game
@@ -19,14 +19,14 @@ export class Rabbit extends GameObject implements IGameObjectRabbit {
   }
 
   init() {
-    const spriteRight = Sprite.from("rabbitRight")
-    const spriteLeft = Sprite.from("rabbitLeft")
+    const spriteRight = Sprite.from('rabbitRight')
+    const spriteLeft = Sprite.from('rabbitLeft')
 
     spriteRight.anchor.set(0.5, 1)
     spriteLeft.anchor.set(0.5, 1)
 
-    spriteLeft.direction = "LEFT"
-    spriteRight.direction = "RIGHT"
+    spriteLeft.direction = 'LEFT'
+    spriteRight.direction = 'RIGHT'
 
     this.addChild(spriteRight, spriteLeft)
   }
@@ -43,7 +43,7 @@ export class Rabbit extends GameObject implements IGameObjectRabbit {
       sprite.visible = true
     }
 
-    if (this.state === "MOVING") {
+    if (this.state === 'MOVING') {
       this.angle = this.animationAngle
       this.shakeAnimation()
     }

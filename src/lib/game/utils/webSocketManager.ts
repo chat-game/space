@@ -1,5 +1,5 @@
-import { MessageController } from "$lib/game/utils/messageController"
-import type { Game } from "../game"
+import type { Game } from '../game'
+import { MessageController } from '$lib/game/utils/messageController'
 
 export abstract class WebSocketManager {
   public static socket: WebSocket
@@ -7,11 +7,11 @@ export abstract class WebSocketManager {
   public static kbitPerSecond = 0
 
   public static init(game: Game) {
-    WebSocketManager.socket = new WebSocket("ws://localhost:4002")
+    WebSocketManager.socket = new WebSocket('ws://localhost:4002')
 
     WebSocketManager.setMessagesPerSecondHandler()
 
-    WebSocketManager.socket.addEventListener("message", (event) => {
+    WebSocketManager.socket.addEventListener('message', (event) => {
       const message = MessageController.parse(event.data.toString())
       if (!message) {
         return

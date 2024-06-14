@@ -1,29 +1,29 @@
 <script>
-import {
-  DISCORD_SERVER_INVITE_URL,
-  DONATE_URL,
-  GITHUB_REPO_URL,
-  TWITCH_URL,
-} from "$lib/config"
+  import {
+    DISCORD_SERVER_INVITE_URL,
+    DONATE_URL,
+    GITHUB_REPO_URL,
+    TWITCH_URL,
+  } from '$lib/config'
 </script>
 
 <footer>
-    <ul>
-        <li>
-            <a href={GITHUB_REPO_URL} target="_blank">Код на GitHub</a>
-        </li>
-        <li>
-            <a href={DISCORD_SERVER_INVITE_URL} target="_blank">Discord</a>
-        </li>
-        <li>
-            <a href={TWITCH_URL} target="_blank">Twitch</a>
-        </li>
-        <li>
-            <a href={DONATE_URL} target="_blank">Донат</a>
-        </li>
-    </ul>
+  <ul>
+    <li>
+      <a href={GITHUB_REPO_URL} target='_blank'>Код на GitHub</a>
+    </li>
+    <li>
+      <a href={DISCORD_SERVER_INVITE_URL} target='_blank'>Discord</a>
+    </li>
+    <li>
+      <a href={TWITCH_URL} target='_blank'>Twitch</a>
+    </li>
+    <li>
+      <a href={DONATE_URL} target='_blank'>Донат</a>
+    </li>
+  </ul>
 
-    <p>Создается с трепетом и ❤️</p>
+  <p>Создается с трепетом и ❤️</p>
 </footer>
 
 <style>

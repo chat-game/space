@@ -1,34 +1,34 @@
-import { createId } from "@paralleldrive/cuid2"
+import { createId } from '@paralleldrive/cuid2'
 import {
   type GameSceneType,
   type IGameEvent,
   getDatePlusSeconds,
-} from "../../../../../packages/api-sdk/src"
-import { sendMessage } from "../../websocket/websocket.server"
+} from '../../../../../packages/api-sdk/src'
+import { sendMessage } from '../../websocket/websocket.server'
 
 interface IEventOptions {
-  title: IGameEvent["title"]
-  description: IGameEvent["description"]
-  type: IGameEvent["type"]
+  title: IGameEvent['title']
+  description: IGameEvent['description']
+  type: IGameEvent['type']
   secondsToEnd: number
   scene?: GameSceneType
-  poll: IGameEvent["poll"]
-  quest: IGameEvent["quest"]
-  offers: IGameEvent["offers"]
+  poll: IGameEvent['poll']
+  quest: IGameEvent['quest']
+  offers: IGameEvent['offers']
 }
 
 export class Event implements IGameEvent {
   public id: string
-  public title: IGameEvent["title"]
-  public description: IGameEvent["description"]
-  public type: IGameEvent["type"]
-  public status: IGameEvent["status"]
+  public title: IGameEvent['title']
+  public description: IGameEvent['description']
+  public type: IGameEvent['type']
+  public status: IGameEvent['status']
   public scene?: GameSceneType
   public endsAt!: Date
   public deletesAt!: Date
-  public poll?: IGameEvent["poll"]
-  public quest?: IGameEvent["quest"]
-  public offers?: IGameEvent["offers"]
+  public poll?: IGameEvent['poll']
+  public quest?: IGameEvent['quest']
+  public offers?: IGameEvent['offers']
 
   constructor({
     title,
@@ -48,7 +48,7 @@ export class Event implements IGameEvent {
     this.poll = poll
     this.quest = quest
     this.offers = offers
-    this.status = "STARTED"
+    this.status = 'STARTED'
 
     this.setEndsAtPlusSeconds(secondsToEnd)
 
@@ -57,10 +57,10 @@ export class Event implements IGameEvent {
 
   public checkStatus() {
     if (this.endsAt.getTime() <= new Date().getTime()) {
-      this.status = "STOPPED"
+      this.status = 'STOPPED'
     }
     if (this.deletesAt.getTime() <= new Date().getTime()) {
-      this.status = "STOPPED"
+      this.status = 'STOPPED'
     }
 
     return this.status

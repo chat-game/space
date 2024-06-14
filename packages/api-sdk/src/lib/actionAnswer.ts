@@ -5,11 +5,11 @@ export const ANSWER = {
   },
   DONATE_WOOD_OK: {
     ok: true,
-    message: "You gave wood to the village! Your reputation has increased.",
+    message: 'You gave wood to the village! Your reputation has increased.',
   },
   VOTED_OK: {
     ok: true,
-    message: "You voted!",
+    message: 'You voted!',
   },
   ERROR: {
     ok: false,
@@ -17,42 +17,42 @@ export const ANSWER = {
   },
   BUSY_ERROR: {
     ok: false,
-    message: "You're busy right now",
+    message: 'You\'re busy right now',
   },
   CANT_DO_THIS_NOW_ERROR: {
     ok: false,
-    message: "This cannot be done now.",
+    message: 'This cannot be done now.',
   },
   NO_PLAYER_ERROR: {
     ok: false,
-    message: "You are not in active game :(",
+    message: 'You are not in active game :(',
   },
   NO_TARGET_ERROR: {
     ok: false,
-    message: "No target specified.",
+    message: 'No target specified.',
   },
   NO_SPACE_AVAILABLE_ERROR: {
     ok: false,
-    message: "No space available.",
+    message: 'No space available.',
   },
   NO_AVAILABLE_TREE_ERROR: {
     ok: false,
-    message: "No available tree",
+    message: 'No available tree',
   },
   WRONG_AMOUNT_ERROR: {
     ok: false,
-    message: "Incorrect quantity specified.",
+    message: 'Incorrect quantity specified.',
   },
   ALREADY_VOTED_ERROR: {
     ok: false,
-    message: "You've already voted.",
+    message: 'You\'ve already voted.',
   },
   NOT_ENOUGH_PARAMS_ERROR: {
     ok: false,
-    message: "Be more specific.",
+    message: 'Be more specific.',
   },
   NOT_ENOUGH_WOOD_ERROR: {
     ok: false,
-    message: "You don't have enough wood.",
+    message: 'You don\'t have enough wood.',
   },
 }

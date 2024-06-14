@@ -1,7 +1,7 @@
-import type { Wagon } from "$lib/game/objects"
-import { getRandomInRange } from "$lib/random"
-import { type Container, Sprite } from "pixi.js"
-import { GraphicsContainer } from "./graphicsContainer"
+import { type Container, Sprite } from 'pixi.js'
+import { GraphicsContainer } from './graphicsContainer'
+import type { Wagon } from '$lib/game/objects'
+import { getRandomInRange } from '$lib/random'
 
 interface IWagonEngineCloudsContainerOptions {
   wagon: Wagon
@@ -12,7 +12,7 @@ export class WagonEngineCloudsContainer extends GraphicsContainer {
   private wagon: Wagon
 
   constructor({ wagon }: IWagonEngineCloudsContainerOptions) {
-    super({ type: "WAGON_ENGINE_CLOUD", direction: "LEFT" })
+    super({ type: 'WAGON_ENGINE_CLOUD', direction: 'LEFT' })
 
     this.x = -106
     this.y = -118
@@ -32,15 +32,15 @@ export class WagonEngineCloudsContainer extends GraphicsContainer {
   getRandomSpriteIndex() {
     const random = getRandomInRange(1, 1000)
     if (random <= 500) {
-      return "wagonEngineCloud1"
+      return 'wagonEngineCloud1'
     }
     if (random <= 750) {
-      return "wagonEngineCloud2"
+      return 'wagonEngineCloud2'
     }
     if (random <= 995) {
-      return "wagonEngineCloud3"
+      return 'wagonEngineCloud3'
     }
-    return "wagonEngineCloud4"
+    return 'wagonEngineCloud4'
   }
 
   remove(container: Container) {
@@ -51,8 +51,8 @@ export class WagonEngineCloudsContainer extends GraphicsContainer {
     this.offset -= speed + 1
 
     const cloudsActive = speed * 8 + 1
-    const canCreateCloud =
-      this.children.length < cloudsActive && this.offset <= 0
+    const canCreateCloud
+      = this.children.length < cloudsActive && this.offset <= 0
     if (canCreateCloud) {
       this.createRandom()
       this.offset = speed * getRandomInRange(170, 190) + 3

@@ -1,35 +1,35 @@
-<script lang="ts">
-import unitAvatar from "$lib/assets/website/unit-512.png"
-import type { PageServerData } from "./$types"
+<script lang='ts'>
+  import type { PageServerData } from './$types'
+  import unitAvatar from '$lib/assets/website/unit-512.png'
 
-export let data: PageServerData
+  export let data: PageServerData
 </script>
 
-<section class="hero">
+<section class='hero'>
   <h1>{data.character.name}</h1>
-  <h2>Игровой персонаж, созданный <a href="/p/valentina8177">valentina8177</a></h2>
+  <h2>Игровой персонаж, созданный <a href='/p/valentina8177'>valentina8177</a></h2>
 
-  <div class="unit-avatar">
-    <img src={unitAvatar} alt=""/>
+  <div class='unit-avatar'>
+    <img src={unitAvatar} alt="" />
   </div>
 </section>
 
-<section class="info-block">
-  <div class="progression">
-    <div class="info">
-      <p class="lvl">Малый</p>
+<section class='info-block'>
+  <div class='progression'>
+    <div class='info'>
+      <p class='lvl'>Малый</p>
       <p>Уровень проработанности</p>
     </div>
 
-    <div class="progress-bar">
-      <div class="common"></div>
-      <div class="uncommon"></div>
-      <div class="rare"></div>
-      <div class="epic"></div>
-      <div class="legendary"></div>
+    <div class='progress-bar'>
+      <div class='common'></div>
+      <div class='uncommon'></div>
+      <div class='rare'></div>
+      <div class='epic'></div>
+      <div class='legendary'></div>
     </div>
   </div>
-  <div class="meta">
+  <div class='meta'>
     <ul>
       <li>Рубашка: Common Blue</li>
       <li>Прическа: Classic Brown</li>
@@ -39,37 +39,37 @@ export let data: PageServerData
       <li>Уникальный URL: Нет</li>
     </ul>
   </div>
-  <div class="description">
+  <div class='description'>
     {data.character.description}
   </div>
 </section>
 
 <section>
-  <div class="rights-block">
+  <div class='rights-block'>
     Сейчас управляет: Никто
   </div>
-  <div class="feed">
-    <div class="post">
+  <div class='feed'>
+    <div class='post'>
       <p>Пример поста 3</p>
-      <div class="info">
-        <div class="date">8 часов назад</div>
-        <div class="interactions"></div>
+      <div class='info'>
+        <div class='date'>8 часов назад</div>
+        <div class='interactions'></div>
       </div>
     </div>
 
-    <div class="post">
+    <div class='post'>
       <p>Пример поста 2</p>
-      <div class="info">
-        <div class="date">2 дня назад</div>
-        <div class="interactions"></div>
+      <div class='info'>
+        <div class='date'>2 дня назад</div>
+        <div class='interactions'></div>
       </div>
     </div>
 
-    <div class="post">
+    <div class='post'>
       <p>Пример поста 1</p>
-      <div class="info">
-        <div class="date">6 дней назад</div>
-        <div class="interactions"></div>
+      <div class='info'>
+        <div class='date'>6 дней назад</div>
+        <div class='interactions'></div>
       </div>
     </div>
   </div>

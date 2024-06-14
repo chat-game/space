@@ -1,6 +1,6 @@
-import type { IGameObject, IGameTask } from "$lib/game/types"
-import type { GameObject } from "../objects"
-import { Script } from "./script"
+import type { GameObject } from '../objects'
+import { Script } from './script'
+import type { IGameObject, IGameTask } from '$lib/game/types'
 
 interface IMoveOffScreenAndSelfDestroyScriptOptions {
   object: GameObject
@@ -25,8 +25,8 @@ export class MoveOffScreenAndSelfDestroyScript extends Script {
 
   selfDestroy(func: () => void): IGameTask {
     return {
-      id: "3",
-      status: "IDLE",
+      id: '3',
+      status: 'IDLE',
       live: () => {
         func()
         this.markTaskAsDone()

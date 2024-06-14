@@ -1,9 +1,9 @@
-import { createId } from "@paralleldrive/cuid2"
+import { createId } from '@paralleldrive/cuid2'
 import type {
   IGameGroup,
   IGameObjectPlayer,
-} from "../../../../../packages/api-sdk/src"
-import type { Player } from "../objects/units"
+} from '../../../../../packages/api-sdk/src'
+import type { Player } from '../objects/units'
 
 export class Group implements IGameGroup {
   id: string

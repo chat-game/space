@@ -1,8 +1,8 @@
-import type { IGameObjectStone } from "$lib/game/types"
-import { getRandomInRange } from "$lib/random"
-import { Sprite } from "pixi.js"
-import type { GameScene } from "../scenes/gameScene"
-import { GameObject } from "./gameObject"
+import { Sprite } from 'pixi.js'
+import type { GameScene } from '../scenes/gameScene'
+import { GameObject } from './gameObject'
+import { getRandomInRange } from '$lib/random'
+import type { IGameObjectStone } from '$lib/game/types'
 
 interface IStoneOptions {
   scene: GameScene
@@ -14,7 +14,7 @@ interface IStoneOptions {
 }
 
 export class Stone extends GameObject implements IGameObjectStone {
-  public type!: IGameObjectStone["type"]
+  public type!: IGameObjectStone['type']
   public resource!: number
 
   public isReserved = false
@@ -24,7 +24,7 @@ export class Stone extends GameObject implements IGameObjectStone {
   constructor({ scene, x, y, resource, size }: IStoneOptions) {
     super({ scene, x, y })
 
-    this.state = "IDLE"
+    this.state = 'IDLE'
     this.resource = resource ?? getRandomInRange(1, 5)
     this.size = size ?? 100
 
@@ -40,19 +40,19 @@ export class Stone extends GameObject implements IGameObjectStone {
   }
 
   getSpriteByType() {
-    if (this.type === "1") {
-      return Sprite.from("stone1")
+    if (this.type === '1') {
+      return Sprite.from('stone1')
     }
   }
 
   public animate() {
     super.animate()
 
-    if (this.state === "DESTROYED") {
+    if (this.state === 'DESTROYED') {
       this.visible = false
     }
 
-    if (this.state === "MINING") {
+    if (this.state === 'MINING') {
       this.scale = 0.98
       this.shakeAnimation()
     }
@@ -67,27 +67,21 @@ export class Stone extends GameObject implements IGameObjectStone {
   }
 
   live() {
-    if (this.state === "MINING") {
+    if (this.state === 'MINING') {
       if (this.health <= 0) {
         this.setAsMined()
       }
 
       const random = getRandomInRange(1, 20)
       if (random <= 1 && this.health > 0) {
-        this.state = "IDLE"
+        this.state = 'IDLE'
         this.isReserved = false
       }
-
-      return
-    }
-
-    if (this.state === "DESTROYED") {
-      return
     }
   }
 
   mine() {
-    this.state = "MINING"
+    this.state = 'MINING'
     this.isReserved = true
     this.health -= 0.08
   }
@@ -95,6 +89,6 @@ export class Stone extends GameObject implements IGameObjectStone {
   setAsMined() {
     this.size = 0
     this.health = 0
-    this.state = "DESTROYED"
+    this.state = 'DESTROYED'
   }
 }

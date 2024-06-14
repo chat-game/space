@@ -1,7 +1,7 @@
-import { getRandomInRange } from "../../../../../packages/api-sdk/src"
-import type { Game } from "../game"
-import { Stone, Tree } from "../objects"
-import { GameScene } from "./gameScene"
+import { getRandomInRange } from '../../../../../packages/api-sdk/src'
+import type { Game } from '../game'
+import { Stone, Tree } from '../objects'
+import { GameScene } from './gameScene'
 
 interface IDefenceSceneOptions {
   game: Game

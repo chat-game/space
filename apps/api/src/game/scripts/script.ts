@@ -1,10 +1,10 @@
-import { createId } from "@paralleldrive/cuid2"
+import { createId } from '@paralleldrive/cuid2'
 import type {
   IGameObject,
   IGameScript,
   IGameTask,
-} from "../../../../../packages/api-sdk/src"
-import type { GameObject } from "../objects"
+} from '../../../../../packages/api-sdk/src'
+import type { GameObject } from '../objects'
 
 interface IScriptOptions {
   object: GameObject
@@ -12,7 +12,7 @@ interface IScriptOptions {
 
 export class Script implements IGameScript {
   public id: string
-  public tasks!: IGameScript["tasks"]
+  public tasks!: IGameScript['tasks']
   public isInterruptible = false
 
   public object!: GameObject
@@ -37,15 +37,15 @@ export class Script implements IGameScript {
   }
 
   getActiveTask() {
-    return this.tasks.find((t) => t.status === "ACTIVE")
+    return this.tasks.find((t) => t.status === 'ACTIVE')
   }
 
   getNextIdleTask() {
-    return this.tasks.find((t) => t.status === "IDLE")
+    return this.tasks.find((t) => t.status === 'IDLE')
   }
 
   markTaskAsActive(task: IGameTask) {
-    task.status = "ACTIVE"
+    task.status = 'ACTIVE'
   }
 
   markTaskAsDone() {
@@ -54,7 +54,7 @@ export class Script implements IGameScript {
       return
     }
 
-    activeTask.status = "DONE"
+    activeTask.status = 'DONE'
   }
 
   markScriptAsFinished() {
@@ -64,10 +64,10 @@ export class Script implements IGameScript {
   setTarget(target: IGameObject): IGameTask {
     return {
       id: createId(),
-      status: "IDLE",
+      status: 'IDLE',
       live: () => {
         this.object.target = target
-        this.object.state = "MOVING"
+        this.object.state = 'MOVING'
         this.markTaskAsDone()
       },
     }
@@ -76,7 +76,7 @@ export class Script implements IGameScript {
   runToTarget(): IGameTask {
     return {
       id: createId(),
-      status: "IDLE",
+      status: 'IDLE',
       live: () => {
         const isMoving = this.object.move()
         if (!isMoving) {

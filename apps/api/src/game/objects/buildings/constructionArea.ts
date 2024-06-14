@@ -1,5 +1,5 @@
-import type { IGameBuildingConstructionArea } from "../../../../../../packages/api-sdk/src"
-import { Building } from "./building"
+import type { IGameBuildingConstructionArea } from '../../../../../../packages/api-sdk/src'
+import { Building } from './building'
 
 interface IConstructionAreaOptions {
   x: number
@@ -8,9 +8,8 @@ interface IConstructionAreaOptions {
 
 export class ConstructionArea
   extends Building
-  implements IGameBuildingConstructionArea
-{
+  implements IGameBuildingConstructionArea {
   constructor({ x, y }: IConstructionAreaOptions) {
-    super({ entity: "CONSTRUCTION_AREA", x, y })
+    super({ entity: 'CONSTRUCTION_AREA', x, y })
   }
 }

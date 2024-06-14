@@ -2,16 +2,16 @@ import type {
   GameSceneType,
   IGameActionResponse,
   IGameSceneAction,
-} from "../../../../packages/api-sdk/src"
-import { DBRepository } from "../db/db.repository"
-import { sendMessage } from "../websocket/websocket.server"
-import type { Action } from "./actions/action"
+} from '../../../../packages/api-sdk/src'
+import { DBRepository } from '../db/db.repository'
+import { sendMessage } from '../websocket/websocket.server'
+import type { Action } from './actions/action'
 import {
   DefenceScene,
   type GameScene,
   MovingScene,
   VillageScene,
-} from "./scenes"
+} from './scenes'
 
 interface HandleChatCommandOptions {
   action: IGameSceneAction
@@ -32,7 +32,7 @@ export class Game {
   constructor() {
     this.repository = new DBRepository()
 
-    this.initScene("MOVING")
+    this.initScene('MOVING')
   }
 
   public async handleActionFromChat({
@@ -70,19 +70,18 @@ export class Game {
     if (this.scene) {
       this.scene.destroy()
     }
-    sendMessage("SCENE_CHANGED")
+    sendMessage('SCENE_CHANGED')
 
-    if (scene === "MOVING") {
+    if (scene === 'MOVING') {
       this.scene = new MovingScene({ game: this })
       return
     }
-    if (scene === "VILLAGE") {
+    if (scene === 'VILLAGE') {
       this.scene = new VillageScene({ game: this })
       return
     }
-    if (scene === "DEFENCE") {
+    if (scene === 'DEFENCE') {
       this.scene = new DefenceScene({ game: this })
-      return
     }
   }
 }

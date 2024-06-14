@@ -1,12 +1,12 @@
-import { createId } from "@paralleldrive/cuid2"
+import { createId } from '@paralleldrive/cuid2'
 import {
   type IGameObjectPlayer,
   type IGameSkill,
   getRandomInRange,
-} from "../../../../../../packages/api-sdk/src"
-import { db } from "../../../db/db.client"
-import { Inventory, Skill } from "../../common"
-import { Unit } from "./unit"
+} from '../../../../../../packages/api-sdk/src'
+import { db } from '../../../db/db.client'
+import { Inventory, Skill } from '../../common'
+import { Unit } from './unit'
 
 interface IPlayerOptions {
   id?: string
@@ -20,7 +20,7 @@ export class Player extends Unit implements IGameObjectPlayer {
   public villainPoints = 0
   public refuellerPoints = 0
   public raiderPoints = 0
-  public lastActionAt: IGameObjectPlayer["lastActionAt"] = new Date()
+  public lastActionAt: IGameObjectPlayer['lastActionAt'] = new Date()
   public health = 100
 
   public inventoryId?: string
@@ -30,7 +30,7 @@ export class Player extends Unit implements IGameObjectPlayer {
   constructor({ id, x, y }: IPlayerOptions) {
     const objectId = id ?? createId()
 
-    super({ id: objectId, x, y, entity: "PLAYER" })
+    super({ id: objectId, x, y, entity: 'PLAYER' })
 
     this.speedPerSecond = 2
   }
@@ -39,9 +39,9 @@ export class Player extends Unit implements IGameObjectPlayer {
     await this.readFromDB()
     await this.initSkillsFromDB()
     super.initVisual({
-      head: "1",
-      hairstyle: "CLASSIC",
-      top: "VIOLET_SHIRT",
+      head: '1',
+      hairstyle: 'CLASSIC',
+      top: 'VIOLET_SHIRT',
     })
   }
 
@@ -63,16 +63,16 @@ export class Player extends Unit implements IGameObjectPlayer {
   async chopTree() {
     super.chopTree()
 
-    await this.findOrCreateSkillInDB("WOODSMAN")
-    this.upSkill("WOODSMAN")
+    await this.findOrCreateSkillInDB('WOODSMAN')
+    this.upSkill('WOODSMAN')
     this.handleChange()
   }
 
   async mineStone() {
     super.mineStone()
 
-    await this.findOrCreateSkillInDB("MINER")
-    this.upSkill("MINER")
+    await this.findOrCreateSkillInDB('MINER')
+    this.upSkill('MINER')
     this.handleChange()
   }
 
@@ -193,7 +193,7 @@ export class Player extends Unit implements IGameObjectPlayer {
     }
   }
 
-  async findOrCreateSkillInDB(type: IGameSkill["type"]) {
+  async findOrCreateSkillInDB(type: IGameSkill['type']) {
     const skill = this.skills.find((skill) => skill.type === type)
     if (!skill) {
       await Skill.createInDB(this.id, type)
@@ -204,7 +204,7 @@ export class Player extends Unit implements IGameObjectPlayer {
     return skill
   }
 
-  public upSkill(type: IGameSkill["type"]) {
+  public upSkill(type: IGameSkill['type']) {
     const random = getRandomInRange(1, 200)
     if (random <= 1) {
       const skill = this.skills.find((skill) => skill.type === type)

@@ -1,8 +1,8 @@
-import type { IGameObjectPlayer, IGameSkill } from "$lib/game/types"
-import { getRandomInRange } from "$lib/random"
-import { Inventory, Skill } from "../../common"
-import type { GameScene } from "../../scenes/gameScene.ts"
-import { Unit } from "./unit"
+import { Inventory, Skill } from '../../common'
+import type { GameScene } from '../../scenes/gameScene.ts'
+import { Unit } from './unit'
+import { getRandomInRange } from '$lib/random'
+import type { IGameObjectPlayer, IGameSkill } from '$lib/game/types'
 
 interface IPlayerOptions {
   scene: GameScene
@@ -17,7 +17,7 @@ export class Player extends Unit implements IGameObjectPlayer {
   refuellerPoints!: number
   raiderPoints!: number
   skills!: Skill[]
-  lastActionAt!: IGameObjectPlayer["lastActionAt"]
+  lastActionAt!: IGameObjectPlayer['lastActionAt']
 
   public inventoryId?: string
 
@@ -32,24 +32,24 @@ export class Player extends Unit implements IGameObjectPlayer {
     await this.readFromDB()
     await this.initSkillsFromDB()
     super.initVisual({
-      head: "1",
-      hairstyle: "CLASSIC",
-      top: "VIOLET_SHIRT",
+      head: '1',
+      hairstyle: 'CLASSIC',
+      top: 'VIOLET_SHIRT',
     })
   }
 
   async chopTree() {
     super.chopTree()
 
-    await this.findOrCreateSkillInDB("WOODSMAN")
-    this.upSkill("WOODSMAN")
+    await this.findOrCreateSkillInDB('WOODSMAN')
+    this.upSkill('WOODSMAN')
   }
 
   async mineStone() {
     super.mineStone()
 
-    await this.findOrCreateSkillInDB("MINER")
-    this.upSkill("MINER")
+    await this.findOrCreateSkillInDB('MINER')
+    this.upSkill('MINER')
   }
 
   updateCoins(amount: number) {
@@ -164,7 +164,7 @@ export class Player extends Unit implements IGameObjectPlayer {
     }
   }
 
-  async findOrCreateSkillInDB(type: IGameSkill["type"]) {
+  async findOrCreateSkillInDB(type: IGameSkill['type']) {
     const skill = this.skills.find((skill) => skill.type === type)
     if (!skill) {
       await Skill.createInDB(this.id, type)
@@ -175,7 +175,7 @@ export class Player extends Unit implements IGameObjectPlayer {
     return skill
   }
 
-  public upSkill(type: IGameSkill["type"]) {
+  public upSkill(type: IGameSkill['type']) {
     const random = getRandomInRange(1, 200)
     if (random <= 1) {
       const skill = this.skills.find((skill) => skill.type === type)

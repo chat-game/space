@@ -1,6 +1,6 @@
-import { createId } from "@paralleldrive/cuid2"
-import type { TwitchAccessToken } from "../../../../packages/api-sdk/src"
-import { db } from "./db.client"
+import { createId } from '@paralleldrive/cuid2'
+import type { TwitchAccessToken } from '../../../../packages/api-sdk/src'
+import { db } from './db.client'
 
 export class DBRepository {
   private readonly db
@@ -50,22 +50,22 @@ export class DBRepository {
 
   async findTopPlayers() {
     const famous = await db.player.findFirst({
-      orderBy: { reputation: "desc" },
+      orderBy: { reputation: 'desc' },
     })
     const rich = await db.player.findFirst({
-      orderBy: { coins: "desc" },
+      orderBy: { coins: 'desc' },
     })
     const viewer = await db.player.findFirst({
-      orderBy: { viewerPoints: "desc" },
+      orderBy: { viewerPoints: 'desc' },
     })
     const raider = await db.player.findFirst({
-      orderBy: { raiderPoints: "desc" },
+      orderBy: { raiderPoints: 'desc' },
     })
     const villain = await db.player.findFirst({
-      orderBy: { villainPoints: "desc" },
+      orderBy: { villainPoints: 'desc' },
     })
     const refueller = await db.player.findFirst({
-      orderBy: { refuellerPoints: "desc" },
+      orderBy: { refuellerPoints: 'desc' },
     })
     const woodsman = await this.findTopWoodsmanPlayer()
     const miner = await this.findTopMinerPlayer()
@@ -102,8 +102,8 @@ export class DBRepository {
 
   async findTopWoodsmanPlayer() {
     const topSkill = await db.skill.findFirst({
-      where: { type: "WOODSMAN" },
-      orderBy: { lvl: "desc" },
+      where: { type: 'WOODSMAN' },
+      orderBy: { lvl: 'desc' },
     })
     if (!topSkill) {
       return null
@@ -120,8 +120,8 @@ export class DBRepository {
 
   async findTopMinerPlayer() {
     const topSkill = await db.skill.findFirst({
-      where: { type: "MINER" },
-      orderBy: { lvl: "desc" },
+      where: { type: 'MINER' },
+      orderBy: { lvl: 'desc' },
     })
     if (!topSkill) {
       return null

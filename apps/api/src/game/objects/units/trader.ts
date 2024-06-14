@@ -1,8 +1,8 @@
-import { createId } from "@paralleldrive/cuid2"
-import type { IGameObjectTrader } from "../../../../../../packages/api-sdk/src"
-import { generateUnitUserName } from "../../common/generators/unitName"
-import { generateUnitTop } from "../../common/generators/unitTop"
-import { Unit } from "./unit"
+import { createId } from '@paralleldrive/cuid2'
+import type { IGameObjectTrader } from '../../../../../../packages/api-sdk/src'
+import { generateUnitUserName } from '../../common/generators/unitName'
+import { generateUnitTop } from '../../common/generators/unitTop'
+import { Unit } from './unit'
 
 interface ITraderOptions {
   x: number
@@ -17,10 +17,10 @@ export class Trader extends Unit implements IGameObjectTrader {
       id,
       x,
       y,
-      entity: "TRADER",
+      entity: 'TRADER',
       visual: {
-        head: "1",
-        hairstyle: "COAL_LONG",
+        head: '1',
+        hairstyle: 'COAL_LONG',
         top: generateUnitTop(),
       },
     })

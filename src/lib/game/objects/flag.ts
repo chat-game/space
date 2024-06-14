@@ -1,19 +1,19 @@
-import type { IGameObjectFlag } from "$lib/game/types"
-import { Sprite } from "pixi.js"
-import type { GameScene } from "../scenes/gameScene"
-import { GameObject } from "./gameObject"
+import { Sprite } from 'pixi.js'
+import type { GameScene } from '../scenes/gameScene'
+import { GameObject } from './gameObject'
+import type { IGameObjectFlag } from '$lib/game/types'
 
 interface IFlagOptions {
   scene: GameScene
   x: number
   y: number
-  type: IGameObjectFlag["type"]
+  type: IGameObjectFlag['type']
   offsetX?: number
   offsetY?: number
 }
 
 export class Flag extends GameObject implements IGameObjectFlag {
-  public type!: IGameObjectFlag["type"]
+  public type!: IGameObjectFlag['type']
 
   public isReserved: boolean
   public offsetX: number
@@ -33,7 +33,7 @@ export class Flag extends GameObject implements IGameObjectFlag {
   }
 
   public live() {
-    if (this.target?.state === "DESTROYED") {
+    if (this.target?.state === 'DESTROYED') {
       this.removeTarget()
     }
   }
@@ -48,14 +48,14 @@ export class Flag extends GameObject implements IGameObjectFlag {
 
   getSpriteByType() {
     if (
-      this.type === "MOVEMENT" ||
-      this.type === "WAGON_NEAR_MOVEMENT" ||
-      this.type === "WAGON_MOVEMENT"
+      this.type === 'MOVEMENT'
+      || this.type === 'WAGON_NEAR_MOVEMENT'
+      || this.type === 'WAGON_MOVEMENT'
     ) {
-      return Sprite.from("flag1")
+      return Sprite.from('flag1')
     }
-    if (this.type === "RESOURCE") {
-      return Sprite.from("flag2")
+    if (this.type === 'RESOURCE') {
+      return Sprite.from('flag2')
     }
   }
 
@@ -65,12 +65,12 @@ export class Flag extends GameObject implements IGameObjectFlag {
       return
     }
 
-    if (this.type === "WAGON_MOVEMENT") {
+    if (this.type === 'WAGON_MOVEMENT') {
       this.visible = true
       return
     }
 
-    if (this.state === "DESTROYED") {
+    if (this.state === 'DESTROYED') {
       this.visible = false
       return
     }

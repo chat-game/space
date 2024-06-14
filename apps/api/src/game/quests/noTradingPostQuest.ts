@@ -1,7 +1,7 @@
-import { createId } from "@paralleldrive/cuid2"
-import type { IGameQuestTaskFunc } from "../../../../../packages/api-sdk/src"
-import type { DonateWoodToVillageAction } from "../actions/donateWoodToVillageAction"
-import { Quest } from "./quest"
+import { createId } from '@paralleldrive/cuid2'
+import type { IGameQuestTaskFunc } from '../../../../../packages/api-sdk/src'
+import type { DonateWoodToVillageAction } from '../actions/donateWoodToVillageAction'
+import { Quest } from './quest'
 
 interface INoTradingPostQuestOptions {
   creatorId: string
@@ -18,9 +18,9 @@ export class NoTradingPostQuest extends Quest {
     taskAction1,
   }: INoTradingPostQuestOptions) {
     super({
-      type: "SIDE",
-      title: "No Trading Post",
-      description: "The locals need help. Traders are expected to arrive.",
+      type: 'SIDE',
+      title: 'No Trading Post',
+      description: 'The locals need help. Traders are expected to arrive.',
     })
 
     this.creatorId = creatorId
@@ -39,8 +39,8 @@ export class NoTradingPostQuest extends Quest {
     this.tasks = [
       {
         id: createId(),
-        status: "ACTIVE",
-        description: "Accumulate 25 wood in the warehouse",
+        status: 'ACTIVE',
+        description: 'Accumulate 25 wood in the warehouse',
         progressNow: 0,
         progressToSuccess: 25,
         updateProgress: taskUpdateFunc1,
@@ -48,8 +48,8 @@ export class NoTradingPostQuest extends Quest {
       },
       {
         id: createId(),
-        status: "ACTIVE",
-        description: "Build Trading Post",
+        status: 'ACTIVE',
+        description: 'Build Trading Post',
         progressNow: false,
         progressToSuccess: true,
         updateProgress: taskUpdateFunc2,

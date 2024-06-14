@@ -1,4 +1,4 @@
-import type { IGameSkill } from "$lib/game/types"
+import type { IGameSkill } from '$lib/game/types'
 
 interface ISkillOptions {
   id: string
@@ -7,7 +7,7 @@ interface ISkillOptions {
 export class Skill implements IGameSkill {
   public id: string
   public objectId: string | null = null
-  public type!: IGameSkill["type"]
+  public type!: IGameSkill['type']
 
   public lvl = 0
   public xp = 0
@@ -27,7 +27,6 @@ export class Skill implements IGameSkill {
     if (this.xp >= this.xpNextLvl) {
       await this.lvlUpInDB()
       await this.init()
-      return
     }
 
     // return db.skill.update({
@@ -37,7 +36,7 @@ export class Skill implements IGameSkill {
   }
 
   public lvlUpInDB() {
-    const xpNextLvl = Math.floor(this.xpNextLvl * 1.5)
+    // const xpNextLvl = Math.floor(this.xpNextLvl * 1.5)
     // return db.skill.update({
     //   where: { id: this.id },
     //   data: {
@@ -63,13 +62,13 @@ export class Skill implements IGameSkill {
     // this.xpNextLvl = skill.xpNextLvl
   }
 
-  public static async findAllInDB(objectId: string) {
+  public static async findAllInDB(_objectId: string) {
     // return db.skill.findMany({
     //   where: { objectId },
     // })
   }
 
-  public static createInDB(objectId: string, type: IGameSkill["type"]) {
+  public static createInDB(_objectId: string, _type: IGameSkill['type']) {
     // return db.skill.create({
     //   data: {
     //     id: createId(),

@@ -1,6 +1,6 @@
-import type { IGameObjectDirection } from "$lib/game/types"
-import { Sprite } from "pixi.js"
-import { GraphicsContainer } from "./graphicsContainer"
+import { Sprite } from 'pixi.js'
+import { GraphicsContainer } from './graphicsContainer'
+import type { IGameObjectDirection } from '$lib/game/types'
 
 interface IWagonEngineContainerOptions {
   direction: IGameObjectDirection
@@ -8,7 +8,7 @@ interface IWagonEngineContainerOptions {
 
 export class WagonEngineContainer extends GraphicsContainer {
   constructor({ direction }: IWagonEngineContainerOptions) {
-    super({ type: "WAGON_ENGINE", direction })
+    super({ type: 'WAGON_ENGINE', direction })
   }
 
   static create(spriteIndex: string, direction: IGameObjectDirection) {
