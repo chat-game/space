@@ -14,10 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+
+      - run: bun install
 
       - name: Lint
         run: |
-          npm i --legacy-peer-deps
-          npm run lint
-          npm run lint:deps
-          npm run check
+          bun run lint
+          bun run lint:deps
+          bun run check
