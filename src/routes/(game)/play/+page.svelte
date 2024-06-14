@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Game } from "$lib/game/game.js"
+import { Game } from "$lib/game/game"
 import { onMount } from "svelte"
 import GameInterface from "./GameInterface.svelte"
 

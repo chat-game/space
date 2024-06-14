@@ -1,7 +1,7 @@
 <script>
 import unitAvatar from "$lib/assets/website/unit-512.png"
 
-export const show = true
+export let show = true
 </script>
 
 <div class="loader-block" data-active={show}>

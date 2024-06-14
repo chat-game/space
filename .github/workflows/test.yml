@@ -20,3 +20,4 @@ jobs:
           npm i
           npm run lint
           npm run lint:deps
+          npm run check

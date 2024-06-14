@@ -1,0 +1,39 @@
+<script lang="ts">
+import { onDestroy } from "svelte"
+
+export let endsAt: Date
+
+let countdown = new Date(endsAt).getTime()
+let now = Date.now()
+let end = now + countdown
+
+$: count = Math.round((end - now) / 1000)
+$: h = Math.floor(count / 3600)
+$: m = Math.floor((count - h * 3600) / 60)
+$: s = count - h * 3600 - m * 60
+
+function updateTimer() {
+  now = Date.now()
+}
+
+let interval = setInterval(updateTimer, 1000)
+$: if (count === 0) clearInterval(interval)
+
+onDestroy(() => {
+  clearInterval(interval)
+})
+</script>
+
+<div class="block">
+  Ends in {h}:{m}:{s}
+</div>
+
+<style>
+  .block {
+    margin-top: 0.5em;
+    text-align: center;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-style: italic;
+  }
+</style>

@@ -397,3 +397,19 @@ export type GraphicsContainerType =
   | "WAGON_CARGO"
   | "WAGON_FUEL"
   | "FIRE_PARTICLE"
+
+interface PlayerWithPoints {
+  player: IGameObjectPlayer
+  points: number
+}
+
+export interface TopPlayersResponse {
+  famous: PlayerWithPoints | null
+  rich: PlayerWithPoints | null
+  viewer: PlayerWithPoints | null
+  raider: PlayerWithPoints | null
+  woodsman: PlayerWithPoints | null
+  miner: PlayerWithPoints | null
+  villain: PlayerWithPoints | null
+  refueller: PlayerWithPoints | null
+}

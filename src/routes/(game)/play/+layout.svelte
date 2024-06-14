@@ -1,6 +1,6 @@
 <script lang="ts">
 import { page } from "$app/stores"
-import "../../styles.css"
+import "$lib/styles/styles.css"
 
 const isAvailable = $page.data.profile?.id === "h149p7n9g7uoggp7ns9k60iv"
 </script>

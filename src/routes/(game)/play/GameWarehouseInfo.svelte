@@ -13,7 +13,7 @@ const items = []
 
   <div class="wrapper">
     {#each items as item}
-      <GameItem/>
+      <GameItem type={item.type} amount={item.amount} />
     {/each}
   </div>
 </div>

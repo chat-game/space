@@ -226,8 +226,4 @@ export let data: PageServerData
     .post .info .date {
         font-size: 0.8rem;
     }
-
-    .post .info .interactions {
-
-    }
 </style>

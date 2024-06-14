@@ -13,7 +13,8 @@
     },
     "ignore": [
       "node_modules",
-      "tmp"
+      "tmp",
+      "*.svelte"
     ]
   },
   "formatter": {

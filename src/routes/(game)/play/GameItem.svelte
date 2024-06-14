@@ -4,8 +4,8 @@ import stoneImage from "$lib/assets/game/images/icons/items/stone.png"
 import woodImage from "$lib/assets/game/images/icons/items/wood.png"
 import type { IGameInventoryItem } from "$lib/game/types"
 
-const type: IGameInventoryItem["type"] = "WOOD"
-const amount = 0
+export let type: IGameInventoryItem["type"] = "WOOD"
+export let amount = 0
 </script>
 
 <div class="block">
