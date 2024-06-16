@@ -1,15 +1,19 @@
-import { Forest, LakeChunk, Village } from '../chunks'
-import { Route } from '../common'
-import { Stone, Tree } from '../objects'
-import type { GameScene } from '../scenes/gameScene'
+import { Forest, LakeChunk, Village } from '../../chunks'
+import { Route } from '../../common'
+import { Stone, Tree } from '../../objects'
 import { getRandomInRange } from '$lib/random'
-import type { IGameChunkTheme, IGameRoute } from '$lib/game/types'
+import type {
+  GameScene,
+  GameSceneService,
+  IGameChunkTheme,
+  IGameRoute,
+} from '$lib/game/types'
 
 interface IRouteServiceOptions {
   scene: GameScene
 }
 
-export class RouteService {
+export class RouteService implements GameSceneService {
   public route: Route | undefined
   public scene: GameScene
 
@@ -17,7 +21,7 @@ export class RouteService {
     this.scene = scene
   }
 
-  public update() {
+  update() {
     if (!this.route?.flags || this.route.flags.length <= 0) {
       if (
         this.scene.eventService.events.find(

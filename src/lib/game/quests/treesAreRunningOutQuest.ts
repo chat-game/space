@@ -1,6 +1,6 @@
 import { createId } from '@paralleldrive/cuid2'
 import type { PlantTreeAction } from '../actions/plantTreeAction'
-import { Quest } from './quest'
+import { BaseQuest } from './baseQuest'
 import type { IGameQuestTaskFunc } from '$lib/game/types'
 
 interface ITreesAreRunningOutQuestOptions {
@@ -9,7 +9,7 @@ interface ITreesAreRunningOutQuestOptions {
   taskAction1: PlantTreeAction
 }
 
-export class TreesAreRunningOutQuest extends Quest {
+export class TreesAreRunningOutQuest extends BaseQuest {
   constructor({
     creatorId,
     taskUpdateFunc1,

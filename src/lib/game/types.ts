@@ -1,3 +1,52 @@
+export interface Game {
+
+}
+
+export interface GameScene {
+  game: Game
+  live: () => void
+}
+
+export interface GameSceneService {
+  scene: GameScene
+  update: () => void
+}
+
+export interface GameObject {
+  id: string
+  x: number
+  y: number
+  type: GameObjectType
+  state: IGameObjectState
+  direction: IGameObjectDirection
+  target: GameObject | undefined
+  health: number
+  speedPerSecond: number
+  size: number
+  scene: GameScene
+  script: IGameScript | undefined
+  live: () => void
+  animate: () => void
+  move: () => boolean
+}
+
+type GameObjectType =
+  | 'RABBIT'
+  | 'WOLF'
+  | 'PLAYER'
+  | 'RAIDER'
+  | 'TREE'
+  | 'STONE'
+  | 'WATER'
+  | 'LAKE'
+  | 'FLAG'
+  | 'AREA'
+  | 'TRADER'
+  | 'VILLAGE_UNIT'
+  | 'MECHANIC'
+  | 'WAGON'
+  | GameObjectBuildingType
+
 export interface TwitchAccessTokenResponse {
   access_token: string
   refresh_token: string
@@ -18,6 +67,10 @@ export interface TwitchAccessToken {
 export interface IGameAction {
   command: string
   commandDescription: string
+  live: (
+    player: IGameObjectPlayer,
+    params: string[],
+  ) => Promise<IGameActionResponse>
 }
 
 export interface IGameActionResponse {
@@ -130,19 +183,6 @@ export interface IGameForestChunk extends IGameChunk {}
 
 export interface IGameLakeChunk extends IGameChunk {}
 
-export interface IGameObject {
-  id: string
-  x: number
-  y: number
-  state: IGameObjectState
-  direction: IGameObjectDirection
-  entity: IGameObjectEntity
-  target: IGameObject | undefined
-  health: number
-  speedPerSecond: number
-  size: number
-}
-
 export type IGameObjectState =
   | 'MOVING'
   | 'IDLE'
@@ -150,23 +190,6 @@ export type IGameObjectState =
   | 'CHOPPING'
   | 'MINING'
   | 'DESTROYED'
-export type IGameObjectEntity =
-  | 'RABBIT'
-  | 'WOLF'
-  | 'PLAYER'
-  | 'RAIDER'
-  | 'TREE'
-  | 'STONE'
-  | 'WATER'
-  | 'LAKE'
-  | 'FLAG'
-  | 'AREA'
-  | 'TRADER'
-  | 'COURIER'
-  | 'FARMER'
-  | 'MECHANIC'
-  | 'WAGON'
-  | IGameObjectBuildingType
 export type IGameObjectDirection = 'LEFT' | 'RIGHT'
 
 export interface WebSocketMessage {
@@ -183,10 +206,10 @@ export interface WebSocketMessage {
     | 'SIDE_QUEST_STARTED'
     | 'TRADE_STARTED'
     | 'IDEA_CREATED'
-  object?: Partial<IGameObject>
+  object?: Partial<GameObject>
 }
 
-export interface IGameObjectWagon extends IGameObject {
+export interface IGameObjectWagon extends GameObject {
   fuel: number
   visibilityArea: {
     startX: number
@@ -197,14 +220,14 @@ export interface IGameObjectWagon extends IGameObject {
   cargoType: 'CHEST' | undefined
 }
 
-export type IGameObjectBuildingType =
+export type GameObjectBuildingType =
   | 'CAMPFIRE'
   | 'WAREHOUSE'
   | 'WAGON_STOP'
   | 'STORE'
   | 'CONSTRUCTION_AREA'
 
-export interface IGameObjectBuilding extends IGameObject {
+export interface IGameObjectBuilding extends GameObject {
   inventory: IGameInventory
 }
 
@@ -218,8 +241,8 @@ export interface IGameBuildingWagonStop extends IGameObjectBuilding {}
 
 export interface IGameBuildingConstructionArea extends IGameObjectBuilding {}
 
-export interface IGameObjectFlag extends IGameObject {
-  type:
+export interface GameObjectFlag extends GameObject {
+  variant:
     | 'MOVEMENT'
     | 'WAGON_MOVEMENT'
     | 'WAGON_NEAR_MOVEMENT'
@@ -230,13 +253,13 @@ export interface IGameObjectFlag extends IGameObject {
     | 'TRADE_POINT'
 }
 
-export interface IGameObjectWater extends IGameObject {}
+export interface IGameObjectWater extends GameObject {}
 
-export interface IGameObjectLake extends IGameObject {
+export interface IGameObjectLake extends GameObject {
   water: IGameObjectWater[]
 }
 
-export interface IGameObjectArea extends IGameObject {
+export interface IGameObjectArea extends GameObject {
   theme: IGameChunkTheme
   area: {
     startX: number
@@ -246,19 +269,19 @@ export interface IGameObjectArea extends IGameObject {
   }
 }
 
-export interface IGameObjectTree extends IGameObject {
-  type: '1' | '2' | '3' | '4' | '5'
-  variant: IGameChunkTheme
+export interface GameObjectTree extends GameObject {
+  variant: '1' | '2' | '3' | '4' | '5'
+  theme: IGameChunkTheme
   resource: number
   isReadyToChop: boolean
 }
 
-export interface IGameObjectStone extends IGameObject {
-  type: '1'
+export interface GameObjectStone extends GameObject {
+  variant: '1'
   resource: number
 }
 
-export interface IGameObjectUnit extends IGameObject {
+export interface IGameObjectUnit extends GameObject {
   userName: string
   coins: number
   inventory: IGameInventory
@@ -296,9 +319,9 @@ export interface IGameObjectPlayer extends IGameObjectUnit {
 
 export interface IGameObjectRaider extends IGameObjectUnit {}
 
-export interface IGameObjectRabbit extends IGameObject {}
+export interface IGameObjectRabbit extends GameObject {}
 
-export interface IGameObjectWolf extends IGameObject {}
+export interface IGameObjectWolf extends GameObject {}
 
 export interface ITradeOffer {
   id: string
@@ -319,7 +342,7 @@ export interface IGameScript {
 export interface IGameTask {
   id: string
   status: 'IDLE' | 'ACTIVE' | 'DONE'
-  target?: IGameObject
+  target?: GameObject
   live: () => void
 }
 

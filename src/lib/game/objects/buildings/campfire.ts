@@ -1,9 +1,8 @@
 import { type AnimatedSprite, Sprite } from 'pixi.js'
 import { FireParticlesContainer } from '../../components/fireParticlesContainer'
-import type { GameScene } from '../../scenes/gameScene.ts'
 import { AssetsManager } from '../../utils'
-import { Building } from './building'
-import type { IGameBuildingCampfire } from '$lib/game/types'
+import { BaseBuilding } from './baseBuilding'
+import type { GameScene, IGameBuildingCampfire } from '$lib/game/types'
 
 interface ICampfireOptions {
   scene: GameScene
@@ -11,12 +10,12 @@ interface ICampfireOptions {
   y: number
 }
 
-export class Campfire extends Building implements IGameBuildingCampfire {
+export class Campfire extends BaseBuilding implements IGameBuildingCampfire {
   private fireAnimation!: AnimatedSprite
   private fireParticles!: FireParticlesContainer
 
   constructor({ scene, x, y }: ICampfireOptions) {
-    super({ scene, x, y })
+    super({ scene, x, y, type: 'CAMPFIRE' })
 
     this.initGraphics()
   }

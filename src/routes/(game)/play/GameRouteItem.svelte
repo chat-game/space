@@ -3,7 +3,7 @@
   const title = ''
 </script>
 
-<div class='title' style={{ width: `${widthInPercent}%` }}>
+<div class='title' style='width: {widthInPercent}%'>
   {title}
 </div>
 

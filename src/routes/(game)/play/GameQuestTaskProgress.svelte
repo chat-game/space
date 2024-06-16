@@ -5,9 +5,7 @@
 
   export let task: IGameQuestTask
 
-  let progressBarWidth = Math.round(
-    task.progressNow / (task.progressToSuccess / 100),
-  )
+  let progressBarWidth = Math.round(task.progressNow / (task.progressToSuccess / 100))
   if (progressBarWidth > 100) {
     progressBarWidth = 100
   }
@@ -24,7 +22,7 @@
   </div>
 
   <div class='progress'>
-    <div class='bar' data-active={task.status === 'ACTIVE'} style={{ width: `${progressBarWidth}%` }} />
+    <div class='bar' data-active={task.status === 'ACTIVE'} style='width: {progressBarWidth}%' />
   </div>
 </div>
 

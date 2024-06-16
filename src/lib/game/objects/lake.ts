@@ -1,8 +1,7 @@
-import type { GameScene } from '../scenes/gameScene'
 import { AssetsManager } from '../utils'
-import { GameObject } from './gameObject'
+import { BaseObject } from './baseObject'
 import { Water } from './water'
-import type { IGameObjectLake } from '$lib/game/types'
+import type { GameScene, IGameObjectLake } from '$lib/game/types'
 
 interface ILakeOptions {
   scene: GameScene
@@ -10,35 +9,35 @@ interface ILakeOptions {
   y: number
 }
 
-export class Lake extends GameObject implements IGameObjectLake {
+export class Lake extends BaseObject implements IGameObjectLake {
   public water: Water[] = []
 
   constructor({ scene, x, y }: ILakeOptions) {
-    super({ scene, x, y })
+    super({ scene, x, y, type: 'LAKE' })
 
-    this.generate(13)
-    this.initGraphics()
+    this.#generate(13)
+    this.#initGraphics()
   }
 
-  public animate() {
+  animate() {
     super.animate()
 
     this.zIndex = 0
   }
 
-  generate(r: number) {
+  #generate(r: number) {
     for (let y = r; y >= -r; --y) {
       for (let x = -r; x <= r; x++) {
         const value = x ** 2 + y ** 2
 
         if (value < r ** 2) {
-          this.draw(x, y)
+          this.#draw(x, y)
         }
       }
     }
   }
 
-  draw(x: number, y: number) {
+  #draw(x: number, y: number) {
     const water = new Water({ scene: this.scene, x: x * 32, y: y * 32 })
     this.water.push(water)
   }
@@ -66,7 +65,7 @@ export class Lake extends GameObject implements IGameObjectLake {
     }
   }
 
-  private initGraphics() {
+  #initGraphics() {
     for (const w of this.water) {
       const sprite = AssetsManager.getRandomSpriteForWater()
       sprite.anchor.set(0.5, 1)

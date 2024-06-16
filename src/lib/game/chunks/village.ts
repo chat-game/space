@@ -5,7 +5,6 @@ import { Store } from '../objects/buildings/store'
 import { WagonStop } from '../objects/buildings/wagonStop'
 import { Warehouse } from '../objects/buildings/warehouse'
 import { Courier, Farmer } from '../objects/units'
-import type { GameScene } from '../scenes/gameScene'
 import { BuildScript } from '../scripts/buildScript'
 import { ChopTreeScript } from '../scripts/chopTreeScript'
 import { MoveToTargetScript } from '../scripts/moveToTargetScript'
@@ -14,9 +13,9 @@ import { PlantNewTreeScript } from '../scripts/plantNewTreeScript'
 import { GameChunk } from './gameChunk'
 import { getRandomInRange } from '$lib/random'
 import type {
-  IGameChunkTheme,
-  IGameObjectFlag,
-  IGameVillageChunk,
+  GameObjectFlag,
+  GameScene,
+  IGameChunkTheme, IGameVillageChunk,
 } from '$lib/game/types'
 
 interface IVillageOptions {
@@ -179,7 +178,7 @@ export class Village extends GameChunk implements IGameVillageChunk {
     }
   }
 
-  initFlag(type: IGameObjectFlag['type']) {
+  initFlag(type: GameObjectFlag['type']) {
     const randomPoint = this.getRandomPoint()
     this.objects.push(
       new Flag({
@@ -191,7 +190,7 @@ export class Village extends GameChunk implements IGameVillageChunk {
     )
   }
 
-  initFlags(type: IGameObjectFlag['type'], count: number) {
+  initFlags(type: GameObjectFlag['type'], count: number) {
     for (let i = 0; i < count; i++) {
       this.initFlag(type)
     }

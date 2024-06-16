@@ -1,19 +1,23 @@
-import type { Player } from '../objects/units'
-import type { GameScene } from '../scenes/gameScene'
-import type { IGameObjectPlayer, IGamePoll } from '$lib/game/types'
+import type { Player } from '../../objects/units'
+import type {
+  GameScene,
+  GameSceneService,
+  IGameObjectPlayer,
+  IGamePoll,
+} from '$lib/game/types'
 
 interface IPollServiceOptions {
   scene: GameScene
 }
 
-export class PollService {
-  public scene: GameScene
+export class PollService implements GameSceneService {
+  scene: GameScene
 
   constructor({ scene }: IPollServiceOptions) {
     this.scene = scene
   }
 
-  public update() {
+  update() {
     for (const event of this.scene.eventService.events) {
       if (!event.poll || event.poll.status !== 'ACTIVE') {
         continue

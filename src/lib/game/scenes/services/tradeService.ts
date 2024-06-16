@@ -1,20 +1,19 @@
-import { Village } from '../chunks'
-import { Poll } from '../common'
-import { Flag } from '../objects'
-import type { Player } from '../objects/units'
-import { Trader } from '../objects/units'
-import type { GameScene } from '../scenes/gameScene'
-import { MoveOffScreenAndSelfDestroyScript } from '../scripts/moveOffScreenAndSelfDestroyScript'
-import { MoveToTargetScript } from '../scripts/moveToTargetScript'
-import { MoveToTradePostAndTradeScript } from '../scripts/moveToTradePostAndTradeScript'
+import { Village } from '../../chunks'
+import { Poll } from '../../common'
+import { Flag } from '../../objects'
+import type { Player } from '../../objects/units'
+import { Trader } from '../../objects/units'
+import { MoveOffScreenAndSelfDestroyScript } from '../../scripts/moveOffScreenAndSelfDestroyScript'
+import { MoveToTargetScript } from '../../scripts/moveToTargetScript'
+import { MoveToTradePostAndTradeScript } from '../../scripts/moveToTradePostAndTradeScript'
 import { getRandomInRange } from '$lib/random'
-import type { ITradeOffer } from '$lib/game/types'
+import type { GameScene, GameSceneService, ITradeOffer } from '$lib/game/types'
 
 interface ITradeServiceOptions {
   scene: GameScene
 }
 
-export class TradeService {
+export class TradeService implements GameSceneService {
   public offers: ITradeOffer[] = []
   public tradeWasSuccessful: boolean
   public traderIsMovingWithWagon: boolean

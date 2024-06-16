@@ -1,6 +1,5 @@
-import type { GameScene } from '../scenes/gameScene'
-import { GameObject } from './gameObject'
-import type { IGameObjectWater } from '$lib/game/types'
+import { BaseObject } from './baseObject'
+import type { GameScene, IGameObjectWater } from '$lib/game/types'
 
 interface IWaterOptions {
   scene: GameScene
@@ -8,8 +7,8 @@ interface IWaterOptions {
   y: number
 }
 
-export class Water extends GameObject implements IGameObjectWater {
+export class Water extends BaseObject implements IGameObjectWater {
   constructor({ scene, x, y }: IWaterOptions) {
-    super({ scene, x, y })
+    super({ scene, x, y, type: 'WATER' })
   }
 }

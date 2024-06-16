@@ -1,6 +1,5 @@
-import type { GameScene } from '../scenes/gameScene'
-import { GameObject } from './gameObject'
-import type { IGameObjectArea } from '$lib/game/types'
+import { BaseObject } from './baseObject'
+import type { GameScene, IGameObjectArea } from '$lib/game/types'
 
 interface IAreaOptions {
   scene: GameScene
@@ -8,7 +7,7 @@ interface IAreaOptions {
   area: IGameObjectArea['area']
 }
 
-export class Area extends GameObject implements IGameObjectArea {
+export class Area extends BaseObject implements IGameObjectArea {
   public theme: IGameObjectArea['theme']
   public area: IGameObjectArea['area']
 
@@ -16,15 +15,21 @@ export class Area extends GameObject implements IGameObjectArea {
     const x = area.startX
     const y = area.startY
 
-    super({ scene, x, y })
+    super({ scene, x, y, type: 'AREA' })
 
     this.theme = theme
     this.area = area
 
-    this.initGraphics()
+    this.#initGraphics()
   }
 
-  private initGraphics() {
+  animate() {
+    super.animate()
+
+    this.zIndex = -1
+  }
+
+  #initGraphics() {
     this.scene.game.bg.changePaletteByTheme(this.theme)
 
     const bg = this.scene.game.bg.getGeneratedBackgroundTilingSprite()
@@ -32,11 +37,5 @@ export class Area extends GameObject implements IGameObjectArea {
     bg.height = this.area.endY - this.area.startY
 
     this.addChild(bg)
-  }
-
-  animate() {
-    super.animate()
-
-    this.zIndex = -1
   }
 }

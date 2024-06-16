@@ -7,10 +7,9 @@ import { WagonEngineCloudsContainer } from '../components/wagonEngineCloudsConta
 import { WagonEngineContainer } from '../components/wagonEngineContainer'
 import { WagonFuelBoxContainer } from '../components/wagonFuelBoxContainer'
 import { WagonWheelContainer } from '../components/wagonWheelContainer'
-import type { GameScene } from '../scenes/gameScene'
-import { GameObject } from './gameObject'
+import { BaseObject } from './baseObject'
 import { Mechanic } from './units'
-import type { IGameObjectWagon } from '$lib/game/types'
+import type { GameScene, IGameObjectWagon } from '$lib/game/types'
 
 interface IWagonOptions {
   scene: GameScene
@@ -18,7 +17,7 @@ interface IWagonOptions {
   y: number
 }
 
-export class Wagon extends GameObject implements IGameObjectWagon {
+export class Wagon extends BaseObject implements IGameObjectWagon {
   public fuel!: number
   public visibilityArea!: IGameObjectWagon['visibilityArea']
   public cargoType: IGameObjectWagon['cargoType']
@@ -30,27 +29,27 @@ export class Wagon extends GameObject implements IGameObjectWagon {
   public collisionArea!: IGameObjectWagon['visibilityArea']
 
   constructor({ scene, x, y }: IWagonOptions) {
-    super({ scene, x, y })
+    super({ scene, x, y, type: 'WAGON' })
 
-    this.state = 'IDLE'
     this.speedPerSecond = 0
     this.fuel = 2000
-    this.updateVisibilityArea()
-    this.updateServerDataArea()
 
-    this.initMechanic()
-    this.initGraphics()
+    this.#updateVisibilityArea()
+    this.#updateServerDataArea()
+
+    this.#initMechanic()
+    this.#initGraphics()
   }
 
-  public live() {
-    this.updateVisibilityArea()
-    this.updateServerDataArea()
-    this.updateCollisionArea()
-    this.updateMechanic()
-    this.consumeFuel()
+  live() {
+    this.#updateVisibilityArea()
+    this.#updateServerDataArea()
+    this.#updateCollisionArea()
+    this.#updateMechanic()
+    this.#consumeFuel()
   }
 
-  consumeFuel() {
+  #consumeFuel() {
     if (this.speedPerSecond <= 0) {
       return
     }
@@ -70,7 +69,22 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     this.fuel = 0
   }
 
-  updateVisibilityArea() {
+  setCargo() {
+    this.cargo = new Inventory({
+      id: createId(),
+      saveInDb: false,
+      objectId: this.id,
+    })
+    void this.cargo.addOrCreateItem('WOOD', 100)
+    this.cargoType = 'CHEST'
+  }
+
+  emptyCargo() {
+    this.cargo = undefined
+    this.cargoType = undefined
+  }
+
+  #updateVisibilityArea() {
     const offsetX = 2560 / 2
     const offsetY = 1440 / 2
 
@@ -82,7 +96,7 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     }
   }
 
-  updateServerDataArea() {
+  #updateServerDataArea() {
     const offsetX = 2560 * 1.5
     const offsetY = 1440
 
@@ -94,7 +108,7 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     }
   }
 
-  updateCollisionArea() {
+  #updateCollisionArea() {
     const offsetX = 250
     const offsetY = 180
 
@@ -133,7 +147,7 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     )
   }
 
-  initMechanic() {
+  #initMechanic() {
     this.mechanic = new Mechanic({
       scene: this.scene,
       x: this.x,
@@ -141,29 +155,33 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     })
   }
 
-  updateMechanic() {
+  #updateMechanic() {
     this.mechanic.live()
     this.mechanic.direction = 'LEFT'
     this.mechanic.x = this.x - 50
     this.mechanic.y = this.y - 48
   }
 
-  public setCargo() {
-    this.cargo = new Inventory({
-      id: createId(),
-      saveInDb: false,
-      objectId: this.id,
-    })
-    void this.cargo.addOrCreateItem('WOOD', 100)
-    this.cargoType = 'CHEST'
+  animate() {
+    super.animate()
+
+    for (const container of this.children) {
+      container.visible = true
+
+      this.#drawWheels(container)
+      this.#drawEngine(container)
+      this.#drawCargo(container)
+      this.#drawFuel(container)
+
+      if (container instanceof WagonEngineCloudsContainer) {
+        container.animate(this.speedPerSecond)
+      }
+    }
+
+    this.#handleSoundByState()
   }
 
-  public emptyCargo() {
-    this.cargo = undefined
-    this.cargoType = undefined
-  }
-
-  private initGraphics() {
+  #initGraphics() {
     const spriteSide = Sprite.from('wagonBase1')
     spriteSide.anchor.set(0.5, 1)
     spriteSide.scale = 0.75
@@ -200,26 +218,7 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     )
   }
 
-  public animate() {
-    super.animate()
-
-    for (const container of this.children) {
-      container.visible = true
-
-      this.drawWheels(container)
-      this.drawEngine(container)
-      this.drawCargo(container)
-      this.drawFuel(container)
-
-      if (container instanceof WagonEngineCloudsContainer) {
-        container.animate(this.speedPerSecond)
-      }
-    }
-
-    this.handleSoundByState()
-  }
-
-  drawWheels(container: GraphicsContainer) {
+  #drawWheels(container: GraphicsContainer) {
     if (container instanceof WagonWheelContainer) {
       if (container.side === 'LEFT') {
         container.x = -123
@@ -238,7 +237,7 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     }
   }
 
-  drawEngine(container: GraphicsContainer) {
+  #drawEngine(container: GraphicsContainer) {
     if (container instanceof WagonEngineContainer) {
       container.x = -102
       container.y = -58
@@ -247,7 +246,7 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     }
   }
 
-  drawCargo(container: GraphicsContainer) {
+  #drawCargo(container: GraphicsContainer) {
     if (container instanceof WagonCargoContainer) {
       if (this.cargoType === 'CHEST') {
         container.visible = true
@@ -262,7 +261,7 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     }
   }
 
-  drawFuel(container: GraphicsContainer) {
+  #drawFuel(container: GraphicsContainer) {
     let initFuel = this.fuel
     if (container instanceof WagonFuelBoxContainer) {
       for (const c of container.children) {
@@ -278,7 +277,7 @@ export class Wagon extends GameObject implements IGameObjectWagon {
     }
   }
 
-  handleSoundByState() {
+  #handleSoundByState() {
     if (this.state === 'MOVING') {
       this.scene.game.audio.playSound('WAGON_MOVING')
     }

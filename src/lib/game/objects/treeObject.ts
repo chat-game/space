@@ -1,10 +1,9 @@
 import { Sprite } from 'pixi.js'
-import type { GameScene } from '../scenes/gameScene'
-import { GameObject } from './gameObject'
+import { BaseObject } from './baseObject'
 import { getRandomInRange } from '$lib/random'
-import type { IGameObjectTree } from '$lib/game/types'
+import type { GameObjectTree, GameScene } from '$lib/game/types'
 
-interface ITreeOptions {
+interface TreeOptions {
   scene: GameScene
   x: number
   y: number
@@ -12,13 +11,13 @@ interface ITreeOptions {
   size?: number
   health?: number
   growSpeed?: number
-  type?: IGameObjectTree['type']
-  variant?: IGameObjectTree['variant']
+  theme?: GameObjectTree['theme']
+  variant?: GameObjectTree['variant']
 }
 
-export class Tree extends GameObject implements IGameObjectTree {
-  public type!: IGameObjectTree['type']
-  public variant!: IGameObjectTree['variant']
+export class TreeObject extends BaseObject implements GameObjectTree {
+  public variant!: GameObjectTree['variant']
+  public theme!: GameObjectTree['theme']
   public resource!: number
   public isReadyToChop!: boolean
 
@@ -35,43 +34,42 @@ export class Tree extends GameObject implements IGameObjectTree {
     resource,
     size,
     health,
-    type,
+    theme,
     variant,
-  }: ITreeOptions) {
-    super({ scene, x, y })
+  }: TreeOptions) {
+    super({ scene, x, y, type: 'TREE' })
 
-    this.state = 'IDLE'
     this.resource = resource ?? getRandomInRange(1, 5)
     this.size = size ?? 100
     this.health = health ?? 100
-    this.type = type ?? this.getNewType()
-    this.variant = variant ?? this.getNewVariant()
+    this.variant = variant ?? this.#getRandomVariant()
+    this.theme = theme ?? this.#getRandomTheme()
 
-    this.initGraphics()
+    this.#initGraphics()
   }
 
-  public live() {
-    this.checkHealth()
+  live() {
+    this.#checkHealth()
 
     switch (this.state) {
       case 'IDLE':
-        this.grow()
+        this.#grow()
         break
       case 'CHOPPING':
-        this.handleChoppingState()
+        this.#handleChoppingState()
         break
       case 'DESTROYED':
         break
     }
   }
 
-  public animate() {
+  animate() {
     super.animate()
 
     this.scale = this.size / 100
 
     if (this.state === 'IDLE') {
-      this.shakeOnWind()
+      this.#shakeOnWind()
     }
 
     if (this.state === 'DESTROYED') {
@@ -79,7 +77,7 @@ export class Tree extends GameObject implements IGameObjectTree {
     }
 
     if (this.state === 'CHOPPING') {
-      this.shakeAnimation()
+      this.#shakeAnimation()
     }
   }
 
@@ -89,10 +87,10 @@ export class Tree extends GameObject implements IGameObjectTree {
     this.health -= 0.08
   }
 
-  private initGraphics() {
+  #initGraphics() {
     this.angle = getRandomInRange(-1, 1)
 
-    const sprite = this.getSpriteByType()
+    const sprite = this.#getSprite()
     if (sprite) {
       sprite.anchor.set(0.5, 1)
 
@@ -106,7 +104,7 @@ export class Tree extends GameObject implements IGameObjectTree {
     }
   }
 
-  private getSpriteByType() {
+  #getSprite() {
     if (this.variant === 'GREEN') {
       return Sprite.from(`tree${this.type}Green`)
     }
@@ -127,7 +125,7 @@ export class Tree extends GameObject implements IGameObjectTree {
     }
   }
 
-  private shakeAnimation() {
+  #shakeAnimation() {
     if (Math.abs(this.angle) < 3) {
       this.angle += (this.animationSpeedPerSecond * 5) / this.scene.game.tick
       return
@@ -138,7 +136,7 @@ export class Tree extends GameObject implements IGameObjectTree {
       += ((this.animationSpeedPerSecond * 5) / this.scene.game.tick) * 10
   }
 
-  private shakeOnWind() {
+  #shakeOnWind() {
     if (Math.abs(this.angle) < 1.8) {
       this.angle += this.animationSpeedPerSecond / this.scene.game.tick
       return
@@ -148,13 +146,13 @@ export class Tree extends GameObject implements IGameObjectTree {
     this.angle += (this.animationSpeedPerSecond / this.scene.game.tick) * 10
   }
 
-  private checkHealth() {
+  #checkHealth() {
     if (this.health <= 0) {
       this.destroy()
     }
   }
 
-  private handleChoppingState() {
+  #handleChoppingState() {
     const random = getRandomInRange(1, 20)
     if (random <= 1) {
       this.state = 'IDLE'
@@ -162,7 +160,7 @@ export class Tree extends GameObject implements IGameObjectTree {
     }
   }
 
-  private grow() {
+  #grow() {
     if (this.size >= this.minSizeToChop && !this.isReadyToChop) {
       this.isReadyToChop = true
     }
@@ -174,14 +172,14 @@ export class Tree extends GameObject implements IGameObjectTree {
     this.size += this.growSpeedPerSecond / this.scene.game.tick
   }
 
-  private getNewType(): IGameObjectTree['type'] {
-    const types: IGameObjectTree['type'][] = ['1', '2', '3', '4', '5']
-    const index = getRandomInRange(0, types.length - 1)
-    return types[index]
+  #getRandomVariant(): GameObjectTree['variant'] {
+    const variants: GameObjectTree['variant'][] = ['1', '2', '3', '4', '5']
+    const index = getRandomInRange(0, variants.length - 1)
+    return variants[index]
   }
 
-  private getNewVariant(): IGameObjectTree['variant'] {
-    const variants: IGameObjectTree['variant'][] = [
+  #getRandomTheme(): GameObjectTree['theme'] {
+    const themes: GameObjectTree['theme'][] = [
       'GREEN',
       'BLUE',
       'STONE',
@@ -189,7 +187,7 @@ export class Tree extends GameObject implements IGameObjectTree {
       'TOXIC',
       'VIOLET',
     ]
-    const index = getRandomInRange(0, variants.length - 1)
-    return variants[index]
+    const index = getRandomInRange(0, themes.length - 1)
+    return themes[index]
   }
 }

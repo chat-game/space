@@ -1,8 +1,7 @@
 import { generateUnitUserName } from '../../common/generators/unitName'
 import { generateUnitTop } from '../../common/generators/unitTop'
-import type { GameScene } from '../../scenes/gameScene'
-import { Unit } from './unit'
-import type { IGameObjectFarmer } from '$lib/game/types'
+import { UnitObject } from './unitObject'
+import type { GameScene, IGameObjectFarmer } from '$lib/game/types'
 
 interface IFarmerOptions {
   scene: GameScene
@@ -10,12 +9,13 @@ interface IFarmerOptions {
   y: number
 }
 
-export class Farmer extends Unit implements IGameObjectFarmer {
+export class Farmer extends UnitObject implements IGameObjectFarmer {
   constructor({ scene, x, y }: IFarmerOptions) {
     super({
       scene,
       x,
       y,
+      type: 'VILLAGE_UNIT',
     })
 
     this.speedPerSecond = 70

@@ -2,7 +2,7 @@
   import GameRouteItem from './GameRouteItem.svelte'
   import type { IGameRoute } from '$lib/game/types'
 
-  let route: IGameRoute
+  export let route: IGameRoute
 
   export let nowX = 0
   const startX = route.startPoint.x

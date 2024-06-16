@@ -1,10 +1,9 @@
 import { Sprite } from 'pixi.js'
-import type { GameScene } from '../scenes/gameScene'
-import { GameObject } from './gameObject'
+import { BaseObject } from './baseObject'
 import { getRandomInRange } from '$lib/random'
-import type { IGameObjectStone } from '$lib/game/types'
+import type { GameObjectStone, GameScene } from '$lib/game/types'
 
-interface IStoneOptions {
+interface StoneOptions {
   scene: GameScene
   x: number
   y: number
@@ -13,39 +12,38 @@ interface IStoneOptions {
   health?: number
 }
 
-export class Stone extends GameObject implements IGameObjectStone {
-  public type!: IGameObjectStone['type']
+export class StoneObject extends BaseObject implements GameObjectStone {
+  public variant!: GameObjectStone['variant']
   public resource!: number
 
   public isReserved = false
   public animationAngle = 0
   public animationHighSpeed = 0.05
 
-  constructor({ scene, x, y, resource, size }: IStoneOptions) {
-    super({ scene, x, y })
+  constructor({ scene, x, y, resource, size }: StoneOptions) {
+    super({ scene, x, y, type: 'STONE' })
 
-    this.state = 'IDLE'
     this.resource = resource ?? getRandomInRange(1, 5)
     this.size = size ?? 100
 
-    this.initGraphics()
+    this.#initGraphics()
   }
 
-  private initGraphics() {
-    const sprite = this.getSpriteByType()
+  #initGraphics() {
+    const sprite = this.#getSprite()
     if (sprite) {
       sprite.anchor.set(0.5, 1)
       this.addChild(sprite)
     }
   }
 
-  getSpriteByType() {
-    if (this.type === '1') {
+  #getSprite() {
+    if (this.variant === '1') {
       return Sprite.from('stone1')
     }
   }
 
-  public animate() {
+  animate() {
     super.animate()
 
     if (this.state === 'DESTROYED') {
@@ -54,11 +52,11 @@ export class Stone extends GameObject implements IGameObjectStone {
 
     if (this.state === 'MINING') {
       this.scale = 0.98
-      this.shakeAnimation()
+      this.#shakeAnimation()
     }
   }
 
-  shakeAnimation() {
+  #shakeAnimation() {
     if (Math.abs(this.animationAngle) >= 0.5) {
       this.animationHighSpeed *= -1
     }

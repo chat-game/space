@@ -1,6 +1,6 @@
 import { createId } from '@paralleldrive/cuid2'
 import type { DonateWoodToVillageAction } from '../actions/donateWoodToVillageAction'
-import { Quest } from './quest'
+import { BaseQuest } from './baseQuest'
 import type { IGameQuestTaskFunc } from '$lib/game/types'
 
 interface INoTradingPostQuestOptions {
@@ -10,7 +10,7 @@ interface INoTradingPostQuestOptions {
   taskAction1: DonateWoodToVillageAction
 }
 
-export class NoTradingPostQuest extends Quest {
+export class NoTradingPostQuest extends BaseQuest {
   constructor({
     creatorId,
     taskUpdateFunc1,
@@ -24,10 +24,10 @@ export class NoTradingPostQuest extends Quest {
     })
 
     this.creatorId = creatorId
-    this.initTasks({ taskUpdateFunc1, taskUpdateFunc2, taskAction1 })
+    this.#initTasks({ taskUpdateFunc1, taskUpdateFunc2, taskAction1 })
   }
 
-  initTasks({
+  #initTasks({
     taskUpdateFunc1,
     taskUpdateFunc2,
     taskAction1,

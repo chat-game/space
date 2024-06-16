@@ -1,21 +1,19 @@
 import { Sprite } from 'pixi.js'
-import type { Game } from '../game'
-import { GameObject } from './gameObject'
-import type { IGameObjectWolf } from '$lib/game/types'
+import { BaseObject } from '../baseObject'
+import type { GameScene, IGameObjectWolf } from '$lib/game/types'
 
 interface IWolfOptions {
-  game: Game
-  object: IGameObjectWolf
+  scene: GameScene
+  x: number
+  y: number
 }
 
-export class Wolf extends GameObject implements IGameObjectWolf {
-  public animationAngle = 0
-  public animationSlowSpeed = 0.1
+export class Wolf extends BaseObject implements IGameObjectWolf {
+  #animationSlowSpeed = 0.1
 
-  constructor({ game, object }: IWolfOptions) {
-    super({ game, ...object })
+  constructor({ scene, x, y }: IWolfOptions) {
+    super({ scene, x, y, type: 'WOLF' })
 
-    this.update(object)
     this.init()
   }
 
@@ -45,16 +43,14 @@ export class Wolf extends GameObject implements IGameObjectWolf {
     }
 
     if (this.state === 'MOVING') {
-      this.angle = this.animationAngle
-      this.shakeAnimation()
+      this.#shakeAnimation()
     }
   }
 
-  shakeAnimation() {
-    if (Math.abs(this.animationAngle) >= 2) {
-      this.animationSlowSpeed *= -1
+  #shakeAnimation() {
+    if (Math.abs(this.angle) >= 2) {
+      this.#animationSlowSpeed *= -1
     }
-    this.animationAngle += this.animationSlowSpeed
-    this.angle = this.animationAngle
+    this.angle += this.#animationSlowSpeed
   }
 }

@@ -1,28 +1,24 @@
-import { Flag, Wagon } from '../objects'
-import type { GameScene } from '../scenes/gameScene'
-import { RouteService } from './routeService'
+import { Flag, Wagon } from '../../objects'
 import { getMinusOrPlus, getRandomInRange } from '$lib/random'
+import type { GameScene, GameSceneService } from '$lib/game/types'
 
 interface IWagonServiceOptions {
   scene: GameScene
 }
 
-export class WagonService {
-  public wagon!: Wagon
-  public outFlags: Flag[] = []
-  public nearFlags: Flag[] = []
-  public routeService: RouteService
-  public scene: GameScene
+export class WagonService implements GameSceneService {
+  wagon!: Wagon
+  outFlags: Flag[] = []
+  nearFlags: Flag[] = []
+  scene: GameScene
 
   constructor({ scene }: IWagonServiceOptions) {
     this.scene = scene
-    this.routeService = new RouteService({ scene })
   }
 
-  public update() {
+  update() {
     this.updateWagon()
     this.updateFlags()
-    this.routeService.update()
   }
 
   public initWagon({ x, y }: { x: number, y: number }) {
@@ -67,7 +63,7 @@ export class WagonService {
       this.wagon.state = 'IDLE'
     }
     if (this.wagon.state === 'IDLE') {
-      const target = this.routeService.route?.getNextFlag()
+      const target = this.scene.routeService.route?.getNextFlag()
       if (target) {
         this.wagon.target = target
         this.wagon.state = 'MOVING'
@@ -82,7 +78,7 @@ export class WagonService {
           this.wagon.target instanceof Flag
           && this.wagon.target.type === 'WAGON_MOVEMENT'
         ) {
-          this.routeService.route?.removeFlag(this.wagon.target)
+          this.scene.routeService.route?.removeFlag(this.wagon.target)
           this.wagon.target = undefined
           this.wagon.state = 'IDLE'
           this.wagon.speedPerSecond = 0

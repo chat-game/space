@@ -2,7 +2,7 @@
   import { onMount } from 'svelte'
   import type { PageServerData } from './$types'
   import { TWITCH_URL } from '$lib/config'
-  import { Game } from '$lib/game/game'
+  import { BaseGame } from '$lib/game/baseGame'
   import { ruWordWithEndings } from '$lib/locale'
 
   export let data: PageServerData
@@ -14,7 +14,7 @@
     'профилей',
   ])
 
-  const game = new Game()
+  const game = new BaseGame()
   let gameElement: HTMLElement
   let isGameReady = false
   let isGameElementActive = false

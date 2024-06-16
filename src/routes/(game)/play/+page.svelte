@@ -1,9 +1,9 @@
 <script lang='ts'>
   import { onMount } from 'svelte'
   import GameInterface from './GameInterface.svelte'
-  import { Game } from '$lib/game/game'
+  import { BaseGame } from '$lib/game/baseGame'
 
-  const game = new Game()
+  const game = new BaseGame()
   let gameElement: HTMLElement
   let isGameReady = false
   const isGameElementActive = true

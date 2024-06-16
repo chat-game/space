@@ -1,25 +1,23 @@
 import { Village } from '../chunks'
-import type { Player } from '../objects/units'
-import type { GameScene } from '../scenes/gameScene'
 import { PlantNewTreeScript } from '../scripts/plantNewTreeScript'
-import { Action } from './action'
-import { ANSWER } from '$lib/game/services/actionService'
+import { BaseAction } from './baseAction'
+import { ANSWER } from '$lib/game/scenes/services/actionService'
+import type { GameScene } from '$lib/game/types'
 
 interface IPlantTreeActionOptions {
   scene: GameScene
 }
 
-export class PlantTreeAction extends Action {
-  private scene: GameScene
+export class PlantTreeAction extends BaseAction {
+  scene: GameScene
 
   constructor({ scene }: IPlantTreeActionOptions) {
     super({ command: 'plant', commandDescription: '!plant' })
 
     this.scene = scene
-    this.live = this.initLive
   }
 
-  async initLive(player: Player) {
+  async live(player) {
     if (player.script && !player.script.isInterruptible) {
       return ANSWER.BUSY_ERROR
     }

@@ -1,10 +1,9 @@
-import type { GameObject } from '../objects'
 import { Script } from './script'
-import type { IGameObject, IGameTask } from '$lib/game/types'
+import type { GameObject, IGameTask } from '$lib/game/types'
 
 interface IBuildScriptOptions {
   object: GameObject
-  target: IGameObject
+  target: GameObject
   buildFunc: () => boolean
 }
 

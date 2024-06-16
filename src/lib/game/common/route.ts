@@ -1,6 +1,5 @@
 import { Flag } from '../objects'
-import type { GameScene } from '../scenes/gameScene'
-import type { IGameChunk, IGameRoute } from '$lib/game/types'
+import type { GameScene, IGameChunk, IGameRoute } from '$lib/game/types'
 
 interface IRoutePoint {
   x: number
@@ -41,11 +40,11 @@ export class Route implements IGameRoute {
     })
   }
 
-  public setEndPoint({ x, y }: IRoutePoint) {
+  setEndPoint({ x, y }: IRoutePoint) {
     this.endPoint = { x, y }
   }
 
-  public addFlag({ x, y }: IRoutePoint) {
+  #addFlag({ x, y }: IRoutePoint) {
     const movementFlag = new Flag({
       scene: this.scene,
       type: 'WAGON_MOVEMENT',
@@ -55,7 +54,7 @@ export class Route implements IGameRoute {
 
     const prevFlag = this.flags[this.flags.length - 1]
     if (prevFlag) {
-      this.initArea(prevFlag, movementFlag)
+      this.#initArea(prevFlag, movementFlag)
     }
 
     this.flags.push(movementFlag)
@@ -64,25 +63,25 @@ export class Route implements IGameRoute {
   public addGlobalFlag(end: IRoutePoint) {
     const prevGlobalFlag = this.flags[this.flags.length - 1]
     if (!prevGlobalFlag) {
-      return this.addFlag(end)
+      return this.#addFlag(end)
     }
 
-    this.generatePath({ x: prevGlobalFlag.x, y: prevGlobalFlag.y }, end)
-    this.addFlag({ x: end.x, y: end.y })
+    this.#generatePath({ x: prevGlobalFlag.x, y: prevGlobalFlag.y }, end)
+    this.#addFlag({ x: end.x, y: end.y })
   }
 
-  public getNextFlag() {
+  getNextFlag() {
     return this.flags[0]
   }
 
-  public removeFlag(flag: Flag) {
+  removeFlag(flag: Flag) {
     const index = this.flags.findIndex((f) => f.id === flag.id)
     if (index >= 0) {
       this.flags.splice(index, 1)
     }
   }
 
-  public initArea(flag1: Flag, flag2: Flag) {
+  #initArea(flag1: Flag, flag2: Flag) {
     const offset = 150
     const halfOffset = offset / 2
 
@@ -102,7 +101,7 @@ export class Route implements IGameRoute {
     this.areas.push(area)
   }
 
-  private isInArea(area: IRouteArea, point: IRoutePoint) {
+  #isInArea(area: IRouteArea, point: IRoutePoint) {
     return (
       area.startX < point.x
       && point.x < area.endX
@@ -111,9 +110,9 @@ export class Route implements IGameRoute {
     )
   }
 
-  public checkIfPointIsOnWagonPath(point: IRoutePoint) {
+  checkIfPointIsOnWagonPath(point: IRoutePoint) {
     for (const area of this.areas) {
-      if (this.isInArea(area, point)) {
+      if (this.#isInArea(area, point)) {
         return true
       }
     }
@@ -121,7 +120,7 @@ export class Route implements IGameRoute {
     return false
   }
 
-  generatePath(start: IRoutePoint, end: IRoutePoint) {
+  #generatePath(start: IRoutePoint, end: IRoutePoint) {
     const pathDistance = Route.getDistanceBetween2Points(start, end)
     console.log('path', pathDistance)
 
@@ -137,11 +136,11 @@ export class Route implements IGameRoute {
     for (let i = 0; i < pointsCount; i++) {
       nowX += stepX
       nowY += stepY
-      this.addFlag({ x: nowX, y: nowY })
+      this.#addFlag({ x: nowX, y: nowY })
     }
   }
 
-  public static getDistanceBetween2Points(
+  static getDistanceBetween2Points(
     point1: {
       x: number
       y: number

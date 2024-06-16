@@ -1,7 +1,6 @@
 import { Sprite } from 'pixi.js'
-import type { GameScene } from '../../scenes/gameScene.ts'
-import { Building } from './building'
-import type { IGameBuildingWagonStop } from '$lib/game/types'
+import { BaseBuilding } from './baseBuilding'
+import type { GameScene, IGameBuildingWagonStop } from '$lib/game/types'
 
 interface IWagonStopOptions {
   scene: GameScene
@@ -9,14 +8,14 @@ interface IWagonStopOptions {
   y: number
 }
 
-export class WagonStop extends Building implements IGameBuildingWagonStop {
+export class WagonStop extends BaseBuilding implements IGameBuildingWagonStop {
   constructor({ scene, x, y }: IWagonStopOptions) {
-    super({ scene, x, y })
+    super({ scene, x, y, type: 'WAGON_STOP' })
 
-    this.initGraphics()
+    this.#initGraphics()
   }
 
-  private initGraphics() {
+  #initGraphics() {
     const sprite = Sprite.from('wagonStop1')
     if (sprite) {
       sprite.anchor.set(0.5, 0.92)

@@ -1,9 +1,7 @@
-name: Test
+name: Run Tests and Lint
 
 on:
-  push:
-    branches:
-      - main
+  push
 
 permissions:
   contents: write
@@ -18,8 +16,11 @@ jobs:
 
       - run: bun install
 
-      - name: Lint
-        run: |
-          bun run lint
-          bun run lint:deps
-          bun run check
+      - name: ESLint
+        run: bun run lint
+
+      - name: Find circular dependencies
+        run: bun run lint:deps
+
+      - name: Check Svelte files
+        run: bun run check

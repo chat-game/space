@@ -1,8 +1,11 @@
 import { Lake, Stone, Tree } from '../objects'
-import type { GameScene } from '../scenes/gameScene.ts'
 import { GameChunk } from './gameChunk'
 import { getRandomInRange } from '$lib/random'
-import type { IGameChunkTheme, IGameLakeChunk } from '$lib/game/types'
+import type {
+  GameScene,
+  IGameChunkTheme,
+  IGameLakeChunk,
+} from '$lib/game/types'
 
 interface ILakeOptions {
   scene: GameScene

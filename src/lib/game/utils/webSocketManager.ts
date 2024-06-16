@@ -1,5 +1,5 @@
-import type { Game } from '../game'
 import { MessageController } from '$lib/game/utils/messageController'
+import type { Game } from '$lib/game/types'
 
 export abstract class WebSocketManager {
   public static socket: WebSocket

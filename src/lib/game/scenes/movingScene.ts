@@ -1,30 +1,28 @@
-import type { Game } from '../game'
-import { GameScene } from './gameScene'
+import { BaseScene } from './baseScene'
+import type { Game } from '$lib/game/types'
 
 interface IMovingSceneOptions {
   game: Game
 }
 
-export class MovingScene extends GameScene {
+export class MovingScene extends BaseScene {
   constructor({ game }: IMovingSceneOptions) {
-    super({
-      game,
-    })
+    super({ game })
 
     void this.init()
   }
 
-  public async init() {
-    const village = this.initStartingVillage()
+  async init() {
+    const village = this.#initStartingVillage()
     const wagonStartPoint = village.getWagonStopPoint()
 
     this.wagonService.initWagon(wagonStartPoint)
-    await this.initGroupPlayers()
+    await this.#initGroupPlayers()
 
     // void this.live()
   }
 
-  initStartingVillage() {
+  #initStartingVillage() {
     const initialOffsetX = 0
     const initialOffsetY = 2000
     const width = 5000
@@ -49,7 +47,7 @@ export class MovingScene extends GameScene {
     return village
   }
 
-  async initGroupPlayers() {
+  async #initGroupPlayers() {
     if (!this.group) {
       return
     }

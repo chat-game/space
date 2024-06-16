@@ -1,6 +1,5 @@
 import { createId } from '@paralleldrive/cuid2'
-import type { GameObject } from '../objects'
-import type { IGameObject, IGameScript, IGameTask } from '$lib/game/types'
+import type { GameObject, IGameScript, IGameTask } from '$lib/game/types'
 
 interface IScriptOptions {
   object: GameObject
@@ -57,7 +56,7 @@ export class Script implements IGameScript {
     this.object.script = undefined
   }
 
-  setTarget(target: IGameObject): IGameTask {
+  setTarget(target: GameObject): IGameTask {
     return {
       id: createId(),
       status: 'IDLE',

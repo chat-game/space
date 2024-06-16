@@ -7,9 +7,9 @@ interface IQuestOptions {
   description: IGameQuest['description']
 }
 
-export class Quest implements IGameQuest {
-  public id: string
-  public type: IGameQuest['type']
+export class BaseQuest implements IGameQuest {
+  readonly #id: string
+  type: IGameQuest['type']
   public title: IGameQuest['title']
   public description: IGameQuest['description']
   public tasks: IGameQuest['tasks']
@@ -18,7 +18,7 @@ export class Quest implements IGameQuest {
   public conditions!: IGameQuest['conditions']
 
   constructor({ type, title, description }: IQuestOptions) {
-    this.id = createId()
+    this.#id = createId()
     this.type = type
     this.title = title
     this.description = description
@@ -26,5 +26,9 @@ export class Quest implements IGameQuest {
 
     this.status = 'ACTIVE'
     this.conditions = {}
+  }
+
+  get id(): string {
+    return this.#id
   }
 }

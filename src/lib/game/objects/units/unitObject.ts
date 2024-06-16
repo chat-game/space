@@ -7,23 +7,23 @@ import { UnitHairContainer } from '../../components/unitHairContainer'
 import { UnitHeadContainer } from '../../components/unitHeadContainer'
 import { UnitInterface } from '../../components/unitInterface'
 import { UnitTopContainer } from '../../components/unitTopContainer'
-import type { GameScene } from '../../scenes/gameScene'
 import { AssetsManager } from '../../utils'
-import { Flag } from '../flag'
-import { GameObject } from '../gameObject'
-import { Stone } from '../stone'
-import { Tree } from '../tree'
+import { FlagObject } from '../flagObject'
+import { BaseObject } from '../baseObject'
+import { StoneObject } from '../stoneObject'
+import { TreeObject } from '../treeObject'
 import { getRandomInRange } from '$lib/random'
-import type { IGameObjectUnit } from '$lib/game/types'
+import type { GameObject, GameScene, IGameObjectUnit } from '$lib/game/types'
 
 interface IUnitOptions {
   scene: GameScene
   id?: string
   x: number
   y: number
+  type: GameObject['type']
 }
 
-export class Unit extends GameObject implements IGameObjectUnit {
+export class UnitObject extends BaseObject implements IGameObjectUnit {
   public inventory!: Inventory
   public visual!: IGameObjectUnit['visual']
   public userName!: IGameObjectUnit['userName']
@@ -36,8 +36,8 @@ export class Unit extends GameObject implements IGameObjectUnit {
   private readonly animationMovingLeft!: AnimatedSprite
   private readonly animationMovingRight!: AnimatedSprite
 
-  constructor({ scene, x, y, id }: IUnitOptions) {
-    super({ scene, x, y, id })
+  constructor({ scene, x, y, id, type }: IUnitOptions) {
+    super({ scene, x, y, id, type })
 
     this.initInventory()
     this.initVisual()
@@ -51,7 +51,7 @@ export class Unit extends GameObject implements IGameObjectUnit {
     this.initGraphics()
   }
 
-  public live() {
+  live() {
     this.handleMessages()
 
     if (this.script) {
@@ -101,7 +101,7 @@ export class Unit extends GameObject implements IGameObjectUnit {
   }
 
   public chopTree() {
-    if (this.target instanceof Tree && this.target.state !== 'DESTROYED') {
+    if (this.target instanceof TreeObject && this.target.state !== 'DESTROYED') {
       this.direction = 'RIGHT'
       this.state = 'CHOPPING'
       this.checkAndBreakTool('AXE')
@@ -111,7 +111,7 @@ export class Unit extends GameObject implements IGameObjectUnit {
   }
 
   public mineStone() {
-    if (this.target instanceof Stone && this.target.state !== 'DESTROYED') {
+    if (this.target instanceof StoneObject && this.target.state !== 'DESTROYED') {
       this.direction = 'RIGHT'
       this.state = 'MINING'
       this.checkAndBreakTool('PICKAXE')
@@ -217,7 +217,7 @@ export class Unit extends GameObject implements IGameObjectUnit {
     this.showToolInHand()
     this.handleSoundByState()
 
-    if (this.target && this.target instanceof Flag) {
+    if (this.target && this.target instanceof FlagObject) {
       this.target.visible = true
     }
   }

@@ -1,28 +1,27 @@
 import { createId } from '@paralleldrive/cuid2'
-import { DonateWoodToVillageAction } from '../actions/donateWoodToVillageAction'
-import { PlantTreeAction } from '../actions/plantTreeAction'
-import { Village } from '../chunks'
-import { NoTradingPostQuest } from '../quests/noTradingPostQuest'
-import { TreesAreRunningOutQuest } from '../quests/treesAreRunningOutQuest'
-import type { GameScene } from '../scenes/gameScene'
+import { DonateWoodToVillageAction } from '../../actions/donateWoodToVillageAction'
+import { PlantTreeAction } from '../../actions/plantTreeAction'
+import { Village } from '../../chunks'
+import { NoTradingPostQuest } from '../../quests/noTradingPostQuest'
+import { TreesAreRunningOutQuest } from '../../quests/treesAreRunningOutQuest'
 import type {
+  GameSceneService,
   IGameQuest,
-  IGameQuestTask,
-  IGameQuestTaskFunc,
+  IGameQuestTask, IGameQuestTaskFunc,
 } from '$lib/game/types'
 
 interface IQuestServiceOptions {
   scene: GameScene
 }
 
-export class QuestService {
-  public scene: GameScene
+export class QuestService implements GameSceneService {
+  scene: GameScene
 
   constructor({ scene }: IQuestServiceOptions) {
     this.scene = scene
   }
 
-  public update() {
+  update() {
     this.updateAndFinishActiveQuests()
 
     if (this.scene.chunkNow instanceof Village) {

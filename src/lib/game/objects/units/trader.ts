@@ -1,8 +1,7 @@
 import { generateUnitUserName } from '../../common/generators/unitName'
 import { generateUnitTop } from '../../common/generators/unitTop'
-import type { GameScene } from '../../scenes/gameScene'
-import { Unit } from './unit'
-import type { IGameObjectTrader } from '$lib/game/types'
+import { UnitObject } from './unitObject'
+import type { GameScene, IGameObjectTrader } from '$lib/game/types'
 
 interface ITraderOptions {
   scene: GameScene
@@ -10,12 +9,13 @@ interface ITraderOptions {
   y: number
 }
 
-export class Trader extends Unit implements IGameObjectTrader {
+export class Trader extends UnitObject implements IGameObjectTrader {
   constructor({ scene, x, y }: ITraderOptions) {
     super({
       scene,
       x,
       y,
+      type: 'TRADER',
     })
 
     this.speedPerSecond = 60

@@ -1,4 +1,4 @@
-name: App – Deploy Docker Image on server
+name: Deploy Docker Image on Prod
 
 on:
   workflow_dispatch:

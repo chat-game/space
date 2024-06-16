@@ -1,24 +1,23 @@
 import { Sprite } from 'pixi.js'
-import type { Game } from '../game'
-import { GameObject } from './gameObject'
-import type { IGameObjectRabbit } from '$lib/game/types'
+import { BaseObject } from '../baseObject'
+import type { GameScene, IGameObjectRabbit } from '$lib/game/types'
 
-interface IRabbitOptions {
-  game: Game
-  object: IGameObjectRabbit
+interface RabbitOptions {
+  scene: GameScene
+  x: number
+  y: number
 }
 
-export class Rabbit extends GameObject implements IGameObjectRabbit {
+export class Rabbit extends BaseObject implements IGameObjectRabbit {
   public animationAngle = 0
 
-  constructor({ game, object }: IRabbitOptions) {
-    super({ game, ...object })
+  constructor({ scene, x, y }: RabbitOptions) {
+    super({ scene, x, y, type: 'RABBIT' })
 
-    this.update(object)
-    this.init()
+    this.#init()
   }
 
-  init() {
+  #init() {
     const spriteRight = Sprite.from('rabbitRight')
     const spriteLeft = Sprite.from('rabbitLeft')
 

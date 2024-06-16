@@ -1,8 +1,12 @@
 import { createId } from '@paralleldrive/cuid2'
-import { Area, type GameObject, Tree } from '../objects'
-import type { GameScene } from '../scenes/gameScene.ts'
+import { Area, Tree } from '../objects'
 import { getRandomInRange } from '$lib/random'
-import type { IGameChunk, IGameChunkTheme } from '$lib/game/types'
+import type {
+  GameObject,
+  GameScene,
+  IGameChunk,
+  IGameChunkTheme,
+} from '$lib/game/types'
 
 interface IGameChunkOptions {
   center: IGameChunk['center']
@@ -40,12 +44,12 @@ export class GameChunk implements IGameChunk {
 
     this.scene = scene
 
-    this.initArea({ width, height, theme })
+    this.#initArea({ width, height, theme })
   }
 
   public live() {}
 
-  private initArea({
+  #initArea({
     width,
     height,
     theme,

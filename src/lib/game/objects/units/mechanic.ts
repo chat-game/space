@@ -1,6 +1,5 @@
-import type { GameScene } from '../../scenes/gameScene.ts'
-import { Unit } from './unit'
-import type { IGameObjectMechanic } from '$lib/game/types'
+import { UnitObject } from './unitObject'
+import type { GameScene, IGameObjectMechanic } from '$lib/game/types'
 
 interface IMechanicOptions {
   scene: GameScene
@@ -8,12 +7,13 @@ interface IMechanicOptions {
   y: number
 }
 
-export class Mechanic extends Unit implements IGameObjectMechanic {
+export class Mechanic extends UnitObject implements IGameObjectMechanic {
   constructor({ scene, x, y }: IMechanicOptions) {
     super({
       scene,
       x,
       y,
+      type: 'MECHANIC',
     })
 
     this.userName = 'Mechanic'
@@ -25,7 +25,7 @@ export class Mechanic extends Unit implements IGameObjectMechanic {
     })
   }
 
-  public animate() {
+  animate() {
     super.animate()
 
     this.zIndex = Math.round(this.y + 100)

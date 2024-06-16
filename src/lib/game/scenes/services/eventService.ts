@@ -1,34 +1,33 @@
-import type { Action } from '../actions/action'
-import { Village } from '../chunks'
-import { Event } from '../common'
-import type { GameScene } from '../scenes/gameScene'
+import type { BaseAction } from '../../actions/baseAction'
+import { Village } from '../../chunks'
+import { Event } from '../../common'
 import { PollService } from './pollService'
 import { QuestService } from './questService'
 import type {
+  GameScene,
+  GameSceneService,
   GameSceneType,
-  IGameEvent,
-  IGamePoll,
-  IGameQuest,
-  IGameQuestTask,
+  IGameEvent, IGamePoll, IGameQuest, IGameQuestTask,
 } from '$lib/game/types'
 
 interface IEventServiceOptions {
   scene: GameScene
 }
 
-export class EventService {
-  public events: Event[] = []
-  public questService: QuestService
-  public pollService: PollService
-  public scene: GameScene
+export class EventService implements GameSceneService {
+  events: Event[] = []
+  questService: QuestService
+  pollService: PollService
+  scene: GameScene
 
   constructor({ scene }: IEventServiceOptions) {
     this.scene = scene
+
     this.questService = new QuestService({ scene })
     this.pollService = new PollService({ scene })
   }
 
-  public update() {
+  update() {
     for (const event of this.events) {
       const status = event.checkStatus()
 
@@ -143,7 +142,7 @@ export class EventService {
           (q) => q.action?.command === command,
         )
         if (task?.action) {
-          return task.action as Action
+          return task.action as BaseAction
         }
       }
     }
@@ -152,7 +151,7 @@ export class EventService {
   public findActionByCommandInPoll(command: string) {
     for (const event of this.events) {
       if (event.poll?.action && event.poll.action.command === command) {
-        return event.poll?.action as Action
+        return event.poll?.action as BaseAction
       }
     }
   }
@@ -190,7 +189,7 @@ export class EventService {
 
     const updateProgress1: IGameQuestTask['updateProgress'] = () => {
       if (
-        !this.scene.wagonService.routeService.route?.flags
+        !this.scene.routeService.route?.flags
         && this.events.find((e) => e.type === 'MAIN_QUEST_STARTED')
       ) {
         return {
@@ -238,7 +237,7 @@ export class EventService {
     this.scene.wagonService.wagon.setCargo()
 
     if (this.scene.chunkNow instanceof Village) {
-      this.scene.wagonService.routeService.generateAdventure(
+      this.scene.routeService.generateAdventure(
         this.scene.chunkNow,
         event.quest.conditions.chunks ?? 3,
       )

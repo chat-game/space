@@ -27,7 +27,7 @@
     "check:watch": "svelte-kit sync && svelte-check --tsconfig tsconfig.json --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "lint:deps": "madge -c --extensions ts ./"
+    "lint:deps": "madge -c --extensions ts ./src"
   },
   "dependencies": {
     "@paralleldrive/cuid2": "2.2.2",

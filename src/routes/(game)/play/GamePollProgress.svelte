@@ -3,7 +3,7 @@
   import GameCommand from './GameCommand.svelte'
   import type { IGamePoll } from '$lib/game/types'
 
-  export let poll: IGamePoll | undefined
+  export let poll: IGamePoll
 
   let pollProgressBarWidth = Math.round(
     poll.votes.length / (poll.votesToSuccess / 100),
@@ -17,7 +17,7 @@
   <div class='progress'>
     Votes: {poll.votes.length} of {poll.votesToSuccess}
   </div>
-  <div class='bar' style={{ width: `${pollProgressBarWidth}%` }} />
+  <div class='bar' style='width: {pollProgressBarWidth}%' />
 </div>
 
 <GameCommand command={poll.action.commandDescription} />

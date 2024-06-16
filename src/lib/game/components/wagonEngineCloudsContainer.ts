@@ -8,8 +8,8 @@ interface IWagonEngineCloudsContainerOptions {
 }
 
 export class WagonEngineCloudsContainer extends GraphicsContainer {
-  private offset = 0
-  private wagon: Wagon
+  #offset = 0
+  #wagon: Wagon
 
   constructor({ wagon }: IWagonEngineCloudsContainerOptions) {
     super({ type: 'WAGON_ENGINE_CLOUD', direction: 'LEFT' })
@@ -17,11 +17,35 @@ export class WagonEngineCloudsContainer extends GraphicsContainer {
     this.x = -106
     this.y = -118
 
-    this.wagon = wagon
+    this.#wagon = wagon
   }
 
-  createRandom() {
-    const sprite = Sprite.from(this.getRandomSpriteIndex())
+  animate(speed: number) {
+    this.#offset -= speed + 1
+
+    const cloudsActive = speed * 8 + 1
+    const canCreateCloud
+      = this.children.length < cloudsActive && this.#offset <= 0
+    if (canCreateCloud) {
+      this.#createRandom()
+      this.#offset = speed * getRandomInRange(170, 190) + 3
+    }
+
+    for (const container of this.children) {
+      container.visible = true
+
+      container.x -= (speed / 3 + 2.5) / this.#wagon.scene.game.tick
+      container.y -= 3 / this.#wagon.scene.game.tick
+      container.alpha -= 0.5 / this.#wagon.scene.game.tick
+
+      if (container.alpha <= 0) {
+        this.#remove(container)
+      }
+    }
+  }
+
+  #createRandom() {
+    const sprite = Sprite.from(this.#getRandomSpriteIndex())
     sprite.anchor.set(0.5, 1)
     sprite.scale = 0.75
     sprite.visible = false
@@ -29,7 +53,7 @@ export class WagonEngineCloudsContainer extends GraphicsContainer {
     this.addChild(sprite)
   }
 
-  getRandomSpriteIndex() {
+  #getRandomSpriteIndex() {
     const random = getRandomInRange(1, 1000)
     if (random <= 500) {
       return 'wagonEngineCloud1'
@@ -43,31 +67,7 @@ export class WagonEngineCloudsContainer extends GraphicsContainer {
     return 'wagonEngineCloud4'
   }
 
-  remove(container: Container) {
+  #remove(container: Container) {
     return this.removeChild(container)
-  }
-
-  animate(speed: number) {
-    this.offset -= speed + 1
-
-    const cloudsActive = speed * 8 + 1
-    const canCreateCloud
-      = this.children.length < cloudsActive && this.offset <= 0
-    if (canCreateCloud) {
-      this.createRandom()
-      this.offset = speed * getRandomInRange(170, 190) + 3
-    }
-
-    for (const container of this.children) {
-      container.visible = true
-
-      container.x -= (speed / 3 + 2.5) / this.wagon.scene.game.tick
-      container.y -= 3 / this.wagon.scene.game.tick
-      container.alpha -= 0.5 / this.wagon.scene.game.tick
-
-      if (container.alpha <= 0) {
-        this.remove(container)
-      }
-    }
   }
 }

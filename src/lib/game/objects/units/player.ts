@@ -1,17 +1,16 @@
 import { Inventory, Skill } from '../../common'
-import type { GameScene } from '../../scenes/gameScene.ts'
-import { Unit } from './unit'
+import { UnitObject } from './unitObject'
 import { getRandomInRange } from '$lib/random'
-import type { IGameObjectPlayer, IGameSkill } from '$lib/game/types'
+import type { GameScene, IGameObjectPlayer, IGameSkill } from '$lib/game/types'
 
-interface IPlayerOptions {
+interface PlayerOptions {
   scene: GameScene
   id?: string
   x: number
   y: number
 }
 
-export class Player extends Unit implements IGameObjectPlayer {
+export class Player extends UnitObject implements IGameObjectPlayer {
   reputation!: number
   villainPoints!: number
   refuellerPoints!: number
@@ -21,8 +20,8 @@ export class Player extends Unit implements IGameObjectPlayer {
 
   public inventoryId?: string
 
-  constructor({ scene, id, x, y }: IPlayerOptions) {
-    super({ scene, id, x, y })
+  constructor({ scene, id, x, y }: PlayerOptions) {
+    super({ scene, id, x, y, type: 'PLAYER' })
 
     this.speedPerSecond = 2
     void this.initFromDB()

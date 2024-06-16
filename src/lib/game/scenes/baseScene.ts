@@ -1,71 +1,72 @@
 import { createId } from '@paralleldrive/cuid2'
 import { type GameChunk, Village } from '../chunks'
 import { Group, Route } from '../common'
-import type { Game } from '../game'
-import {
-  Flag,
-  type GameObject,
-  type Rabbit,
-  Stone,
-  Tree,
-  type Wolf,
-} from '../objects'
-import { Player, Raider, Trader } from '../objects/units'
 import { ChopTreeScript } from '../scripts/chopTreeScript'
 import { MoveOffScreenAndSelfDestroyScript } from '../scripts/moveOffScreenAndSelfDestroyScript'
 import { MoveToTargetScript } from '../scripts/moveToTargetScript'
-import { ActionService } from '../services/actionService'
-import { EventService } from '../services/eventService'
-import { TradeService } from '../services/tradeService'
-import { WagonService } from '../services/wagonService'
+import { WagonService } from './services/wagonService'
+import { TradeService } from './services/tradeService'
+import { ActionService } from './services/actionService'
+import { EventService } from './services/eventService'
 import { getRandomInRange } from '$lib/random'
 import type {
+  Game,
+  GameObject,
+  GameScene,
   GetSceneResponse,
-  IGameChunk,
-  IGameChunkTheme,
-  IGameInventoryItem,
+  IGameChunk, IGameChunkTheme, IGameInventoryItem,
 } from '$lib/game/types'
 import { getDateMinusMinutes } from '$lib/date'
+import { RouteService } from '$lib/game/scenes/services/routeService'
 
 interface IGameSceneOptions {
   game: Game
 }
 
-export class GameScene {
-  public id: string
-  public game: Game
-  public objects: GameObject[] = []
-  public group: Group
-  public chunks: GameChunk[] = []
-  public chunkNow: GameChunk | undefined
+export class BaseScene implements GameScene {
+  game: Game
+  objects: GameObject[] = []
+  group: Group
+  chunks: GameChunk[] = []
+  chunkNow: GameChunk | undefined
 
-  public actionService: ActionService
-  public eventService: EventService
-  public tradeService: TradeService
-  public wagonService: WagonService
+  actionService: ActionService
+  eventService: EventService
+  tradeService: TradeService
+  wagonService: WagonService
+  routeService: RouteService
+
+  readonly #id: string
 
   constructor({ game }: IGameSceneOptions) {
-    this.id = createId()
     this.game = game
-    this.group = new Group()
 
+    this.#id = createId()
+
+    this.group = new Group()
     this.actionService = new ActionService({ scene: this })
     this.eventService = new EventService({ scene: this })
     this.tradeService = new TradeService({ scene: this })
     this.wagonService = new WagonService({ scene: this })
+    this.routeService = new RouteService({ scene: this })
   }
 
-  public live() {
+  live() {
     this.eventService.update()
     this.tradeService.update()
     this.wagonService.update()
+    this.routeService.update()
     this.updateObjects()
     this.updateChunks()
     this.updateChunkNow()
   }
 
-  public destroy() {
+  destroy() {
     this.objects = []
+  }
+
+  get id() {
+    return this.#id
   }
 
   getChunkNow(): IGameChunk | null {
@@ -101,7 +102,7 @@ export class GameScene {
       group: this.group.getGroup(),
       wagon: this.wagonService.wagon,
       chunk: this.getChunkNow(),
-      route: this.wagonService.routeService.getRoute(),
+      route: this.routeService.getRoute(),
       warehouseItems: this.getWarehouseItems(),
     }
   }

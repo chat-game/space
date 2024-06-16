@@ -1,19 +1,16 @@
 import { Application, Container } from 'pixi.js'
-import type { GameObject, Wagon } from './objects'
-import { Player, Trader } from './objects/units'
-import type { GameScene } from './scenes/gameScene'
-import { MovingScene } from './scenes/movingScene'
-import { AssetsManager, AudioManager } from './utils'
-import { BackgroundGenerator } from './utils/generators/background'
 import type {
-  GameSceneType,
-  IGameObject,
-  IGameObjectPlayer,
-  IGameObjectTrader,
-  WebSocketMessage,
+  Game,
+  GameObject,
+  GameScene,
+  GameSceneType, WebSocketMessage,
 } from '$lib/game/types'
+import type { Wagon } from '$lib/game/objects/wagon'
+import { AudioManager } from '$lib/game/utils/audioManager'
+import { BackgroundGenerator } from '$lib/game/utils/generators/background'
+import { AssetsManager } from '$lib/game/utils/assetsManager'
 
-export class Game extends Container {
+export class BaseGame extends Container implements Game {
   public children: GameObject[] = []
   public app!: Application
   public audio!: AudioManager
@@ -176,30 +173,6 @@ export class Game extends Container {
     }
   }
 
-  initPlayer(object: IGameObjectPlayer) {
-    const player = new Player({ game: this, object })
-    this.addChild(player)
-  }
-
-  updatePlayer(object: IGameObjectPlayer) {
-    const player = this.findObject(object.id)
-    if (player instanceof Player) {
-      player.update(object)
-    }
-  }
-
-  initTrader(object: IGameObjectTrader) {
-    const unit = new Trader({ game: this, object })
-    this.addChild(unit)
-  }
-
-  updateTrader(object: IGameObjectTrader) {
-    const unit = this.findObject(object.id)
-    if (unit instanceof Trader) {
-      unit.update(object)
-    }
-  }
-
   public checkIfThisFlagIsTarget(id: string) {
     for (const obj of this.children) {
       if (obj.target?.id === id) {
@@ -234,31 +207,12 @@ export class Game extends Container {
     }
   }
 
-  handleMessageObject(object: Partial<IGameObject>) {
+  handleMessageObject(object: Partial<GameObject>) {
     if (!object.id) {
       return
     }
 
-    const obj = this.findObject(object.id)
-    if (!obj) {
-      if (object.entity === 'PLAYER') {
-        this.initPlayer(object as IGameObjectPlayer)
-        return
-      }
-      if (object.entity === 'TRADER') {
-        this.initTrader(object as IGameObjectTrader)
-        return
-      }
-      return
-    }
-
-    if (object.entity === 'PLAYER') {
-      this.updatePlayer(object as IGameObjectPlayer)
-      return
-    }
-    if (object.entity === 'TRADER') {
-      this.updateTrader(object as IGameObjectTrader)
-    }
+    this.findObject(object.id)
   }
 
   handleMessageEvent(event: WebSocketMessage['event']) {

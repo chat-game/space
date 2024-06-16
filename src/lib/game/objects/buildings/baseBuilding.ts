@@ -1,26 +1,30 @@
 import { createId } from '@paralleldrive/cuid2'
 import { Inventory } from '../../common'
-import type { GameScene } from '../../scenes/gameScene'
-import { GameObject } from '../gameObject'
-import type { IGameObjectBuilding, ItemType } from '$lib/game/types'
+import { BaseObject } from '../baseObject'
+import type {
+  GameObjectBuildingType,
+  GameScene,
+  IGameObjectBuilding,
+  ItemType,
+} from '$lib/game/types'
 
 interface IBuildingOptions {
   scene: GameScene
   x: number
   y: number
+  type: GameObjectBuildingType
 }
 
-export class Building extends GameObject implements IGameObjectBuilding {
+export class BaseBuilding extends BaseObject implements IGameObjectBuilding {
   public inventory!: Inventory
 
-  constructor({ scene, x, y }: IBuildingOptions) {
-    super({ scene, x, y })
+  constructor({ scene, x, y, type }: IBuildingOptions) {
+    super({ scene, x, y, type })
 
-    this.state = 'IDLE'
-    this.initInventory()
+    this.#initInventory()
   }
 
-  public animate() {
+  animate() {
     super.animate()
 
     this.zIndex = Math.round(this.y - 5)
@@ -30,7 +34,7 @@ export class Building extends GameObject implements IGameObjectBuilding {
     }
   }
 
-  private initInventory() {
+  #initInventory() {
     this.inventory = new Inventory({
       objectId: this.id,
       id: createId(),
@@ -38,7 +42,7 @@ export class Building extends GameObject implements IGameObjectBuilding {
     })
   }
 
-  public getItemByType(type: ItemType) {
+  getItemByType(type: ItemType) {
     if (!this.inventory?.items) {
       return
     }

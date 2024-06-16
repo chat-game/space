@@ -1,18 +1,17 @@
-import type { Action } from '../actions/action'
-import { Village } from '../chunks'
-import { Group } from '../common'
-import { Stone, Tree } from '../objects'
-import type { Warehouse } from '../objects/buildings/warehouse'
-import type { Player } from '../objects/units'
-import type { GameScene } from '../scenes/gameScene'
-import { ChopTreeScript } from '../scripts/chopTreeScript'
-import { MineStoneScript } from '../scripts/mineStoneScript'
-import { PlantNewTreeScript } from '../scripts/plantNewTreeScript'
+import type { BaseAction } from '../../actions/baseAction'
+import { Village } from '../../chunks'
+import { Group } from '../../common'
+import { Stone, Tree } from '../../objects'
+import type { Warehouse } from '../../objects/buildings/warehouse'
+import type { Player } from '../../objects/units'
+import { ChopTreeScript } from '../../scripts/chopTreeScript'
+import { MineStoneScript } from '../../scripts/mineStoneScript'
+import { PlantNewTreeScript } from '../../scripts/plantNewTreeScript'
 import type {
+  GameScene,
+  GameSceneService,
   GameSceneType,
-  IGameActionResponse,
-  IGameSceneAction,
-  ItemType,
+  IGameActionResponse, IGameSceneAction, ItemType,
 } from '$lib/game/types'
 import {
   ADMIN_PLAYER_ID,
@@ -90,11 +89,11 @@ export const ANSWER = {
   },
 }
 
-export class ActionService {
-  public possibleCommands!: ICommandWithAction[]
-  public possibleActions!: IGameSceneAction[]
-  public activeActions!: IGameSceneAction[]
-  public scene: GameScene
+export class ActionService implements GameSceneService {
+  possibleCommands!: ICommandWithAction[]
+  possibleActions!: IGameSceneAction[]
+  activeActions!: IGameSceneAction[]
+  scene: GameScene
 
   constructor({ scene }: IActionServiceOptions) {
     this.scene = scene
@@ -222,7 +221,7 @@ export class ActionService {
   }
 
   public async handleDynamicAction(
-    action: Action,
+    action: BaseAction,
     playerId: string,
     params: string[],
   ): Promise<IGameActionResponse> {
