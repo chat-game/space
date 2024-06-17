@@ -1,19 +1,22 @@
-import { AssetsManager } from '../utils'
 import { BaseObject } from './baseObject'
 import { Water } from './water'
-import type { GameScene, IGameObjectLake } from '$lib/game/types'
+import type { Game, IGameObjectLake } from '$lib/game/types'
+import { AssetsManager } from '$lib/game/utils/assetsManager'
 
 interface ILakeOptions {
-  scene: GameScene
+  game: Game
   x: number
   y: number
+  chunkId?: string
 }
 
 export class Lake extends BaseObject implements IGameObjectLake {
   public water: Water[] = []
 
-  constructor({ scene, x, y }: ILakeOptions) {
-    super({ scene, x, y, type: 'LAKE' })
+  constructor({ game, x, y, chunkId }: ILakeOptions) {
+    super({ game, x, y, type: 'LAKE' })
+
+    this.chunkId = chunkId
 
     this.#generate(13)
     this.#initGraphics()
@@ -38,11 +41,11 @@ export class Lake extends BaseObject implements IGameObjectLake {
   }
 
   #draw(x: number, y: number) {
-    const water = new Water({ scene: this.scene, x: x * 32, y: y * 32 })
+    const water = new Water({ game: this.game, x: x * 32, y: y * 32 })
     this.water.push(water)
   }
 
-  init(width: number, height: number) {
+  initWater(width: number, height: number) {
     const gridX = Math.ceil(width / 32)
     const gridY = Math.floor(height / 32)
 
@@ -59,7 +62,7 @@ export class Lake extends BaseObject implements IGameObjectLake {
         //   continue
         // }
 
-        const water = new Water({ scene: this.scene, x, y })
+        const water = new Water({ game: this.game, x, y })
         this.water.push(water)
       }
     }

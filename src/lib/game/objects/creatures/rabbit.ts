@@ -1,18 +1,21 @@
 import { Sprite } from 'pixi.js'
 import { BaseObject } from '../baseObject'
-import type { GameScene, IGameObjectRabbit } from '$lib/game/types'
+import type { Game, IGameObjectRabbit } from '$lib/game/types'
 
 interface RabbitOptions {
-  scene: GameScene
+  game: Game
   x: number
   y: number
+  chunkId?: string
 }
 
 export class Rabbit extends BaseObject implements IGameObjectRabbit {
   public animationAngle = 0
 
-  constructor({ scene, x, y }: RabbitOptions) {
-    super({ scene, x, y, type: 'RABBIT' })
+  constructor({ game, x, y, chunkId }: RabbitOptions) {
+    super({ game, x, y, type: 'RABBIT' })
+
+    this.chunkId = chunkId
 
     this.#init()
   }

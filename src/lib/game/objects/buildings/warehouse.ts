@@ -1,19 +1,20 @@
 import { Sprite } from 'pixi.js'
 import { BuildingInterface } from '../../components/buildingInterface'
 import { BaseBuilding } from './baseBuilding'
-import type { GameScene, IGameBuildingWarehouse } from '$lib/game/types'
+import type { Game, IGameBuildingWarehouse } from '$lib/game/types'
 
 interface IWarehouseOptions {
-  scene: GameScene
+  game: Game
   x: number
   y: number
+  chunkId?: string
 }
 
 export class Warehouse extends BaseBuilding implements IGameBuildingWarehouse {
   public interface!: BuildingInterface
 
-  constructor({ scene, x, y }: IWarehouseOptions) {
-    super({ scene, x, y, type: 'WAREHOUSE' })
+  constructor({ game, x, y, chunkId }: IWarehouseOptions) {
+    super({ game, x, y, chunkId, type: 'WAREHOUSE' })
 
     this.#initGraphics()
     // this.#initInterface()

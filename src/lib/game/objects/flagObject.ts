@@ -1,12 +1,13 @@
 import { Sprite } from 'pixi.js'
 import { BaseObject } from './baseObject'
-import type { GameObjectFlag, GameScene } from '$lib/game/types'
+import type { Game, GameObjectFlag } from '$lib/game/types'
 
 interface FlagOptions {
-  scene: GameScene
+  game: Game
   x: number
   y: number
   variant: GameObjectFlag['variant']
+  chunkId?: string
   offsetX?: number
   offsetY?: number
 }
@@ -18,9 +19,10 @@ export class FlagObject extends BaseObject implements GameObjectFlag {
   public offsetX: number
   public offsetY: number
 
-  constructor({ scene, x, y, variant, offsetX, offsetY }: FlagOptions) {
-    super({ scene, x, y, type: 'FLAG' })
+  constructor({ game, chunkId, x, y, variant, offsetX, offsetY }: FlagOptions) {
+    super({ game, x, y, type: 'FLAG' })
 
+    this.chunkId = chunkId
     this.variant = variant
     this.isReserved = false
     this.offsetX = offsetX ?? 0
@@ -35,17 +37,19 @@ export class FlagObject extends BaseObject implements GameObjectFlag {
     super.live()
 
     if (this.target?.state === 'DESTROYED') {
-      this.removeTarget()
+      this.target = undefined
     }
   }
 
   animate() {
-    if (this.scene.game.checkIfThisFlagIsTarget(this.id)) {
+    super.animate()
+
+    if (this.game.checkIfThisFlagIsTarget(this.id)) {
       this.visible = true
       return
     }
 
-    if (this.type === 'WAGON_MOVEMENT') {
+    if (this.variant === 'WAGON_MOVEMENT') {
       this.visible = true
       return
     }

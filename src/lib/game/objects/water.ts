@@ -1,14 +1,14 @@
 import { BaseObject } from './baseObject'
-import type { GameScene, IGameObjectWater } from '$lib/game/types'
+import type { Game, IGameObjectWater } from '$lib/game/types'
 
 interface IWaterOptions {
-  scene: GameScene
+  game: Game
   x: number
   y: number
 }
 
 export class Water extends BaseObject implements IGameObjectWater {
-  constructor({ scene, x, y }: IWaterOptions) {
-    super({ scene, x, y, type: 'WATER' })
+  constructor({ game, x, y }: IWaterOptions) {
+    super({ game, x, y, type: 'WATER' })
   }
 }

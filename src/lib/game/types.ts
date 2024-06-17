@@ -1,21 +1,70 @@
-export interface Game {
+import type { Container, TilingSprite } from 'pixi.js'
+import type { GameAction } from '$lib/game/actions/interface'
+import type {
+  GameActionService,
+  GameEventService,
+  GameRouteService,
+  GameService,
+  GameWagonService,
+  IGameEvent,
+  IGameRoute, Wagon,
+} from '$lib/game/services/interface'
+import type {
+  GameChunk,
+  GameChunkService, IGameChunkTheme,
+} from '$lib/game/services/chunk/interface'
+import type { GamePlayerService } from '$lib/game/services/player/interface'
 
+export interface Game extends Container {
+  children: GameObject[]
+  tick: number
+  audio: GameAudio
+  scene: GameScene
+  bg: GameBackground
+  group: IGameGroup
+  activePlayers: GameObjectPlayer[]
+  actionService: GameActionService
+  eventService: GameEventService
+  tradeService: GameService
+  wagonService: GameWagonService
+  routeService: GameRouteService
+  chunkService: GameChunkService
+  playerService: GamePlayerService
+  play: () => void
+  checkIfThisFlagIsTarget: (id: string) => boolean
+  initScene: (scene: GameSceneType) => void
+  removeObject: (obj: GameObject) => void
+  stopRaid: () => void
+  initRaiders: (count: number) => void
 }
 
 export interface GameScene {
   game: Game
-  live: () => void
+  destroy: () => void
 }
 
-export interface GameSceneService {
-  scene: GameScene
-  update: () => void
+export interface GameBackground {
+  generateBackgroundTilingSprite: (theme: IGameChunkTheme) => TilingSprite
 }
 
-export interface GameObject {
+export interface GameAudio {
+  playSound: (name: GameAudioName) => void
+  isEnabled: boolean
+  destroy: () => void
+}
+
+export type GameAudioName =
+  | 'CHOP_HIT'
+  | 'MINE_HIT'
+  | 'HAND_HIT'
+  | 'MARCHING_WITH_HORNS'
+  | 'FOREST_BACKGROUND'
+  | 'WAGON_MOVING'
+  | 'FIRE_BURN'
+  | 'YEAH'
+
+export interface GameObject extends Container {
   id: string
-  x: number
-  y: number
   type: GameObjectType
   state: IGameObjectState
   direction: IGameObjectDirection
@@ -23,11 +72,15 @@ export interface GameObject {
   health: number
   speedPerSecond: number
   size: number
-  scene: GameScene
+  chunkId: string | undefined
+  isOnWagonPath: boolean
+  game: Game
   script: IGameScript | undefined
+  init: () => void
   live: () => void
   animate: () => void
   move: () => boolean
+  setTarget: (obj: GameObject) => void
 }
 
 type GameObjectType =
@@ -64,15 +117,6 @@ export interface TwitchAccessToken {
   obtainmentTimestamp: number
 }
 
-export interface IGameAction {
-  command: string
-  commandDescription: string
-  live: (
-    player: IGameObjectPlayer,
-    params: string[],
-  ) => Promise<IGameActionResponse>
-}
-
 export interface IGameActionResponse {
   ok: boolean
   message: string | null
@@ -107,6 +151,8 @@ export interface IGameInventory {
   id: string
   objectId: string
   items: IGameInventoryItem[]
+  reduceOrDestroyItem: (type: ItemType, amount: number) => Promise<boolean>
+  addOrCreateItem: (type: ItemType, amount: number) => Promise<void>
 }
 
 export interface IGameInventoryItem {
@@ -151,37 +197,12 @@ export interface IGameQuestTask {
   progressToSuccess: number | boolean
   updateProgress: IGameQuestTaskFunc
   command?: string
-  action?: IGameAction
+  action?: GameAction
 }
 
 export type IGameQuestTaskFunc = (
   progressToSuccess?: IGameQuestTask['progressToSuccess'],
 ) => Partial<IGameQuestTask>
-
-export interface IGameChunk {
-  id: string
-  title: string
-  type: 'VILLAGE' | 'FOREST' | 'LAKE'
-  center: {
-    x: number
-    y: number
-  }
-  area: IGameObjectArea
-}
-
-export type IGameChunkTheme =
-  | 'GREEN'
-  | 'TOXIC'
-  | 'STONE'
-  | 'TEAL'
-  | 'BLUE'
-  | 'VIOLET'
-
-export interface IGameVillageChunk extends IGameChunk {}
-
-export interface IGameForestChunk extends IGameChunk {}
-
-export interface IGameLakeChunk extends IGameChunk {}
 
 export type IGameObjectState =
   | 'MOVING'
@@ -207,17 +228,6 @@ export interface WebSocketMessage {
     | 'TRADE_STARTED'
     | 'IDEA_CREATED'
   object?: Partial<GameObject>
-}
-
-export interface IGameObjectWagon extends GameObject {
-  fuel: number
-  visibilityArea: {
-    startX: number
-    endX: number
-    startY: number
-    endY: number
-  }
-  cargoType: 'CHEST' | undefined
 }
 
 export type GameObjectBuildingType =
@@ -298,6 +308,7 @@ export interface IGameObjectUnit extends GameObject {
   dialogue: {
     messages: { id: string, text: string }[]
   }
+  chopTree: () => void
 }
 
 export interface IGameObjectTrader extends IGameObjectUnit {}
@@ -308,13 +319,14 @@ export interface IGameObjectFarmer extends IGameObjectUnit {}
 
 export interface IGameObjectMechanic extends IGameObjectUnit {}
 
-export interface IGameObjectPlayer extends IGameObjectUnit {
+export interface GameObjectPlayer extends IGameObjectUnit {
   reputation: number
   villainPoints: number
   refuellerPoints: number
   raiderPoints: number
   skills: IGameSkill[]
   lastActionAt: Date
+  addReputation: (amount: number) => void
 }
 
 export interface IGameObjectRaider extends IGameObjectUnit {}
@@ -346,48 +358,30 @@ export interface IGameTask {
   live: () => void
 }
 
-export interface IGameEvent {
-  id: string
-  title: string
-  description: string
-  type: WebSocketMessage['event']
-  status: 'STARTED' | 'STOPPED'
-  endsAt: Date
-  poll?: IGamePoll
-  quest?: IGameQuest
-  offers?: ITradeOffer[]
-}
-
 export interface IGamePoll {
   status: 'ACTIVE' | 'SUCCESS' | 'FINISHED'
   id: string
-  action: IGameAction
+  action: GameAction
   votesToSuccess: number
   votes: { id: string, userName: string }[]
 }
 
 export type GameSceneType = 'VILLAGE' | 'DEFENCE' | 'MOVING'
 
-export interface GetSceneResponse {
+export interface GameStateResponse {
   id: string
   commands: string[]
-  chunk: IGameChunk | null
+  chunk: GameChunk | undefined
   events: IGameEvent[]
   group: IGameGroup
-  wagon: IGameObjectWagon
+  wagon: Wagon
   route: IGameRoute | null
   warehouseItems: IGameInventoryItem[] | undefined
 }
 
 export interface IGameGroup {
   id: string
-  players: IGameObjectPlayer[]
-}
-
-export interface IGameRoute {
-  startPoint: { x: number, y: number }
-  endPoint: { x: number, y: number }
-  chunks: IGameChunk[]
+  players: GameObjectPlayer[]
 }
 
 export interface PlayerTitle {
@@ -422,7 +416,7 @@ export type GraphicsContainerType =
   | 'FIRE_PARTICLE'
 
 interface PlayerWithPoints {
-  player: IGameObjectPlayer
+  player: GameObjectPlayer
   points: number
 }
 

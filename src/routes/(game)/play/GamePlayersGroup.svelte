@@ -1,8 +1,8 @@
 <script lang='ts'>
   import GamePlayerCard from './GamePlayerCard.svelte'
-  import type { IGameObjectPlayer } from '$lib/game/types'
+  import type { GameObjectPlayer } from '$lib/game/types'
 
-  const players: IGameObjectPlayer[] = []
+  const players: GameObjectPlayer[] = []
 </script>
 
 <div class='block'>

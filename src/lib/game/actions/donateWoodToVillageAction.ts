@@ -1,32 +1,27 @@
-import { Village } from '../chunks'
-import type { Warehouse } from '../objects/buildings/warehouse'
-import { BaseAction } from './baseAction'
-import { ANSWER } from '$lib/game/scenes/services/actionService'
-import type { GameScene } from '$lib/game/types'
+import { ANSWER } from '$lib/game/services/actionService'
+import type { Game, GameObjectPlayer } from '$lib/game/types'
+import type { GameAction } from '$lib/game/actions/interface'
 
-interface IDonateWoodToVillageActionOptions {
-  scene: GameScene
+interface DonateWoodToVillageActionOptions {
+  game: Game
 }
 
-export class DonateWoodToVillageAction extends BaseAction {
-  scene: GameScene
+export class DonateWoodToVillageAction implements GameAction {
+  command = 'donate'
+  commandDescription = '!donate [quantity]'
+  game: Game
 
-  constructor({ scene }: IDonateWoodToVillageActionOptions) {
-    super({ command: 'donate', commandDescription: '!donate [quantity]' })
-
-    this.scene = scene
+  constructor({ game }: DonateWoodToVillageActionOptions) {
+    this.game = game
   }
 
-  async live(player, params) {
-    const amount = this.scene.actionService.getAmountFromChatCommand(params[0])
+  async live(player: GameObjectPlayer, params: string[]) {
+    const amount = this.game.actionService.getAmountFromChatCommand(params[0])
     if (!amount) {
       return ANSWER.WRONG_AMOUNT_ERROR
     }
 
-    let warehouse: Warehouse | undefined
-    if (this.scene.chunkNow instanceof Village) {
-      warehouse = this.scene.chunkNow.getWarehouse()
-    }
+    const warehouse = this.game.chunkService.chunk?.warehouse
 
     const isSuccess = await player.inventory.reduceOrDestroyItem('WOOD', amount)
     if (!isSuccess) {

@@ -1,16 +1,16 @@
 import { UnitObject } from './unitObject'
-import type { GameScene, IGameObjectMechanic } from '$lib/game/types'
+import type { Game, IGameObjectMechanic } from '$lib/game/types'
 
 interface IMechanicOptions {
-  scene: GameScene
+  game: Game
   x: number
   y: number
 }
 
 export class Mechanic extends UnitObject implements IGameObjectMechanic {
-  constructor({ scene, x, y }: IMechanicOptions) {
+  constructor({ game, x, y }: IMechanicOptions) {
     super({
-      scene,
+      game,
       x,
       y,
       type: 'MECHANIC',

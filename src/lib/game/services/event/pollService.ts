@@ -1,24 +1,18 @@
-import type { Player } from '../../objects/units'
 import type {
-  GameScene,
-  GameSceneService,
-  IGameObjectPlayer,
-  IGamePoll,
+  Game,
+  GameObjectPlayer, IGamePoll,
 } from '$lib/game/types'
+import type { GameService } from '$lib/game/services/interface'
 
-interface IPollServiceOptions {
-  scene: GameScene
-}
+export class PollService implements GameService {
+  game: Game
 
-export class PollService implements GameSceneService {
-  scene: GameScene
-
-  constructor({ scene }: IPollServiceOptions) {
-    this.scene = scene
+  constructor(game: Game) {
+    this.game = game
   }
 
   update() {
-    for (const event of this.scene.eventService.events) {
+    for (const event of this.game.eventService.events) {
       if (!event.poll || event.poll.status !== 'ACTIVE') {
         continue
       }
@@ -29,8 +23,8 @@ export class PollService implements GameSceneService {
     }
   }
 
-  public findActivePollAndVote(pollId: string, player: Player) {
-    for (const event of this.scene.eventService.events) {
+  public findActivePollAndVote(pollId: string, player: GameObjectPlayer) {
+    for (const event of this.game.eventService.events) {
       if (event.poll && event.poll?.id === pollId) {
         const voted = this.vote(event.poll, player)
         if (!voted) {
@@ -43,7 +37,7 @@ export class PollService implements GameSceneService {
     return 'POLL_NOT_FOUND'
   }
 
-  private vote(poll: IGamePoll, player: IGameObjectPlayer): boolean {
+  private vote(poll: IGamePoll, player: GameObjectPlayer): boolean {
     if (poll.votes.find((v) => v.id === player.id)) {
       return false
     }

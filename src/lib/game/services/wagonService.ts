@@ -1,44 +1,45 @@
-import { Flag, Wagon } from '../../objects'
 import { getMinusOrPlus, getRandomInRange } from '$lib/random'
-import type { GameScene, GameSceneService } from '$lib/game/types'
+import type { Game } from '$lib/game/types'
+import { FlagObject } from '$lib/game/objects/flagObject'
+import { BaseWagon } from '$lib/game/objects/baseWagon'
+import type {
+  GameWagonService,
+} from '$lib/game/services/interface'
 
-interface IWagonServiceOptions {
-  scene: GameScene
-}
+export class WagonService implements GameWagonService {
+  wagon!: BaseWagon
+  game: Game
 
-export class WagonService implements GameSceneService {
-  wagon!: Wagon
-  outFlags: Flag[] = []
-  nearFlags: Flag[] = []
-  scene: GameScene
+  #outFlags: FlagObject[] = []
+  #nearFlags: FlagObject[] = []
 
-  constructor({ scene }: IWagonServiceOptions) {
-    this.scene = scene
+  constructor(game: Game) {
+    this.game = game
   }
 
   update() {
-    this.updateWagon()
-    this.updateFlags()
+    this.#updateWagon()
+    this.#updateFlags()
   }
 
-  public initWagon({ x, y }: { x: number, y: number }) {
-    this.wagon = new Wagon({ scene: this.scene, x, y })
+  initWagon({ x, y }: { x: number, y: number }) {
+    this.wagon = new BaseWagon({ game: this.game, x, y })
 
-    this.initOutFlags()
-    this.initNearFlags()
+    this.#initOutFlags()
+    this.#initNearFlags()
   }
 
-  public findRandomOutFlag() {
-    return this.outFlags[Math.floor(Math.random() * this.outFlags.length)]
+  get randomOutFlag() {
+    return this.#outFlags[Math.floor(Math.random() * this.#outFlags.length)]
   }
 
-  public findRandomNearFlag() {
-    return this.nearFlags[Math.floor(Math.random() * this.nearFlags.length)]
+  get randomNearFlag() {
+    return this.#nearFlags[Math.floor(Math.random() * this.#nearFlags.length)]
   }
 
-  private updateWagon() {
+  #updateWagon() {
     const collisionObjects
-      = this.scene.chunkNow?.objects.filter(
+      = this.game.children.filter(
         (obj) => obj.isOnWagonPath && obj.state !== 'DESTROYED',
       ) ?? []
     for (const collisionObject of collisionObjects) {
@@ -63,7 +64,7 @@ export class WagonService implements GameSceneService {
       this.wagon.state = 'IDLE'
     }
     if (this.wagon.state === 'IDLE') {
-      const target = this.scene.routeService.route?.getNextFlag()
+      const target = this.game.routeService.nextFlag
       if (target) {
         this.wagon.target = target
         this.wagon.state = 'MOVING'
@@ -74,11 +75,8 @@ export class WagonService implements GameSceneService {
       const isMoving = this.wagon.move()
 
       if (!isMoving) {
-        if (
-          this.wagon.target instanceof Flag
-          && this.wagon.target.type === 'WAGON_MOVEMENT'
-        ) {
-          this.scene.routeService.route?.removeFlag(this.wagon.target)
+        if (this.wagon.target?.type === 'FLAG') {
+          this.game.routeService.route?.removeFlag(this.wagon.target.id)
           this.wagon.target = undefined
           this.wagon.state = 'IDLE'
           this.wagon.speedPerSecond = 0
@@ -89,30 +87,30 @@ export class WagonService implements GameSceneService {
     this.wagon.live()
   }
 
-  private updateFlags() {
-    for (const flag of this.nearFlags) {
+  #updateFlags() {
+    for (const flag of this.#nearFlags) {
       flag.x = this.wagon.x + flag.offsetX
       flag.y = this.wagon.y + flag.offsetY
     }
-    for (const flag of this.outFlags) {
+    for (const flag of this.#outFlags) {
       flag.x = this.wagon.x + flag.offsetX
       flag.y = this.wagon.y + flag.offsetY
     }
   }
 
-  private initOutFlags(count = 20) {
+  #initOutFlags(count = 20) {
     for (let i = 0; i < count; i++) {
-      this.outFlags.push(this.generateRandomOutFlag())
+      this.#outFlags.push(this.#generateRandomOutFlag())
     }
   }
 
-  private initNearFlags(count = 20) {
+  #initNearFlags(count = 20) {
     for (let i = 0; i < count; i++) {
-      this.nearFlags.push(this.generateRandomNearFlag())
+      this.#nearFlags.push(this.#generateRandomNearFlag())
     }
   }
 
-  private generateRandomOutFlag() {
+  #generateRandomOutFlag() {
     const minOffsetX = 1800
     const minOffsetY = 1200
 
@@ -121,9 +119,9 @@ export class WagonService implements GameSceneService {
     const offsetY
       = getRandomInRange(minOffsetY, minOffsetY * 1.5) * getMinusOrPlus()
 
-    return new Flag({
-      scene: this.scene,
-      type: 'OUT_OF_SCREEN',
+    return new FlagObject({
+      game: this.game,
+      variant: 'OUT_OF_SCREEN',
       x: this.wagon.x + offsetX,
       y: this.wagon.y + offsetY,
       offsetX,
@@ -131,7 +129,7 @@ export class WagonService implements GameSceneService {
     })
   }
 
-  private generateRandomNearFlag() {
+  #generateRandomNearFlag() {
     const minRadius = 280
     const maxRadius = minRadius * 1.1
 
@@ -141,9 +139,9 @@ export class WagonService implements GameSceneService {
     const offsetX = Math.round(Math.cos(angle) * radius)
     const offsetY = Math.round(Math.sin(angle) * radius)
 
-    return new Flag({
-      scene: this.scene,
-      type: 'WAGON_NEAR_MOVEMENT',
+    return new FlagObject({
+      game: this.game,
+      variant: 'WAGON_NEAR_MOVEMENT',
       x: this.wagon.x + offsetX,
       y: this.wagon.y + offsetY,
       offsetX,

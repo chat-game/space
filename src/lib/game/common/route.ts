@@ -1,5 +1,7 @@
-import { Flag } from '../objects'
-import type { GameScene, IGameChunk, IGameRoute } from '$lib/game/types'
+import { FlagObject } from '$lib/game/objects/flagObject'
+import type { GameChunk } from '$lib/game/services/chunk/interface'
+import type { Game } from '$lib/game/types'
+import type { IGameRoute } from '$lib/game/services/interface'
 
 interface IRoutePoint {
   x: number
@@ -14,30 +16,20 @@ interface IRouteArea {
 }
 
 interface IRouteOptions {
-  scene: GameScene
+  game: Game
 }
 
 export class Route implements IGameRoute {
   public startPoint!: IRoutePoint
   public endPoint!: IRoutePoint
-  public chunks: IGameChunk[] = []
+  public chunks: GameChunk[] = []
 
-  public scene: GameScene
-  public flags: Flag[] = []
+  game: Game
+  public flags: FlagObject[] = []
   public areas: IRouteArea[] = []
 
-  constructor({ scene }: IRouteOptions) {
-    this.scene = scene
-  }
-
-  public addChunk(chunk: IGameChunk) {
-    this.chunks.push({
-      id: chunk.id,
-      type: chunk.type,
-      title: chunk.title,
-      center: chunk.center,
-      area: chunk.area,
-    })
+  constructor({ game }: IRouteOptions) {
+    this.game = game
   }
 
   setEndPoint({ x, y }: IRoutePoint) {
@@ -45,9 +37,9 @@ export class Route implements IGameRoute {
   }
 
   #addFlag({ x, y }: IRoutePoint) {
-    const movementFlag = new Flag({
-      scene: this.scene,
-      type: 'WAGON_MOVEMENT',
+    const movementFlag = new FlagObject({
+      game: this.game,
+      variant: 'WAGON_MOVEMENT',
       x,
       y,
     })
@@ -60,7 +52,7 @@ export class Route implements IGameRoute {
     this.flags.push(movementFlag)
   }
 
-  public addGlobalFlag(end: IRoutePoint) {
+  addGlobalFlag(end: IRoutePoint) {
     const prevGlobalFlag = this.flags[this.flags.length - 1]
     if (!prevGlobalFlag) {
       return this.#addFlag(end)
@@ -70,18 +62,14 @@ export class Route implements IGameRoute {
     this.#addFlag({ x: end.x, y: end.y })
   }
 
-  getNextFlag() {
-    return this.flags[0]
-  }
-
-  removeFlag(flag: Flag) {
-    const index = this.flags.findIndex((f) => f.id === flag.id)
+  removeFlag(id: string) {
+    const index = this.flags.findIndex((f) => f.id === id)
     if (index >= 0) {
       this.flags.splice(index, 1)
     }
   }
 
-  #initArea(flag1: Flag, flag2: Flag) {
+  #initArea(flag1: FlagObject, flag2: FlagObject) {
     const offset = 150
     const halfOffset = offset / 2
 

@@ -1,27 +1,32 @@
-import { Inventory, Skill } from '../../common'
 import { UnitObject } from './unitObject'
 import { getRandomInRange } from '$lib/random'
-import type { GameScene, IGameObjectPlayer, IGameSkill } from '$lib/game/types'
+import type {
+  Game,
+  GameObjectPlayer,
+  IGameSkill,
+} from '$lib/game/types'
+import { Skill } from '$lib/game/common/skill'
+import { Inventory } from '$lib/game/common/inventory'
 
 interface PlayerOptions {
-  scene: GameScene
+  game: Game
   id?: string
   x: number
   y: number
 }
 
-export class Player extends UnitObject implements IGameObjectPlayer {
+export class Player extends UnitObject implements GameObjectPlayer {
   reputation!: number
   villainPoints!: number
   refuellerPoints!: number
   raiderPoints!: number
   skills!: Skill[]
-  lastActionAt!: IGameObjectPlayer['lastActionAt']
+  lastActionAt!: GameObjectPlayer['lastActionAt']
 
   public inventoryId?: string
 
-  constructor({ scene, id, x, y }: PlayerOptions) {
-    super({ scene, id, x, y, type: 'PLAYER' })
+  constructor({ game, id, x, y }: PlayerOptions) {
+    super({ game, id, x, y, type: 'PLAYER' })
 
     this.speedPerSecond = 2
     void this.initFromDB()

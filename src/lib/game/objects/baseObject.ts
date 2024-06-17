@@ -1,17 +1,18 @@
 import { createId } from '@paralleldrive/cuid2'
 import { Container } from 'pixi.js'
-import type { GameObject, GameScene, IGameScript } from '$lib/game/types'
+import type { Game, GameObject } from '$lib/game/types'
 
 interface GameObjectOptions {
-  scene: GameScene
+  game: Game
   type: GameObject['type']
-  id?: string
+  id?: GameObject['id']
   x?: number
   y?: number
 }
 
 export class BaseObject extends Container implements GameObject {
-  id: GameObject['id']
+  readonly #id: GameObject['id']
+  #chunkId: GameObject['chunkId']
   state: GameObject['state']
   direction: GameObject['direction']
   type: GameObject['type']
@@ -19,26 +20,32 @@ export class BaseObject extends Container implements GameObject {
   health!: GameObject['health']
   speedPerSecond!: GameObject['speedPerSecond']
   size!: GameObject['size']
+  game: GameObject['game']
+  script: GameObject['script']
+  isOnWagonPath: GameObject['isOnWagonPath']
 
-  scene: GameScene
-  script: IGameScript
   minDistance = 1
-  isOnWagonPath = false
 
-  constructor({ scene, x, y, id, type }: GameObjectOptions) {
+  constructor({ game, x, y, id, type }: GameObjectOptions) {
     super()
 
-    this.scene = scene
+    this.game = game
 
-    this.id = id ?? createId()
+    this.#id = id ?? createId()
     this.x = x ?? 0
     this.y = y ?? 0
     this.type = type
     this.direction = 'RIGHT'
     this.state = 'IDLE'
-
-    this.scene.game.addChild(this)
+    this.script = undefined
+    this.isOnWagonPath = false
   }
+
+  init() {
+    this.game.addChild(this)
+  }
+
+  live() {}
 
   animate(): void {
     this.zIndex = Math.round(this.y)
@@ -60,12 +67,24 @@ export class BaseObject extends Container implements GameObject {
     const distanceToY = this.#getDistanceToTargetY()
 
     // Fix diagonal speed
-    const speed = this.speedPerSecond / this.scene.game.tick
+    const speed = this.speedPerSecond / this.game.tick
     const finalSpeed = distanceToX > 0 && distanceToY > 0 ? speed * 0.75 : speed
 
     this.#moveX(finalSpeed > distanceToX ? distanceToX : finalSpeed)
     this.#moveY(finalSpeed > distanceToY ? distanceToY : finalSpeed)
     return true
+  }
+
+  get id() {
+    return this.#id
+  }
+
+  get chunkId(): string | undefined {
+    return this.#chunkId
+  }
+
+  set chunkId(id: string | undefined) {
+    this.#chunkId = id
   }
 
   setTarget(target: GameObject) {

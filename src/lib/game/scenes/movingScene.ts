@@ -1,25 +1,27 @@
-import { BaseScene } from './baseScene'
-import type { Game } from '$lib/game/types'
+import type { Game, GameScene } from '$lib/game/types'
 
 interface IMovingSceneOptions {
   game: Game
 }
 
-export class MovingScene extends BaseScene {
-  constructor({ game }: IMovingSceneOptions) {
-    super({ game })
+export class MovingScene implements GameScene {
+  game: Game
 
-    void this.init()
+  constructor({ game }: IMovingSceneOptions) {
+    this.game = game
+    void this.#init()
   }
 
-  async init() {
+  destroy() {}
+
+  async #init() {
     const village = this.#initStartingVillage()
-    const wagonStartPoint = village.getWagonStopPoint()
+    const wagonStop = village.wagonStop
+    if (!wagonStop) {
+      return
+    }
 
-    this.wagonService.initWagon(wagonStartPoint)
-    await this.#initGroupPlayers()
-
-    // void this.live()
+    this.game.wagonService.initWagon({ x: wagonStop.x, y: wagonStop.y })
   }
 
   #initStartingVillage() {
@@ -35,26 +37,15 @@ export class MovingScene extends BaseScene {
         y: Math.round(height / 2 + initialOffsetY),
       },
     }
-    const village = this.wagonService.routeService.generateRandomVillage({
+    const village = this.game.chunkService.generateRandomVillage({
       center: area.center,
       width: area.width,
       height: area.height,
-      theme: this.getRandomTheme(),
-      scene: this,
+      theme: this.game.chunkService.getRandomTheme(),
+      game: this.game,
     })
-    this.chunks.push(village)
+    this.game.chunkService.chunks.push(village)
 
     return village
-  }
-
-  async #initGroupPlayers() {
-    if (!this.group) {
-      return
-    }
-
-    for (const player of this.group.players) {
-      const instance = await this.initPlayer(player.id)
-      this.objects.push(instance)
-    }
   }
 }

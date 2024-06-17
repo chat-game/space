@@ -1,6 +1,5 @@
 import { createId } from '@paralleldrive/cuid2'
 import { Sprite } from 'pixi.js'
-import { Inventory } from '../common'
 import type { GraphicsContainer } from '../components/graphicsContainer'
 import { WagonCargoContainer } from '../components/wagonCargoContainer'
 import { WagonEngineCloudsContainer } from '../components/wagonEngineCloudsContainer'
@@ -8,28 +7,30 @@ import { WagonEngineContainer } from '../components/wagonEngineContainer'
 import { WagonFuelBoxContainer } from '../components/wagonFuelBoxContainer'
 import { WagonWheelContainer } from '../components/wagonWheelContainer'
 import { BaseObject } from './baseObject'
-import { Mechanic } from './units'
-import type { GameScene, IGameObjectWagon } from '$lib/game/types'
+import type { Game } from '$lib/game/types'
+import { Inventory } from '$lib/game/common/inventory'
+import { Mechanic } from '$lib/game/objects/units/mechanic'
+import type { Wagon } from '$lib/game/services/interface'
 
 interface IWagonOptions {
-  scene: GameScene
+  game: Game
   x: number
   y: number
 }
 
-export class Wagon extends BaseObject implements IGameObjectWagon {
+export class BaseWagon extends BaseObject implements Wagon {
   public fuel!: number
-  public visibilityArea!: IGameObjectWagon['visibilityArea']
-  public cargoType: IGameObjectWagon['cargoType']
+  public visibilityArea!: Wagon['visibilityArea']
+  public cargoType: Wagon['cargoType']
 
   public children: GraphicsContainer[] = []
   public cargo: Inventory | undefined
   public mechanic!: Mechanic
-  public serverDataArea!: IGameObjectWagon['visibilityArea']
-  public collisionArea!: IGameObjectWagon['visibilityArea']
+  public serverDataArea!: Wagon['visibilityArea']
+  public collisionArea!: Wagon['visibilityArea']
 
-  constructor({ scene, x, y }: IWagonOptions) {
-    super({ scene, x, y, type: 'WAGON' })
+  constructor({ game, x, y }: IWagonOptions) {
+    super({ game, x, y, type: 'WAGON' })
 
     this.speedPerSecond = 0
     this.fuel = 2000
@@ -149,10 +150,11 @@ export class Wagon extends BaseObject implements IGameObjectWagon {
 
   #initMechanic() {
     this.mechanic = new Mechanic({
-      scene: this.scene,
+      game: this.game,
       x: this.x,
       y: this.y,
     })
+    this.mechanic.init()
   }
 
   #updateMechanic() {
@@ -279,7 +281,7 @@ export class Wagon extends BaseObject implements IGameObjectWagon {
 
   #handleSoundByState() {
     if (this.state === 'MOVING') {
-      this.scene.game.audio.playSound('WAGON_MOVING')
+      this.game.audio.playSound('WAGON_MOVING')
     }
   }
 }

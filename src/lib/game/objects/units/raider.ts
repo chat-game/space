@@ -1,16 +1,16 @@
 import { UnitObject } from './unitObject'
-import type { GameScene, IGameObjectRaider } from '$lib/game/types'
+import type { Game, IGameObjectRaider } from '$lib/game/types'
 
 interface RaiderOptions {
-  scene: GameScene
+  game: Game
   x: number
   y: number
 }
 
 export class Raider extends UnitObject implements IGameObjectRaider {
-  constructor({ scene, x, y }: RaiderOptions) {
+  constructor({ game, x, y }: RaiderOptions) {
     super({
-      scene,
+      game,
       x,
       y,
       type: 'RAIDER',

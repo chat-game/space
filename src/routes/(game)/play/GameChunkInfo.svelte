@@ -2,9 +2,9 @@
   import Home from 'lucide-svelte/icons/home'
   import TreeDeciduous from 'lucide-svelte/icons/tree-deciduous'
   import Waves from 'lucide-svelte/icons/waves'
-  import type { IGameChunk } from '$lib/game/types'
+  import type { GameChunk } from '$lib/game/services/chunk/interface'
 
-  export let type: IGameChunk['type']
+  export let type: GameChunk['type']
   export let title
 </script>
 

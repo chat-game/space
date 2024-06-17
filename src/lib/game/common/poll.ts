@@ -1,10 +1,14 @@
 import { createId } from '@paralleldrive/cuid2'
 import { VoteAction } from '../actions/voteAction'
 import { getRandomInRange } from '$lib/random'
-import type { GameScene, IGameObjectPlayer, IGamePoll } from '$lib/game/types'
+import type {
+  Game,
+  GameObjectPlayer,
+  IGamePoll,
+} from '$lib/game/types'
 
 interface IPollOptions {
-  scene: GameScene
+  game: Game
   votesToSuccess: IGamePoll['votesToSuccess']
 }
 
@@ -15,10 +19,10 @@ export class Poll implements IGamePoll {
   public votesToSuccess: IGamePoll['votesToSuccess']
   public votes: IGamePoll['votes'] = []
 
-  public scene: GameScene
+  game: Game
 
-  constructor({ votesToSuccess, scene }: IPollOptions) {
-    this.scene = scene
+  constructor({ votesToSuccess, game }: IPollOptions) {
+    this.game = game
 
     this.id = createId()
     this.status = 'ACTIVE'
@@ -27,7 +31,7 @@ export class Poll implements IGamePoll {
     this.action = new VoteAction({ poll: this })
   }
 
-  public vote(player: IGameObjectPlayer): boolean {
+  public vote(player: GameObjectPlayer): boolean {
     if (this.votes.find((v) => v.id === player.id)) {
       return false
     }
@@ -38,7 +42,7 @@ export class Poll implements IGamePoll {
 
   public generatePollId(): string {
     const id = getRandomInRange(1, 9).toString()
-    for (const event of this.scene.eventService.events) {
+    for (const event of this.game.eventService.events) {
       if (event.poll?.action.command === `go ${id}`) {
         return this.generatePollId()
       }

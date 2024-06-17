@@ -1,26 +1,31 @@
 import { createId } from '@paralleldrive/cuid2'
 import type { AnimatedSprite } from 'pixi.js'
-import { Inventory } from '../../common'
 import { DialogueInterface } from '../../components/dialogueInterface'
 import type { GraphicsContainer } from '../../components/graphicsContainer'
 import { UnitHairContainer } from '../../components/unitHairContainer'
 import { UnitHeadContainer } from '../../components/unitHeadContainer'
 import { UnitInterface } from '../../components/unitInterface'
 import { UnitTopContainer } from '../../components/unitTopContainer'
-import { AssetsManager } from '../../utils'
 import { FlagObject } from '../flagObject'
 import { BaseObject } from '../baseObject'
 import { StoneObject } from '../stoneObject'
 import { TreeObject } from '../treeObject'
 import { getRandomInRange } from '$lib/random'
-import type { GameObject, GameScene, IGameObjectUnit } from '$lib/game/types'
+import type {
+  Game,
+  GameObject,
+  IGameObjectUnit,
+} from '$lib/game/types'
+import { Inventory } from '$lib/game/common/inventory'
+import { AssetsManager } from '$lib/game/utils/assetsManager'
 
-interface IUnitOptions {
-  scene: GameScene
+interface UnitObjectOptions {
+  game: Game
   id?: string
   x: number
   y: number
   type: GameObject['type']
+  chunkId?: string
 }
 
 export class UnitObject extends BaseObject implements IGameObjectUnit {
@@ -36,30 +41,31 @@ export class UnitObject extends BaseObject implements IGameObjectUnit {
   private readonly animationMovingLeft!: AnimatedSprite
   private readonly animationMovingRight!: AnimatedSprite
 
-  constructor({ scene, x, y, id, type }: IUnitOptions) {
-    super({ scene, x, y, id, type })
+  constructor({ game, x, y, id, type, chunkId }: UnitObjectOptions) {
+    super({ game, x, y, id, type })
 
-    this.initInventory()
     this.initVisual()
-    this.initDialogue()
+    this.chunkId = chunkId
     this.coins = 0
     this.state = 'IDLE'
 
     this.animationMovingRight = AssetsManager.getAnimatedSpriteHero('RIGHT')
     this.animationMovingLeft = AssetsManager.getAnimatedSpriteHero('LEFT')
 
-    this.initGraphics()
+    this.#initInventory()
+    this.#initDialogue()
+    this.#initGraphics()
   }
 
   live() {
-    this.handleMessages()
+    this.#handleMessages()
 
     if (this.script) {
       return this.script.live()
     }
   }
 
-  private initInventory() {
+  #initInventory() {
     this.inventory = new Inventory({
       objectId: this.id,
       id: createId(),
@@ -75,7 +81,7 @@ export class UnitObject extends BaseObject implements IGameObjectUnit {
     }
   }
 
-  private initDialogue() {
+  #initDialogue() {
     this.dialogue = {
       messages: [],
     }
@@ -93,14 +99,14 @@ export class UnitObject extends BaseObject implements IGameObjectUnit {
     })
   }
 
-  public handleMessages() {
+  #handleMessages() {
     const random = getRandomInRange(1, 200)
     if (random === 1) {
       this.dialogue.messages.splice(0, 1)
     }
   }
 
-  public chopTree() {
+  chopTree() {
     if (this.target instanceof TreeObject && this.target.state !== 'DESTROYED') {
       this.direction = 'RIGHT'
       this.state = 'CHOPPING'
@@ -110,7 +116,7 @@ export class UnitObject extends BaseObject implements IGameObjectUnit {
     }
   }
 
-  public mineStone() {
+  mineStone() {
     if (this.target instanceof StoneObject && this.target.state !== 'DESTROYED') {
       this.direction = 'RIGHT'
       this.state = 'MINING'
@@ -131,7 +137,7 @@ export class UnitObject extends BaseObject implements IGameObjectUnit {
     }
   }
 
-  private initGraphics() {
+  #initGraphics() {
     const top = this.initTop()
     const head = this.initHead()
     const hair = this.initHair()
@@ -166,7 +172,7 @@ export class UnitObject extends BaseObject implements IGameObjectUnit {
     this.dialogueInterface = new DialogueInterface(this)
   }
 
-  public animate() {
+  animate() {
     super.animate()
 
     this.zIndex = Math.round(this.y + 1)
@@ -273,21 +279,21 @@ export class UnitObject extends BaseObject implements IGameObjectUnit {
   handleSoundByState() {
     if (this.state === 'CHOPPING') {
       if (this.inventory?.items.find((item) => item.type === 'AXE')) {
-        this.scene.game.audio.playSound('CHOP_HIT')
+        this.game.audio.playSound('CHOP_HIT')
         return
       }
 
-      this.scene.game.audio.playSound('HAND_HIT')
+      this.game.audio.playSound('HAND_HIT')
       return
     }
 
     if (this.state === 'MINING') {
       if (this.inventory?.items.find((item) => item.type === 'PICKAXE')) {
-        this.scene.game.audio.playSound('MINE_HIT')
+        this.game.audio.playSound('MINE_HIT')
         return
       }
 
-      this.scene.game.audio.playSound('HAND_HIT')
+      this.game.audio.playSound('HAND_HIT')
     }
   }
 }

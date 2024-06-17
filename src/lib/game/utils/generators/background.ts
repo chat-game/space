@@ -6,8 +6,8 @@ import {
   BACKGROUND_TILE_4,
   BACKGROUND_TILE_5,
 } from './backgroundImages'
-import type { IGameChunkTheme } from '$lib/game/types'
 import { getRandomInRange } from '$lib/random'
+import type { IGameChunkTheme } from '$lib/game/services/chunk/interface'
 
 interface Palette {
   93: string
@@ -78,7 +78,7 @@ export class BackgroundGenerator {
     })
   }
 
-  public changePaletteByTheme(theme: IGameChunkTheme) {
+  changePaletteByTheme(theme: IGameChunkTheme) {
     if (theme === 'GREEN') {
       this.mainColor1 = '0x239063'
       this.mainColor2 = '0x1ebc73'
@@ -209,7 +209,9 @@ export class BackgroundGenerator {
     return [red, red + 1, red + 2, red + 3]
   }
 
-  public getGeneratedBackgroundTilingSprite() {
+  generateBackgroundTilingSprite(theme: IGameChunkTheme) {
+    this.changePaletteByTheme(theme)
+
     const bg = this.generateRandomGridBackground({
       width: 2000,
       height: 1000,

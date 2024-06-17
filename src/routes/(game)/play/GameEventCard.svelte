@@ -4,7 +4,7 @@
   import GameQuestConditions from './GameQuestConditions.svelte'
   import GameQuestTask from './GameQuestTask.svelte'
   import GameTradeOffer from './GameTradeOffer.svelte'
-  import type { IGameEvent } from '$lib/game/types'
+  import type { IGameEvent } from '$lib/game/services/interface'
 
   export let event: IGameEvent
   const isActive = event.status === 'STARTED'

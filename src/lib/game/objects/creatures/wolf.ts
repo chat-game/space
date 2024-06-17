@@ -1,18 +1,21 @@
 import { Sprite } from 'pixi.js'
 import { BaseObject } from '../baseObject'
-import type { GameScene, IGameObjectWolf } from '$lib/game/types'
+import type { Game, IGameObjectWolf } from '$lib/game/types'
 
 interface IWolfOptions {
-  scene: GameScene
+  game: Game
   x: number
   y: number
+  chunkId?: string
 }
 
 export class Wolf extends BaseObject implements IGameObjectWolf {
   #animationSlowSpeed = 0.1
 
-  constructor({ scene, x, y }: IWolfOptions) {
-    super({ scene, x, y, type: 'WOLF' })
+  constructor({ game, x, y, chunkId }: IWolfOptions) {
+    super({ game, x, y, type: 'WOLF' })
+
+    this.chunkId = chunkId
 
     this.init()
   }

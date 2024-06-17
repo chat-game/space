@@ -1,17 +1,14 @@
-import type { BaseAction } from '../../actions/baseAction'
-import { Village } from '../../chunks'
-import { Group } from '../../common'
-import { Stone, Tree } from '../../objects'
-import type { Warehouse } from '../../objects/buildings/warehouse'
-import type { Player } from '../../objects/units'
-import { ChopTreeScript } from '../../scripts/chopTreeScript'
-import { MineStoneScript } from '../../scripts/mineStoneScript'
-import { PlantNewTreeScript } from '../../scripts/plantNewTreeScript'
+import type { Player } from '../objects/units/player'
+import { ChopTreeScript } from '../scripts/chopTreeScript'
+import { MineStoneScript } from '../scripts/mineStoneScript'
+import { PlantNewTreeScript } from '../scripts/plantNewTreeScript'
 import type {
-  GameScene,
-  GameSceneService,
+  Game,
+  GameObject,
   GameSceneType,
-  IGameActionResponse, IGameSceneAction, ItemType,
+  IGameActionResponse,
+  IGameSceneAction,
+  ItemType,
 } from '$lib/game/types'
 import {
   ADMIN_PLAYER_ID,
@@ -19,15 +16,18 @@ import {
   DONATE_URL,
   GITHUB_REPO_URL,
 } from '$lib/config'
+import type { GameAction } from '$lib/game/actions/interface'
+import type { GameService } from '$lib/game/services/interface'
+import { TreeObject } from '$lib/game/objects/treeObject'
+import { Route } from '$lib/game/common/route'
+import { StoneObject } from '$lib/game/objects/stoneObject'
+import { VillageChunk } from '$lib/game/services/chunk/villageChunk'
+import { Group } from '$lib/game/common/group'
 
 interface ICommandWithAction {
   id: string
   action: IGameSceneAction
   command: string
-}
-
-interface IActionServiceOptions {
-  scene: GameScene
 }
 
 export const ANSWER = {
@@ -89,17 +89,19 @@ export const ANSWER = {
   },
 }
 
-export class ActionService implements GameSceneService {
+export class ActionService implements GameService {
   possibleCommands!: ICommandWithAction[]
   possibleActions!: IGameSceneAction[]
   activeActions!: IGameSceneAction[]
-  scene: GameScene
+  game: Game
 
-  constructor({ scene }: IActionServiceOptions) {
-    this.scene = scene
+  constructor(game: Game) {
+    this.game = game
 
     void this.initActions()
   }
+
+  update() {}
 
   async initActions() {
     this.possibleActions = [
@@ -132,12 +134,12 @@ export class ActionService implements GameSceneService {
   }
 
   public findDynamicActionByCommand(command: string) {
-    const quest = this.scene.eventService.findActionByCommandInQuest(command)
+    const quest = this.game.eventService.findActionByCommandInQuest(command)
     if (quest) {
       return quest
     }
 
-    const poll = this.scene.eventService.findActionByCommandInPoll(command)
+    const poll = this.game.eventService.findActionByCommandInPoll(command)
     if (poll) {
       return poll
     }
@@ -148,12 +150,12 @@ export class ActionService implements GameSceneService {
     playerId: string,
     params?: string[],
   ) {
-    const player = await this.scene.findOrCreatePlayer(playerId)
+    const player = await this.game.playerService.findOrCreatePlayer(playerId)
     if (!player) {
       return ANSWER.NO_PLAYER_ERROR
     }
 
-    this.scene.group.join(player)
+    this.game.group.join(player)
     player.updateLastActionAt()
 
     if (action === 'SHOW_MESSAGE') {
@@ -221,16 +223,16 @@ export class ActionService implements GameSceneService {
   }
 
   public async handleDynamicAction(
-    action: BaseAction,
+    action: GameAction,
     playerId: string,
     params: string[],
   ): Promise<IGameActionResponse> {
-    const player = await this.scene.findOrCreatePlayer(playerId)
+    const player = await this.game.playerService.findOrCreatePlayer(playerId)
     if (!player) {
       return ANSWER.NO_PLAYER_ERROR
     }
 
-    this.scene.group.join(player)
+    this.game.group.join(player)
     player.updateLastActionAt()
 
     const answer = await action.live(player, params)
@@ -275,13 +277,13 @@ export class ActionService implements GameSceneService {
     // First param is raidersCount
     const raidersCount = params ? Number(params[0]) : 0
 
-    this.scene.eventService.init({
+    this.game.eventService.initEvent({
       title: 'The raid has started!',
       description: '',
       type: 'RAID_STARTED',
       secondsToEnd: 60 * 5,
     })
-    this.scene.initRaiders(raidersCount)
+    this.game.initRaiders(raidersCount)
 
     // Raider points
     void player.addRaiderPoints(raidersCount)
@@ -309,7 +311,7 @@ export class ActionService implements GameSceneService {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
 
-    this.scene.wagonService.wagon.emptyFuel()
+    this.game.wagonService.wagon.emptyFuel()
 
     await player.addVillainPoints(1)
 
@@ -355,7 +357,7 @@ export class ActionService implements GameSceneService {
 
     await player.addRefuellerPoints(count)
 
-    this.scene.wagonService.wagon.refuel(count)
+    this.game.wagonService.wagon.refuel(count)
 
     return {
       ok: true,
@@ -379,7 +381,7 @@ export class ActionService implements GameSceneService {
       return ANSWER.BUSY_ERROR
     }
 
-    const target = this.scene.getTreeToChop()
+    const target = this.getTreeToChop()
     if (!target) {
       return ANSWER.NO_AVAILABLE_TREE_ERROR
     }
@@ -388,7 +390,7 @@ export class ActionService implements GameSceneService {
       void player.chopTree()
       if (!player.target || player.target.state === 'DESTROYED') {
         player.state = 'IDLE'
-        if (player.target instanceof Tree) {
+        if (player.target instanceof TreeObject) {
           void player.inventory.addOrCreateItem('WOOD', player.target?.resource)
         }
         return true
@@ -416,7 +418,7 @@ export class ActionService implements GameSceneService {
       }
     }
 
-    const target = this.scene.getStoneToMine()
+    const target = this.getStoneToMine()
     if (!target) {
       return {
         ok: false,
@@ -428,7 +430,7 @@ export class ActionService implements GameSceneService {
       void player.mineStone()
       if (!player.target || player.target.state === 'DESTROYED') {
         player.state = 'IDLE'
-        if (player.target instanceof Stone) {
+        if (player.target instanceof StoneObject) {
           void player.inventory.addOrCreateItem(
             'STONE',
             player.target?.resource,
@@ -459,8 +461,8 @@ export class ActionService implements GameSceneService {
       }
     }
 
-    if (this.scene.chunkNow instanceof Village) {
-      const target = this.scene.chunkNow.checkIfNeedToPlantTree()
+    if (this.game.chunkService.chunk instanceof VillageChunk) {
+      const target = this.game.chunkService.chunk.checkIfNeedToPlantTree()
       if (!target) {
         return {
           ok: false,
@@ -469,8 +471,8 @@ export class ActionService implements GameSceneService {
       }
 
       const plantNewTreeFunc = () => {
-        if (this.scene.chunkNow instanceof Village) {
-          this.scene.chunkNow.plantNewTree(target)
+        if (this.game.chunkService.chunk instanceof VillageChunk) {
+          this.game.chunkService.chunk.plantNewTree(target)
         }
       }
 
@@ -500,7 +502,7 @@ export class ActionService implements GameSceneService {
       return ANSWER.NO_TARGET_ERROR
     }
 
-    this.scene.eventService.init({
+    this.game.eventService.initEvent({
       type: 'SCENE_CHANGING_STARTED',
       title: 'Changing location',
       description: '',
@@ -536,9 +538,9 @@ export class ActionService implements GameSceneService {
       return ANSWER.NO_TARGET_ERROR
     }
 
-    this.scene.group = new Group()
+    this.game.group = new Group()
 
-    this.scene.eventService.init({
+    this.game.eventService.initEvent({
       type: 'GROUP_FORM_STARTED',
       title: 'The group is recruiting!',
       description: '',
@@ -554,7 +556,7 @@ export class ActionService implements GameSceneService {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
 
-    this.scene.group?.disband()
+    this.game.group?.disband()
 
     return {
       ok: true,
@@ -622,10 +624,7 @@ export class ActionService implements GameSceneService {
       }
     }
 
-    let warehouse: Warehouse | undefined
-    if (this.scene.chunkNow instanceof Village) {
-      warehouse = this.scene.chunkNow.getWarehouse()
-    }
+    const warehouse = this.game.chunkService.chunk?.warehouse
 
     if (item === 'WOOD') {
       const isSuccess = await player.inventory.reduceOrDestroyItem(item, amount)
@@ -699,7 +698,7 @@ export class ActionService implements GameSceneService {
       return ANSWER.WRONG_AMOUNT_ERROR
     }
 
-    const status = await this.scene.tradeService.findActiveOfferAndTrade(
+    const status = await this.game.tradeService.findActiveOfferAndTrade(
       params[0],
       amount,
       player,
@@ -723,7 +722,7 @@ export class ActionService implements GameSceneService {
   private createIdeaAction(player: Player, params: string[] | undefined) {
     const text = params ? params[0] : ''
 
-    this.scene.eventService.init({
+    this.game.eventService.initEvent({
       title: 'New idea from Twitch Viewer!',
       description: `${player.userName}: ${text}`,
       type: 'IDEA_CREATED',
@@ -731,5 +730,84 @@ export class ActionService implements GameSceneService {
     })
 
     return ANSWER.OK
+  }
+
+  getTreeToChop() {
+    // Part 1: Check trees on Wagon Path
+    const onlyOnPath = this.game.children.filter(
+      (obj) =>
+        obj instanceof TreeObject
+        && obj.state !== 'DESTROYED'
+        && !obj.isReserved
+        && obj.isOnWagonPath,
+    )
+    if (onlyOnPath && onlyOnPath.length > 0) {
+      return this.determineNearestObject(
+        this.game.wagonService.wagon,
+        onlyOnPath,
+      ) as TreeObject
+    }
+
+    // Part 2: Check nearest free tree
+    const other = this.game.children.filter(
+      (obj) =>
+        obj instanceof TreeObject
+        && obj.state !== 'DESTROYED'
+        && !obj.isReserved
+        && obj.isReadyToChop,
+    )
+    if (other && other.length > 0) {
+      return this.determineNearestObject(this.game.wagonService.wagon, other) as TreeObject
+    }
+  }
+
+  getStoneToMine() {
+    // Part 1: Check on Wagon Path
+    const onlyOnPath = this.game.children.filter(
+      (obj) =>
+        obj instanceof StoneObject
+        && obj.state !== 'DESTROYED'
+        && !obj.isReserved
+        && obj.isOnWagonPath,
+    )
+    if (onlyOnPath && onlyOnPath.length > 0) {
+      return this.determineNearestObject(
+        this.game.wagonService.wagon,
+        onlyOnPath,
+      ) as StoneObject
+    }
+
+    // Part 2: Check nearest free
+    const other = this.game.children.filter(
+      (obj) =>
+        obj instanceof StoneObject && obj.state !== 'DESTROYED' && !obj.isReserved,
+    )
+    if (other && other.length > 0) {
+      return this.determineNearestObject(
+        this.game.wagonService.wagon,
+        other,
+      ) as StoneObject
+    }
+  }
+
+  determineNearestObject(
+    point: {
+      x: number
+      y: number
+    },
+    objects: GameObject[],
+  ) {
+    let closestObject = objects[0]
+    let shortestDistance
+
+    for (const object of objects) {
+      const distance = Route.getDistanceBetween2Points(point, object)
+      if (!shortestDistance || distance < shortestDistance) {
+        shortestDistance = distance
+        closestObject = object
+      }
+    }
+
+    return closestObject
   }
 }

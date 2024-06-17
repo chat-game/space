@@ -1,9 +1,9 @@
 <script lang='ts'>
   import GameItem from './GameItem.svelte'
   import GameUnit from './GameUnit.svelte'
-  import type { IGameObjectPlayer } from '$lib/game/types'
+  import type { GameObjectPlayer } from '$lib/game/types'
 
-  export let player: IGameObjectPlayer
+  export let player: GameObjectPlayer
 
   const wood = player.inventory.items.find((item) => item.type === 'WOOD')?.amount
   const stone = player.inventory.items.find(

@@ -1,30 +1,26 @@
-import type { BaseAction } from '../../actions/baseAction'
-import { Village } from '../../chunks'
-import { Event } from '../../common'
 import { PollService } from './pollService'
 import { QuestService } from './questService'
 import type {
-  GameScene,
-  GameSceneService,
-  GameSceneType,
-  IGameEvent, IGamePoll, IGameQuest, IGameQuestTask,
+  Game,
+  GameSceneType, IGamePoll, IGameQuest, IGameQuestTask,
 } from '$lib/game/types'
+import { Event } from '$lib/game/services/event/event'
+import { VillageChunk } from '$lib/game/services/chunk/villageChunk'
+import type {
+  GameEventService, IGameEvent,
+} from '$lib/game/services/interface'
 
-interface IEventServiceOptions {
-  scene: GameScene
-}
-
-export class EventService implements GameSceneService {
+export class EventService implements GameEventService {
   events: Event[] = []
   questService: QuestService
   pollService: PollService
-  scene: GameScene
+  game: Game
 
-  constructor({ scene }: IEventServiceOptions) {
-    this.scene = scene
+  constructor(game: Game) {
+    this.game = game
 
-    this.questService = new QuestService({ scene })
-    this.pollService = new PollService({ scene })
+    this.questService = new QuestService(this.game)
+    this.pollService = new PollService(this.game)
   }
 
   update() {
@@ -44,7 +40,7 @@ export class EventService implements GameSceneService {
     this.questService.update()
   }
 
-  public init({
+  initEvent({
     title,
     description,
     type,
@@ -73,22 +69,9 @@ export class EventService implements GameSceneService {
       quest,
       offers,
     })
-
     this.events.push(event)
-  }
 
-  public getEvents(): IGameEvent[] {
-    return this.events.map((event) => ({
-      id: event.id,
-      title: event.title,
-      description: event.description,
-      type: event.type,
-      status: event.status,
-      endsAt: event.endsAt,
-      poll: this.preparePollData(event.poll),
-      quest: this.prepareQuestData(event.quest),
-      offers: event.offers,
-    }))
+    return event
   }
 
   prepareQuestData(quest: IGameQuest | undefined) {
@@ -142,7 +125,7 @@ export class EventService implements GameSceneService {
           (q) => q.action?.command === command,
         )
         if (task?.action) {
-          return task.action as BaseAction
+          return task.action
         }
       }
     }
@@ -151,26 +134,26 @@ export class EventService implements GameSceneService {
   public findActionByCommandInPoll(command: string) {
     for (const event of this.events) {
       if (event.poll?.action && event.poll.action.command === command) {
-        return event.poll?.action as BaseAction
+        return event.poll?.action
       }
     }
   }
 
   private handleEnding(event: Event) {
     if (event.type === 'SCENE_CHANGING_STARTED' && event.scene) {
-      this.scene.game.initScene(event.scene)
+      this.game.initScene(event.scene)
     }
     if (event.type === 'GROUP_FORM_STARTED' && event.scene) {
-      this.scene.game.initScene(event.scene)
+      this.game.initScene(event.scene)
     }
     if (event.type === 'RAID_STARTED') {
-      this.scene.stopRaid()
+      this.game.stopRaid()
     }
     if (event.type === 'TRADE_STARTED') {
-      this.scene.tradeService.handleTradeIsOver()
+      this.game.tradeService.handleTradeIsOver()
     }
     if (event.type === 'VOTING_FOR_NEW_MAIN_QUEST_STARTED') {
-      this.scene.tradeService.handleTradeIsOver()
+      this.game.tradeService.handleTradeIsOver()
     }
   }
 
@@ -189,7 +172,7 @@ export class EventService implements GameSceneService {
 
     const updateProgress1: IGameQuestTask['updateProgress'] = () => {
       if (
-        !this.scene.routeService.route?.flags
+        !this.game.routeService.route?.flags
         && this.events.find((e) => e.type === 'MAIN_QUEST_STARTED')
       ) {
         return {
@@ -198,7 +181,7 @@ export class EventService implements GameSceneService {
       }
 
       const items
-        = this.scene.wagonService.wagon.cargo?.checkIfAlreadyHaveItem('WOOD')
+        = this.game.wagonService.wagon.cargo?.checkIfAlreadyHaveItem('WOOD')
       if (!items) {
         return {
           status: 'FAILED',
@@ -221,7 +204,7 @@ export class EventService implements GameSceneService {
       }),
     ]
 
-    this.init({
+    this.initEvent({
       title: 'Journey',
       description: '',
       type: 'MAIN_QUEST_STARTED',
@@ -234,16 +217,16 @@ export class EventService implements GameSceneService {
     })
 
     // Cargo
-    this.scene.wagonService.wagon.setCargo()
+    this.game.wagonService.wagon.setCargo()
 
-    if (this.scene.chunkNow instanceof Village) {
-      this.scene.routeService.generateAdventure(
-        this.scene.chunkNow,
+    if (this.game.chunkService.chunk instanceof VillageChunk) {
+      this.game.routeService.generateAdventure(
+        this.game.chunkService.chunk,
         event.quest.conditions.chunks ?? 3,
       )
     }
 
-    this.scene.tradeService.traderIsMovingWithWagon = true
+    this.game.tradeService.traderIsMovingWithWagon = true
 
     this.destroyAllEventsWithPoll()
   }

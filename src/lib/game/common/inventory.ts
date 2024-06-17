@@ -40,7 +40,7 @@ export class Inventory implements IGameInventory {
     }
   }
 
-  public async reduceOrDestroyItem(type: ItemType, amount: number) {
+  async reduceOrDestroyItem(type: ItemType, amount: number): Promise<boolean> {
     const item = this.checkIfAlreadyHaveItem(type)
     if (!item) {
       return false
@@ -63,7 +63,7 @@ export class Inventory implements IGameInventory {
     return true
   }
 
-  public async addOrCreateItem(type: ItemType, amount: number) {
+  async addOrCreateItem(type: ItemType, amount: number): Promise<void> {
     if (this.saveInDb) {
       return this.addOrCreateItemInDB(type, amount)
     }

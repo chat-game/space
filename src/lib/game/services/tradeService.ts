@@ -1,51 +1,43 @@
-import { Village } from '../../chunks'
-import { Poll } from '../../common'
-import { Flag } from '../../objects'
-import type { Player } from '../../objects/units'
-import { Trader } from '../../objects/units'
-import { MoveOffScreenAndSelfDestroyScript } from '../../scripts/moveOffScreenAndSelfDestroyScript'
-import { MoveToTargetScript } from '../../scripts/moveToTargetScript'
-import { MoveToTradePostAndTradeScript } from '../../scripts/moveToTradePostAndTradeScript'
+import { MoveOffScreenAndSelfDestroyScript } from '../scripts/moveOffScreenAndSelfDestroyScript'
+import { MoveToTargetScript } from '../scripts/moveToTargetScript'
+import { MoveToTradePostAndTradeScript } from '../scripts/moveToTradePostAndTradeScript'
 import { getRandomInRange } from '$lib/random'
-import type { GameScene, GameSceneService, ITradeOffer } from '$lib/game/types'
+import type {
+  Game,
+  GameObjectPlayer, ITradeOffer,
+} from '$lib/game/types'
+import { VillageChunk } from '$lib/game/services/chunk/villageChunk'
+import { FlagObject } from '$lib/game/objects/flagObject'
+import { Trader } from '$lib/game/objects/units/trader'
+import { Poll } from '$lib/game/common/poll'
+import type { GameService } from '$lib/game/services/interface'
 
-interface ITradeServiceOptions {
-  scene: GameScene
-}
-
-export class TradeService implements GameSceneService {
+export class TradeService implements GameService {
   public offers: ITradeOffer[] = []
   public tradeWasSuccessful: boolean
   public traderIsMovingWithWagon: boolean
-  public scene: GameScene
+  game: Game
 
-  constructor({ scene }: ITradeServiceOptions) {
-    this.scene = scene
+  constructor(game: Game) {
+    this.game = game
     this.traderIsMovingWithWagon = false
     this.tradeWasSuccessful = false
   }
 
   public update() {
-    this.checkAndGenerateTrader()
-    this.checkClosedOffers()
+    this.#checkAndGenerateTrader()
+    this.#checkClosedOffers()
+    this.#updateTrader()
   }
 
-  public getTrader() {
-    return this.scene.objects.find((obj) => obj instanceof Trader) as
-      | Trader
-      | undefined
+  getTrader() {
+    return this.game.children.find((obj) => obj.type === 'TRADER')
   }
 
-  public getStore() {
-    if (this.scene.chunkNow instanceof Village) {
-      return this.scene.chunkNow.getStore()
-    }
-  }
-
-  public async findActiveOfferAndTrade(
+  async findActiveOfferAndTrade(
     offerId: string,
     amount: number,
-    player: Player,
+    player: GameObjectPlayer,
   ) {
     for (const offer of this.offers) {
       if (offer.id === offerId) {
@@ -60,10 +52,10 @@ export class TradeService implements GameSceneService {
     return 'OFFER_NOT_FOUND'
   }
 
-  public async trade(
+  async trade(
     offer: ITradeOffer,
     amount: number,
-    player: Player,
+    player: GameObjectPlayer,
   ): Promise<boolean> {
     if (offer.amount < amount) {
       return false
@@ -85,7 +77,12 @@ export class TradeService implements GameSceneService {
     return false
   }
 
-  public updateTrader(object: Trader) {
+  #updateTrader() {
+    const object = this.getTrader()
+    if (!object) {
+      return
+    }
+
     object.live()
 
     if (!object.script) {
@@ -93,7 +90,7 @@ export class TradeService implements GameSceneService {
         // Moving near Wagon
         const random = getRandomInRange(1, 150)
         if (random <= 1) {
-          const target = this.scene.wagonService.findRandomNearFlag()
+          const target = this.game.wagonService.randomNearFlag
           object.script = new MoveToTargetScript({
             object,
             target,
@@ -103,12 +100,12 @@ export class TradeService implements GameSceneService {
       }
 
       // Moving to Trade
-      if (this.checkIfNeedToStartTrade()) {
-        if (this.scene.chunkNow instanceof Village) {
-          const target = this.getTradePointFlag()
+      if (this.#isNeedToStartTrade()) {
+        if (this.game.chunkService.chunk instanceof VillageChunk) {
+          const target = this.#getTradePointFlag()
           if (target) {
             const startTradeFunc = () => {
-              this.scene.eventService.init({
+              this.game.eventService.initEvent({
                 title: 'Trade in progress',
                 description: '',
                 type: 'TRADE_STARTED',
@@ -128,15 +125,15 @@ export class TradeService implements GameSceneService {
     }
   }
 
-  public handleTradeIsOver() {
+  handleTradeIsOver() {
     const trader = this.getTrader()
     if (!trader) {
       return
     }
 
-    const target = this.scene.wagonService.findRandomOutFlag()
+    const target = this.game.wagonService.randomOutFlag
     const selfDestroyFunc = () => {
-      this.scene.removeObject(trader)
+      this.game.removeObject(trader)
     }
 
     trader.script = new MoveOffScreenAndSelfDestroyScript({
@@ -150,62 +147,61 @@ export class TradeService implements GameSceneService {
 
   public removeTrade() {
     this.offers = []
-    for (const event of this.scene.eventService.events) {
+    for (const event of this.game.eventService.events) {
       if (event.type === 'TRADE_STARTED') {
-        this.scene.eventService.destroy(event)
+        this.game.eventService.destroy(event)
       }
     }
   }
 
-  private checkIfNeedToStartTrade(): boolean {
+  #isNeedToStartTrade(): boolean {
     if (this.tradeWasSuccessful) {
       return false
     }
 
-    const activeTrade = this.scene.eventService.events.find(
+    const activeTrade = this.game.eventService.events.find(
       (e) => e.type === 'TRADE_STARTED',
     )
     return !activeTrade
   }
 
-  private getTradePointFlag() {
-    return this.scene.chunkNow?.objects.find(
-      (obj) => obj instanceof Flag && obj.type === 'TRADE_POINT',
-    ) as Flag | undefined
+  #getTradePointFlag() {
+    return this.game.children.find(
+      (obj) => obj instanceof FlagObject && obj.variant === 'TRADE_POINT',
+    ) as FlagObject | undefined
   }
 
-  private createTradeTargetFlagNearStore() {
-    if (this.getTradePointFlag()) {
+  #createTradeTargetFlagNearStore() {
+    if (this.#getTradePointFlag()) {
       return
     }
 
-    const store = this.getStore()
+    const store = this.game.chunkService.chunk?.store
     if (!store) {
       return
     }
 
-    const flag = new Flag({
-      scene: this.scene,
+    new FlagObject({
+      game: this.game,
       x: store.x + 105,
       y: store.y + 10,
-      type: 'TRADE_POINT',
-    })
-    this.scene.chunkNow?.objects.push(flag)
+      variant: 'TRADE_POINT',
+    }).init()
   }
 
-  private checkAndGenerateTrader() {
-    if (this.scene.chunkNow instanceof Village) {
-      const store = this.scene.chunkNow.getStore()
+  #checkAndGenerateTrader() {
+    if (this.game.chunkService.chunk instanceof VillageChunk) {
+      const store = this.game.chunkService.chunk.store
       const trader = this.getTrader()
       if (store?.id && !trader?.id) {
-        this.createTradeTargetFlagNearStore()
+        this.#createTradeTargetFlagNearStore()
         this.generateNewTrader()
         this.generateTradeOffers()
       }
     }
   }
 
-  private checkClosedOffers() {
+  #checkClosedOffers() {
     for (const offer of this.offers) {
       if (offer.amount === 0) {
         this.tradeWasSuccessful = true
@@ -216,10 +212,8 @@ export class TradeService implements GameSceneService {
   }
 
   private generateNewTrader() {
-    const { x, y } = this.scene.wagonService.findRandomOutFlag()
-    const trader = new Trader({ scene: this.scene, x, y })
-
-    this.scene.objects.push(trader)
+    const { x, y } = this.game.wagonService.randomOutFlag
+    new Trader({ game: this.game, x, y }).init()
   }
 
   private generateTradeOffers() {
@@ -263,19 +257,19 @@ export class TradeService implements GameSceneService {
       return
     }
 
-    const store = this.getStore()
+    const store = this.game.chunkService.chunk?.store
     if (!store) {
       return
     }
 
-    const votingEvents = this.scene.eventService.events.filter(
+    const votingEvents = this.game.eventService.events.filter(
       (e) => e.type === 'VOTING_FOR_NEW_MAIN_QUEST_STARTED',
     )
     if (votingEvents.length >= 1) {
       return
     }
 
-    const adventureEvents = this.scene.eventService.events.filter(
+    const adventureEvents = this.game.eventService.events.filter(
       (e) => e.type === 'MAIN_QUEST_STARTED',
     )
     if (adventureEvents.length >= 1) {
@@ -283,18 +277,18 @@ export class TradeService implements GameSceneService {
     }
 
     const votesToSuccess
-      = this.scene.findActivePlayers().length >= 2
-        ? this.scene.findActivePlayers().length
+      = this.game.activePlayers.length >= 2
+        ? this.game.activePlayers.length
         : 1
 
-    const poll = new Poll({ votesToSuccess, scene: this.scene })
+    const poll = new Poll({ votesToSuccess, game: this.game })
 
-    this.scene.eventService.init({
+    this.game.eventService.initEvent({
       type: 'VOTING_FOR_NEW_MAIN_QUEST_STARTED',
       title: 'The merchant offers a quest',
       description: 'Let\'s make the quest active? Vote in chat.',
       secondsToEnd: 180,
-      quest: this.scene.eventService.questService.create({
+      quest: this.game.eventService.questService.create({
         status: 'INACTIVE',
         type: 'MAIN',
         title: 'Transport cargo to a neighboring village',

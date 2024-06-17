@@ -1,25 +1,27 @@
 import { createId } from '@paralleldrive/cuid2'
-import { Inventory } from '../../common'
 import { BaseObject } from '../baseObject'
 import type {
+  Game,
   GameObjectBuildingType,
-  GameScene,
   IGameObjectBuilding,
-  ItemType,
 } from '$lib/game/types'
+import { Inventory } from '$lib/game/common/inventory'
 
 interface IBuildingOptions {
-  scene: GameScene
+  game: Game
   x: number
   y: number
   type: GameObjectBuildingType
+  chunkId?: string
 }
 
 export class BaseBuilding extends BaseObject implements IGameObjectBuilding {
-  public inventory!: Inventory
+  inventory!: Inventory
 
-  constructor({ scene, x, y, type }: IBuildingOptions) {
-    super({ scene, x, y, type })
+  constructor({ game, x, y, type, chunkId }: IBuildingOptions) {
+    super({ game, x, y, type })
+
+    this.chunkId = chunkId
 
     this.#initInventory()
   }
@@ -40,13 +42,5 @@ export class BaseBuilding extends BaseObject implements IGameObjectBuilding {
       id: createId(),
       saveInDb: false,
     })
-  }
-
-  getItemByType(type: ItemType) {
-    if (!this.inventory?.items) {
-      return
-    }
-
-    return this.inventory.items.find((item) => item.type === type)
   }
 }

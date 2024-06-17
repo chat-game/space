@@ -1,36 +1,36 @@
-import { Village } from '../chunks'
 import { PlantNewTreeScript } from '../scripts/plantNewTreeScript'
-import { BaseAction } from './baseAction'
-import { ANSWER } from '$lib/game/scenes/services/actionService'
-import type { GameScene } from '$lib/game/types'
+import { ANSWER } from '$lib/game/services/actionService'
+import type { Game, GameObjectPlayer } from '$lib/game/types'
+import { VillageChunk } from '$lib/game/services/chunk/villageChunk'
+import type { GameAction } from '$lib/game/actions/interface'
 
 interface IPlantTreeActionOptions {
-  scene: GameScene
+  game: Game
 }
 
-export class PlantTreeAction extends BaseAction {
-  scene: GameScene
+export class PlantTreeAction implements GameAction {
+  command = 'plant'
+  commandDescription = '!plant'
+  game: Game
 
-  constructor({ scene }: IPlantTreeActionOptions) {
-    super({ command: 'plant', commandDescription: '!plant' })
-
-    this.scene = scene
+  constructor({ game }: IPlantTreeActionOptions) {
+    this.game = game
   }
 
-  async live(player) {
+  async live(player: GameObjectPlayer) {
     if (player.script && !player.script.isInterruptible) {
       return ANSWER.BUSY_ERROR
     }
 
-    if (this.scene.chunkNow instanceof Village) {
-      const target = this.scene.chunkNow.checkIfNeedToPlantTree()
+    if (this.game.chunkService.chunk instanceof VillageChunk) {
+      const target = this.game.chunkService.chunk.checkIfNeedToPlantTree()
       if (!target) {
         return ANSWER.NO_SPACE_AVAILABLE_ERROR
       }
 
       const plantNewTreeFunc = () => {
-        if (this.scene.chunkNow instanceof Village) {
-          this.scene.chunkNow.plantNewTree(target)
+        if (this.game.chunkService.chunk instanceof VillageChunk) {
+          this.game.chunkService.chunk.plantNewTree(target)
         }
       }
 

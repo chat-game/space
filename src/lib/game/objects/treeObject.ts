@@ -1,12 +1,13 @@
 import { Sprite } from 'pixi.js'
 import { BaseObject } from './baseObject'
 import { getRandomInRange } from '$lib/random'
-import type { GameObjectTree, GameScene } from '$lib/game/types'
+import type { Game, GameObjectTree } from '$lib/game/types'
 
 interface TreeOptions {
-  scene: GameScene
+  game: Game
   x: number
   y: number
+  chunkId?: string
   resource?: number
   size?: number
   health?: number
@@ -28,7 +29,7 @@ export class TreeObject extends BaseObject implements GameObjectTree {
   private animationSpeedPerSecond = 3
 
   constructor({
-    scene,
+    game,
     x,
     y,
     resource,
@@ -36,9 +37,11 @@ export class TreeObject extends BaseObject implements GameObjectTree {
     health,
     theme,
     variant,
+    chunkId,
   }: TreeOptions) {
-    super({ scene, x, y, type: 'TREE' })
+    super({ game, x, y, type: 'TREE' })
 
+    this.chunkId = chunkId
     this.resource = resource ?? getRandomInRange(1, 5)
     this.size = size ?? 100
     this.health = health ?? 100
@@ -105,45 +108,45 @@ export class TreeObject extends BaseObject implements GameObjectTree {
   }
 
   #getSprite() {
-    if (this.variant === 'GREEN') {
-      return Sprite.from(`tree${this.type}Green`)
+    if (this.theme === 'GREEN') {
+      return Sprite.from(`tree${this.variant}Green`)
     }
-    if (this.variant === 'BLUE') {
-      return Sprite.from(`tree${this.type}Blue`)
+    if (this.theme === 'BLUE') {
+      return Sprite.from(`tree${this.variant}Blue`)
     }
-    if (this.variant === 'STONE') {
-      return Sprite.from(`tree${this.type}Stone`)
+    if (this.theme === 'STONE') {
+      return Sprite.from(`tree${this.variant}Stone`)
     }
-    if (this.variant === 'TEAL') {
-      return Sprite.from(`tree${this.type}Teal`)
+    if (this.theme === 'TEAL') {
+      return Sprite.from(`tree${this.variant}Teal`)
     }
-    if (this.variant === 'TOXIC') {
-      return Sprite.from(`tree${this.type}Toxic`)
+    if (this.theme === 'TOXIC') {
+      return Sprite.from(`tree${this.variant}Toxic`)
     }
-    if (this.variant === 'VIOLET') {
-      return Sprite.from(`tree${this.type}Violet`)
+    if (this.theme === 'VIOLET') {
+      return Sprite.from(`tree${this.variant}Violet`)
     }
   }
 
   #shakeAnimation() {
     if (Math.abs(this.angle) < 3) {
-      this.angle += (this.animationSpeedPerSecond * 5) / this.scene.game.tick
+      this.angle += (this.animationSpeedPerSecond * 5) / this.game.tick
       return
     }
 
     this.animationSpeedPerSecond *= -1
     this.angle
-      += ((this.animationSpeedPerSecond * 5) / this.scene.game.tick) * 10
+      += ((this.animationSpeedPerSecond * 5) / this.game.tick) * 10
   }
 
   #shakeOnWind() {
     if (Math.abs(this.angle) < 1.8) {
-      this.angle += this.animationSpeedPerSecond / this.scene.game.tick
+      this.angle += this.animationSpeedPerSecond / this.game.tick
       return
     }
 
     this.animationSpeedPerSecond *= -1
-    this.angle += (this.animationSpeedPerSecond / this.scene.game.tick) * 10
+    this.angle += (this.animationSpeedPerSecond / this.game.tick) * 10
   }
 
   #checkHealth() {
@@ -169,7 +172,7 @@ export class TreeObject extends BaseObject implements GameObjectTree {
       return
     }
 
-    this.size += this.growSpeedPerSecond / this.scene.game.tick
+    this.size += this.growSpeedPerSecond / this.game.tick
   }
 
   #getRandomVariant(): GameObjectTree['variant'] {

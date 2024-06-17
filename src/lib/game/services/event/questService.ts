@@ -1,34 +1,29 @@
 import { createId } from '@paralleldrive/cuid2'
 import { DonateWoodToVillageAction } from '../../actions/donateWoodToVillageAction'
 import { PlantTreeAction } from '../../actions/plantTreeAction'
-import { Village } from '../../chunks'
 import { NoTradingPostQuest } from '../../quests/noTradingPostQuest'
 import { TreesAreRunningOutQuest } from '../../quests/treesAreRunningOutQuest'
 import type {
-  GameSceneService,
-  IGameQuest,
-  IGameQuestTask, IGameQuestTaskFunc,
+  Game, IGameQuest, IGameQuestTask, IGameQuestTaskFunc,
 } from '$lib/game/types'
+import { VillageChunk } from '$lib/game/services/chunk/villageChunk'
+import type { GameService } from '$lib/game/services/interface'
 
-interface IQuestServiceOptions {
-  scene: GameScene
-}
+export class QuestService implements GameService {
+  game: Game
 
-export class QuestService implements GameSceneService {
-  scene: GameScene
-
-  constructor({ scene }: IQuestServiceOptions) {
-    this.scene = scene
+  constructor(game: Game) {
+    this.game = game
   }
 
   update() {
     this.updateAndFinishActiveQuests()
 
-    if (this.scene.chunkNow instanceof Village) {
+    if (this.game.chunkService.chunk instanceof VillageChunk) {
       this.generateNewSideQuest()
     }
 
-    for (const event of this.scene.eventService.events) {
+    for (const event of this.game.eventService.events) {
       if (!event.quest) {
         continue
       }
@@ -96,7 +91,7 @@ export class QuestService implements GameSceneService {
   }
 
   private updateAndFinishActiveQuests() {
-    for (const event of this.scene.eventService.events) {
+    for (const event of this.game.eventService.events) {
       if (!event.quest || event.quest.status !== 'ACTIVE') {
         continue
       }
@@ -104,8 +99,8 @@ export class QuestService implements GameSceneService {
       // Tasks done?
       if (!event.quest.tasks.find((t) => t.status === 'ACTIVE')) {
         //
-        this.scene.wagonService.wagon.emptyCargo()
-        this.scene.tradeService.traderIsMovingWithWagon = false
+        this.game.wagonService.wagon.emptyCargo()
+        this.game.tradeService.traderIsMovingWithWagon = false
 
         if (!event.quest.tasks.find((t) => t.status === 'FAILED')) {
           // Reward
@@ -119,7 +114,7 @@ export class QuestService implements GameSceneService {
   }
 
   private generateSecondSideQuest() {
-    const sideQuests = this.scene.eventService.events.filter(
+    const sideQuests = this.game.eventService.events.filter(
       (e) => e.type === 'SIDE_QUEST_STARTED',
     )
     if (sideQuests.length >= 1) {
@@ -127,8 +122,8 @@ export class QuestService implements GameSceneService {
     }
 
     const taskUpdateFunc1: IGameQuestTask['updateProgress'] = () => {
-      if (this.scene.chunkNow instanceof Village) {
-        const treesAmount = this.scene.chunkNow.getTreesAmount()
+      if (this.game.chunkService.chunk instanceof VillageChunk) {
+        const treesAmount = this.game.chunkService.chunk.getTreesAmount()
         if (treesAmount >= 30) {
           return {
             status: 'SUCCESS',
@@ -147,7 +142,7 @@ export class QuestService implements GameSceneService {
       }
     }
 
-    const taskAction1 = new PlantTreeAction({ scene: this.scene })
+    const taskAction1 = new PlantTreeAction({ game: this.game })
 
     const quest = new TreesAreRunningOutQuest({
       creatorId: '1',
@@ -155,7 +150,7 @@ export class QuestService implements GameSceneService {
       taskAction1,
     })
 
-    this.scene.eventService.init({
+    this.game.eventService.initEvent({
       type: 'SIDE_QUEST_STARTED',
       title: quest.title,
       description: quest.description,
@@ -165,14 +160,14 @@ export class QuestService implements GameSceneService {
   }
 
   private generateNewSideQuest() {
-    if (!this.scene.chunkNow) {
+    if (!this.game.chunkService.chunk) {
       return
     }
 
-    if (this.scene.chunkNow instanceof Village) {
-      const store = this.scene.chunkNow.getStore()
+    if (this.game.chunkService.chunk instanceof VillageChunk) {
+      const store = this.game.chunkService.chunk.store
       if (store) {
-        const notEnough = this.scene.chunkNow.checkIfThereAreNotEnoughTrees()
+        const notEnough = this.game.chunkService.chunk.checkIfThereAreNotEnoughTrees()
         if (notEnough) {
           return this.generateSecondSideQuest()
         }
@@ -181,7 +176,7 @@ export class QuestService implements GameSceneService {
       }
     }
 
-    const sideQuests = this.scene.eventService.events.filter(
+    const sideQuests = this.game.eventService.events.filter(
       (e) => e.type === 'SIDE_QUEST_STARTED',
     )
     if (sideQuests.length >= 1) {
@@ -189,10 +184,10 @@ export class QuestService implements GameSceneService {
     }
 
     const taskUpdateFunc1: IGameQuestTaskFunc = () => {
-      if (this.scene.chunkNow instanceof Village) {
-        const warehouse = this.scene.chunkNow.getWarehouse()
+      if (this.game.chunkService.chunk instanceof VillageChunk) {
+        const warehouse = this.game.chunkService.chunk.warehouse
         if (warehouse) {
-          const wood = warehouse.getItemByType('WOOD')
+          const wood = warehouse.inventory.items.find((item) => item.type === 'WOOD')
           if (wood?.amount) {
             if (wood.amount >= 25) {
               return {
@@ -214,11 +209,11 @@ export class QuestService implements GameSceneService {
       }
     }
 
-    const taskAction1 = new DonateWoodToVillageAction({ scene: this.scene })
+    const taskAction1 = new DonateWoodToVillageAction({ game: this.game })
 
     const taskUpdateFunc2: IGameQuestTaskFunc = () => {
-      if (this.scene.chunkNow instanceof Village) {
-        const store = this.scene.chunkNow.getStore()
+      if (this.game.chunkService.chunk instanceof VillageChunk) {
+        const store = this.game.chunkService.chunk.store
         if (store) {
           return {
             status: 'SUCCESS',
@@ -240,7 +235,7 @@ export class QuestService implements GameSceneService {
       taskAction1,
     })
 
-    this.scene.eventService.init({
+    this.game.eventService.initEvent({
       type: 'SIDE_QUEST_STARTED',
       title: quest.title,
       description: quest.description,

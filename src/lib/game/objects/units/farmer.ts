@@ -1,20 +1,22 @@
 import { generateUnitUserName } from '../../common/generators/unitName'
 import { generateUnitTop } from '../../common/generators/unitTop'
 import { UnitObject } from './unitObject'
-import type { GameScene, IGameObjectFarmer } from '$lib/game/types'
+import type { Game, IGameObjectFarmer } from '$lib/game/types'
 
 interface IFarmerOptions {
-  scene: GameScene
+  game: Game
   x: number
   y: number
+  chunkId?: string
 }
 
 export class Farmer extends UnitObject implements IGameObjectFarmer {
-  constructor({ scene, x, y }: IFarmerOptions) {
+  constructor({ game, x, y, chunkId }: IFarmerOptions) {
     super({
-      scene,
+      game,
       x,
       y,
+      chunkId,
       type: 'VILLAGE_UNIT',
     })
 

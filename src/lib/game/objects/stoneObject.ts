@@ -1,12 +1,13 @@
 import { Sprite } from 'pixi.js'
 import { BaseObject } from './baseObject'
 import { getRandomInRange } from '$lib/random'
-import type { GameObjectStone, GameScene } from '$lib/game/types'
+import type { Game, GameObjectStone } from '$lib/game/types'
 
 interface StoneOptions {
-  scene: GameScene
+  game: Game
   x: number
   y: number
+  chunkId?: string
   resource?: number
   size?: number
   health?: number
@@ -20,9 +21,10 @@ export class StoneObject extends BaseObject implements GameObjectStone {
   public animationAngle = 0
   public animationHighSpeed = 0.05
 
-  constructor({ scene, x, y, resource, size }: StoneOptions) {
-    super({ scene, x, y, type: 'STONE' })
+  constructor({ game, x, y, resource, size, chunkId }: StoneOptions) {
+    super({ game, x, y, type: 'STONE' })
 
+    this.chunkId = chunkId
     this.resource = resource ?? getRandomInRange(1, 5)
     this.size = size ?? 100
 

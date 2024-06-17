@@ -1,21 +1,22 @@
 import { type AnimatedSprite, Sprite } from 'pixi.js'
 import { FireParticlesContainer } from '../../components/fireParticlesContainer'
-import { AssetsManager } from '../../utils'
 import { BaseBuilding } from './baseBuilding'
-import type { GameScene, IGameBuildingCampfire } from '$lib/game/types'
+import type { Game, IGameBuildingCampfire } from '$lib/game/types'
+import { AssetsManager } from '$lib/game/utils/assetsManager'
 
 interface ICampfireOptions {
-  scene: GameScene
+  game: Game
   x: number
   y: number
+  chunkId?: string
 }
 
 export class Campfire extends BaseBuilding implements IGameBuildingCampfire {
   private fireAnimation!: AnimatedSprite
   private fireParticles!: FireParticlesContainer
 
-  constructor({ scene, x, y }: ICampfireOptions) {
-    super({ scene, x, y, type: 'CAMPFIRE' })
+  constructor({ game, x, y, chunkId }: ICampfireOptions) {
+    super({ game, x, y, chunkId, type: 'CAMPFIRE' })
 
     this.initGraphics()
   }
@@ -51,7 +52,7 @@ export class Campfire extends BaseBuilding implements IGameBuildingCampfire {
     }
 
     if (this.state === 'IDLE') {
-      this.scene.game.audio.playSound('FIRE_BURN')
+      this.game.audio.playSound('FIRE_BURN')
     }
   }
 }

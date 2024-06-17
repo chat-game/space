@@ -1,20 +1,22 @@
 import { generateUnitUserName } from '../../common/generators/unitName'
 import { generateUnitTop } from '../../common/generators/unitTop'
 import { UnitObject } from './unitObject'
-import type { GameScene, IGameObjectCourier } from '$lib/game/types'
+import type { Game, IGameObjectCourier } from '$lib/game/types'
 
 interface CourierOptions {
-  scene: GameScene
+  game: Game
   x: number
   y: number
+  chunkId?: string
 }
 
 export class Courier extends UnitObject implements IGameObjectCourier {
-  constructor({ scene, x, y }: CourierOptions) {
+  constructor({ game, x, y, chunkId }: CourierOptions) {
     super({
-      scene,
+      game,
       x,
       y,
+      chunkId,
       type: 'VILLAGE_UNIT',
     })
 

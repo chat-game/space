@@ -1,18 +1,18 @@
 import { generateUnitUserName } from '../../common/generators/unitName'
 import { generateUnitTop } from '../../common/generators/unitTop'
 import { UnitObject } from './unitObject'
-import type { GameScene, IGameObjectTrader } from '$lib/game/types'
+import type { Game, IGameObjectTrader } from '$lib/game/types'
 
 interface ITraderOptions {
-  scene: GameScene
+  game: Game
   x: number
   y: number
 }
 
 export class Trader extends UnitObject implements IGameObjectTrader {
-  constructor({ scene, x, y }: ITraderOptions) {
+  constructor({ game, x, y }: ITraderOptions) {
     super({
-      scene,
+      game,
       x,
       y,
       type: 'TRADER',

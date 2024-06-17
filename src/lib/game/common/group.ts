@@ -1,10 +1,9 @@
 import { createId } from '@paralleldrive/cuid2'
-import type { Player } from '../objects/units'
-import type { IGameGroup, IGameObjectPlayer } from '$lib/game/types'
+import type { GameObjectPlayer, IGameGroup } from '$lib/game/types'
 
 export class Group implements IGameGroup {
   id: string
-  players: IGameObjectPlayer[] = []
+  players: GameObjectPlayer[] = []
 
   constructor() {
     this.id = createId()
@@ -13,17 +12,11 @@ export class Group implements IGameGroup {
   public getGroup(): IGameGroup {
     return {
       id: this.id,
-      players: this.players.map((p) => {
-        return {
-          ...p,
-          script: undefined,
-          live: undefined,
-        }
-      }),
+      players: this.players,
     }
   }
 
-  join(player: Player): boolean {
+  join(player: GameObjectPlayer): boolean {
     const check = this.findPlayer(player.id)
     if (check) {
       return false
@@ -33,7 +26,7 @@ export class Group implements IGameGroup {
     return true
   }
 
-  remove(player: IGameObjectPlayer): boolean {
+  remove(player: GameObjectPlayer): boolean {
     const check = this.findPlayer(player.id)
     if (!check) {
       return false

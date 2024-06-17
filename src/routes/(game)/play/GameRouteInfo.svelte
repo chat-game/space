@@ -1,6 +1,6 @@
 <script lang='ts'>
   import GameRouteItem from './GameRouteItem.svelte'
-  import type { IGameRoute } from '$lib/game/types'
+  import type { IGameRoute } from '$lib/game/services/interface'
 
   export let route: IGameRoute
 
