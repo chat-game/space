@@ -51,7 +51,7 @@
     "@types/howler": "2.2.11",
     "@types/jsonwebtoken": "9.0.6",
     "eslint": "9.4.0",
-    "eslint-plugin-svelte": "2.39.3",
+    "eslint-plugin-svelte": "2.39.5",
     "madge": "7.0.0",
     "prisma": "5.15.0",
     "svelte": "4.2.18",
