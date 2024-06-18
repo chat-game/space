@@ -24,7 +24,7 @@ import type {
   IGameVillageChunk,
 } from '$lib/game/services/chunk/interface'
 
-interface IVillageOptions {
+interface VillageChunkOptions {
   game: Game
   width: number
   height: number
@@ -33,19 +33,18 @@ interface IVillageOptions {
 }
 
 export class VillageChunk extends BaseChunk implements IGameVillageChunk {
-  constructor({ width, height, center, theme, game }: IVillageOptions) {
+  constructor({ width, height, center, theme, game }: VillageChunkOptions) {
     super({ title: '', type: 'VILLAGE', theme, width, height, center, game })
 
-    this.title = this.getRandomTitle()
+    this.title = this.#getRandomTitle()
 
-    this.initFlags('RESOURCE', 80)
+    this.#initFlags('RESOURCE', 80)
     // this.initFlags("MOVEMENT", 30)
-    this.initTrees(20)
-    this.initStones(5)
-
-    this.initCourier(1)
-    this.initFarmer(1)
-    this.initBuildings()
+    this.#initTrees(30)
+    this.#initStones(5)
+    this.#initCourier(1)
+    this.#initFarmer(1)
+    this.#initBuildings()
   }
 
   live() {
@@ -62,6 +61,44 @@ export class VillageChunk extends BaseChunk implements IGameVillageChunk {
         this.addTaskToCourier(object)
       }
     }
+  }
+
+  checkIfNeedToPlantTree() {
+    const treesNow = this.game.children.filter(
+      (t) => t instanceof TreeObject && t.chunkId === this.id && t.state !== 'DESTROYED',
+    )
+    if (treesNow.length < 40) {
+      return this.#getRandomEmptyResourceFlagInVillage()
+    }
+  }
+
+  plantNewTree(flag: FlagObject) {
+    const tree = new TreeObject({
+      game: this.game,
+      x: flag.x,
+      y: flag.y,
+      resource: 1,
+      size: 12,
+      health: 20,
+      theme: this.area.theme,
+    })
+
+    flag.target = tree
+    flag.isReserved = false
+    tree.init()
+  }
+
+  getTreesAmount() {
+    return this.game.children.filter(
+      (obj) => obj instanceof TreeObject && obj.chunkId === this.id && obj.state !== 'DESTROYED',
+    ).length
+  }
+
+  checkIfThereAreNotEnoughTrees() {
+    const max = this.#getResourceFlagInVillageAmount()
+    const now = this.getTreesAmount()
+
+    return now < max / 3
   }
 
   addTaskToCourier(object: Courier) {
@@ -83,7 +120,7 @@ export class VillageChunk extends BaseChunk implements IGameVillageChunk {
 
       const buildFunc = (): boolean => {
         warehouse?.inventory.reduceOrDestroyItem('WOOD', 25)
-        this.buildStore()
+        this.#buildStore()
 
         return true
       }
@@ -144,7 +181,7 @@ export class VillageChunk extends BaseChunk implements IGameVillageChunk {
       return
     }
 
-    const target = this.getRandomMovementFlagInVillage()
+    const target = this.#getRandomMovementFlagInVillage()
     if (!target) {
       return
     }
@@ -172,7 +209,7 @@ export class VillageChunk extends BaseChunk implements IGameVillageChunk {
     // No Trees needed?
     const random = getRandomInRange(1, 300)
     if (random <= 1) {
-      const target = this.getRandomMovementFlagInVillage()
+      const target = this.#getRandomMovementFlagInVillage()
       if (!target) {
         return
       }
@@ -183,8 +220,8 @@ export class VillageChunk extends BaseChunk implements IGameVillageChunk {
     }
   }
 
-  initFlag(variant: GameObjectFlag['variant']) {
-    const randomPoint = this.getRandomPoint()
+  #initFlag(variant: GameObjectFlag['variant']) {
+    const randomPoint = this.randomPoint
     new FlagObject({
       game: this.game,
       chunkId: this.id,
@@ -194,13 +231,13 @@ export class VillageChunk extends BaseChunk implements IGameVillageChunk {
     }).init()
   }
 
-  initFlags(variant: GameObjectFlag['variant'], count: number) {
+  #initFlags(variant: GameObjectFlag['variant'], count: number) {
     for (let i = 0; i < count; i++) {
-      this.initFlag(variant)
+      this.#initFlag(variant)
     }
   }
 
-  initTrees(count: number) {
+  #initTrees(count: number) {
     for (let i = 0; i < count; i++) {
       const flag = this.#getRandomEmptyResourceFlagInVillage()
       if (flag) {
@@ -220,7 +257,7 @@ export class VillageChunk extends BaseChunk implements IGameVillageChunk {
     }
   }
 
-  initStones(count: number) {
+  #initStones(count: number) {
     for (let i = 0; i < count; i++) {
       const flag = this.#getRandomEmptyResourceFlagInVillage()
       if (flag) {
@@ -236,9 +273,9 @@ export class VillageChunk extends BaseChunk implements IGameVillageChunk {
     }
   }
 
-  initCourier(count = 1) {
+  #initCourier(count = 1) {
     for (let i = 0; i < count; i++) {
-      const randomPoint = this.getRandomPoint()
+      const randomPoint = this.randomPoint
       new Courier({
         game: this.game,
         x: randomPoint.x,
@@ -247,9 +284,9 @@ export class VillageChunk extends BaseChunk implements IGameVillageChunk {
     }
   }
 
-  initFarmer(count = 1) {
+  #initFarmer(count = 1) {
     for (let i = 0; i < count; i++) {
-      const randomPoint = this.getRandomPoint()
+      const randomPoint = this.randomPoint
       new Farmer({
         game: this.game,
         x: randomPoint.x,
@@ -258,7 +295,7 @@ export class VillageChunk extends BaseChunk implements IGameVillageChunk {
     }
   }
 
-  initBuildings() {
+  #initBuildings() {
     new Campfire({
       game: this.game,
       x: this.center.x,
@@ -284,7 +321,7 @@ export class VillageChunk extends BaseChunk implements IGameVillageChunk {
     }).init()
   }
 
-  buildStore() {
+  #buildStore() {
     const constructionArea = this.game.chunkService.chunk?.constructionArea
     if (!constructionArea) {
       return
@@ -320,7 +357,7 @@ export class VillageChunk extends BaseChunk implements IGameVillageChunk {
     ).length
   }
 
-  getRandomMovementFlagInVillage() {
+  #getRandomMovementFlagInVillage() {
     const flags = this.game.children.filter(
       (f) => f instanceof FlagObject && f.chunkId === this.id && f.variant === 'MOVEMENT',
     )
@@ -329,7 +366,7 @@ export class VillageChunk extends BaseChunk implements IGameVillageChunk {
       : undefined
   }
 
-  getRandomTitle() {
+  #getRandomTitle() {
     const titles = [
       'Windy Peak',
       'Green Grove',
@@ -343,43 +380,5 @@ export class VillageChunk extends BaseChunk implements IGameVillageChunk {
       'Phantom Cliff',
     ]
     return titles[Math.floor(Math.random() * titles.length)]
-  }
-
-  checkIfNeedToPlantTree() {
-    const treesNow = this.game.children.filter(
-      (t) => t instanceof TreeObject && t.chunkId === this.id && t.state !== 'DESTROYED',
-    )
-    if (treesNow.length < 40) {
-      return this.#getRandomEmptyResourceFlagInVillage()
-    }
-  }
-
-  plantNewTree(flag: FlagObject) {
-    const tree = new TreeObject({
-      game: this.game,
-      x: flag.x,
-      y: flag.y,
-      resource: 1,
-      size: 12,
-      health: 20,
-      theme: this.area.theme,
-    })
-
-    flag.target = tree
-    flag.isReserved = false
-    tree.init()
-  }
-
-  getTreesAmount() {
-    return this.game.children.filter(
-      (obj) => obj instanceof TreeObject && obj.chunkId === this.id && obj.state !== 'DESTROYED',
-    ).length
-  }
-
-  checkIfThereAreNotEnoughTrees() {
-    const max = this.#getResourceFlagInVillageAmount()
-    const now = this.getTreesAmount()
-
-    return now < max / 3
   }
 }

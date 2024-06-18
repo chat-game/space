@@ -15,7 +15,7 @@ import type {
 } from '$lib/game/services/chunk/interface'
 import { FlagObject } from '$lib/game/objects/flagObject'
 
-interface IGameChunkOptions {
+interface BaseChunkOptions {
   center: GameChunk['center']
   title: GameChunk['title']
   type: GameChunk['type']
@@ -41,7 +41,7 @@ export class BaseChunk implements GameChunk {
     height,
     center,
     game,
-  }: IGameChunkOptions) {
+  }: BaseChunkOptions) {
     this.id = createId()
     this.center = center
     this.title = title
@@ -53,29 +53,7 @@ export class BaseChunk implements GameChunk {
 
   live() {}
 
-  #initArea({
-    width,
-    height,
-    theme,
-  }: {
-    width: number
-    height: number
-    theme: IGameChunkTheme
-  }) {
-    const halfWidth = Math.round(width / 2)
-    const halfHeight = Math.round(height / 2)
-
-    const area = {
-      startX: this.center.x - halfWidth,
-      endX: this.center.x + halfWidth,
-      startY: this.center.y - halfHeight,
-      endY: this.center.y + halfHeight,
-    }
-
-    this.area = new Area({ game: this.game, theme, area })
-  }
-
-  public getRandomPoint() {
+  get randomPoint() {
     return {
       x: getRandomInRange(this.area.area.startX, this.area.area.endX),
       y: getRandomInRange(this.area.area.startY, this.area.area.endY),
@@ -145,5 +123,26 @@ export class BaseChunk implements GameChunk {
 
   get wagonStop(): IGameBuildingWagonStop | undefined {
     return this.game.children.find((b) => b.type === 'WAGON_STOP') as IGameBuildingWagonStop | undefined
+  }
+
+  #initArea({
+    width, height, theme,
+  }: {
+    width: number
+    height: number
+    theme: IGameChunkTheme
+  }) {
+    const halfWidth = Math.round(width / 2)
+    const halfHeight = Math.round(height / 2)
+
+    const area = {
+      startX: this.center.x - halfWidth,
+      endX: this.center.x + halfWidth,
+      startY: this.center.y - halfHeight,
+      endY: this.center.y + halfHeight,
+    }
+
+    this.area = new Area({ game: this.game, theme, area })
+    this.area.init()
   }
 }

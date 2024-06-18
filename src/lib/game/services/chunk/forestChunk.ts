@@ -39,7 +39,7 @@ export class ForestChunk extends BaseChunk implements IGameForestChunk {
 
   #initTrees(count: number) {
     for (let i = 0; i < count; i++) {
-      const point = this.getRandomPoint()
+      const point = this.randomPoint
       const size = getRandomInRange(75, 90)
       new TreeObject({
         game: this.game,
@@ -55,7 +55,7 @@ export class ForestChunk extends BaseChunk implements IGameForestChunk {
 
   #initStones(count: number) {
     for (let i = 0; i < count; i++) {
-      const point = this.getRandomPoint()
+      const point = this.randomPoint
       new StoneObject({
         game: this.game,
         x: point.x,

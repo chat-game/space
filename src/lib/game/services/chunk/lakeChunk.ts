@@ -11,7 +11,7 @@ import type {
   IGameLakeChunk,
 } from '$lib/game/services/chunk/interface'
 
-interface ILakeOptions {
+interface LakeChunkOptions {
   game: Game
   center: IGameLakeChunk['center']
   width: number
@@ -20,7 +20,7 @@ interface ILakeOptions {
 }
 
 export class LakeChunk extends BaseChunk implements IGameLakeChunk {
-  constructor({ game, width, height, center, theme }: ILakeOptions) {
+  constructor({ game, width, height, center, theme }: LakeChunkOptions) {
     super({
       game,
       width,
@@ -54,7 +54,7 @@ export class LakeChunk extends BaseChunk implements IGameLakeChunk {
 
   #initTrees(count: number) {
     for (let i = 0; i < count; i++) {
-      const point = this.getRandomPoint()
+      const point = this.randomPoint
       const size = getRandomInRange(75, 90)
       new TreeObject({
         game: this.game,
@@ -70,7 +70,7 @@ export class LakeChunk extends BaseChunk implements IGameLakeChunk {
 
   #initStones(count: number) {
     for (let i = 0; i < count; i++) {
-      const point = this.getRandomPoint()
+      const point = this.randomPoint
       new StoneObject({
         game: this.game,
         x: point.x,

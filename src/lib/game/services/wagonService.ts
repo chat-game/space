@@ -24,6 +24,7 @@ export class WagonService implements GameWagonService {
 
   initWagon({ x, y }: { x: number, y: number }) {
     this.wagon = new BaseWagon({ game: this.game, x, y })
+    this.wagon.init()
 
     this.#initOutFlags()
     this.#initNearFlags()

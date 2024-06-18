@@ -1,32 +1,45 @@
-# [Twitch Chat Game] Royal Madness 👑
+# 👑 Chat Game for Twitch
 
-📺🎮 [Building and playing it live](https://www.twitch.tv/hmbanan666)  👾 [Our community](https://discord.gg/B6etUajrGZ)
+- 🏠 [Game Website](https://chatgame.space)
+- 📺 [Developing and playing it live](https://www.twitch.tv/hmbanan666)
+- 👾 [Our community in Discord](https://discord.gg/B6etUajrGZ)
 
-![Screen](https://github.com/hmbanan666/royal-madness-twitch-game/assets/25910785/a80009a5-ac75-4935-afd2-e1aae16285d6)
+![Screen](https://github.com/hmbanan666/chat-game/assets/25910785/a22468a4-0bf1-43e3-91fc-23a1e2a675fc)
 
-🤔 Imagine an open world where your Hero can:
+🤔 Imagine procedurally generated world where you and your viewers can:
 
-- 🗺️ **Travel**, **defeat** creatures and **find** an infinite number of quests
-- 💎 **Gather** loot and a variety of materials
-- 🏗️ **Construct** buildings with other Heroes
-- 💬 **Chat** with other Heroes in real time
-- 🏆 **Earn** more than 1000 achievements!
+- 💬 **Use commands** in chat to see actions in real time
+- 🗺️ **Travel** with the Machine
+- 🦄 **Complete** main and side quests from game characters
+- 💎 **Gather** a variety of materials
+- 🏗️ **Construct** buildings
+- 🏆 **Earn** achievements!
 
-Let's build a similar world together!
+Let's build a similar world together! ⭐️ Become a Stargazer ⭐️
 
-## What will be here?
+## 🧱 Stack
 
-- [Front] Web client for the game made with **Typescript**, **React**
-    - simple graphics, top view camera
-    - interface, menu, inventory slots...
-- [Back] Server on **Bun**, where will be a storage for progress of all Heroes
+- [PixiJS](https://pixijs.com/): The HTML5 Creation Engine.
+- [Svelte](https://svelte.dev/): A new way to build web applications. It's a compiler that takes your declarative components and converts them into efficient JavaScript that surgically updates the DOM.
+- [SvelteKit](https://kit.svelte.dev/): A framework for rapidly developing robust, performant web applications using Svelte.
+- [Twurple](https://twurple.js.org/): A set of libraries that aims to cover all existing Twitch APIs.
+- [Prisma](https://www.prisma.io/): Next-generation Node.js and TypeScript ORM.
+- [Howler.js](https://howlerjs.com/): Audio library for the modern web.
+- [Lucide Svelte](https://lucide.dev/guide/packages/lucide-svelte): An open-source icon library.
+- [Bun](https://bun.sh/): An all-in-one JavaScript runtime & toolkit designed for speed, complete with a bundler, test runner, and Node.js-compatible package manager.
+- [TypeScript](https://www.typescriptlang.org/): A strongly typed programming language that builds on JavaScript, giving you better tooling at any scale.
+- [ESLint](https://eslint.org/): Statically analyzes a code to quickly find problems.
 
-## Why?
+## 🕹️ How to develop
 
-- I want to take a break from product development and develop some game that myself would play in the evenings.
-- It will be made using front and back parts, with good code practices (hope so 😀).
-- Want to discover something new in software development. Some new challenges and their overcoming!
-- I enjoy the new achievements on GitHub, especially Starstruck x4: "Created a repository that has 4096 stars". Why not
-  to try?
+Clone this repo and use standard commands:
 
-⭐️ Become a Stargazer ⭐️ Star this repo. Make forks, issues, PRs, and have fun! Thanks for your ideas and activity! 😉
+```shell
+git clone https://github.com/hmbanan666/chat-game
+bun install
+bun run dev
+```
+
+## 🪀 License
+
+This project is licensed under the MIT License - see the [**MIT License**](https://github.com/hmbanan666/chat-game/blob/main/LICENSE) file for details.
