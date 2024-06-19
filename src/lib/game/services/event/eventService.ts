@@ -12,6 +12,7 @@ import type {
 import type {
   IGameQuestTask,
 } from '$lib/game/services/quest/interface'
+import type { GameAction } from '$lib/game/actions/interface'
 
 export class EventService implements GameEventService {
   events: IGameEvent[] = []
@@ -79,7 +80,7 @@ export class EventService implements GameEventService {
     this.events.splice(index, 1)
   }
 
-  findActionByCommandInPoll(command: string) {
+  findActionByCommandInPoll(command: string): GameAction | undefined {
     for (const event of this.events) {
       if (event.poll?.action && event.poll.action.command === command) {
         return event.poll?.action

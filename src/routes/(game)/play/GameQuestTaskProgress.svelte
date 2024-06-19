@@ -5,7 +5,10 @@
 
   export let task: IGameQuestTask
 
-  let progressBarWidth = Math.round(task.progressNow / (task.progressToSuccess / 100))
+  let progressBarWidth = 0
+  if (typeof task.progressNow === 'number' && typeof task.progressToSuccess === 'number') {
+    progressBarWidth = Math.round(task.progressNow / (task.progressToSuccess / 100))
+  }
   if (progressBarWidth > 100) {
     progressBarWidth = 100
   }

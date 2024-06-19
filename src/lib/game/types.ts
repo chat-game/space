@@ -291,6 +291,8 @@ export interface IGameObjectUnit extends GameObject {
     messages: { id: string, text: string }[]
   }
   chopTree: () => void
+  mineStone: () => void
+  addMessage: (message: string) => void
 }
 
 export interface IGameObjectTrader extends IGameObjectUnit {}
@@ -308,7 +310,12 @@ export interface GameObjectPlayer extends IGameObjectUnit {
   raiderPoints: number
   skills: IGameSkill[]
   lastActionAt: Date
+  updateLastActionAt: () => void
   addReputation: (amount: number) => void
+  addVillainPoints: (amount: number) => void
+  addRefuellerPoints: (amount: number) => void
+  addRaiderPoints: (amount: number) => void
+  updateCoins: (amount: number) => void
 }
 
 export interface IGameObjectRaider extends IGameObjectUnit {}
@@ -364,6 +371,9 @@ export interface GameStateResponse {
 export interface IGameGroup {
   id: string
   players: GameObjectPlayer[]
+  join: (player: GameObjectPlayer) => boolean
+  remove: (player: GameObjectPlayer) => boolean
+  disband: () => void
 }
 
 export interface PlayerTitle {
@@ -403,12 +413,12 @@ interface PlayerWithPoints {
 }
 
 export interface TopPlayersResponse {
-  famous: PlayerWithPoints | null
-  rich: PlayerWithPoints | null
-  viewer: PlayerWithPoints | null
-  raider: PlayerWithPoints | null
-  woodsman: PlayerWithPoints | null
-  miner: PlayerWithPoints | null
-  villain: PlayerWithPoints | null
-  refueller: PlayerWithPoints | null
+  famous: PlayerWithPoints
+  rich: PlayerWithPoints
+  viewer: PlayerWithPoints
+  raider: PlayerWithPoints
+  woodsman: PlayerWithPoints
+  miner: PlayerWithPoints
+  villain: PlayerWithPoints
+  refueller: PlayerWithPoints
 }

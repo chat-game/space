@@ -78,7 +78,8 @@ export class Inventory implements IGameInventory {
   }
 
   async addOrCreateItemInDB(type: ItemType, amount: number) {
-    const item = await this.checkIfAlreadyHaveItemInDB(this.id, type)
+    // const item = await this.checkIfAlreadyHaveItemInDB(this.id, type)
+    const item = { id: '123' }
     if (!item) {
       await this.createItemInDB(this.id, type, amount)
       await this.updateFromDB()

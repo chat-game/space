@@ -56,7 +56,7 @@ export class Player extends UnitObject implements GameObjectPlayer {
     this.upSkill('MINER')
   }
 
-  updateCoins(amount: number) {
+  updateCoins(amount: number): void {
     this.coins = this.coins + amount
 
     // return db.player.update({
@@ -78,7 +78,7 @@ export class Player extends UnitObject implements GameObjectPlayer {
     // })
   }
 
-  addRefuellerPoints(amount: number) {
+  addRefuellerPoints(amount: number): void {
     if (amount < 0) {
       return
     }
@@ -93,7 +93,7 @@ export class Player extends UnitObject implements GameObjectPlayer {
     // })
   }
 
-  addVillainPoints(amount: number) {
+  addVillainPoints(amount: number): void {
     this.villainPoints += amount
 
     // return db.player.update({
@@ -106,7 +106,7 @@ export class Player extends UnitObject implements GameObjectPlayer {
     // })
   }
 
-  addRaiderPoints(amount: number) {
+  addRaiderPoints(amount: number): void {
     this.raiderPoints += amount
 
     // return db.player.update({
@@ -134,7 +134,7 @@ export class Player extends UnitObject implements GameObjectPlayer {
     // this.inventoryId = player.inventoryId
   }
 
-  public updateLastActionAt() {
+  updateLastActionAt(): void {
     this.lastActionAt = new Date()
     // return db.player.update({
     //   where: { id: this.id },
@@ -160,12 +160,12 @@ export class Player extends UnitObject implements GameObjectPlayer {
 
   public async initSkillsFromDB() {
     this.skills = []
-    const skills = await Skill.findAllInDB(this.id)
-    for (const skill of skills) {
-      const instance = new Skill({ id: skill.id })
-      await instance.init()
-      this.skills.push(instance)
-    }
+    await Skill.findAllInDB(this.id)
+    // for (const skill of skills) {
+    //   const instance = new Skill({ id: skill.id })
+    //   await instance.init()
+    //   this.skills.push(instance)
+    // }
   }
 
   async findOrCreateSkillInDB(type: IGameSkill['type']) {

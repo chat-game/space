@@ -5,6 +5,7 @@ import type {
 } from '$lib/game/types'
 import type { GameService } from '$lib/game/services/interface'
 import type { IGameQuest } from '$lib/game/services/quest/interface'
+import type { GameAction } from '$lib/game/actions/interface'
 
 export interface GameEventService extends GameService {
   events: IGameEvent[]
@@ -19,6 +20,7 @@ export interface GameEventService extends GameService {
     quest?: IGameEvent['quest']
     offers?: IGameEvent['offers']
   }) => IGameEvent
+  findActionByCommandInPoll: (command: string) => GameAction | undefined
 }
 
 export interface IGameEvent {

@@ -9,11 +9,8 @@ export class Group implements IGameGroup {
     this.id = createId()
   }
 
-  public getGroup(): IGameGroup {
-    return {
-      id: this.id,
-      players: this.players,
-    }
+  getGroup(): IGameGroup {
+    return this
   }
 
   join(player: GameObjectPlayer): boolean {
@@ -41,7 +38,7 @@ export class Group implements IGameGroup {
     return this.players.find((p) => p.id === id)
   }
 
-  disband() {
+  disband(): void {
     this.players = []
   }
 }

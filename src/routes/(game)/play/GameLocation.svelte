@@ -4,8 +4,8 @@
 </script>
 
 <div class='block'>
-  <GameChunkInfo />
-  <GameWarehouseInfo />
+  <GameChunkInfo title='123' type='VILLAGE' />
+  <GameWarehouseInfo items={[]} />
 </div>
 
 <style>

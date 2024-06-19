@@ -2,7 +2,7 @@
   import GameUnit from './GameUnit.svelte'
   import type { GameObjectPlayer, PlayerTitle } from '$lib/game/types'
 
-  export let player: GameObjectPlayer | undefined
+  export let player: GameObjectPlayer
   export let title: PlayerTitle
   export let points: string
 

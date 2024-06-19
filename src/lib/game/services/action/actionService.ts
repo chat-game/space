@@ -1,14 +1,13 @@
-import type { Player } from '../../objects/units/player'
 import { ChopTreeScript } from '../../scripts/chopTreeScript'
 import { MineStoneScript } from '../../scripts/mineStoneScript'
 import { PlantNewTreeScript } from '../../scripts/plantNewTreeScript'
 import type {
   Game,
   GameObject,
+  GameObjectPlayer,
   GameSceneType,
   IGameActionResponse,
-  IGameSceneAction,
-  ItemType,
+  IGameSceneAction, ItemType,
 } from '$lib/game/types'
 import {
   ADMIN_PLAYER_ID,
@@ -211,11 +210,11 @@ export class ActionService implements GameActionService {
     return commands
   }
 
-  public isActionPossible(action: IGameSceneAction): boolean {
+  isActionPossible(action: IGameSceneAction): boolean {
     return !!this.activeActions.find((a) => a === action)
   }
 
-  private startRaidAction(player: Player, params?: string[]) {
+  private startRaidAction(player: GameObjectPlayer, params?: string[]) {
     // First param is raidersCount
     const raidersCount = params ? Number(params[0]) : 0
 
@@ -233,7 +232,7 @@ export class ActionService implements GameActionService {
     return ANSWER.OK
   }
 
-  private async showMessageAction(player: Player, params?: string[]) {
+  private async showMessageAction(player: GameObjectPlayer, params?: string[]) {
     if (!this.isActionPossible('SHOW_MESSAGE')) {
       return ANSWER.ERROR
     }
@@ -248,7 +247,7 @@ export class ActionService implements GameActionService {
     return ANSWER.OK
   }
 
-  private async stealFuelAction(player: Player) {
+  private async stealFuelAction(player: GameObjectPlayer) {
     if (!this.isActionPossible('STEAL_FUEL')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
@@ -263,7 +262,7 @@ export class ActionService implements GameActionService {
     }
   }
 
-  private async refuelAction(player: Player, params?: string[]) {
+  private async refuelAction(player: GameObjectPlayer, params?: string[]) {
     if (!this.isActionPossible('REFUEL')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
@@ -315,7 +314,7 @@ export class ActionService implements GameActionService {
     return null
   }
 
-  private async chopAction(player: Player) {
+  private async chopAction(player: GameObjectPlayer) {
     if (!this.isActionPossible('CHOP')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
@@ -349,7 +348,7 @@ export class ActionService implements GameActionService {
     return ANSWER.OK
   }
 
-  private async mineAction(player: Player) {
+  private async mineAction(player: GameObjectPlayer) {
     if (!this.isActionPossible('MINE')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
@@ -392,7 +391,7 @@ export class ActionService implements GameActionService {
     return ANSWER.OK
   }
 
-  private plantAction(player: Player) {
+  private plantAction(player: GameObjectPlayer) {
     if (!this.isActionPossible('PLANT')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
@@ -430,7 +429,7 @@ export class ActionService implements GameActionService {
     return ANSWER.ERROR
   }
 
-  private startChangingSceneAction(_: Player, params?: string[]) {
+  private startChangingSceneAction(_: GameObjectPlayer, params?: string[]) {
     if (!this.isActionPossible('START_CHANGING_SCENE')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
@@ -466,7 +465,7 @@ export class ActionService implements GameActionService {
     return null
   }
 
-  private startGroupBuildAction(_: Player, params?: string[]) {
+  private startGroupBuildAction(_: GameObjectPlayer, params?: string[]) {
     if (!this.isActionPossible('START_GROUP_BUILD')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
@@ -506,7 +505,7 @@ export class ActionService implements GameActionService {
     }
   }
 
-  private helpAction(player: Player) {
+  private helpAction(player: GameObjectPlayer) {
     if (!this.isActionPossible('HELP')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
@@ -517,7 +516,7 @@ export class ActionService implements GameActionService {
     }
   }
 
-  private githubAction(player: Player) {
+  private githubAction(player: GameObjectPlayer) {
     if (!this.isActionPossible('GITHUB')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
@@ -528,7 +527,7 @@ export class ActionService implements GameActionService {
     }
   }
 
-  private donateAction(player: Player) {
+  private donateAction(player: GameObjectPlayer) {
     if (!this.isActionPossible('DONATE')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
@@ -538,7 +537,7 @@ export class ActionService implements GameActionService {
     }
   }
 
-  private async giftAction(player: Player, params: string[] | undefined) {
+  private async giftAction(player: GameObjectPlayer, params: string[] | undefined) {
     if (!this.isActionPossible('GIFT')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
@@ -626,7 +625,7 @@ export class ActionService implements GameActionService {
     return null
   }
 
-  private async tradeAction(player: Player, params: string[] | undefined) {
+  private async tradeAction(player: GameObjectPlayer, params: string[] | undefined) {
     if (!this.isActionPossible('TRADE')) {
       return ANSWER.CANT_DO_THIS_NOW_ERROR
     }
@@ -661,7 +660,7 @@ export class ActionService implements GameActionService {
     }
   }
 
-  private createIdeaAction(player: Player, params: string[] | undefined) {
+  private createIdeaAction(player: GameObjectPlayer, params: string[] | undefined) {
     const text = params ? params[0] : ''
 
     this.game.eventService.initEvent({

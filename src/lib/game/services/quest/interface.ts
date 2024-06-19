@@ -3,6 +3,24 @@ import type { GameAction } from '$lib/game/actions/interface'
 
 export interface GameQuestService extends GameService {
   quests: IGameQuest[]
+  create: ({
+    status,
+    type,
+    tasks,
+    conditions,
+    creatorId,
+    title,
+    description,
+  }: Omit<IGameQuest, 'id'>) => IGameQuest
+  createTask: ({
+    updateProgress,
+    progressToSuccess,
+    progressNow,
+    description,
+  }: Pick<
+    IGameQuestTask,
+    'description' | 'progressToSuccess' | 'progressNow' | 'updateProgress'
+  >) => IGameQuestTask
   findActionByCommand: (command: string) => GameAction | undefined
 }
 

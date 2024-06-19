@@ -10,7 +10,9 @@ import { VillageChunk } from '$lib/game/services/chunk/villageChunk'
 import { FlagObject } from '$lib/game/objects/flagObject'
 import { Trader } from '$lib/game/objects/units/trader'
 import { Poll } from '$lib/game/common/poll'
-import type { GameTradeService } from '$lib/game/services/trade/interface'
+import type {
+  FindActiveOfferAndTrade, GameTradeService,
+} from '$lib/game/services/trade/interface'
 
 export class TradeService implements GameTradeService {
   offers: ITradeOffer[] = []
@@ -38,7 +40,7 @@ export class TradeService implements GameTradeService {
     offerId: string,
     amount: number,
     player: GameObjectPlayer,
-  ) {
+  ): Promise<FindActiveOfferAndTrade> {
     for (const offer of this.offers) {
       if (offer.id === offerId) {
         const status = await this.trade(offer, amount, player)

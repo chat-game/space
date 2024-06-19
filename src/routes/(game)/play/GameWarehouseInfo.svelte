@@ -1,8 +1,9 @@
-<script>
+<script lang='ts'>
   import Warehouse from 'lucide-svelte/icons/warehouse'
   import GameItem from './GameItem.svelte'
+  import type { IGameInventoryItem } from '$lib/game/types'
 
-  const items = []
+  export let items: IGameInventoryItem[] = []
 </script>
 
 <div class='block'>

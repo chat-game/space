@@ -27,9 +27,6 @@ export class Wolf extends BaseObject implements IGameObjectWolf {
     spriteRight.anchor.set(0.5, 1)
     spriteLeft.anchor.set(0.5, 1)
 
-    spriteRight.direction = 'RIGHT'
-    spriteLeft.direction = 'LEFT'
-
     this.addChild(spriteRight, spriteLeft)
   }
 
@@ -37,12 +34,6 @@ export class Wolf extends BaseObject implements IGameObjectWolf {
     // Hide all
     for (const t of this.children) {
       t.visible = false
-    }
-
-    // Visible only 1
-    const sprite = this.children.find((t) => t.direction === this.direction)
-    if (sprite) {
-      sprite.visible = true
     }
 
     if (this.state === 'MOVING') {

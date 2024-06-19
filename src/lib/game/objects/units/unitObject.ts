@@ -87,7 +87,7 @@ export class UnitObject extends BaseObject implements IGameObjectUnit {
     }
   }
 
-  public addMessage(message: string) {
+  addMessage(message: string): void {
     const MAX_CHARS = 100
     const messagePrepared
       = message.trim().slice(0, MAX_CHARS)
@@ -116,7 +116,7 @@ export class UnitObject extends BaseObject implements IGameObjectUnit {
     }
   }
 
-  mineStone() {
+  mineStone(): void {
     if (this.target instanceof StoneObject && this.target.state !== 'DESTROYED') {
       this.direction = 'RIGHT'
       this.state = 'MINING'

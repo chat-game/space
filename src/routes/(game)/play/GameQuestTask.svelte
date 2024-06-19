@@ -25,7 +25,7 @@
     <GameQuestTaskProgress task={task} />
   {/if}
 
-  {#if isCommand}
+  {#if isCommand && !!task.action?.commandDescription}
     <GameCommand command={task.action.commandDescription} />
   {/if}
 </div>

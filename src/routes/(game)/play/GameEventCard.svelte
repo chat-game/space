@@ -38,14 +38,24 @@
   <div class='body'>
     <p class='description'>{event.description}</p>
 
-    <GamePollProgress poll={event.poll} />
-    <GameQuestConditions limitSeconds={event.quest.conditions.limitSeconds} />
+    {#if event.poll}
+      <GamePollProgress poll={event.poll} />
+    {/if}
 
-    {#each event.quest.tasks as task}
-      <GameQuestTask task={task} />
-    {/each}
+    {#if event.quest}
+      <GameQuestConditions limitSeconds={event.quest.conditions.limitSeconds} />
+    {/if}
 
-    <GameTradeOffer offer={event.offers[0]} />
+    {#if event.quest}
+      {#each event.quest.tasks as task}
+        <GameQuestTask task={task} />
+      {/each}
+    {/if}
+
+    {#if event.offers}
+      <GameTradeOffer offer={event.offers[0]} />
+    {/if}
+
     <GameEventTimer endsAt={event.endsAt} />
   </div>
 </div>
