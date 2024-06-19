@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@paralleldrive/cuid2": "2.2.2",
-    "@prisma/client": "5.15.0",
+    "@prisma/client": "5.15.1",
     "@radix-ui/colors": "3.0.0",
     "@twurple/api": "7.1.0",
     "@twurple/auth": "7.1.0",
