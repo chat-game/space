@@ -1,20 +1,19 @@
 <script lang='ts'>
   import { onMount } from 'svelte'
   import GameInterface from './GameInterface.svelte'
-  import { BaseGame } from '$lib/game/baseGame'
+  import { BaseGame } from '$lib/game/baseGame.svelte'
 
   const game = new BaseGame()
   let gameElement: HTMLElement
-  let isGameReady = false
-  const isGameElementActive = true
+  let isGameReady = $state(false)
 
-  // const handleGameButtonClick = () => {
-  //   isGameElementActive = !isGameElementActive
-  //   game.play()
-  //   setTimeout(() => {
-  //     game.app.resize()
-  //   }, 200)
-  // }
+  const handleVisibilityChange = () => {
+    game.isPaused = true
+  }
+
+  const unpause = () => {
+    game.isPaused = false
+  }
 
   onMount(() => {
     const initGame = async () => {
@@ -37,11 +36,15 @@
   })
 </script>
 
+<svelte:document onvisibilitychange={handleVisibilityChange} />
+
 <div class='game-block'>
-  <div id='game-canvas' bind:this={gameElement} data-active={isGameElementActive} />
-  <!--  <div class="buttons-block" data-active={!isGameElementActive && isGameReady}> -->
-  <!--    <button on:click={handleGameButtonClick} class="show-switch">Хочу больше!</button> -->
-  <!--  </div> -->
+  <div id='game-canvas' bind:this={gameElement}></div>
+
+  <div class='pause-block' data-active={game.isPaused}>
+    <button onclick={unpause}>Продолжить</button>
+  </div>
+
   <GameInterface isGameReady={isGameReady} />
 </div>
 
@@ -55,5 +58,36 @@
   #game-canvas {
     width: 100%;
     height: 100%;
+  }
+
+  .pause-block {
+    visibility: hidden;
+    z-index: 50;
+  }
+
+  .pause-block[data-active="true"] {
+    visibility: visible;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  .pause-block button {
+    background: var(--color-bg-accent-1);
+    color: var(--color-background);
+    border: 3px solid var(--color-border);
+    padding: 1.5em 2.5em;
+    font-size: 1.2rem;
+    transition: all 0.2s;
+  }
+
+  .pause-block button:hover {
+    transform: scale(1.02);
   }
 </style>

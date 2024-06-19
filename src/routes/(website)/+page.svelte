@@ -2,7 +2,7 @@
   import { onMount } from 'svelte'
   import type { PageServerData } from './$types'
   import { TWITCH_URL } from '$lib/config'
-  import { BaseGame } from '$lib/game/baseGame'
+  import { BaseGame } from '$lib/game/baseGame.svelte'
   import { ruWordWithEndings } from '$lib/locale'
 
   export let data: PageServerData
@@ -25,6 +25,10 @@
     setTimeout(() => {
       game.app.resize()
     }, 200)
+  }
+
+  const handleVisibilityChange = () => {
+    game.isPaused = document.hidden
   }
 
   onMount(() => {
@@ -50,6 +54,8 @@
     перерыв, пока зрители...' />
 </svelte:head>
 
+<svelte:document onvisibilitychange={handleVisibilityChange} />
+
 <section class='hero'>
   <h1>
     Интерактивная чат-игра для Twitch
@@ -59,9 +65,9 @@
 </section>
 
 <div class='game-block'>
-  <div id='game-canvas' bind:this={gameElement} data-active={isGameElementActive} />
+  <div id='game-canvas' bind:this={gameElement} data-active={isGameElementActive}></div>
   <div class='buttons-block' data-active={!isGameElementActive && isGameReady}>
-    <button on:click={handleGameButtonClick} class='show-switch'>Хочу больше!</button>
+    <button onclick={handleGameButtonClick} class='show-switch'>Хочу больше!</button>
   </div>
 </div>
 

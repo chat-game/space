@@ -1,6 +1,6 @@
 <script lang='ts'>
   import GameRouteItem from './GameRouteItem.svelte'
-  import type { IGameRoute } from '$lib/game/services/interface'
+  import type { IGameRoute } from '$lib/game/services/route/interface'
 
   export let route: IGameRoute
 
@@ -24,7 +24,7 @@
         <GameRouteItem widthInPercent={(chunk.area.area.endX - chunk.area.area.startX) / onePercentAllChunks} />
       {/each}
     </div>
-    <div class='progress-bar' style='width: {distanceNowInPercent}' />
+    <div class='progress-bar' style='width: {distanceNowInPercent}'></div>
   </div>
 </div>
 

@@ -6,8 +6,7 @@ import type {
   GameObjectPlayer,
   GameSceneType,
   GameStateResponse,
-  IGameInventoryItem,
-  IGameObjectRaider, WebSocketMessage,
+  IGameInventoryItem, IGameObjectRaider,
 } from '$lib/game/types'
 import { AudioManager } from '$lib/game/utils/audioManager'
 import { BackgroundGenerator } from '$lib/game/utils/generators/background'
@@ -16,23 +15,28 @@ import { MovingScene } from '$lib/game/scenes/movingScene'
 import {
   MoveOffScreenAndSelfDestroyScript,
 } from '$lib/game/scripts/moveOffScreenAndSelfDestroyScript'
-import type { Wagon } from '$lib/game/services/interface'
 import { getRandomInRange } from '$lib/random'
 import { MoveToTargetScript } from '$lib/game/scripts/moveToTargetScript'
 import { ChopTreeScript } from '$lib/game/scripts/chopTreeScript'
-import { ActionService } from '$lib/game/services/actionService'
+import { ActionService } from '$lib/game/services/action/actionService'
 import { EventService } from '$lib/game/services/event/eventService'
-import { TradeService } from '$lib/game/services/tradeService'
-import { WagonService } from '$lib/game/services/wagonService'
-import { RouteService } from '$lib/game/services/routeService'
+import { TradeService } from '$lib/game/services/trade/tradeService'
+import { WagonService } from '$lib/game/services/wagon/wagonService'
+import { RouteService } from '$lib/game/services/route/routeService'
 import { ChunkService } from '$lib/game/services/chunk/chunkService'
 import { TreeObject } from '$lib/game/objects/treeObject'
 import { Group } from '$lib/game/common/group'
 import { PlayerService } from '$lib/game/services/player/playerService'
 import { Raider } from '$lib/game/objects/units/raider'
+import { QuestService } from '$lib/game/services/quest/questService'
+import type { Wagon } from '$lib/game/services/wagon/interface'
+import {
+  WebSocketService,
+} from '$lib/game/services/socket/webSocketService'
 
 export class BaseGame extends Container implements Game {
   id: string
+  isPaused = $state(false)
   children: Game['children'] = []
   app: Application
   audio: Game['audio']
@@ -41,6 +45,7 @@ export class BaseGame extends Container implements Game {
   tick: Game['tick'] = 0
   group: Group
 
+  webSocketService: WebSocketService
   actionService: ActionService
   eventService: EventService
   tradeService: TradeService
@@ -48,6 +53,7 @@ export class BaseGame extends Container implements Game {
   routeService: RouteService
   chunkService: ChunkService
   playerService: PlayerService
+  questService: QuestService
 
   #cameraX = 0
   #cameraY = 0
@@ -63,6 +69,8 @@ export class BaseGame extends Container implements Game {
     this.bg = new BackgroundGenerator(this.app)
     this.group = new Group()
 
+    this.webSocketService = new WebSocketService(this)
+
     this.actionService = new ActionService(this)
     this.eventService = new EventService(this)
     this.tradeService = new TradeService(this)
@@ -70,6 +78,7 @@ export class BaseGame extends Container implements Game {
     this.routeService = new RouteService(this)
     this.chunkService = new ChunkService(this)
     this.playerService = new PlayerService(this)
+    this.questService = new QuestService(this)
   }
 
   async init() {
@@ -91,11 +100,13 @@ export class BaseGame extends Container implements Game {
 
     this.app.stage.addChild(this)
 
-    // WebSocketManager.init(this)
-
     this.initScene('MOVING')
 
     this.app.ticker.add(() => {
+      if (this.isPaused) {
+        return
+      }
+
       this.tick = this.app.ticker.FPS
 
       this.eventService.update()
@@ -104,6 +115,7 @@ export class BaseGame extends Container implements Game {
       this.routeService.update()
       this.chunkService.update()
       this.playerService.update()
+      this.questService.update()
       this.#updateObjects()
       this.#removeDestroyedObjects()
 
@@ -115,6 +127,7 @@ export class BaseGame extends Container implements Game {
 
   async play() {
     this.audio.isEnabled = true
+    this.isPaused = false
 
     // setInterval(() => {
     //   console.log("FPS", this.app.ticker.FPS)
@@ -190,39 +203,8 @@ export class BaseGame extends Container implements Game {
     }
   }
 
-  handleMessage(message: WebSocketMessage) {
-    if (message.object) {
-      this.handleMessageObject(message.object)
-    }
-    if (message.event) {
-      this.handleMessageEvent(message.event)
-    }
-  }
-
-  handleMessageObject(object: Partial<GameObject>) {
-    if (!object.id) {
-      return
-    }
-
-    this.#findObject(object.id)
-  }
-
-  handleMessageEvent(event: WebSocketMessage['event']) {
-    if (event === 'RAID_STARTED') {
-      this.audio.playSound('MARCHING_WITH_HORNS')
-    }
-    if (event === 'GROUP_FORM_STARTED') {
-      this.audio.playSound('MARCHING_WITH_HORNS')
-    }
-    if (event === 'MAIN_QUEST_STARTED') {
-      this.audio.playSound('MARCHING_WITH_HORNS')
-    }
-    if (event === 'SCENE_CHANGED') {
-      this.#rebuildScene()
-    }
-    if (event === 'IDEA_CREATED') {
-      this.audio.playSound('YEAH')
-    }
+  findObject(id: string): GameObject | undefined {
+    return this.children.find((obj) => obj.id === id)
   }
 
   getState(): GameStateResponse {
@@ -238,7 +220,7 @@ export class BaseGame extends Container implements Game {
     }
   }
 
-  #rebuildScene() {
+  rebuildScene(): void {
     this.removeChild(...this.children)
   }
 
@@ -382,9 +364,5 @@ export class BaseGame extends Container implements Game {
       this.parent.x = this.#cameraX
       this.parent.y = this.#cameraY
     }
-  }
-
-  #findObject(id: string) {
-    return this.children.find((obj) => obj.id === id)
   }
 }

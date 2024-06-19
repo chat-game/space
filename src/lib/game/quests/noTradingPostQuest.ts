@@ -1,7 +1,7 @@
 import { createId } from '@paralleldrive/cuid2'
 import type { DonateWoodToVillageAction } from '../actions/donateWoodToVillageAction'
 import { BaseQuest } from './baseQuest'
-import type { IGameQuestTaskFunc } from '$lib/game/types'
+import type { IGameQuestTaskFunc } from '$lib/game/services/quest/interface'
 
 interface INoTradingPostQuestOptions {
   creatorId: string

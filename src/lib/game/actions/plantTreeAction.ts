@@ -1,5 +1,5 @@
 import { PlantNewTreeScript } from '../scripts/plantNewTreeScript'
-import { ANSWER } from '$lib/game/services/actionService'
+import { ANSWER } from '$lib/game/services/action/answer'
 import type { Game, GameObjectPlayer } from '$lib/game/types'
 import { VillageChunk } from '$lib/game/services/chunk/villageChunk'
 import type { GameAction } from '$lib/game/actions/interface'

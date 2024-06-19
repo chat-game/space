@@ -1,7 +1,7 @@
 import { createId } from '@paralleldrive/cuid2'
 import type { PlantTreeAction } from '../actions/plantTreeAction'
 import { BaseQuest } from './baseQuest'
-import type { IGameQuestTaskFunc } from '$lib/game/types'
+import type { IGameQuestTaskFunc } from '$lib/game/services/quest/interface'
 
 interface ITreesAreRunningOutQuestOptions {
   creatorId: string

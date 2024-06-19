@@ -3,7 +3,7 @@
   import CircleDashed from 'lucide-svelte/icons/circle-dashed'
   import GameCommand from './GameCommand.svelte'
   import GameQuestTaskProgress from './GameQuestTaskProgress.svelte'
-  import type { IGameQuestTask } from '$lib/game/types'
+  import type { IGameQuestTask } from '$lib/game/services/quest/interface'
 
   export let task: IGameQuestTask
 

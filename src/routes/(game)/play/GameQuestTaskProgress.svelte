@@ -1,7 +1,7 @@
 <script lang='ts'>
   import CircleCheck from 'lucide-svelte/icons/circle-check'
   import CircleDashed from 'lucide-svelte/icons/circle-dashed'
-  import type { IGameQuestTask } from '$lib/game/types'
+  import type { IGameQuestTask } from '$lib/game/services/quest/interface'
 
   export let task: IGameQuestTask
 
@@ -22,7 +22,7 @@
   </div>
 
   <div class='progress'>
-    <div class='bar' data-active={task.status === 'ACTIVE'} style='width: {progressBarWidth}%' />
+    <div class='bar' data-active={task.status === 'ACTIVE'} style='width: {progressBarWidth}%'></div>
   </div>
 </div>
 

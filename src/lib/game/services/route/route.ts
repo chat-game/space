@@ -1,7 +1,7 @@
 import { FlagObject } from '$lib/game/objects/flagObject'
 import type { GameChunk } from '$lib/game/services/chunk/interface'
 import type { Game } from '$lib/game/types'
-import type { IGameRoute } from '$lib/game/services/interface'
+import type { IGameRoute } from '$lib/game/services/route/interface'
 
 interface IRoutePoint {
   x: number

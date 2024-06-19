@@ -1,40 +1,17 @@
-FROM oven/bun:1 as base
-WORKDIR /usr/src/app
-
-# install dependencies into temp directory
-# this will cache them and speed up future builds
-FROM base AS install
-RUN mkdir -p /temp/dev
-COPY package.json bun.lockb /temp/dev/
-RUN cd /temp/dev && bun install --frozen-lockfile
-
-# install with --production (exclude devDependencies)
-RUN mkdir -p /temp/prod
-COPY package.json bun.lockb /temp/prod/
-RUN cd /temp/prod && bun install --frozen-lockfile --production
-
-# copy node_modules from temp directory
-# then copy all (non-ignored) project files into the image
-FROM base AS prerelease
-COPY --from=install /temp/dev/node_modules node_modules
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json .
+RUN npm ci --legacy-peer-deps
 COPY . .
+RUN npx prisma generate
+RUN npm run build
+RUN npm prune --omit=dev --legacy-peer-deps
 
-# [optional] tests & build
+FROM node:20-alpine
+WORKDIR /app
+COPY --from=builder /app/build build/
+COPY --from=builder /app/node_modules node_modules/
+COPY package.json .
+EXPOSE 3000
 ENV NODE_ENV=production
-# RUN bun test
-RUN bunx prisma generate
-RUN bun run build
-
-# copy dependencies and source code into final image
-FROM base AS release
-COPY --from=install /temp/dev/node_modules node_modules
-COPY --from=install /temp/prod/node_modules node_modules
-COPY --from=prerelease /usr/src/app/node_modules node_modules
-COPY --from=prerelease /usr/src/app/build .
-
-ARG PORT=3000
-ENV PORT=$PORT
-
-USER bun
-EXPOSE $PORT/tcp
-ENTRYPOINT [ "bun", "run", "start" ]
+CMD [ "node", "build" ]

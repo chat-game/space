@@ -1,11 +1,11 @@
 import type {
   Game,
 } from '$lib/game/types'
-import { Route } from '$lib/game/common/route'
+import { Route } from '$lib/game/services/route/route'
 import type {
   GameRouteService,
   IGameRoute,
-} from '$lib/game/services/interface'
+} from '$lib/game/services/route/interface'
 import type {
   GameChunk,
   IGameVillageChunk,
@@ -29,7 +29,7 @@ export class RouteService implements GameRouteService {
           (e) => e.type === 'MAIN_QUEST_STARTED',
         )
       ) {
-        return this.finishAdventure()
+        return this.#finishAdventure()
       }
     }
 
@@ -56,7 +56,7 @@ export class RouteService implements GameRouteService {
     this.route?.chunks.push(chunk)
   }
 
-  generateAdventure(village: IGameVillageChunk, chunks: number) {
+  generateAdventure(village: IGameVillageChunk, chunks: number): void {
     const wagonStartPoint = village.wagonStop
     const villageOutPoint = village.randomOutPoint
     if (!wagonStartPoint) {
@@ -86,10 +86,10 @@ export class RouteService implements GameRouteService {
     }
   }
 
-  finishAdventure() {
+  #finishAdventure() {
     console.log('Adventure finished!', new Date())
     this.route = undefined
-    this.game.wagonService.wagon.emptyCargo()
+    this.game.wagonService.emptyCargo()
     this.game.tradeService.traderIsMovingWithWagon = false
     this.game.tradeService.handleTradeIsOver()
 

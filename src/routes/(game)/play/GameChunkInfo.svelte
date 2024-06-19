@@ -5,7 +5,7 @@
   import type { GameChunk } from '$lib/game/services/chunk/interface'
 
   export let type: GameChunk['type']
-  export let title
+  export let title: string
 </script>
 
 <div class='block'>

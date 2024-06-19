@@ -1,4 +1,3 @@
-import { createId } from '@paralleldrive/cuid2'
 import { Sprite } from 'pixi.js'
 import type { GraphicsContainer } from '../components/graphicsContainer'
 import { WagonCargoContainer } from '../components/wagonCargoContainer'
@@ -8,9 +7,8 @@ import { WagonFuelBoxContainer } from '../components/wagonFuelBoxContainer'
 import { WagonWheelContainer } from '../components/wagonWheelContainer'
 import { BaseObject } from './baseObject'
 import type { Game } from '$lib/game/types'
-import { Inventory } from '$lib/game/common/inventory'
 import { Mechanic } from '$lib/game/objects/units/mechanic'
-import type { Wagon } from '$lib/game/services/interface'
+import type { Wagon } from '$lib/game/services/wagon/interface'
 
 interface IWagonOptions {
   game: Game
@@ -24,7 +22,6 @@ export class BaseWagon extends BaseObject implements Wagon {
   public cargoType: Wagon['cargoType']
 
   public children: GraphicsContainer[] = []
-  public cargo: Inventory | undefined
   public mechanic!: Mechanic
   public serverDataArea!: Wagon['visibilityArea']
   public collisionArea!: Wagon['visibilityArea']
@@ -58,7 +55,7 @@ export class BaseWagon extends BaseObject implements Wagon {
     this.fuel -= this.speedPerSecond * 2
   }
 
-  refuel(woodAmount: number) {
+  refuel(woodAmount: number): void {
     if (woodAmount < 0) {
       return
     }
@@ -66,23 +63,8 @@ export class BaseWagon extends BaseObject implements Wagon {
     this.fuel += woodAmount * 5 * 40
   }
 
-  emptyFuel() {
+  emptyFuel(): void {
     this.fuel = 0
-  }
-
-  setCargo() {
-    this.cargo = new Inventory({
-      id: createId(),
-      saveInDb: false,
-      objectId: this.id,
-    })
-    void this.cargo.addOrCreateItem('WOOD', 100)
-    this.cargoType = 'CHEST'
-  }
-
-  emptyCargo() {
-    this.cargo = undefined
-    this.cargoType = undefined
   }
 
   #updateVisibilityArea() {
@@ -121,7 +103,7 @@ export class BaseWagon extends BaseObject implements Wagon {
     }
   }
 
-  public checkIfPointInCollisionArea(point: { x: number, y: number }) {
+  checkIfPointInCollisionArea(point: { x: number, y: number }) {
     return (
       this.collisionArea.startX < point.x
       && point.x < this.collisionArea.endX

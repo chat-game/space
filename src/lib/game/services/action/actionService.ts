@@ -1,7 +1,7 @@
-import type { Player } from '../objects/units/player'
-import { ChopTreeScript } from '../scripts/chopTreeScript'
-import { MineStoneScript } from '../scripts/mineStoneScript'
-import { PlantNewTreeScript } from '../scripts/plantNewTreeScript'
+import type { Player } from '../../objects/units/player'
+import { ChopTreeScript } from '../../scripts/chopTreeScript'
+import { MineStoneScript } from '../../scripts/mineStoneScript'
+import { PlantNewTreeScript } from '../../scripts/plantNewTreeScript'
 import type {
   Game,
   GameObject,
@@ -17,12 +17,13 @@ import {
   GITHUB_REPO_URL,
 } from '$lib/config'
 import type { GameAction } from '$lib/game/actions/interface'
-import type { GameService } from '$lib/game/services/interface'
 import { TreeObject } from '$lib/game/objects/treeObject'
-import { Route } from '$lib/game/common/route'
+import { Route } from '$lib/game/services/route/route'
 import { StoneObject } from '$lib/game/objects/stoneObject'
 import { VillageChunk } from '$lib/game/services/chunk/villageChunk'
 import { Group } from '$lib/game/common/group'
+import type { GameActionService } from '$lib/game/services/action/interface'
+import { ANSWER } from '$lib/game/services/action/answer'
 
 interface ICommandWithAction {
   id: string
@@ -30,66 +31,7 @@ interface ICommandWithAction {
   command: string
 }
 
-export const ANSWER = {
-  OK: {
-    ok: true,
-    message: null,
-  },
-  DONATE_WOOD_OK: {
-    ok: true,
-    message: 'You gave wood to the village! Your reputation has increased.',
-  },
-  VOTED_OK: {
-    ok: true,
-    message: 'You voted!',
-  },
-  ERROR: {
-    ok: false,
-    message: null,
-  },
-  BUSY_ERROR: {
-    ok: false,
-    message: 'You\'re busy right now',
-  },
-  CANT_DO_THIS_NOW_ERROR: {
-    ok: false,
-    message: 'This cannot be done now.',
-  },
-  NO_PLAYER_ERROR: {
-    ok: false,
-    message: 'You are not in active game :(',
-  },
-  NO_TARGET_ERROR: {
-    ok: false,
-    message: 'No target specified.',
-  },
-  NO_SPACE_AVAILABLE_ERROR: {
-    ok: false,
-    message: 'No space available.',
-  },
-  NO_AVAILABLE_TREE_ERROR: {
-    ok: false,
-    message: 'No available tree',
-  },
-  WRONG_AMOUNT_ERROR: {
-    ok: false,
-    message: 'Incorrect quantity specified.',
-  },
-  ALREADY_VOTED_ERROR: {
-    ok: false,
-    message: 'You\'ve already voted.',
-  },
-  NOT_ENOUGH_PARAMS_ERROR: {
-    ok: false,
-    message: 'Be more specific.',
-  },
-  NOT_ENOUGH_WOOD_ERROR: {
-    ok: false,
-    message: 'You don\'t have enough wood.',
-  },
-}
-
-export class ActionService implements GameService {
+export class ActionService implements GameActionService {
   possibleCommands!: ICommandWithAction[]
   possibleActions!: IGameSceneAction[]
   activeActions!: IGameSceneAction[]
@@ -134,7 +76,7 @@ export class ActionService implements GameService {
   }
 
   public findDynamicActionByCommand(command: string) {
-    const quest = this.game.eventService.findActionByCommandInQuest(command)
+    const quest = this.game.questService.findActionByCommand(command)
     if (quest) {
       return quest
     }

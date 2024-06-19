@@ -1,7 +1,7 @@
 import { createId } from '@paralleldrive/cuid2'
 import { getDatePlusSeconds } from '$lib/date'
 import type { GameSceneType } from '$lib/game/types'
-import type { IGameEvent } from '$lib/game/services/interface'
+import type { IGameEvent } from '$lib/game/services/event/interface'
 
 interface IEventOptions {
   title: IGameEvent['title']
@@ -52,7 +52,7 @@ export class Event implements IGameEvent {
     // sendMessage(type)
   }
 
-  public checkStatus() {
+  checkStatus(): IGameEvent['status'] {
     if (this.endsAt.getTime() <= new Date().getTime()) {
       this.status = 'STOPPED'
     }

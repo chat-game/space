@@ -1,5 +1,5 @@
 import { createId } from '@paralleldrive/cuid2'
-import type { IGameQuest } from '$lib/game/types'
+import type { IGameQuest } from '$lib/game/services/quest/interface'
 
 interface IQuestOptions {
   type: IGameQuest['type']

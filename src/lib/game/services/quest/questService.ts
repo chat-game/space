@@ -4,12 +4,17 @@ import { PlantTreeAction } from '../../actions/plantTreeAction'
 import { NoTradingPostQuest } from '../../quests/noTradingPostQuest'
 import { TreesAreRunningOutQuest } from '../../quests/treesAreRunningOutQuest'
 import type {
-  Game, IGameQuest, IGameQuestTask, IGameQuestTaskFunc,
+  Game,
 } from '$lib/game/types'
 import { VillageChunk } from '$lib/game/services/chunk/villageChunk'
-import type { GameService } from '$lib/game/services/interface'
+import type {
+  GameQuestService,
+  IGameQuest, IGameQuestTask, IGameQuestTaskFunc,
+} from '$lib/game/services/quest/interface'
+import type { GameAction } from '$lib/game/actions/interface'
 
-export class QuestService implements GameService {
+export class QuestService implements GameQuestService {
+  quests: IGameQuest[] = []
   game: Game
 
   constructor(game: Game) {
@@ -17,10 +22,10 @@ export class QuestService implements GameService {
   }
 
   update() {
-    this.updateAndFinishActiveQuests()
+    this.#updateAndFinishActiveQuests()
 
     if (this.game.chunkService.chunk instanceof VillageChunk) {
-      this.generateNewSideQuest()
+      this.#generateNewSideQuest()
     }
 
     for (const event of this.game.eventService.events) {
@@ -30,13 +35,13 @@ export class QuestService implements GameService {
 
       for (const task of event.quest.tasks) {
         if (task.status === 'ACTIVE') {
-          this.updateQuestActiveTask(task)
+          this.#updateQuestActiveTask(task)
         }
       }
     }
   }
 
-  public create({
+  create({
     status,
     type,
     tasks,
@@ -57,7 +62,7 @@ export class QuestService implements GameService {
     }
   }
 
-  public createTask({
+  createTask({
     updateProgress,
     progressToSuccess,
     progressNow,
@@ -76,7 +81,20 @@ export class QuestService implements GameService {
     }
   }
 
-  private updateQuestActiveTask(task: IGameQuestTask) {
+  findActionByCommand(command: string): GameAction | undefined {
+    for (const q of this.quests) {
+      if (q?.tasks) {
+        const task = q.tasks.find(
+          (q) => q.action?.command === command,
+        )
+        if (task?.action) {
+          return task.action
+        }
+      }
+    }
+  }
+
+  #updateQuestActiveTask(task: IGameQuestTask) {
     const progress = task.updateProgress(task.progressToSuccess)
 
     if (typeof progress.status !== 'undefined') {
@@ -90,7 +108,7 @@ export class QuestService implements GameService {
     }
   }
 
-  private updateAndFinishActiveQuests() {
+  #updateAndFinishActiveQuests() {
     for (const event of this.game.eventService.events) {
       if (!event.quest || event.quest.status !== 'ACTIVE') {
         continue
@@ -98,8 +116,7 @@ export class QuestService implements GameService {
 
       // Tasks done?
       if (!event.quest.tasks.find((t) => t.status === 'ACTIVE')) {
-        //
-        this.game.wagonService.wagon.emptyCargo()
+        this.game.wagonService.emptyCargo()
         this.game.tradeService.traderIsMovingWithWagon = false
 
         if (!event.quest.tasks.find((t) => t.status === 'FAILED')) {
@@ -113,7 +130,7 @@ export class QuestService implements GameService {
     }
   }
 
-  private generateSecondSideQuest() {
+  #generateSecondSideQuest() {
     const sideQuests = this.game.eventService.events.filter(
       (e) => e.type === 'SIDE_QUEST_STARTED',
     )
@@ -159,7 +176,7 @@ export class QuestService implements GameService {
     })
   }
 
-  private generateNewSideQuest() {
+  #generateNewSideQuest() {
     if (!this.game.chunkService.chunk) {
       return
     }
@@ -169,7 +186,7 @@ export class QuestService implements GameService {
       if (store) {
         const notEnough = this.game.chunkService.chunk.checkIfThereAreNotEnoughTrees()
         if (notEnough) {
-          return this.generateSecondSideQuest()
+          return this.#generateSecondSideQuest()
         }
 
         return

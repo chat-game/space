@@ -9,7 +9,7 @@
 🤔 Imagine procedurally generated world where you and your viewers can:
 
 - 💬 **Use commands** in chat to see actions in real time
-- 🗺️ **Travel** with the Machine
+- 🗺️ **Travel** with the Wagon
 - 🦄 **Complete** main and side quests from game characters
 - 💎 **Gather** a variety of materials
 - 🏗️ **Construct** buildings
@@ -26,7 +26,6 @@ Let's build a similar world together! ⭐️ Become a Stargazer ⭐️
 - [Prisma](https://www.prisma.io/): Next-generation Node.js and TypeScript ORM.
 - [Howler.js](https://howlerjs.com/): Audio library for the modern web.
 - [Lucide Svelte](https://lucide.dev/guide/packages/lucide-svelte): An open-source icon library.
-- [Bun](https://bun.sh/): An all-in-one JavaScript runtime & toolkit designed for speed, complete with a bundler, test runner, and Node.js-compatible package manager.
 - [TypeScript](https://www.typescriptlang.org/): A strongly typed programming language that builds on JavaScript, giving you better tooling at any scale.
 - [ESLint](https://eslint.org/): Statically analyzes a code to quickly find problems.
 
@@ -36,10 +35,10 @@ Clone this repo and use standard commands:
 
 ```shell
 git clone https://github.com/hmbanan666/chat-game
-bun install
-bun run dev
+npm install
+npm run dev
 ```
 
 ## 🪀 License
 
-This project is licensed under the MIT License - see the [**MIT License**](https://github.com/hmbanan666/chat-game/blob/main/LICENSE) file for details.
+This project is licensed under the MIT License - see the [**MIT License**](https://github.com/hmbanan666/chat-game/blob/main/LICENSE.txt) file for details.

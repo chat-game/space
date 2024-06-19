@@ -1,4 +1,4 @@
-import { ANSWER } from '$lib/game/services/actionService'
+import { ANSWER } from '$lib/game/services/action/answer'
 import type { Poll } from '$lib/game/common/poll'
 import type { GameObjectPlayer } from '$lib/game/types'
 import type { GameAction } from '$lib/game/actions/interface'

@@ -1,21 +1,29 @@
 import type { Container, TilingSprite } from 'pixi.js'
 import type { GameAction } from '$lib/game/actions/interface'
-import type {
-  GameActionService,
-  GameEventService,
-  GameRouteService,
-  GameService,
-  GameWagonService,
-  IGameEvent,
-  IGameRoute, Wagon,
-} from '$lib/game/services/interface'
+
 import type {
   GameChunk,
   GameChunkService, IGameChunkTheme,
 } from '$lib/game/services/chunk/interface'
 import type { GamePlayerService } from '$lib/game/services/player/interface'
+import type { GameTradeService } from '$lib/game/services/trade/interface'
+import type {
+  GameEventService,
+  IGameEvent,
+} from '$lib/game/services/event/interface'
+import type {
+  GameWagonService,
+  Wagon,
+} from '$lib/game/services/wagon/interface'
+import type {
+  GameRouteService,
+  IGameRoute,
+} from '$lib/game/services/route/interface'
+import type { GameActionService } from '$lib/game/services/action/interface'
+import type { GameQuestService } from '$lib/game/services/quest/interface'
 
 export interface Game extends Container {
+  isPaused: boolean
   children: GameObject[]
   tick: number
   audio: GameAudio
@@ -25,17 +33,20 @@ export interface Game extends Container {
   activePlayers: GameObjectPlayer[]
   actionService: GameActionService
   eventService: GameEventService
-  tradeService: GameService
+  tradeService: GameTradeService
   wagonService: GameWagonService
   routeService: GameRouteService
   chunkService: GameChunkService
   playerService: GamePlayerService
+  questService: GameQuestService
   play: () => void
   checkIfThisFlagIsTarget: (id: string) => boolean
   initScene: (scene: GameSceneType) => void
+  findObject: (id: string) => GameObject | undefined
   removeObject: (obj: GameObject) => void
   stopRaid: () => void
   initRaiders: (count: number) => void
+  rebuildScene: () => void
 }
 
 export interface GameScene {
@@ -153,6 +164,7 @@ export interface IGameInventory {
   items: IGameInventoryItem[]
   reduceOrDestroyItem: (type: ItemType, amount: number) => Promise<boolean>
   addOrCreateItem: (type: ItemType, amount: number) => Promise<void>
+  checkIfAlreadyHaveItem: (type: ItemType) => IGameInventoryItem | undefined
 }
 
 export interface IGameInventoryItem {
@@ -173,36 +185,6 @@ export interface IGameSkill {
   xp: number
   xpNextLvl: number
 }
-
-export interface IGameQuest {
-  id: string
-  type: 'MAIN' | 'SIDE'
-  title: string
-  description: string
-  tasks: IGameQuestTask[]
-  status: 'INACTIVE' | 'ACTIVE' | 'FAILED' | 'SUCCESS'
-  creatorId: string
-  conditions: {
-    chunks?: number
-    limitSeconds?: number
-    reward?: string
-  }
-}
-
-export interface IGameQuestTask {
-  id: string
-  description: string
-  status: 'INACTIVE' | 'ACTIVE' | 'FAILED' | 'SUCCESS'
-  progressNow: number | boolean
-  progressToSuccess: number | boolean
-  updateProgress: IGameQuestTaskFunc
-  command?: string
-  action?: GameAction
-}
-
-export type IGameQuestTaskFunc = (
-  progressToSuccess?: IGameQuestTask['progressToSuccess'],
-) => Partial<IGameQuestTask>
 
 export type IGameObjectState =
   | 'MOVING'

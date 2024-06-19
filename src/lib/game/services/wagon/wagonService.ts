@@ -1,13 +1,14 @@
+import { createId } from '@paralleldrive/cuid2'
 import { getMinusOrPlus, getRandomInRange } from '$lib/random'
 import type { Game } from '$lib/game/types'
 import { FlagObject } from '$lib/game/objects/flagObject'
 import { BaseWagon } from '$lib/game/objects/baseWagon'
-import type {
-  GameWagonService,
-} from '$lib/game/services/interface'
+import { Inventory } from '$lib/game/common/inventory'
+import type { GameWagonService } from '$lib/game/services/wagon/interface'
 
 export class WagonService implements GameWagonService {
   wagon!: BaseWagon
+  cargo: Inventory | undefined
   game: Game
 
   #outFlags: FlagObject[] = []
@@ -36,6 +37,21 @@ export class WagonService implements GameWagonService {
 
   get randomNearFlag() {
     return this.#nearFlags[Math.floor(Math.random() * this.#nearFlags.length)]
+  }
+
+  setCargo() {
+    this.cargo = new Inventory({
+      id: createId(),
+      saveInDb: false,
+      objectId: this.wagon.id,
+    })
+    void this.cargo.addOrCreateItem('WOOD', 100)
+    this.wagon.cargoType = 'CHEST'
+  }
+
+  emptyCargo() {
+    this.cargo = undefined
+    this.wagon.cargoType = undefined
   }
 
   #updateWagon() {

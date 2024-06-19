@@ -155,7 +155,7 @@ export class Inventory implements IGameInventory {
     // })
   }
 
-  checkIfAlreadyHaveItem(type: ItemType) {
+  checkIfAlreadyHaveItem(type: ItemType): IGameInventoryItem | undefined {
     return this.items.find((item) => item.type === type)
   }
 

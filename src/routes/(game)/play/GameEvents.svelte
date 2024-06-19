@@ -1,6 +1,6 @@
 <script lang='ts'>
   import GameEventCard from './GameEventCard.svelte'
-  import type { IGameEvent } from '$lib/game/services/interface'
+  import type { IGameEvent } from '$lib/game/services/event/interface'
 
   export let events: IGameEvent[] = []
 </script>

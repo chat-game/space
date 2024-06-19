@@ -12,15 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
 
-      - run: bun install
+      - run: npm ci --legacy-peer-deps
 
       - name: ESLint
-        run: bun run lint
+        run: npm run lint
 
       - name: Find circular dependencies
-        run: bun run lint:deps
+        run: npm run lint:deps
 
       - name: Check Svelte files
-        run: bun run check
+        run: npm run check

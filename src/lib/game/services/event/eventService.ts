@@ -1,25 +1,26 @@
 import { PollService } from './pollService'
-import { QuestService } from './questService'
 import type {
   Game,
-  GameSceneType, IGamePoll, IGameQuest, IGameQuestTask,
+  GameSceneType,
 } from '$lib/game/types'
 import { Event } from '$lib/game/services/event/event'
 import { VillageChunk } from '$lib/game/services/chunk/villageChunk'
 import type {
-  GameEventService, IGameEvent,
-} from '$lib/game/services/interface'
+  GameEventService,
+  IGameEvent,
+} from '$lib/game/services/event/interface'
+import type {
+  IGameQuestTask,
+} from '$lib/game/services/quest/interface'
 
 export class EventService implements GameEventService {
-  events: Event[] = []
-  questService: QuestService
+  events: IGameEvent[] = []
   pollService: PollService
   game: Game
 
   constructor(game: Game) {
     this.game = game
 
-    this.questService = new QuestService(this.game)
     this.pollService = new PollService(this.game)
   }
 
@@ -28,16 +29,15 @@ export class EventService implements GameEventService {
       const status = event.checkStatus()
 
       if (status === 'STOPPED') {
-        this.handleEnding(event)
+        this.#handleEnding(event)
         this.destroy(event)
       }
 
-      this.updateSuccessPollsWithQuest(event)
-      this.updateClosedQuests(event)
+      this.#updateSuccessPollsWithQuest(event)
+      this.#updateClosedQuests(event)
     }
 
     this.pollService.update()
-    this.questService.update()
   }
 
   initEvent({
@@ -74,64 +74,12 @@ export class EventService implements GameEventService {
     return event
   }
 
-  prepareQuestData(quest: IGameQuest | undefined) {
-    if (!quest) {
-      return
-    }
-
-    const tasks = quest?.tasks.map((t) => {
-      const action = t.action
-        ? {
-            ...t.action,
-            live: undefined,
-            scene: undefined,
-          }
-        : undefined
-      return { ...t, action }
-    })
-
-    return {
-      ...quest,
-      tasks,
-    }
-  }
-
-  preparePollData(poll: IGamePoll | undefined) {
-    if (!poll) {
-      return
-    }
-
-    return {
-      ...poll,
-      action: {
-        ...poll.action,
-        poll: undefined,
-        live: undefined,
-        scene: undefined,
-      },
-      scene: undefined,
-    }
-  }
-
-  public destroy(event: Event) {
+  destroy(event: IGameEvent): void {
     const index = this.events.indexOf(event)
     this.events.splice(index, 1)
   }
 
-  public findActionByCommandInQuest(command: string) {
-    for (const event of this.events) {
-      if (event.quest?.tasks) {
-        const task = event.quest.tasks.find(
-          (q) => q.action?.command === command,
-        )
-        if (task?.action) {
-          return task.action
-        }
-      }
-    }
-  }
-
-  public findActionByCommandInPoll(command: string) {
+  findActionByCommandInPoll(command: string) {
     for (const event of this.events) {
       if (event.poll?.action && event.poll.action.command === command) {
         return event.poll?.action
@@ -139,7 +87,7 @@ export class EventService implements GameEventService {
     }
   }
 
-  private handleEnding(event: Event) {
+  #handleEnding(event: IGameEvent) {
     if (event.type === 'SCENE_CHANGING_STARTED' && event.scene) {
       this.game.initScene(event.scene)
     }
@@ -157,7 +105,7 @@ export class EventService implements GameEventService {
     }
   }
 
-  private destroyAllEventsWithPoll() {
+  #destroyAllEventsWithPoll() {
     for (const event of this.events) {
       if (event.poll) {
         this.destroy(event)
@@ -165,14 +113,14 @@ export class EventService implements GameEventService {
     }
   }
 
-  private updateSuccessPollsWithQuest(event: Event) {
+  #updateSuccessPollsWithQuest(event: IGameEvent) {
     if (event.poll?.status !== 'SUCCESS' || !event.quest) {
       return
     }
 
     const updateProgress1: IGameQuestTask['updateProgress'] = () => {
       if (
-        !this.game.routeService.route?.flags
+        !this.game.routeService.route
         && this.events.find((e) => e.type === 'MAIN_QUEST_STARTED')
       ) {
         return {
@@ -181,7 +129,7 @@ export class EventService implements GameEventService {
       }
 
       const items
-        = this.game.wagonService.wagon.cargo?.checkIfAlreadyHaveItem('WOOD')
+        = this.game.wagonService.cargo?.checkIfAlreadyHaveItem('WOOD')
       if (!items) {
         return {
           status: 'FAILED',
@@ -196,7 +144,7 @@ export class EventService implements GameEventService {
     }
 
     const tasks = [
-      this.questService.createTask({
+      this.game.questService.createTask({
         updateProgress: updateProgress1,
         description: 'Transport cargo safely',
         progressNow: 100,
@@ -217,7 +165,7 @@ export class EventService implements GameEventService {
     })
 
     // Cargo
-    this.game.wagonService.wagon.setCargo()
+    this.game.wagonService.setCargo()
 
     if (this.game.chunkService.chunk instanceof VillageChunk) {
       this.game.routeService.generateAdventure(
@@ -228,13 +176,12 @@ export class EventService implements GameEventService {
 
     this.game.tradeService.traderIsMovingWithWagon = true
 
-    this.destroyAllEventsWithPoll()
+    this.#destroyAllEventsWithPoll()
   }
 
-  private updateClosedQuests(event: Event) {
+  #updateClosedQuests(event: IGameEvent) {
     if (event.status === 'STARTED' && event.quest) {
       if (event.quest.status === 'FAILED' || event.quest.status === 'SUCCESS') {
-        //
         event.status = 'STOPPED'
       }
     }

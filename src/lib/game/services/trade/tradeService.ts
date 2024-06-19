@@ -1,6 +1,6 @@
-import { MoveOffScreenAndSelfDestroyScript } from '../scripts/moveOffScreenAndSelfDestroyScript'
-import { MoveToTargetScript } from '../scripts/moveToTargetScript'
-import { MoveToTradePostAndTradeScript } from '../scripts/moveToTradePostAndTradeScript'
+import { MoveOffScreenAndSelfDestroyScript } from '../../scripts/moveOffScreenAndSelfDestroyScript'
+import { MoveToTargetScript } from '../../scripts/moveToTargetScript'
+import { MoveToTradePostAndTradeScript } from '../../scripts/moveToTradePostAndTradeScript'
 import { getRandomInRange } from '$lib/random'
 import type {
   Game,
@@ -10,12 +10,12 @@ import { VillageChunk } from '$lib/game/services/chunk/villageChunk'
 import { FlagObject } from '$lib/game/objects/flagObject'
 import { Trader } from '$lib/game/objects/units/trader'
 import { Poll } from '$lib/game/common/poll'
-import type { GameService } from '$lib/game/services/interface'
+import type { GameTradeService } from '$lib/game/services/trade/interface'
 
-export class TradeService implements GameService {
-  public offers: ITradeOffer[] = []
-  public tradeWasSuccessful: boolean
-  public traderIsMovingWithWagon: boolean
+export class TradeService implements GameTradeService {
+  offers: ITradeOffer[] = []
+  tradeWasSuccessful: boolean
+  traderIsMovingWithWagon: boolean
   game: Game
 
   constructor(game: Game) {
@@ -288,7 +288,7 @@ export class TradeService implements GameService {
       title: 'The merchant offers a quest',
       description: 'Let\'s make the quest active? Vote in chat.',
       secondsToEnd: 180,
-      quest: this.game.eventService.questService.create({
+      quest: this.game.questService.create({
         status: 'INACTIVE',
         type: 'MAIN',
         title: 'Transport cargo to a neighboring village',

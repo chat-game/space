@@ -17,7 +17,7 @@
   <div class='progress'>
     Votes: {poll.votes.length} of {poll.votesToSuccess}
   </div>
-  <div class='bar' style='width: {pollProgressBarWidth}%' />
+  <div class='bar' style='width: {pollProgressBarWidth}%'></div>
 </div>
 
 <GameCommand command={poll.action.commandDescription} />
