@@ -30,9 +30,6 @@ import { PlayerService } from '$lib/game/services/player/playerService'
 import { Raider } from '$lib/game/objects/units/raider'
 import { QuestService } from '$lib/game/services/quest/questService'
 import type { Wagon } from '$lib/game/services/wagon/interface'
-import {
-  WebSocketService,
-} from '$lib/game/services/socket/webSocketService'
 
 export class BaseGame extends Container implements Game {
   id: string
@@ -45,7 +42,6 @@ export class BaseGame extends Container implements Game {
   tick: Game['tick'] = 0
   group: Group
 
-  webSocketService: WebSocketService
   actionService: ActionService
   eventService: EventService
   tradeService: TradeService
@@ -68,8 +64,6 @@ export class BaseGame extends Container implements Game {
     this.audio = new AudioManager()
     this.bg = new BackgroundGenerator(this.app)
     this.group = new Group()
-
-    this.webSocketService = new WebSocketService(this)
 
     this.actionService = new ActionService(this)
     this.eventService = new EventService(this)

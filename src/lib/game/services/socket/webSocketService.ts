@@ -56,11 +56,7 @@ export class WebSocketService implements GameWebSocketService {
   }
 
   #init() {
-    if (!env.PUBLIC_WEBSOCKET_URL) {
-      throw new Error('No PUBLIC_WEBSOCKET_URL in config')
-    }
-
-    this.socket = new WebSocket(env.PUBLIC_WEBSOCKET_URL)
+    this.socket = new WebSocket(env.PUBLIC_WEBSOCKET_URL ?? '')
 
     this.#setMessagesPerSecondHandler()
 

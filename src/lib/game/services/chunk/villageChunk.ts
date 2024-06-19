@@ -81,6 +81,7 @@ export class VillageChunk extends BaseChunk implements IGameVillageChunk {
       size: 12,
       health: 20,
       theme: this.area.theme,
+      chunkId: this.id,
     })
 
     flag.target = tree
@@ -250,6 +251,7 @@ export class VillageChunk extends BaseChunk implements IGameVillageChunk {
           resource: 1,
           health: 20,
           theme: this.area.theme,
+          chunkId: this.id,
         })
         flag.target = tree
         tree.init()
@@ -266,6 +268,7 @@ export class VillageChunk extends BaseChunk implements IGameVillageChunk {
           x: flag.x,
           y: flag.y,
           resource: 1,
+          chunkId: this.id,
         })
         flag.target = stone
         stone.init()
@@ -280,6 +283,7 @@ export class VillageChunk extends BaseChunk implements IGameVillageChunk {
         game: this.game,
         x: randomPoint.x,
         y: randomPoint.y,
+        chunkId: this.id,
       }).init()
     }
   }
@@ -291,6 +295,7 @@ export class VillageChunk extends BaseChunk implements IGameVillageChunk {
         game: this.game,
         x: randomPoint.x,
         y: randomPoint.y,
+        chunkId: this.id,
       }).init()
     }
   }

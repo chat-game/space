@@ -34,12 +34,12 @@ export class UnitObject extends BaseObject implements IGameObjectUnit {
   public userName!: IGameObjectUnit['userName']
   public coins = 0
   public dialogue!: IGameObjectUnit['dialogue']
-
-  private interface!: UnitInterface
-  private dialogueInterface!: DialogueInterface
   children: GraphicsContainer[] = []
-  private readonly animationMovingLeft!: AnimatedSprite
-  private readonly animationMovingRight!: AnimatedSprite
+
+  readonly #interface!: UnitInterface
+  readonly #dialogueInterface!: DialogueInterface
+  readonly #animationMovingLeft!: AnimatedSprite
+  readonly #animationMovingRight!: AnimatedSprite
 
   constructor({ game, x, y, id, type, chunkId }: UnitObjectOptions) {
     super({ game, x, y, id, type })
@@ -49,11 +49,15 @@ export class UnitObject extends BaseObject implements IGameObjectUnit {
     this.coins = 0
     this.state = 'IDLE'
 
-    this.animationMovingRight = AssetsManager.getAnimatedSpriteHero('RIGHT')
-    this.animationMovingLeft = AssetsManager.getAnimatedSpriteHero('LEFT')
+    this.#animationMovingRight = AssetsManager.getAnimatedSpriteHero('RIGHT')
+    this.#animationMovingLeft = AssetsManager.getAnimatedSpriteHero('LEFT')
 
     this.#initInventory()
     this.#initDialogue()
+
+    this.#interface = new UnitInterface(this)
+    this.#dialogueInterface = new DialogueInterface(this)
+
     this.#initGraphics()
   }
 
@@ -138,38 +142,31 @@ export class UnitObject extends BaseObject implements IGameObjectUnit {
   }
 
   #initGraphics() {
-    const top = this.initTop()
-    const head = this.initHead()
-    const hair = this.initHair()
-
-    this.initInterface()
+    const top = this.#initTop()
+    const head = this.#initHead()
+    const hair = this.#initHair()
 
     this.addChild(
       ...top,
       ...head,
       ...hair,
-      this.animationMovingLeft,
-      this.animationMovingRight,
-      this.interface,
-      this.dialogueInterface,
+      this.#animationMovingLeft,
+      this.#animationMovingRight,
+      this.#interface,
+      this.#dialogueInterface,
     )
   }
 
-  initTop() {
+  #initTop() {
     return UnitTopContainer.getAll()
   }
 
-  initHead() {
+  #initHead() {
     return UnitHeadContainer.getAll()
   }
 
-  initHair() {
+  #initHair() {
     return UnitHairContainer.getAll()
-  }
-
-  initInterface() {
-    this.interface = new UnitInterface(this)
-    this.dialogueInterface = new DialogueInterface(this)
   }
 
   animate() {
@@ -181,16 +178,16 @@ export class UnitObject extends BaseObject implements IGameObjectUnit {
       container.visible = false
 
       if (this.state === 'MOVING') {
-        this.animationMovingLeft.animationSpeed = 0.25
-        this.animationMovingRight.animationSpeed = 0.25
+        this.#animationMovingLeft.animationSpeed = 0.25
+        this.#animationMovingRight.animationSpeed = 0.25
 
         if (this.direction === 'RIGHT') {
-          this.animationMovingRight.visible = true
-          this.animationMovingRight.play()
+          this.#animationMovingRight.visible = true
+          this.#animationMovingRight.play()
         }
         if (this.direction === 'LEFT') {
-          this.animationMovingLeft.visible = true
-          this.animationMovingLeft.play()
+          this.#animationMovingLeft.visible = true
+          this.#animationMovingLeft.play()
         }
       }
 
@@ -199,26 +196,26 @@ export class UnitObject extends BaseObject implements IGameObjectUnit {
         || this.state === 'CHOPPING'
         || this.state === 'MINING'
       ) {
-        this.animationMovingLeft.animationSpeed = 0
-        this.animationMovingRight.animationSpeed = 0
-        this.animationMovingLeft.currentFrame = 0
-        this.animationMovingRight.currentFrame = 0
+        this.#animationMovingLeft.animationSpeed = 0
+        this.#animationMovingRight.animationSpeed = 0
+        this.#animationMovingLeft.currentFrame = 0
+        this.#animationMovingRight.currentFrame = 0
 
         if (this.direction === 'LEFT') {
-          this.animationMovingLeft.visible = true
+          this.#animationMovingLeft.visible = true
         }
         if (this.direction === 'RIGHT') {
-          this.animationMovingRight.visible = true
+          this.#animationMovingRight.visible = true
         }
       }
 
-      this.drawTop(container)
-      this.drawHead(container)
-      this.drawHair(container)
+      this.#drawTop(container)
+      this.#drawHead(container)
+      this.#drawHair(container)
     }
 
-    // this.interface.animate()
-    // this.dialogueInterface.animate()
+    this.#interface.animate()
+    this.#dialogueInterface.animate()
 
     this.showToolInHand()
     this.handleSoundByState()
@@ -228,7 +225,7 @@ export class UnitObject extends BaseObject implements IGameObjectUnit {
     }
   }
 
-  drawTop(container: GraphicsContainer) {
+  #drawTop(container: GraphicsContainer) {
     if (container instanceof UnitTopContainer) {
       if (container.visual !== this.visual.top) {
         return
@@ -241,7 +238,7 @@ export class UnitObject extends BaseObject implements IGameObjectUnit {
     }
   }
 
-  drawHead(container: GraphicsContainer) {
+  #drawHead(container: GraphicsContainer) {
     if (container instanceof UnitHeadContainer) {
       if (container.visual !== this.visual.head) {
         return
@@ -254,7 +251,7 @@ export class UnitObject extends BaseObject implements IGameObjectUnit {
     }
   }
 
-  drawHair(container: GraphicsContainer) {
+  #drawHair(container: GraphicsContainer) {
     if (container instanceof UnitHairContainer) {
       if (container.visual !== this.visual.hairstyle) {
         return
@@ -269,10 +266,10 @@ export class UnitObject extends BaseObject implements IGameObjectUnit {
 
   showToolInHand() {
     if (this.state === 'CHOPPING') {
-      this.interface.showAxeInHand()
+      this.#interface.showAxeInHand()
     }
     if (this.state === 'MINING') {
-      this.interface.showPickaxeInHand()
+      this.#interface.showPickaxeInHand()
     }
   }
 
