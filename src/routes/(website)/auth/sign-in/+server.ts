@@ -3,23 +3,19 @@ import { error, json } from '@sveltejs/kit'
 import { ApiClient } from '@twurple/api'
 import { StaticAuthProvider, getTokenInfo } from '@twurple/auth'
 import jwt from 'jsonwebtoken'
+import type { Profile } from '@prisma/client'
 import type { RequestHandler } from './$types'
 import type { IProfile } from '$lib/types'
 import { db } from '$lib/server/db/db.client'
 import { env as publicEnv } from '$env/dynamic/public'
 import { env as privateEnv } from '$env/dynamic/private'
 
-async function findOrCreateProfile({
-  twitchId,
-  userName,
-}: {
-  twitchId: string
-  userName: string
-}) {
-  const profileInDB = await db.profile.findFirst({
+async function findOrCreateProfile({ twitchId, userName }: Pick<Profile, 'twitchId' | 'userName'>): Promise<Profile> {
+  const profile = await db.profile.findFirst({
     where: { twitchId },
   })
-  if (!profileInDB) {
+
+  if (!profile) {
     return db.profile.create({
       data: {
         id: createId(),
@@ -29,7 +25,7 @@ async function findOrCreateProfile({
     })
   }
 
-  return profileInDB
+  return profile
 }
 
 async function prepareJwtToken(accessToken: string) {

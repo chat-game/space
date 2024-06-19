@@ -1,7 +1,7 @@
 export function ruWordWithEndings(
   int: number,
   array: [string, string, string],
-) {
+): string {
   return array[
     int % 100 > 4 && int % 100 < 20
       ? 2

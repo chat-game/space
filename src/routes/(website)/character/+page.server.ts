@@ -4,7 +4,8 @@ import { db } from '$lib/server/db/db.client'
 
 export const load: PageServerLoad = async () => {
   const characters = await db.character.findMany()
-  if (!characters) {
+
+  if (!characters.length) {
     error(404, 'Not found')
   }
 
