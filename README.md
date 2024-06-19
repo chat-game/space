@@ -23,7 +23,6 @@ Let's build a similar world together! ⭐️ Become a Stargazer ⭐️
 - [Svelte](https://svelte.dev/): A new way to build web applications. It's a compiler that takes your declarative components and converts them into efficient JavaScript that surgically updates the DOM.
 - [SvelteKit](https://kit.svelte.dev/): A framework for rapidly developing robust, performant web applications using Svelte.
 - [Twurple](https://twurple.js.org/): A set of libraries that aims to cover all existing Twitch APIs.
-- [Prisma](https://www.prisma.io/): Next-generation Node.js and TypeScript ORM.
 - [Howler.js](https://howlerjs.com/): Audio library for the modern web.
 - [Lucide Svelte](https://lucide.dev/guide/packages/lucide-svelte): An open-source icon library.
 - [TypeScript](https://www.typescriptlang.org/): A strongly typed programming language that builds on JavaScript, giving you better tooling at any scale.
@@ -41,4 +40,4 @@ npm run dev
 
 ## 🪀 License
 
-This project is licensed under the MIT License - see the [**MIT License**](https://github.com/hmbanan666/chat-game/blob/main/LICENSE.txt) file for details.
+This project is licensed under the MIT License - see the [**MIT License**](https://github.com/hmbanan666/chat-game/blob/main/LICENSE) file for details.

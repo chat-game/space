@@ -1,6 +1,5 @@
 import type { Container, TilingSprite } from 'pixi.js'
 import type { GameAction } from '$lib/game/actions/interface'
-
 import type {
   GameChunk,
   GameChunkService, IGameChunkTheme,
@@ -110,23 +109,6 @@ type GameObjectType =
   | 'MECHANIC'
   | 'WAGON'
   | GameObjectBuildingType
-
-export interface TwitchAccessTokenResponse {
-  access_token: string
-  refresh_token: string
-  scope: string[]
-  expires_in: number
-  token_type: 'bearer'
-}
-
-export interface TwitchAccessToken {
-  userId: string
-  accessToken: string
-  refreshToken: string | null
-  scope: string[]
-  expiresIn: number | null
-  obtainmentTimestamp: number
-}
 
 export interface IGameActionResponse {
   ok: boolean

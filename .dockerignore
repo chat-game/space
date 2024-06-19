@@ -15,7 +15,7 @@ README.md
 build
 package
 docker-compose*
-LICENSE.txt
+LICENSE
 Makefile
 helm-charts
 .env

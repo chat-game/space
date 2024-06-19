@@ -19,7 +19,6 @@
     "twitch"
   ],
   "scripts": {
-    "deprecated:api:start": "bun run --hot apps/api/src/index.ts",
     "dev": "vite dev",
     "build": "svelte-kit sync && vite build",
     "preview": "vite preview",
@@ -35,9 +34,6 @@
     "@radix-ui/colors": "3.0.0",
     "@twurple/api": "7.1.0",
     "@twurple/auth": "7.1.0",
-    "@twurple/easy-bot": "7.1.0",
-    "@twurple/pubsub": "7.1.0",
-    "hono": "4.4.7",
     "howler": "2.2.4",
     "jsonwebtoken": "9.0.2",
     "lucide-svelte": "0.395.0",

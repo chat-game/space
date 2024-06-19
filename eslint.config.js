@@ -17,6 +17,5 @@ export default antfu({
     'node_modules',
     '.svelte-kit',
     'build',
-    '.dependency-cruiser.cjs',
   ],
 })
