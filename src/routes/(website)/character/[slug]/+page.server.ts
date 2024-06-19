@@ -8,6 +8,7 @@ export const load: PageServerLoad = async ({ params }) => {
   const character = await db.character.findFirst({
     where: { id },
   })
+
   if (!character) {
     error(404, 'Not found')
   }
