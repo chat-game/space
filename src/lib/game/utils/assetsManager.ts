@@ -94,7 +94,7 @@ import water2 from '$lib/assets/game/images/water/2.png'
 import water3 from '$lib/assets/game/images/water/3.png'
 import water4 from '$lib/assets/game/images/water/4.png'
 import type { IGameObjectUnit } from '$lib/game/types'
-import { getRandomInRange } from '$lib/random'
+import { getRandomInRange } from '$lib/utils/random'
 
 export abstract class AssetsManager {
   static assets = [

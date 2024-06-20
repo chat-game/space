@@ -1,5 +1,5 @@
 import { UnitObject } from './unitObject'
-import { getRandomInRange } from '$lib/random'
+import { getRandomInRange } from '$lib/utils/random'
 import type {
   Game,
   GameObjectPlayer,

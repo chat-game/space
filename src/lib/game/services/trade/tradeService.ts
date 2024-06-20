@@ -1,7 +1,7 @@
 import { MoveOffScreenAndSelfDestroyScript } from '../../scripts/moveOffScreenAndSelfDestroyScript'
 import { MoveToTargetScript } from '../../scripts/moveToTargetScript'
 import { MoveToTradePostAndTradeScript } from '../../scripts/moveToTradePostAndTradeScript'
-import { getRandomInRange } from '$lib/random'
+import { getRandomInRange } from '$lib/utils/random'
 import type {
   Game,
   GameObjectPlayer, ITradeOffer,

@@ -6,7 +6,7 @@ import {
   BACKGROUND_TILE_4,
   BACKGROUND_TILE_5,
 } from './backgroundImages'
-import { getRandomInRange } from '$lib/random'
+import { getRandomInRange } from '$lib/utils/random'
 import type { IGameChunkTheme } from '$lib/game/services/chunk/interface'
 
 interface Palette {

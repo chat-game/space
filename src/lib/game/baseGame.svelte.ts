@@ -15,7 +15,7 @@ import { MovingScene } from '$lib/game/scenes/movingScene'
 import {
   MoveOffScreenAndSelfDestroyScript,
 } from '$lib/game/scripts/moveOffScreenAndSelfDestroyScript'
-import { getRandomInRange } from '$lib/random'
+import { getRandomInRange } from '$lib/utils/random'
 import { MoveToTargetScript } from '$lib/game/scripts/moveToTargetScript'
 import { ChopTreeScript } from '$lib/game/scripts/chopTreeScript'
 import { ActionService } from '$lib/game/services/action/actionService'

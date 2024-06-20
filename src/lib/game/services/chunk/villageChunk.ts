@@ -9,7 +9,7 @@ import { MoveToTargetScript } from '../../scripts/moveToTargetScript'
 import { PlaceItemInWarehouseScript } from '../../scripts/placeItemInWarehouseScript'
 import { PlantNewTreeScript } from '../../scripts/plantNewTreeScript'
 import { BaseChunk } from './baseChunk'
-import { getRandomInRange } from '$lib/random'
+import { getRandomInRange } from '$lib/utils/random'
 import type {
   Game,
   GameObjectFlag,

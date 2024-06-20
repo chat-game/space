@@ -24,6 +24,7 @@
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig tsconfig.json --watch",
+    "test": "vitest run --coverage",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:deps": "madge -c --extensions ts ./src"
@@ -44,17 +45,21 @@
     "@sveltejs/adapter-node": "5.2.0",
     "@sveltejs/kit": "2.5.17",
     "@sveltejs/vite-plugin-svelte": "3.1.1",
+    "@testing-library/svelte": "^5.1.0",
     "@types/howler": "2.2.11",
     "@types/jsonwebtoken": "9.0.6",
     "@types/node": "20.14.6",
+    "@vitest/coverage-v8": "^1.6.0",
     "eslint": "9.5.0",
     "eslint-plugin-svelte": "2.40.0",
+    "happy-dom": "^14.12.0",
     "madge": "7.0.0",
     "prisma": "5.15.1",
     "svelte": "5.0.0-next.158",
     "svelte-check": "3.8.1",
     "svelte-eslint-parser": "0.39.1",
     "typescript": "5.4.5",
-    "vite": "5.3.1"
+    "vite": "5.3.1",
+    "vitest": "^1.6.0"
   }
 }

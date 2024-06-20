@@ -6,7 +6,7 @@ import type {
 import { VillageChunk } from '$lib/game/services/chunk/villageChunk'
 import { ForestChunk } from '$lib/game/services/chunk/forestChunk'
 import { LakeChunk } from '$lib/game/services/chunk/lakeChunk'
-import { getRandomInRange } from '$lib/random'
+import { getRandomInRange } from '$lib/utils/random'
 
 export class ChunkService implements GameChunkService {
   chunks: GameChunk[] = []

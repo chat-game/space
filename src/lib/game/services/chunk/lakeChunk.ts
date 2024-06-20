@@ -1,5 +1,5 @@
 import { BaseChunk } from './baseChunk'
-import { getRandomInRange } from '$lib/random'
+import { getRandomInRange } from '$lib/utils/random'
 import type {
   Game,
 } from '$lib/game/types'

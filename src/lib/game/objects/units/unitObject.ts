@@ -10,7 +10,7 @@ import { FlagObject } from '../flagObject'
 import { BaseObject } from '../baseObject'
 import { StoneObject } from '../stoneObject'
 import { TreeObject } from '../treeObject'
-import { getRandomInRange } from '$lib/random'
+import { getRandomInRange } from '$lib/utils/random'
 import type {
   Game,
   GameObject,
