@@ -28,7 +28,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:deps": "madge -c --extensions ts ./src",
-    "release": "npm run test && npm run lint && npm run lint:deps && npm run build && changelogen --release --push",
+    "release": "npm run check && npm run test && npm run lint && npm run lint:deps && npm run build && changelogen --release --push",
     "prepare": "husky"
   },
   "dependencies": {
