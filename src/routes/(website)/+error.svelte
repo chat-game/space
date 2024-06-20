@@ -1,10 +1,11 @@
 <script lang='ts'>
   import { page } from '$app/stores'
+  import { t } from '$lib/translations'
 </script>
 
-<h1>{$page.status}: {$page.error?.message}</h1>
+<h1>{$t('error.title')} ({$page.status})</h1>
 
-<p>Ну вот... Или это фича?</p>
+<p>{$t(`error.${$page.status}`, { default: $t('error.default') })}</p>
 
 <style>
     p {

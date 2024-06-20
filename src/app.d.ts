@@ -1,11 +1,11 @@
-// See https://kit.svelte.dev/docs/types#app
-// for information about these interfaces
+/// <reference types="@sveltejs/kit" />
 import type { IProfile } from '$lib/types'
 
 declare global {
   namespace App {
     interface Locals {
       profile: null | IProfile
+      lang: string
     }
 
     // interface Error {}
