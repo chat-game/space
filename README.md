@@ -38,6 +38,12 @@ npm install
 npm run dev
 ```
 
+## 🏆 Contributors
+
+A huge thank you to everyone who is helping to improve. Thanks to you, the project can evolve!
+
+<img src="https://raw.githubusercontent.com/hmbanan666/chat-game/main/.github/static/contributors.svg" alt="Chat Game Contributors" width="100%"/>
+
 ## 🪀 License
 
 This project is licensed under the MIT License - see the [**MIT License**](https://github.com/hmbanan666/chat-game/blob/main/LICENSE) file for details.
