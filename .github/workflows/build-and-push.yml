@@ -9,7 +9,7 @@ on:
       - main
 
 env:
-  IMAGE_NAME: chat-game/app
+  IMAGE_NAME: ghcr.io/hmbanan666/chat-game/app
 
 jobs:
   docker:
