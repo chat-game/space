@@ -6,7 +6,6 @@ import { dev } from '$app/environment'
 export const defaultLocale = 'en'
 
 export const config: Config = {
-  // preprocess: 'preserveArrays',
   log: {
     level: dev ? 'warn' : 'error',
   },
