@@ -1,6 +1,6 @@
 import { Sprite } from 'pixi.js'
 import { BaseObject } from './baseObject'
-import { getRandomInRange } from '$lib/random'
+import { getRandomInRange } from '$lib/utils/random'
 import type { Game, GameObjectTree } from '$lib/game/types'
 
 interface TreeOptions {

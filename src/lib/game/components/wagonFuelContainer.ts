@@ -1,6 +1,6 @@
 import { Sprite } from 'pixi.js'
 import { GraphicsContainer } from './graphicsContainer'
-import { getRandomInRange } from '$lib/random'
+import { getRandomInRange } from '$lib/utils/random'
 
 export class WagonFuelContainer extends GraphicsContainer {
   constructor() {

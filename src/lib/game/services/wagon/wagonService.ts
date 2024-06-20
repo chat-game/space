@@ -1,5 +1,5 @@
 import { createId } from '@paralleldrive/cuid2'
-import { getMinusOrPlus, getRandomInRange } from '$lib/random'
+import { getMinusOrPlus, getRandomInRange } from '$lib/utils/random'
 import type { Game } from '$lib/game/types'
 import { FlagObject } from '$lib/game/objects/flagObject'
 import { BaseWagon } from '$lib/game/objects/baseWagon'

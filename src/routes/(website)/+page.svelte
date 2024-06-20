@@ -3,12 +3,12 @@
   import type { PageServerData } from './$types'
   import { TWITCH_URL } from '$lib/config'
   import { BaseGame } from '$lib/game/baseGame.svelte'
-  import { ruWordWithEndings } from '$lib/locale'
+  import { pluralizationRu } from '$lib/utils/locale'
 
   export let data: PageServerData
 
   const profileCount = data.count
-  const profileDesc = ruWordWithEndings(data.count, [
+  const profileDesc = pluralizationRu(data.count, [
     'профиль',
     'профиля',
     'профилей',

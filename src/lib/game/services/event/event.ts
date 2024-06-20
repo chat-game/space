@@ -1,5 +1,5 @@
 import { createId } from '@paralleldrive/cuid2'
-import { getDatePlusSeconds } from '$lib/date'
+import { getDatePlusSeconds } from '$lib/utils/date'
 import type { GameSceneType } from '$lib/game/types'
 import type { IGameEvent } from '$lib/game/services/event/interface'
 

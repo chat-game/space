@@ -23,3 +23,9 @@ jobs:
 
       - name: Check Svelte files
         run: npm run check
+
+      - name: Check tests
+        run: npm run test
+
+      - name: Check Build
+        run: npm run build
