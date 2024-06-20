@@ -1,8 +1,9 @@
-import { type Handle, error } from '@sveltejs/kit'
+import { type Handle, type HandleServerError, error } from '@sveltejs/kit'
 import jwt from 'jsonwebtoken'
 import { env as privateEnv } from '$env/dynamic/private'
 import { env as publicEnv } from '$env/dynamic/public'
 import type { IProfile } from '$lib/types'
+import { loadTranslations } from '$lib/translations'
 
 export const handle: Handle = async ({ event, resolve }) => {
   const cookieKey = publicEnv.PUBLIC_COOKIE_KEY
@@ -37,4 +38,13 @@ export const handle: Handle = async ({ event, resolve }) => {
   }
 
   return resolve(event)
+}
+
+export const handleError: HandleServerError = async ({ event }) => {
+  const { locals } = event
+  const { lang } = locals
+
+  await loadTranslations(lang, 'error')
+
+  return locals
 }
