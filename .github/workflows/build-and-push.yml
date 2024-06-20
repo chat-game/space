@@ -15,7 +15,7 @@ on:
 env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
-  IMAGE_NAME: ${{ github.repository }}/app
+  IMAGE_NAME: chat-game/app
 
 jobs:
   docker:
