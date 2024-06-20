@@ -1,15 +1,26 @@
 name: Run Tests and Lint
 
 on:
-  push
+  push:
+    paths-ignore:
+      - "docs/**"
+      - ".md"
+    branches:
+      - main
+  pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "*.md"
+    branches:
+      - main
 
 permissions:
   contents: write
 
 jobs:
   lint:
-    concurrency: ci-${{ github.ref }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 

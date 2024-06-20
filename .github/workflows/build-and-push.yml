@@ -9,7 +9,7 @@ on:
       - main
 
 env:
-  IMAGE_NAME: ${{ github.repository }}/app
+  IMAGE_NAME: chat-game/app
 
 jobs:
   docker:
