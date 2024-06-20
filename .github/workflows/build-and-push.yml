@@ -34,7 +34,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Docker
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           build-args: VERSION=nightly
@@ -44,7 +44,7 @@ jobs:
           tags: ${{ env.IMAGE_NAME }}:nightly
 
       - name: Build Docker (release)
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         if: github.event_name == 'release'
         with:
           context: .
