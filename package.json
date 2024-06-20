@@ -62,7 +62,7 @@
     "lint-staged": "^15.2.7",
     "madge": "7.0.0",
     "prisma": "5.15.1",
-    "svelte": "5.0.0-next.158",
+    "svelte": "5.0.0-next.160",
     "svelte-check": "3.8.1",
     "svelte-eslint-parser": "0.39.1",
     "typescript": "5.4.5",
