@@ -1,0 +1,6 @@
+{
+  "404": "Page not found.",
+  "500": "Server internal error.",
+  "title": "Oh, dear...",
+  "default": "Here we go... Or is that a feature?"
+}

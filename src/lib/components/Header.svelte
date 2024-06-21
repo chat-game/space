@@ -1,7 +1,9 @@
 <script>
+  import { t } from '$lib/translations'
   import { page } from '$app/stores'
   import unit from '$lib/assets/website/unit-64.png'
   import Profile from '$lib/components/Profile.svelte'
+  import Locale from '$lib/components/Locale.svelte'
 </script>
 
 <header>
@@ -18,18 +20,19 @@
   <nav>
     <ul>
       <li aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
-        <a href='/'>Главная</a>
+        <a href='/'>{$t('header.menu.home')}</a>
       </li>
       <li aria-current={$page.url.pathname === '/about' ? 'page' : undefined}>
-        <a href='/about'>Об игре</a>
+        <a href='/about'>{$t('header.menu.about')}</a>
       </li>
       <li aria-current={$page.url.pathname === '/character' ? 'page' : undefined}>
-        <a href='/character'>Персонажи</a>
+        <a href='/character'>{$t('header.menu.character')}</a>
       </li>
     </ul>
   </nav>
 
   <div class='right'>
+    <Locale />
     <Profile />
   </div>
 </header>
