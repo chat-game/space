@@ -33,7 +33,6 @@
   },
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
-    "@prisma/client": "^5.15.1",
     "@radix-ui/colors": "^3.0.0",
     "@twurple/api": "^7.1.0",
     "@twurple/auth": "^7.1.0",
@@ -61,7 +60,6 @@
     "husky": "^9.0.11",
     "lint-staged": "^15.2.7",
     "madge": "^7.0.0",
-    "prisma": "^5.15.1",
     "svelte": "^5.0.0-next.158",
     "svelte-check": "^3.8.1",
     "svelte-eslint-parser": "^0.39.1",

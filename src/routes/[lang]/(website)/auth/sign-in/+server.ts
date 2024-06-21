@@ -2,9 +2,8 @@ import { error, json } from '@sveltejs/kit'
 import { ApiClient } from '@twurple/api'
 import { StaticAuthProvider, getTokenInfo } from '@twurple/auth'
 import jwt from 'jsonwebtoken'
-import type { Profile } from '@prisma/client'
 import type { RequestHandler } from './$types'
-import type { IProfile } from '$lib/types'
+import type { Profile } from '$lib/types'
 import { env as publicEnv } from '$env/dynamic/public'
 import { env as privateEnv } from '$env/dynamic/private'
 
@@ -51,7 +50,7 @@ async function prepareJwtToken(accessToken: string) {
     userName: user.name,
   })
 
-  const profile: IProfile = {
+  const profile: Profile = {
     id: profileInDB.id,
     twitchToken: accessToken,
     twitchId: user.id,
