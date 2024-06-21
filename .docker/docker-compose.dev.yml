@@ -5,5 +5,10 @@ services:
     build:
       context: ../
       dockerfile: .docker/Dockerfile.dev
+    env_file:
+      - ../.env
     ports:
       - '3000:3000'
+    volumes:
+      - ..:/app
+      - /app/node_modules
