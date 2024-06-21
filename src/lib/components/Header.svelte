@@ -10,10 +10,10 @@
 
 <header>
   <div class='left logo'>
-    {#if $page.url.pathname === '/'}
+    {#if $page.url.pathname === `/${locale}`}
       <img src={unit} alt="" />
     {:else}
-      <a href='/'>
+      <a href='/{locale}'>
         <img src={unit} alt="" />
       </a>
     {/if}
