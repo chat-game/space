@@ -3,13 +3,13 @@
   import { page } from '$app/stores'
 
   if (browser && $page.url.hash) {
-    void fetch('/auth/sign-in', {
+    void fetch('/en/auth/sign-in', {
       method: 'POST',
       body: JSON.stringify({ hash: $page.url.hash }),
       headers: {
         'content-type': 'application/json',
       },
-    }).finally(() => location.assign('/'))
+    }).finally(() => location.assign(`/${$page.data.locale}`))
   }
 </script>
 
@@ -19,21 +19,21 @@
 </section>
 
 <style>
-    section {
-        text-align: center;
-        padding: 2em 1em;
-        margin: 0 auto;
-        max-width: 42em;
-    }
+  section {
+    text-align: center;
+    padding: 2em 1em;
+    margin: 0 auto;
+    max-width: 42em;
+  }
 
-    .hero {
-        padding-top: 4em;
-        padding-bottom: 4em;
-        max-width: 64em;
-    }
+  .hero {
+    padding-top: 4em;
+    padding-bottom: 4em;
+    max-width: 64em;
+  }
 
-    h1 {
-        width: 100%;
-        margin-bottom: 0.25em;
-    }
+  h1 {
+    width: 100%;
+    margin-bottom: 0.25em;
+  }
 </style>

@@ -46,7 +46,7 @@ function handleJWT(event: RequestEvent) {
 }
 
 function handleLang(event: RequestEvent) {
-  const { pathname, search } = new URL(event.request.url)
+  const { pathname, search } = event.url
 
   const pathLang = pathname.match(/[^/]+(?=\/|$)/)
   const pathnameWithoutLang = pathLang ? pathname.replace(`/${pathLang}`, '') : pathname
