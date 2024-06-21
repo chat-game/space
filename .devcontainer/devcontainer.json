@@ -1,0 +1,18 @@
+{
+  "service": "chat-game",
+  "dockerComposeFile": [
+    "../.docker/docker-compose.dev.yml"
+  ],
+  "workspaceFolder": "app",
+  "build": {
+    "dockerfile": "../.docker/Dockerfile.dev",
+    "context": "../"
+  },
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "Application",
+      "onAutoForward": "openPreview"
+    }
+  }
+}
