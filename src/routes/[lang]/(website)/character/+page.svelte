@@ -15,7 +15,7 @@
   {#each data.characters as char}
     <div class='block bg-paper'>
       <div class='header'>
-        <a href='{$page.data.locale}/character/{char.id}'>
+        <a href='/{$page.data.locale}/character/{char.id}'>
           <h3>{char.name}</h3>
         </a>
       </div>
