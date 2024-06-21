@@ -1,19 +1,24 @@
 <script lang='ts'>
-  import { locale, locales, t } from '$lib/translations'
+  import { page } from '$app/stores'
+  import { supportedLocales } from '$lib/translations'
 
-  type SelectEvent = Event & { currentTarget: EventTarget & HTMLInputElement }
+  const locale = $page.data.locale
+  let selected = locale
 
-  const handleChange = ({ currentTarget }: SelectEvent) => {
+  const handleChange = ({ currentTarget }: { currentTarget: HTMLSelectElement }) => {
     const { value } = currentTarget
-
-    document.cookie = `lang=${value} ;`
+    window.location.href = `/${value}`
   }
 </script>
 
-<div>
-  <select bind:value={$locale} on:change={() => handleChange}>
-    {#each $locales as value}
-      <option value={value} selected={$locale === value}>{$t(`lang.${value}`)}</option>
-    {/each}
-  </select>
-</div>
+<select bind:value={selected} onchange={handleChange}>
+  {#each supportedLocales as value}
+    <option value={value} selected={selected === value}>{value}</option>
+  {/each}
+</select>
+
+<style>
+  select {
+    margin: 0 2em;
+  }
+</style>

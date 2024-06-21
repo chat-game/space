@@ -1,11 +1,11 @@
 /// <reference types="@sveltejs/kit" />
-import type { IProfile } from '$lib/types'
+import type { IProfile, Locale } from '$lib/types'
 
 declare global {
   namespace App {
     interface Locals {
       profile: null | IProfile
-      lang: string
+      locale: Locale
     }
 
     // interface Error {}
