@@ -28,7 +28,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:deps": "madge -c --extensions ts ./src",
-    "release": "npm run check && npm run test && npm run lint && npm run lint:deps && npm run build && changelogen --release --push",
+    "release": "yarn run check && yarn run test && yarn run lint && yarn run lint:deps && yarn run build && changelogen --release --push",
     "prepare": "husky"
   },
   "dependencies": {
@@ -71,6 +71,6 @@
     "vitest": "^1.6.0"
   },
   "lint-staged": {
-    "*.ts": "npm run lint"
+    "*.ts": "yarn run lint"
   }
 }

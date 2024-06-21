@@ -22,21 +22,28 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - run: npm ci --legacy-peer-deps
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: yarn install
 
       - name: ESLint
-        run: npm run lint
+        run: yarn run lint
 
       - name: Find circular dependencies
-        run: npm run lint:deps
+        run: yarn run lint:deps
 
       - name: Check Svelte files
-        run: npm run check
+        run: yarn run check
 
       - name: Check tests
-        run: npm run test
+        run: yarn run test
 
       - name: Check Build
-        run: npm run build
+        run: yarn run build

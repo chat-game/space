@@ -4,12 +4,12 @@ ARG NODE=node:20-alpine
 
 FROM $NODE AS builder
 WORKDIR /app
-COPY package*.json .
-RUN npm ci --legacy-peer-deps
+COPY package.json .
+COPY yarn.lock .
+RUN yarn install
 COPY . .
 RUN npx prisma generate
-RUN npm run build
-RUN npm prune --omit=dev --legacy-peer-deps
+RUN yarn run build
 
 ################# Web App ##############
 
