@@ -1,11 +1,13 @@
 import type { PageServerLoad } from './$types'
-import { db } from '$lib/server/db/db.client'
 
 export const prerender = false
 export const ssr = true
 
 export const load = (async () => {
+  const res = await fetch('https://chatgame.space/api/profile')
+  const profile = await res.json()
+
   return {
-    count: await db.profile.count(),
+    count: profile.count,
   }
 }) satisfies PageServerLoad

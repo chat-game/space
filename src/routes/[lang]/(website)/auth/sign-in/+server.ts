@@ -1,4 +1,3 @@
-import { createId } from '@paralleldrive/cuid2'
 import { error, json } from '@sveltejs/kit'
 import { ApiClient } from '@twurple/api'
 import { StaticAuthProvider, getTokenInfo } from '@twurple/auth'
@@ -6,23 +5,19 @@ import jwt from 'jsonwebtoken'
 import type { Profile } from '@prisma/client'
 import type { RequestHandler } from './$types'
 import type { IProfile } from '$lib/types'
-import { db } from '$lib/server/db/db.client'
 import { env as publicEnv } from '$env/dynamic/public'
 import { env as privateEnv } from '$env/dynamic/private'
 
 async function findOrCreateProfile({ twitchId, userName }: Pick<Profile, 'twitchId' | 'userName'>): Promise<Profile> {
-  const profile = await db.profile.findFirst({
-    where: { twitchId },
-  })
+  const res = await fetch(`https://chatgame.space/api/profile/twitchId/${twitchId}`)
+  const profile = await res.json()
 
   if (!profile) {
-    return db.profile.create({
-      data: {
-        id: createId(),
-        twitchId,
-        userName,
-      },
+    const res = await fetch('https://chatgame.space/api/profile', {
+      method: 'POST',
+      body: JSON.stringify({ twitchId, userName }),
     })
+    return res.json()
   }
 
   return profile
