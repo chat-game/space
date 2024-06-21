@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  chat-game-dev:
+    build:
+      context: ../
+      dockerfile: .docker/Dockerfile.dev
+    ports:
+      - '3000:3000'
