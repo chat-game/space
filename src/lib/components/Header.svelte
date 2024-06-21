@@ -1,9 +1,11 @@
-<script>
-  import { t } from '$lib/translations'
+<script lang='ts'>
   import { page } from '$app/stores'
   import unit from '$lib/assets/website/unit-64.png'
   import Profile from '$lib/components/Profile.svelte'
   import Locale from '$lib/components/Locale.svelte'
+
+  const locale = $page.data.locale
+  const t = $page.data.t
 </script>
 
 <header>
@@ -20,19 +22,20 @@
   <nav>
     <ul>
       <li aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
-        <a href='/'>{$t('header.menu.home')}</a>
+        <a href='/{locale}'>{t.header.menu.home}</a>
       </li>
       <li aria-current={$page.url.pathname === '/about' ? 'page' : undefined}>
-        <a href='/about'>{$t('header.menu.about')}</a>
+        <a href='/{locale}/about'>{t.header.menu.about}</a>
       </li>
       <li aria-current={$page.url.pathname === '/character' ? 'page' : undefined}>
-        <a href='/character'>{$t('header.menu.character')}</a>
+        <a href='/{locale}/character'>{t.header.menu.characters}</a>
       </li>
     </ul>
   </nav>
 
+  <Locale />
+
   <div class='right'>
-    <Locale />
     <Profile />
   </div>
 </header>
