@@ -2,7 +2,7 @@ import { type Handle, type RequestEvent, error, redirect } from '@sveltejs/kit'
 import jwt from 'jsonwebtoken'
 import { env as privateEnv } from '$env/dynamic/private'
 import { env as publicEnv } from '$env/dynamic/public'
-import type { IProfile } from '$lib/types'
+import type { Profile } from '$lib/types'
 import { type Locale, defaultLocale, supportedLocales } from '$lib/translations'
 
 export const handle: Handle = async ({ event, resolve }) => {
@@ -32,7 +32,7 @@ function handleJWT(event: RequestEvent) {
         error(400, 'Token is not valid')
       }
 
-      const profile = payload.profile as IProfile
+      const profile = payload.profile as Profile
 
       event.locals.profile = {
         ...profile,
@@ -46,7 +46,7 @@ function handleJWT(event: RequestEvent) {
 }
 
 function handleLang(event: RequestEvent) {
-  const { pathname, search } = new URL(event.request.url)
+  const { pathname, search } = event.url
 
   const pathLang = pathname.match(/[^/]+(?=\/|$)/)
   const pathnameWithoutLang = pathLang ? pathname.replace(`/${pathLang}`, '') : pathname

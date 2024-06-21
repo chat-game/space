@@ -1,5 +1,6 @@
 <script lang='ts'>
   import type { PageServerData } from './$types'
+  import { page } from '$app/stores'
 
   export let data: PageServerData
 </script>
@@ -14,7 +15,7 @@
   {#each data.characters as char}
     <div class='block bg-paper'>
       <div class='header'>
-        <a href='/character/{char.id}'>
+        <a href='/{$page.data.locale}/character/{char.id}'>
           <h3>{char.name}</h3>
         </a>
       </div>

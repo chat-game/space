@@ -1,4 +1,4 @@
-export interface IProfile {
+export interface Profile {
   id: string
   twitchToken: string
   twitchId: string

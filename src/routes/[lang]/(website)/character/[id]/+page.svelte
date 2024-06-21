@@ -1,13 +1,14 @@
 <script lang='ts'>
   import type { PageServerData } from './$types'
   import unitAvatar from '$lib/assets/website/unit-512.png'
+  import { page } from '$app/stores'
 
   export let data: PageServerData
 </script>
 
 <section class='hero'>
   <h1>{data.character.name}</h1>
-  <h2>Игровой персонаж, созданный <a href='/p/valentina8177'>valentina8177</a></h2>
+  <h2>Игровой персонаж, созданный <a href='/{$page.data.locale}/p/valentina8177'>valentina8177</a></h2>
 
   <div class='unit-avatar'>
     <img src={unitAvatar} alt="" />
