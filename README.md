@@ -34,8 +34,8 @@ Clone this repo and use standard commands:
 
 ```shell
 git clone https://github.com/hmbanan666/chat-game
-npm install
-npm run dev
+yarn install
+yarn run dev
 ```
 
 ## 🏆 Contributors
