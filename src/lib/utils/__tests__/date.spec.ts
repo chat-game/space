@@ -7,13 +7,13 @@ describe('getDatePlusMinutes()', () => {
     const minutesToAdd = 5
     const result = getDatePlusMinutes(minutesToAdd)
     const expected = new Date(now.getTime() + minutesToAdd * 60 * 1000)
-    expect(result.getTime()).toBeCloseTo(expected.getTime(), 0)
+    expect(result.getTime()).toBeCloseTo(expected.getTime(), 2)
   })
 
   it('handles the edge case of zero minutes', () => {
     const now = new Date()
     const result = getDatePlusMinutes(0)
-    expect(result.getTime()).toBeCloseTo(now.getTime(), 0)
+    expect(result.getTime()).toBeCloseTo(now.getTime(), 2)
   })
 
   it('handles the edge case of negative minutes', () => {
@@ -21,7 +21,7 @@ describe('getDatePlusMinutes()', () => {
     const minutesToAdd = -5
     const result = getDatePlusMinutes(minutesToAdd)
     const expected = new Date(now.getTime() + minutesToAdd * 60 * 1000)
-    expect(result.getTime()).toBeCloseTo(expected.getTime(), 0)
+    expect(result.getTime()).toBeCloseTo(expected.getTime(), 2)
   })
 })
 
@@ -31,13 +31,13 @@ describe('getDateMinusMinutes()', () => {
     const minutesToSubtract = 5
     const result = getDateMinusMinutes(minutesToSubtract)
     const expected = new Date(now.getTime() - minutesToSubtract * 60 * 1000)
-    expect(result.getTime()).toBeCloseTo(expected.getTime(), 0)
+    expect(result.getTime()).toBeCloseTo(expected.getTime(), 2)
   })
 
   it('handles the edge case of zero minutes', () => {
     const now = new Date()
     const result = getDateMinusMinutes(0)
-    expect(result.getTime()).toBeCloseTo(now.getTime(), 0)
+    expect(result.getTime()).toBeCloseTo(now.getTime(), 2)
   })
 
   it('handles the edge case of negative minutes', () => {
@@ -45,7 +45,7 @@ describe('getDateMinusMinutes()', () => {
     const minutesToSubtract = -5
     const result = getDateMinusMinutes(minutesToSubtract)
     const expected = new Date(now.getTime() - minutesToSubtract * 60 * 1000)
-    expect(result.getTime()).toBeCloseTo(expected.getTime(), 0)
+    expect(result.getTime()).toBeCloseTo(expected.getTime(), 2)
   })
 })
 
@@ -55,13 +55,13 @@ describe('getDatePlusSeconds()', () => {
     const secondsToAdd = 5
     const result = getDatePlusSeconds(secondsToAdd)
     const expected = new Date(now.getTime() + secondsToAdd * 1000)
-    expect(result.getTime()).toBeCloseTo(expected.getTime(), 0)
+    expect(result.getTime()).toBeCloseTo(expected.getTime(), 2)
   })
 
   it('handles the edge case of zero seconds', () => {
     const now = new Date()
     const result = getDatePlusSeconds(0)
-    expect(result.getTime()).toBeCloseTo(now.getTime(), 0)
+    expect(result.getTime()).toBeCloseTo(now.getTime(), 2)
   })
 
   it('handles the edge case of negative seconds', () => {
@@ -69,6 +69,6 @@ describe('getDatePlusSeconds()', () => {
     const secondsToAdd = -5
     const result = getDatePlusSeconds(secondsToAdd)
     const expected = new Date(now.getTime() + secondsToAdd * 1000)
-    expect(result.getTime()).toBeCloseTo(expected.getTime(), 0)
+    expect(result.getTime()).toBeCloseTo(expected.getTime(), 2)
   })
 })
