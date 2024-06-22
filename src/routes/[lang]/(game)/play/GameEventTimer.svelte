@@ -1,23 +1,23 @@
 <script lang='ts'>
   import { onDestroy } from 'svelte'
 
-  export let endsAt: Date
+  const { endsAt }: { endsAt: Date } = $props()
 
   const countdown = new Date(endsAt).getTime()
   let now = Date.now()
   const end = now + countdown
 
-  $: count = Math.round((end - now) / 1000)
-  $: h = Math.floor(count / 3600)
-  $: m = Math.floor((count - h * 3600) / 60)
-  $: s = count - h * 3600 - m * 60
+  const count = $state(Math.round((end - now) / 1000))
+  const h = $state(Math.floor(count / 3600))
+  const m = $state(Math.floor((count - h * 3600) / 60))
+  const s = $state(count - h * 3600 - m * 60)
 
   function updateTimer() {
     now = Date.now()
   }
 
   const interval = setInterval(updateTimer, 1000)
-  $: if (count === 0) {
+  if (count === 0) {
     clearInterval(interval)
   }
 

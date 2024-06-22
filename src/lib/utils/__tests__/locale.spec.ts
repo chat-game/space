@@ -26,4 +26,14 @@ describe('pluralizationRu()', () => {
     const result = pluralizationRu(-3, ['яблоко', 'яблока', 'яблок'])
     expect(result).toBe('яблока')
   })
+
+  it('handles the edge case of 101 - 110', () => {
+    const result = pluralizationRu(102, ['яблоко', 'яблока', 'яблок'])
+    expect(result).toBe('яблока')
+  })
+
+  it('handles the edge case of 124', () => {
+    const result = pluralizationRu(124, ['яблоко', 'яблока', 'яблок'])
+    expect(result).toBe('яблока')
+  })
 })
