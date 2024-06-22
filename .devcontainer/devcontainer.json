@@ -1,6 +1,5 @@
 {
   "name": "Chat Game",
-  "service": "app",
   "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 
@@ -19,10 +18,15 @@
     "vscode": {
       // Add the IDs of extensions you want installed when the container is created.
       "extensions": [
-        "dbaeumer.vscode-eslint"
+        "dbaeumer.vscode-eslint",
+        "svelte.svelte-vscode",
+        "ms-azuretools.vscode-docker",
+        "vitest.explorer"
       ]
     }
   },
+
+  "runArgs": ["--env-file", ".devcontainer/devcontainer.env"],
 
   "portsAttributes": {
     "3000": {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getRandomInRange } from '$lib/utils/random'
+import { getMinusOrPlus, getRandomInRange } from '$lib/utils/random'
 
 describe('getRandomInRange()', () => {
   it('returns a number within the range', () => {
@@ -17,5 +17,14 @@ describe('getRandomInRange()', () => {
     const result = getRandomInRange(-5, -1)
     expect(result).toBeGreaterThanOrEqual(-5)
     expect(result).toBeLessThanOrEqual(-1)
+  })
+})
+
+describe('getMinusOrPlus()', () => {
+  it('returns 1 or -1', () => {
+    const result = getMinusOrPlus()
+    expect(result).toBeGreaterThanOrEqual(-1)
+    expect(result).toBeLessThanOrEqual(1)
+    expect(result).not.toBe(0)
   })
 })
