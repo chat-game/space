@@ -20,10 +20,13 @@
       "extensions": [
         "dbaeumer.vscode-eslint",
         "svelte.svelte-vscode",
+        "ms-azuretools.vscode-docker",
         "WallabyJs.wallaby-vscode"
       ]
     }
   },
+
+  "runArgs": ["--env-file", ".devcontainer/devcontainer.env"],
 
   "portsAttributes": {
     "3000": {
