@@ -1,9 +1,7 @@
 {
   "name": "Chat Game",
   "service": "app",
-  "dockerComposeFile": [
-    "../.docker/docker-compose.dev.yml"
-  ],
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 
   // Features to add to the dev container. More info: https://containers.dev/features.
@@ -23,8 +21,6 @@
       "extensions": []
     }
   },
-
-  "remoteUser": "node",
 
   "portsAttributes": {
     "3000": {
