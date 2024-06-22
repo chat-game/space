@@ -30,7 +30,11 @@ Let's build a similar world together! ⭐️ Become a Stargazer ⭐️
 
 ## 🕹️ How to develop
 
-Clone this repo and use standard commands:
+You can develop in isolated container with prepared options:
+
+[![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/hmbanan666/chat-game)
+
+Make a fork. Or clone this repo and use standard commands:
 
 ```shell
 git clone https://github.com/hmbanan666/chat-game
