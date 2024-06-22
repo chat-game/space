@@ -21,7 +21,7 @@
         "dbaeumer.vscode-eslint",
         "svelte.svelte-vscode",
         "ms-azuretools.vscode-docker",
-        "WallabyJs.wallaby-vscode"
+        "vitest.explorer"
       ]
     }
   },
