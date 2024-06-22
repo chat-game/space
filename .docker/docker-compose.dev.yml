@@ -1,14 +1,17 @@
-version: '3.8'
-
 services:
-  chat-game-dev:
+  app:
     build:
       context: ../
       dockerfile: .docker/Dockerfile.dev
+
+    volumes:
+      - ..:/workspaces:cached
+
     env_file:
       - ../.env
-    ports:
-      - '3000:3000'
-    volumes:
-      - ..:/app
-      - /app/node_modules
+
+    # Overrides default command so things don't shut down after the process ends.
+    # command: sleep infinity
+
+    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+    # network_mode: service:db

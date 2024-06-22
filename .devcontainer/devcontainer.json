@@ -1,14 +1,31 @@
 {
-  "service": "chat-game",
+  "name": "Chat Game",
+  "service": "app",
   "dockerComposeFile": [
     "../.docker/docker-compose.dev.yml"
   ],
-  "workspaceFolder": "app",
-  "build": {
-    "dockerfile": "../.docker/Dockerfile.dev",
-    "context": "../"
-  },
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  // "features": {},
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
   "forwardPorts": [3000],
+
+  // Use 'postCreateCommand' to run commands after the container is created.
+  "postCreateCommand": "yarn install",
+
+  // Configure tool-specific properties.
+  "customizations": {
+    // Configure properties specific to VS Code.
+    "vscode": {
+      // Add the IDs of extensions you want installed when the container is created.
+      "extensions": []
+    }
+  },
+
+  "remoteUser": "node",
+
   "portsAttributes": {
     "3000": {
       "label": "Application",
