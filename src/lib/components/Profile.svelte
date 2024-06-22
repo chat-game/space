@@ -12,7 +12,7 @@
   const isSignedIn = !!$page.data.profile
 
   const handleSignOut = () => {
-    void fetch('/auth/profile', {
+    void fetch('/en/auth/profile', {
       method: 'DELETE',
       headers: {
         'content-type': 'application/json',
@@ -35,8 +35,8 @@
     {#if menuOpened}
       <div class='profile-menu'>
         <div>
-          <a href='/p/{$page.data.profile.userName}'>{$page.data.profile.userName}</a>
-          <a href='/play'>Играть</a>
+          <a href='/{$page.data.locale}/p/{$page.data.profile.userName}'>{$page.data.profile.userName}</a>
+          <a href='/{$page.data.locale}/play'>Играть</a>
         </div>
         <button on:click={handleSignOut}>Выйти</button>
       </div>
