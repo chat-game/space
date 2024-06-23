@@ -6,17 +6,21 @@ import type { RequestHandler } from './$types'
 import type { Profile } from '$lib/types'
 import { env as publicEnv } from '$env/dynamic/public'
 import { env as privateEnv } from '$env/dynamic/private'
+import { api } from '$lib/server/api'
 
-async function findOrCreateProfile({ twitchId, userName }: Pick<Profile, 'twitchId' | 'userName'>): Promise<Profile> {
-  const res = await fetch(`https://chatgame.space/api/profile/twitchId/${twitchId}`)
-  const profile = await res.json()
+async function findOrCreateProfile({ twitchId, userName }: Pick<Profile, 'twitchId' | 'userName'>) {
+  const profile = await api.profile.getByTwitchId(twitchId)
+  if (profile instanceof Error) {
+    throw profile
+  }
 
   if (!profile) {
-    const res = await fetch('https://chatgame.space/api/profile', {
-      method: 'POST',
-      body: JSON.stringify({ twitchId, userName }),
-    })
-    return res.json()
+    const newProfile = await api.profile.create({ data: { twitchId, userName } })
+    if (newProfile instanceof Error) {
+      throw newProfile
+    }
+
+    return newProfile.result
   }
 
   return profile

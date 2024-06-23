@@ -1,9 +1,12 @@
 import { error } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
+import { api } from '$lib/server/api'
 
 export const load: PageServerLoad = async () => {
-  const res = await fetch('https://chatgame.space/api/character')
-  const characters = await res.json()
+  const characters = await api.character.getList()
+  if (characters instanceof Error) {
+    throw characters
+  }
 
   if (!characters.length) {
     error(404, 'Not found')
