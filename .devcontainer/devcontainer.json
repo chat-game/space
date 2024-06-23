@@ -26,8 +26,6 @@
     }
   },
 
-  "runArgs": ["--env-file", ".devcontainer/devcontainer.env"],
-
   "portsAttributes": {
     "3000": {
       "label": "Application",

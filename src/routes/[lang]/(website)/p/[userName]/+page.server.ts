@@ -1,11 +1,10 @@
 import { error } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
+import { api } from '$lib/server/api'
 
 export const load = (async ({ params }) => {
-  const res = await fetch(`https://chatgame.space/api/profile/userName/${params.userName}`)
-  const profile = await res.json()
-
-  if (!profile) {
+  const profile = await api.profile.getByUserName(params.userName)
+  if (!profile || profile instanceof Error) {
     error(404, 'Not found')
   }
 
