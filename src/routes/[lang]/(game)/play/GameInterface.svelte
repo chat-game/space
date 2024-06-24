@@ -3,11 +3,9 @@
   import GameHeader from './GameHeader.svelte'
   import GameLoader from './GameLoader.svelte'
   import GamePlayersGroup from './GamePlayersGroup.svelte'
-
-  export let isGameReady: boolean
 </script>
 
-<GameLoader show={!isGameReady} />
+<GameLoader />
 <GameHeader />
 <GamePlayersGroup />
 <GameEvents events={[]} />

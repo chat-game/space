@@ -29,12 +29,13 @@ export class Player extends UnitObject implements GameObjectPlayer {
     super({ game, id, x, y, type: 'PLAYER' })
 
     this.speedPerSecond = 2
-    void this.initFromDB()
   }
 
-  async initFromDB() {
-    await this.readFromDB()
-    await this.initSkillsFromDB()
+  async init() {
+    await this.#readFromDB()
+    await this.#initSkillsFromDB()
+    await this.#initInventoryFromDB()
+
     super.initVisual({
       head: '1',
       hairstyle: 'CLASSIC',
@@ -119,7 +120,7 @@ export class Player extends UnitObject implements GameObjectPlayer {
     // })
   }
 
-  public async readFromDB() {
+  async #readFromDB() {
     // const player = await db.player.findUnique({ where: { id: this.id } })
     // if (!player) {
     //   return
@@ -144,21 +145,21 @@ export class Player extends UnitObject implements GameObjectPlayer {
     // })
   }
 
-  public async initInventoryFromDB() {
+  async #initInventoryFromDB() {
     if (!this.inventoryId) {
       return
     }
 
     const inventory = new Inventory({
       objectId: this.id,
-      id: this.inventoryId,
       saveInDb: true,
     })
-    await inventory.init()
+    await inventory.init(this.inventoryId)
+
     this.inventory = inventory
   }
 
-  public async initSkillsFromDB() {
+  async #initSkillsFromDB() {
     this.skills = []
     await Skill.findAllInDB(this.id)
     // for (const skill of skills) {
@@ -172,7 +173,7 @@ export class Player extends UnitObject implements GameObjectPlayer {
     const skill = this.skills.find((skill) => skill.type === type)
     if (!skill) {
       await Skill.createInDB(this.id, type)
-      await this.initSkillsFromDB()
+      await this.#initSkillsFromDB()
       return this.skills.find((skill) => skill.type === type) as Skill
     }
 

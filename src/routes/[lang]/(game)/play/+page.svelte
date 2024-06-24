@@ -1,18 +1,18 @@
 <script lang='ts'>
   import { onMount } from 'svelte'
   import GameInterface from './GameInterface.svelte'
-  import { BaseGame } from '$lib/game/baseGame.svelte'
+  import { BaseGame } from '$lib/game/baseGame'
+  import { page } from '$app/stores'
 
-  const game = new BaseGame()
+  const game = new BaseGame({ isSocketOn: true, profileJWT: $page.data.gameProfileJWT })
   let gameElement: HTMLElement
-  let isGameReady = $state(false)
 
   const handleVisibilityChange = () => {
-    game.isPaused = true
+    game.options.isPaused = true
   }
 
   const unpause = () => {
-    game.isPaused = false
+    game.options.isPaused = false
   }
 
   onMount(() => {
@@ -24,7 +24,7 @@
       game.app.resizeTo = gameElement
 
       setTimeout(() => {
-        isGameReady = true
+        game.options.isReady = true
       }, 1000)
     }
 
@@ -41,11 +41,11 @@
 <div class='game-block'>
   <div id='game-canvas' bind:this={gameElement}></div>
 
-  <div class='pause-block' data-active={game.isPaused}>
+  <div class='pause-block' data-active={game.options.isPaused}>
     <button onclick={unpause}>Продолжить</button>
   </div>
 
-  <GameInterface isGameReady={isGameReady} />
+  <GameInterface />
 </div>
 
 <style>

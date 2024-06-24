@@ -27,7 +27,7 @@ export interface IGameEvent {
   id: string
   title: string
   description: string
-  type: WebSocketMessage['event']
+  type: WebSocketMessage['type']
   status: 'STARTED' | 'STOPPED'
   endsAt: Date
   poll?: IGamePoll

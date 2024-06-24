@@ -5,9 +5,8 @@ import type {
   ItemType,
 } from '$lib/game/types'
 
-interface IInventoryOptions {
+interface InventoryOptions {
   objectId: string
-  id: string
   saveInDb: boolean
 }
 
@@ -17,13 +16,16 @@ export class Inventory implements IGameInventory {
   public items: IGameInventoryItem[] = []
   public saveInDb: boolean
 
-  constructor({ id, objectId, saveInDb }: IInventoryOptions) {
-    this.id = id
+  constructor({ objectId, saveInDb }: InventoryOptions) {
+    this.id = createId()
     this.objectId = objectId
     this.saveInDb = saveInDb
   }
 
-  public async init() {
+  public async init(inventoryId?: string) {
+    if (inventoryId) {
+      this.id = inventoryId
+    }
     await this.updateFromDB()
   }
 

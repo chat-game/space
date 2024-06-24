@@ -1,5 +1,4 @@
-import { MessageController } from '$lib/game/utils/messageController'
-import type { Game, GameObject, WebSocketMessage } from '$lib/game/types'
+import type { Game, WebSocketMessage } from '$lib/game/types'
 import type { GameWebSocketService } from '$lib/game/services/socket/interface'
 import { env } from '$env/dynamic/public'
 import { browser } from '$app/environment'
@@ -13,7 +12,7 @@ export class WebSocketService implements GameWebSocketService {
   constructor(game: Game) {
     this.game = game
 
-    if (browser) {
+    if (browser && this.game.options.isSocketOn) {
       this.#init()
     }
   }
@@ -21,47 +20,40 @@ export class WebSocketService implements GameWebSocketService {
   update() {}
 
   #handleMessage(message: WebSocketMessage): void {
-    if (message.object) {
-      this.#handleMessageObject(message.object)
+    if (message.type === 'COMMAND') {
+      console.log('handling command from user', message)
     }
-    if (message.event) {
-      this.#handleMessageEvent(message.event)
+    if (message.type === 'MESSAGE') {
+      console.log('handling message from user', message)
     }
-  }
-
-  #handleMessageObject(object: Partial<GameObject>) {
-    if (!object.id) {
-      return
-    }
-
-    this.game.findObject(object.id)
-  }
-
-  #handleMessageEvent(event: WebSocketMessage['event']) {
-    if (event === 'RAID_STARTED') {
+    if (message.type === 'RAID_STARTED') {
       this.game.audio.playSound('MARCHING_WITH_HORNS')
     }
-    if (event === 'GROUP_FORM_STARTED') {
+    if (message.type === 'GROUP_FORM_STARTED') {
       this.game.audio.playSound('MARCHING_WITH_HORNS')
     }
-    if (event === 'MAIN_QUEST_STARTED') {
+    if (message.type === 'MAIN_QUEST_STARTED') {
       this.game.audio.playSound('MARCHING_WITH_HORNS')
     }
-    if (event === 'SCENE_CHANGED') {
+    if (message.type === 'SCENE_CHANGED') {
       this.game.rebuildScene()
     }
-    if (event === 'IDEA_CREATED') {
+    if (message.type === 'IDEA_CREATED') {
       this.game.audio.playSound('YEAH')
     }
   }
 
   #init() {
-    this.socket = new WebSocket(env.PUBLIC_WEBSOCKET_URL ?? '')
+    this.socket = new WebSocket(env.PUBLIC_WEBSOCKET_URL ?? '', [this.game.id])
 
     this.#setMessagesPerSecondHandler()
 
+    this.socket.addEventListener('open', () => {
+      this.socket.send(JSON.stringify({ type: 'GAME_HANDSHAKE', id: this.game.id, profileJWT: this.game.profileJWT }))
+    })
+
     this.socket.addEventListener('message', (event) => {
-      const message = MessageController.parse(event.data.toString())
+      const message = this.#parse(event.data.toString())
       if (!message) {
         return
       }
@@ -72,6 +64,16 @@ export class WebSocketService implements GameWebSocketService {
 
       this.#handleMessage(message)
     })
+  }
+
+  #parse(message: string): WebSocketMessage | undefined {
+    console.log(message)
+    const parsed = JSON.parse(message)
+    if (parsed) {
+      return parsed as WebSocketMessage
+    }
+
+    return undefined
   }
 
   #setMessagesPerSecondHandler() {

@@ -1,6 +1,7 @@
-<script>
+<script lang='ts'>
   import GameLocation from './GameLocation.svelte'
   import GameWagonInfo from './GameWagonInfo.svelte'
+  import { gameOptions } from '$lib/game/store.svelte'
 </script>
 
 <div class='block bg-paper'>
@@ -8,6 +9,8 @@
     <GameLocation />
     <!--    <GameRouteInfo nowX={0}/> -->
     <GameWagonInfo />
+
+    <button onclick={() => gameOptions.isSoundOn = !gameOptions.isSoundOn}>{gameOptions.isSoundOn ? 'Звук ВКЛ' : 'Звук ВЫКЛ'}</button>
   </div>
 </div>
 

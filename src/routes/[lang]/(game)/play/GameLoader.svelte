@@ -1,10 +1,9 @@
 <script>
   import unitAvatar from '$lib/assets/website/unit-512.png'
-
-  export let show = true
+  import { gameOptions } from '$lib/game/store.svelte'
 </script>
 
-<div class='loader-block' data-active={show}>
+<div class='loader-block' data-active={!gameOptions.isReady}>
   <div class='image-block animate-bounce'>
     <img src={unitAvatar} alt="" width={256} height={256} />
   </div>

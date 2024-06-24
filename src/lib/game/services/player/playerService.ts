@@ -31,8 +31,7 @@ export class PlayerService implements GamePlayerService {
 
   async #initPlayer(id: string) {
     const instance = new Player({ game: this.game, id, x: -100, y: -100 })
-    await instance.initFromDB()
-    await instance.initInventoryFromDB()
+    await instance.init()
 
     const flag = this.game.wagonService.randomOutFlag
     instance.x = flag.x

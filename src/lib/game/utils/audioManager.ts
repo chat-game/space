@@ -7,10 +7,14 @@ import marchWithHorns1Audio from '$lib/assets/game/audio/marching-with-horns-1.w
 import mine1Audio from '$lib/assets/game/audio/mine-1.wav'
 import wagon1Audio from '$lib/assets/game/audio/wagon-1.wav'
 import yeah1Audio from '$lib/assets/game/audio/yeah-1.wav'
-import type { GameAudio, GameAudioName } from '$lib/game/types'
+import type { Game, GameAudio, GameAudioName } from '$lib/game/types'
 
 export class AudioManager implements GameAudio {
-  public isEnabled = false
+  game: Game
+
+  constructor(game: Game) {
+    this.game = game
+  }
 
   #chop1 = new Howl({
     src: chop1Audio,
@@ -88,7 +92,7 @@ export class AudioManager implements GameAudio {
   }
 
   #play(audios: Howl[]) {
-    if (!audios.length || !this.isEnabled) {
+    if (!audios.length || !this.game.options.isSoundOn) {
       return
     }
 
