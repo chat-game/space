@@ -12,7 +12,7 @@
   const isSignedIn = !!$page.data.profile
 
   const handleSignOut = () => {
-    void fetch('/en/auth/profile', {
+    void fetch('/auth/profile', {
       method: 'DELETE',
       headers: {
         'content-type': 'application/json',
