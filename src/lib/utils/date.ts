@@ -1,14 +1,13 @@
-export function getDatePlusMinutes(minutes: number): Date {
-  const milliseconds = minutes * 60 * 1000
-  return new Date(new Date().getTime() + milliseconds)
+export function getDatePlusMinutes(minuteOffset: number): Date {
+  const millisecondOffset = minuteOffset * 60 * 1000
+  return new Date(Date.now() + millisecondOffset)
 }
 
 export function getDateMinusMinutes(minutes: number): Date {
-  const milliseconds = minutes * 60 * 1000
-  return new Date(new Date().getTime() - milliseconds)
+  const millisecondsOffset = minutes * 60 * 1000
+  return new Date(Date.now() - millisecondsOffset)
 }
 
 export function getDatePlusSeconds(seconds: number): Date {
-  const milliseconds = seconds * 1000
-  return new Date(new Date().getTime() + milliseconds)
+  return new Date(Date.now() + seconds * 1000)
 }
