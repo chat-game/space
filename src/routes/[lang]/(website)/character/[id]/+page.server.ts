@@ -1,8 +1,7 @@
 import { error } from '@sveltejs/kit'
-import type { PageServerLoad } from './$types'
 import { api } from '$lib/server/api'
 
-export const load: PageServerLoad = async ({ params }) => {
+export async function load({ params }) {
   const character = await api.character.getById(params.id)
   if (character instanceof Error) {
     throw character
