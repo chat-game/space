@@ -1,4 +1,4 @@
-ARG NODE=node:20-alpine
+ARG NODE=node:20.15.0-alpine
 
 ################# Web builder ##############
 
