@@ -1,4 +1,3 @@
-import { createId } from '@paralleldrive/cuid2'
 import { BaseObject } from '../baseObject'
 import type {
   Game,
@@ -39,7 +38,6 @@ export class BaseBuilding extends BaseObject implements IGameObjectBuilding {
   #initInventory() {
     this.inventory = new Inventory({
       objectId: this.id,
-      id: createId(),
       saveInDb: false,
     })
   }

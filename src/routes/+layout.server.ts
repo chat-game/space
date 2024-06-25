@@ -1,7 +1,6 @@
-import type { LayoutServerLoad } from './$types'
 import { dictionary } from '$lib/translations'
 
-export const load = (async ({ locals }) => {
+export async function load({ locals }) {
   const locale = locals.locale
 
   return {
@@ -9,4 +8,4 @@ export const load = (async ({ locals }) => {
     locale,
     t: dictionary(locale),
   }
-}) satisfies LayoutServerLoad
+}

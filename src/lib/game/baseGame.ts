@@ -1,9 +1,12 @@
 import { Application, Container } from 'pixi.js'
 import { createId } from '@paralleldrive/cuid2'
+import { WebSocketService } from './services/socket/webSocketService'
+import { gameOptions } from './store.svelte'
 import type {
   Game,
   GameObject,
   GameObjectPlayer,
+  GameOptions,
   GameSceneType,
   GameStateResponse,
   IGameInventoryItem, IGameObjectRaider,
@@ -31,9 +34,15 @@ import { Raider } from '$lib/game/objects/units/raider'
 import { QuestService } from '$lib/game/services/quest/questService'
 import type { Wagon } from '$lib/game/services/wagon/interface'
 
+interface BaseGameOptions {
+  isSocketOn?: boolean
+  profileJWT?: string
+}
+
 export class BaseGame extends Container implements Game {
   id: string
-  isPaused = $state(false)
+  profileJWT?: string
+  options: GameOptions
   children: Game['children'] = []
   app: Application
   audio: Game['audio']
@@ -50,18 +59,24 @@ export class BaseGame extends Container implements Game {
   chunkService: ChunkService
   playerService: PlayerService
   questService: QuestService
+  websocketService: WebSocketService
 
   #cameraX = 0
   #cameraY = 0
   #cameraPerfectX = 0
   #cameraPerfectY = 0
 
-  constructor() {
+  constructor({ isSocketOn, profileJWT }: BaseGameOptions) {
     super()
+
+    this.options = gameOptions
+    this.options.isSocketOn = isSocketOn ?? false
+
+    this.profileJWT = profileJWT
 
     this.id = createId()
     this.app = new Application()
-    this.audio = new AudioManager()
+    this.audio = new AudioManager(this)
     this.bg = new BackgroundGenerator(this.app)
     this.group = new Group()
 
@@ -73,6 +88,7 @@ export class BaseGame extends Container implements Game {
     this.chunkService = new ChunkService(this)
     this.playerService = new PlayerService(this)
     this.questService = new QuestService(this)
+    this.websocketService = new WebSocketService(this)
   }
 
   async init() {
@@ -97,7 +113,7 @@ export class BaseGame extends Container implements Game {
     this.initScene('MOVING')
 
     this.app.ticker.add(() => {
-      if (this.isPaused) {
+      if (this.options.isPaused) {
         return
       }
 
@@ -120,8 +136,7 @@ export class BaseGame extends Container implements Game {
   }
 
   async play() {
-    this.audio.isEnabled = true
-    this.isPaused = false
+    this.options.isPaused = false
 
     // setInterval(() => {
     //   console.log("FPS", this.app.ticker.FPS)

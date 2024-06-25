@@ -1,70 +1,49 @@
-import { type Handle, type RequestEvent, error, redirect } from '@sveltejs/kit'
+import { type Handle, redirect } from '@sveltejs/kit'
 import jwt from 'jsonwebtoken'
+import { sequence } from '@sveltejs/kit/hooks'
 import { env as privateEnv } from '$env/dynamic/private'
 import { env as publicEnv } from '$env/dynamic/public'
 import type { Profile } from '$lib/types'
 import { type Locale, defaultLocale, supportedLocales } from '$lib/translations'
 
-export const handle: Handle = async ({ event, resolve }) => {
-  handleJWT(event)
-  handleLang(event)
+const handleJWT: Handle = ({ event, resolve }) => {
+  const cookieKey = publicEnv.PUBLIC_COOKIE_KEY ?? ''
+  const jwtSecret = privateEnv.PRIVATE_JWT_SECRET_KEY
+
+  const token = event.cookies.get(cookieKey)
+  if (!token || !jwtSecret) {
+    event.locals.profile = null
+    return resolve(event)
+  }
+
+  try {
+    const { profile } = jwt.verify(token, jwtSecret) as { profile: Profile }
+    event.locals.profile = { ...profile }
+  } catch (error) {
+    if (error instanceof jwt.TokenExpiredError) {
+      event.cookies.delete(cookieKey, { path: '/' })
+    }
+  }
 
   return resolve(event)
 }
 
-function handleJWT(event: RequestEvent) {
-  const cookieKey = publicEnv.PUBLIC_COOKIE_KEY
-  const jwtSecret = privateEnv.PRIVATE_JWT_SECRET_KEY
-
-  if (jwtSecret && cookieKey && event.cookies.get(cookieKey)) {
-    const token = event.cookies.get(cookieKey)
-    if (!token) {
-      event.locals.profile = null
-      return
-    }
-
-    try {
-      const payload = jwt.verify(token, jwtSecret)
-      if (typeof payload === 'string') {
-        error(400, 'Something went wrong')
-      }
-      if (!payload.profile) {
-        error(400, 'Token is not valid')
-      }
-
-      const profile = payload.profile as Profile
-
-      event.locals.profile = {
-        ...profile,
-      }
-    } catch (error) {
-      if (error instanceof jwt.TokenExpiredError) {
-        event.cookies.delete(cookieKey, { path: '/' })
-      }
-    }
-  }
-}
-
-function handleLang(event: RequestEvent) {
+const handleLocale: Handle = async ({ event, resolve }) => {
   const { pathname, search } = event.url
 
-  const pathLang = pathname.match(/[^/]+(?=\/|$)/)
-  const pathnameWithoutLang = pathLang ? pathname.replace(`/${pathLang}`, '') : pathname
-  const matchedLang = pathLang ? pathLang[0].toLowerCase() : null
+  const browserLang = `${`${event.request.headers.get('accept-language')}`.match(/[a-z]+(?=[\-_,;])/i)}`.toLowerCase()
+  const browserLocale = supportedLocales.find((locale) => locale === browserLang) ? browserLang as Locale : defaultLocale
+  const locale = supportedLocales.find((locale) => locale === event.params.lang) ? event.params.lang as Locale : browserLocale
 
-  // First time on website? Let's find locale
-  if (!matchedLang) {
-    const browserLocale = `${`${event.request.headers.get('accept-language')}`.match(/[a-z]+(?=[\-_,;])/i)}`.toLowerCase()
-    const locale = supportedLocales.find((locale) => locale === browserLocale) ? browserLocale : defaultLocale
+  event.locals.locale = locale
 
-    event.locals.locale = locale as Locale
-    redirect(301, `/${locale}${pathnameWithoutLang}${search}`)
+  if (pathname === '/') {
+    redirect(301, `/${defaultLocale}${search}`)
   }
 
-  // We don't have this locale?
-  if (!supportedLocales.find((locale) => locale === matchedLang)) {
-    redirect(301, `/${defaultLocale}${pathnameWithoutLang}${search}`)
-  }
-
-  event.locals.locale = matchedLang as Locale
+  return resolve(event, {
+    transformPageChunk: ({ html }) => html.replace('%lang%', locale),
+  })
 }
+
+export const handle = sequence(handleJWT, handleLocale)

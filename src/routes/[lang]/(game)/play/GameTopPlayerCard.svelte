@@ -40,7 +40,7 @@
   <div class='player'>
     <GameUnit />
   </div>
-  <p class='name'>{player.userName}</p>
+  <p class='name'>{player.name}</p>
   <p>{title.title}! {points}</p>
 </div>
 

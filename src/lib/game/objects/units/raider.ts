@@ -17,7 +17,7 @@ export class Raider extends UnitObject implements IGameObjectRaider {
     })
 
     this.speedPerSecond = 1.5
-    this.userName = 'Raider'
+    this.name = 'Raider'
 
     this.initVisual({
       head: '1',

@@ -22,7 +22,7 @@ export class Courier extends UnitObject implements IGameObjectCourier {
 
     this.speedPerSecond = 100
     this.minDistance = 15
-    this.userName = generateUnitUserName()
+    this.name = generateUnitUserName()
 
     this.initVisual({
       head: '1',

@@ -15,7 +15,7 @@
 <div class='block'>
   <GameUnit />
   <div class='info'>
-    <p>{player.userName}</p>
+    <p>{player.name}</p>
     <div class='inventory'>
       <GameItem type='COIN' amount={coin} />
       <GameItem type='WOOD' amount={wood} />

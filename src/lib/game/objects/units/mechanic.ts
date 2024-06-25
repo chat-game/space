@@ -16,7 +16,7 @@ export class Mechanic extends UnitObject implements IGameObjectMechanic {
       type: 'MECHANIC',
     })
 
-    this.userName = 'Mechanic'
+    this.name = 'Mechanic'
 
     this.initVisual({
       head: '1',

@@ -29,14 +29,14 @@ interface UnitObjectOptions {
 }
 
 export class UnitObject extends BaseObject implements IGameObjectUnit {
-  public inventory!: Inventory
+  public inventory: Inventory
   public visual!: IGameObjectUnit['visual']
-  public userName!: IGameObjectUnit['userName']
+  public name!: IGameObjectUnit['name']
   public coins = 0
   public dialogue!: IGameObjectUnit['dialogue']
   children: GraphicsContainer[] = []
 
-  readonly #interface!: UnitInterface
+  readonly #interface: UnitInterface
   readonly #dialogueInterface!: DialogueInterface
   readonly #animationMovingLeft!: AnimatedSprite
   readonly #animationMovingRight!: AnimatedSprite
@@ -52,7 +52,11 @@ export class UnitObject extends BaseObject implements IGameObjectUnit {
     this.#animationMovingRight = AssetsManager.getAnimatedSpriteHero('RIGHT')
     this.#animationMovingLeft = AssetsManager.getAnimatedSpriteHero('LEFT')
 
-    this.#initInventory()
+    this.inventory = new Inventory({
+      objectId: this.id,
+      saveInDb: false,
+    })
+
     this.#initDialogue()
 
     this.#interface = new UnitInterface(this)
@@ -67,14 +71,6 @@ export class UnitObject extends BaseObject implements IGameObjectUnit {
     if (this.script) {
       return this.script.live()
     }
-  }
-
-  #initInventory() {
-    this.inventory = new Inventory({
-      objectId: this.id,
-      id: createId(),
-      saveInDb: false,
-    })
   }
 
   public initVisual(visual?: IGameObjectUnit['visual']) {

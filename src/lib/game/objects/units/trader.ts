@@ -20,7 +20,7 @@ export class Trader extends UnitObject implements IGameObjectTrader {
 
     this.speedPerSecond = 60
     this.minDistance = 5
-    this.userName = generateUnitUserName()
+    this.name = generateUnitUserName()
 
     this.initVisual({
       head: '1',

@@ -1,4 +1,3 @@
-import { createId } from '@paralleldrive/cuid2'
 import { getMinusOrPlus, getRandomInRange } from '$lib/utils/random'
 import type { Game } from '$lib/game/types'
 import { FlagObject } from '$lib/game/objects/flagObject'
@@ -41,7 +40,6 @@ export class WagonService implements GameWagonService {
 
   setCargo() {
     this.cargo = new Inventory({
-      id: createId(),
       saveInDb: false,
       objectId: this.wagon.id,
     })

@@ -6,7 +6,7 @@ export class UnitInterface extends GraphicsContainer {
   public children: GraphicsContainer[] = []
   public unit: IGameObjectUnit
 
-  public userName = ''
+  public name = ''
   public coins = 0
   public wood = 0
   public stone = 0
@@ -70,7 +70,7 @@ export class UnitInterface extends GraphicsContainer {
   }
 
   update() {
-    const userName = this.unit.userName
+    const name = this.unit.name
     const wood
       = this.unit.inventory.items.find((item) => item.type === 'WOOD')?.amount
       ?? 0
@@ -85,14 +85,14 @@ export class UnitInterface extends GraphicsContainer {
     )
 
     if (
-      userName !== this.userName
+      name !== this.name
       || this.unit.coins !== this.coins
       || wood !== this.wood
       || stone !== this.stone
       || haveAxe !== this.haveAxe
       || havePickaxe !== this.havePickaxe
     ) {
-      this.userName = userName
+      this.name = name
       this.coins = this.unit.coins
       this.wood = wood
       this.stone = stone
@@ -101,7 +101,7 @@ export class UnitInterface extends GraphicsContainer {
       this.rebuild()
     }
 
-    this.userName = this.unit.userName
+    this.name = this.unit.name
     this.coins = this.unit.coins
     this.wood = wood
     this.stone = stone
@@ -149,14 +149,14 @@ export class UnitInterface extends GraphicsContainer {
   }
 
   drawUserName() {
-    if (!this.unit.userName) {
+    if (!this.unit.name) {
       return
     }
 
     const container = new GraphicsContainer({ type: 'INTERFACE' })
 
     const basicText = new Text({
-      text: this.unit.userName,
+      text: this.unit.name,
       style: {
         fontFamily: 'Noto Serif',
         fontSize: 14,

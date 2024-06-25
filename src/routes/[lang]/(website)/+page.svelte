@@ -1,11 +1,10 @@
 <script lang='ts'>
   import { onMount } from 'svelte'
-  import type { PageServerData } from './$types'
   import { TWITCH_URL } from '$lib/config'
-  import { BaseGame } from '$lib/game/baseGame.svelte'
+  import { BaseGame } from '$lib/game/baseGame'
   import { pluralizationRu } from '$lib/utils/locale'
 
-  export let data: PageServerData
+  export let data
 
   const profileCount = data.count
   const profileDesc = pluralizationRu(data.count, [
@@ -14,7 +13,7 @@
     'профилей',
   ])
 
-  const game = new BaseGame()
+  const game = new BaseGame({})
   let gameElement: HTMLElement
   let isGameReady = false
   let isGameElementActive = false
@@ -28,7 +27,7 @@
   }
 
   const handleVisibilityChange = () => {
-    game.isPaused = document.hidden
+    game.options.isPaused = document.hidden
   }
 
   onMount(() => {

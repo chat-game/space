@@ -36,7 +36,7 @@ export class Poll implements IGamePoll {
       return false
     }
 
-    this.votes.push({ id: player.id, userName: player.userName })
+    this.votes.push({ id: player.id, userName: player.name })
     return true
   }
 

@@ -22,7 +22,9 @@ import type { GameActionService } from '$lib/game/services/action/interface'
 import type { GameQuestService } from '$lib/game/services/quest/interface'
 
 export interface Game extends Container {
-  isPaused: boolean
+  id: string
+  profileJWT?: string
+  options: GameOptions
   children: GameObject[]
   tick: number
   audio: GameAudio
@@ -48,6 +50,13 @@ export interface Game extends Container {
   rebuildScene: () => void
 }
 
+export interface GameOptions {
+  isReady: boolean
+  isPaused: boolean
+  isSocketOn: boolean
+  isSoundOn: boolean
+}
+
 export interface GameScene {
   game: Game
   destroy: () => void
@@ -59,7 +68,6 @@ export interface GameBackground {
 
 export interface GameAudio {
   playSound: (name: GameAudioName) => void
-  isEnabled: boolean
   destroy: () => void
 }
 
@@ -177,22 +185,27 @@ export type IGameObjectState =
   | 'DESTROYED'
 export type IGameObjectDirection = 'LEFT' | 'RIGHT'
 
-export interface WebSocketMessage {
-  id: string
-  event:
-    | 'OBJECT_UPDATED'
-    | 'RAID_STARTED'
-    | 'GROUP_FORM_STARTED'
-    | 'SCENE_CHANGING_STARTED'
-    | 'COUNTDOWN_NEXT_WAVE_STARTED'
-    | 'SCENE_CHANGED'
-    | 'VOTING_FOR_NEW_MAIN_QUEST_STARTED'
-    | 'MAIN_QUEST_STARTED'
-    | 'SIDE_QUEST_STARTED'
-    | 'TRADE_STARTED'
-    | 'IDEA_CREATED'
-  object?: Partial<GameObject>
+export interface WebSocketEventCommand {
+  type: 'COMMAND'
+  data: {
+    command: string
+    params: string[]
+    player: GameObjectPlayer
+    text: string
+  }
 }
+
+export interface WebSocketEventMessage {
+  type: 'MESSAGE'
+  data: {
+    player: GameObjectPlayer
+    text: string
+  }
+}
+
+type WebSocketEvents = WebSocketEventCommand | WebSocketEventMessage
+
+export type WebSocketMessage = { id: string } & WebSocketEvents
 
 export type GameObjectBuildingType =
   | 'CAMPFIRE'
@@ -256,7 +269,7 @@ export interface GameObjectStone extends GameObject {
 }
 
 export interface IGameObjectUnit extends GameObject {
-  userName: string
+  name: string
   coins: number
   inventory: IGameInventory
   visual: {

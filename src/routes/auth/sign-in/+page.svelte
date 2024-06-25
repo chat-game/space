@@ -3,7 +3,7 @@
   import { page } from '$app/stores'
 
   if (browser && $page.url.hash) {
-    void fetch('/en/auth/sign-in', {
+    void fetch('/auth/sign-in', {
       method: 'POST',
       body: JSON.stringify({ hash: $page.url.hash }),
       headers: {

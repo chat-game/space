@@ -1,9 +1,8 @@
 <script lang='ts'>
-  import type { PageServerData } from './$types'
   import unitAvatar from '$lib/assets/website/unit-512.png'
   import { page } from '$app/stores'
 
-  export let data: PageServerData
+  export let data
 </script>
 
 <section class='hero'>

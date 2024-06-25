@@ -1,8 +1,7 @@
 <script lang='ts'>
-  import type { PageServerData } from './$types'
   import { page } from '$app/stores'
 
-  export let data: PageServerData
+  export let data
 </script>
 
 <section class='hero'>

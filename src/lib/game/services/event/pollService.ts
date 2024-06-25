@@ -42,7 +42,7 @@ export class PollService implements GameService {
       return false
     }
 
-    poll.votes.push({ id: player.id, userName: player.userName })
+    poll.votes.push({ id: player.id, userName: player.name })
     return true
   }
 }
