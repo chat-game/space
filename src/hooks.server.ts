@@ -7,7 +7,7 @@ import type { Profile } from '$lib/types'
 import { type Locale, defaultLocale, supportedLocales } from '$lib/translations'
 
 const handleJWT: Handle = ({ event, resolve }) => {
-  const cookieKey = publicEnv.PUBLIC_COOKIE_KEY
+  const cookieKey = publicEnv.PUBLIC_COOKIE_KEY ?? ''
   const jwtSecret = privateEnv.PRIVATE_JWT_SECRET_KEY
 
   const token = event.cookies.get(cookieKey)
