@@ -21,7 +21,8 @@
         "dbaeumer.vscode-eslint",
         "svelte.svelte-vscode",
         "ms-azuretools.vscode-docker",
-        "vitest.explorer"
+        "vitest.explorer",
+        "Codeium.codeium"
       ]
     }
   },

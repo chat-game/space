@@ -39,7 +39,7 @@
     "@twurple/auth": "^7.1.0",
     "howler": "^2.2.4",
     "jsonwebtoken": "^9.0.2",
-    "lucide-svelte": "^0.395.0",
+    "lucide-svelte": "^0.396.0",
     "pixi.js": "^8.1.8"
   },
   "devDependencies": {
