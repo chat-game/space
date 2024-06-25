@@ -1,6 +1,44 @@
 # Changelog
 
 
+## v0.2.0
+
+[compare changes](https://github.com/hmbanan666/chat-game/compare/v0.1.0...v0.2.0)
+
+### 🚀 Enhancements
+
+- Fetch data from api ([#173](https://github.com/hmbanan666/chat-game/pull/173))
+- Dev containers ([#174](https://github.com/hmbanan666/chat-game/pull/174))
+- Getting data by wrapper, not direct fetch ([#178](https://github.com/hmbanan666/chat-game/pull/178))
+- Svelte store for game options ([#179](https://github.com/hmbanan666/chat-game/pull/179))
+
+### 🩹 Fixes
+
+- Take locale on hook, use custom dictionary ([ca8dd63](https://github.com/hmbanan666/chat-game/commit/ca8dd63))
+- Dev container ([#175](https://github.com/hmbanan666/chat-game/pull/175))
+- House icon, not home anymore ([#181](https://github.com/hmbanan666/chat-game/pull/181))
+
+### 📦 Build
+
+- ⚠️  Migrate npm to yarn ([b314be9](https://github.com/hmbanan666/chat-game/commit/b314be9))
+
+### 🏡 Chore
+
+- Lock file ([1abc6b0](https://github.com/hmbanan666/chat-game/commit/1abc6b0))
+- Rollback release check ([d211552](https://github.com/hmbanan666/chat-game/commit/d211552))
+- Removed sveltekit-i18n ([a0d4142](https://github.com/hmbanan666/chat-game/commit/a0d4142))
+- Some refactoring and new tests ([#177](https://github.com/hmbanan666/chat-game/pull/177))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Migrate npm to yarn ([b314be9](https://github.com/hmbanan666/chat-game/commit/b314be9))
+
+### ❤️ Contributors
+
+- Nick Kosarev ([@hmbanan666](http://github.com/hmbanan666))
+- Alexander ([@hywax](http://github.com/hywax))
+- Hywax ([@hywax](http://github.com/hywax))
+
 ## v0.1.0
 
 
