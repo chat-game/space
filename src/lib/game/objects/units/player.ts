@@ -10,7 +10,7 @@ import { Inventory } from '$lib/game/common/inventory'
 
 interface PlayerOptions {
   game: Game
-  id?: string
+  id: string
   x: number
   y: number
 }
@@ -21,20 +21,21 @@ export class Player extends UnitObject implements GameObjectPlayer {
   refuellerPoints!: number
   raiderPoints!: number
   skills!: Skill[]
-  lastActionAt!: GameObjectPlayer['lastActionAt']
+  lastActionAt: GameObjectPlayer['lastActionAt']
 
   public inventoryId?: string
 
   constructor({ game, id, x, y }: PlayerOptions) {
     super({ game, id, x, y, type: 'PLAYER' })
 
-    this.speedPerSecond = 2
+    this.speedPerSecond = 70
+    this.lastActionAt = new Date()
   }
 
   async init() {
     await this.#readFromDB()
-    await this.#initSkillsFromDB()
-    await this.#initInventoryFromDB()
+    // await this.#initSkillsFromDB()
+    // await this.#initInventoryFromDB()
 
     super.initVisual({
       head: '1',
@@ -121,12 +122,13 @@ export class Player extends UnitObject implements GameObjectPlayer {
   }
 
   async #readFromDB() {
-    // const player = await db.player.findUnique({ where: { id: this.id } })
+    // const res = await fetch(`/mock/game/player/${this.id}`)
+    // const player = await res.json()
     // if (!player) {
     //   return
     // }
-    //
-    // this.userName = player.userName
+
+    // this.name = player.name
     // this.coins = player.coins
     // this.reputation = player.reputation
     // this.villainPoints = player.villainPoints

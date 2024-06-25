@@ -17,11 +17,12 @@ export class PlayerService implements GamePlayerService {
     this.#removeInactivePlayers()
   }
 
-  async findOrCreatePlayer(id: string): Promise<Player | undefined> {
+  async findOrCreatePlayer(id: string): Promise<Player> {
     const player = this.#findPlayer(id)
-    if (!player && this.game.actionService.isActionPossible('CREATE_NEW_PLAYER')) {
-      return this.#createPlayer(id)
+    if (!player) {
+      return this.#initPlayer(id)
     }
+
     return player
   }
 
@@ -30,29 +31,18 @@ export class PlayerService implements GamePlayerService {
   }
 
   async #initPlayer(id: string) {
-    const instance = new Player({ game: this.game, id, x: -100, y: -100 })
-    await instance.init()
+    const player = new Player({ game: this.game, id, x: -100, y: -100 })
+    await player.init()
 
     const flag = this.game.wagonService.randomOutFlag
-    instance.x = flag.x
-    instance.y = flag.y
+    player.x = flag.x
+    player.y = flag.y
 
-    instance.init()
-
-    return instance
-  }
-
-  async #createPlayer(id: string): Promise<Player> {
-    const player = this.#findPlayer(id)
-    if (!player) {
-      return this.#initPlayer(id)
-    }
     return player
   }
 
   #removeInactivePlayers() {
-    const players = this.game.activePlayers
-    for (const player of players) {
+    for (const player of this.game.activePlayers) {
       const checkTime = getDateMinusMinutes(8)
       if (player.lastActionAt.getTime() <= checkTime.getTime()) {
         if (player.script) {

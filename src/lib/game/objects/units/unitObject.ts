@@ -31,12 +31,12 @@ interface UnitObjectOptions {
 export class UnitObject extends BaseObject implements IGameObjectUnit {
   public inventory: Inventory
   public visual!: IGameObjectUnit['visual']
-  public userName!: IGameObjectUnit['userName']
+  public name!: IGameObjectUnit['name']
   public coins = 0
   public dialogue!: IGameObjectUnit['dialogue']
   children: GraphicsContainer[] = []
 
-  readonly #interface!: UnitInterface
+  readonly #interface: UnitInterface
   readonly #dialogueInterface!: DialogueInterface
   readonly #animationMovingLeft!: AnimatedSprite
   readonly #animationMovingRight!: AnimatedSprite

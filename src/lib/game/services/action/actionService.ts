@@ -258,7 +258,7 @@ export class ActionService implements GameActionService {
 
     return {
       ok: true,
-      message: `${player.userName}, and you're a villain!`,
+      message: `${player.name}, and you're a villain!`,
     }
   }
 
@@ -281,7 +281,7 @@ export class ActionService implements GameActionService {
     if (!itemExist) {
       return {
         ok: false,
-        message: `${player.userName}, you don't have wood.`,
+        message: `${player.name}, you don't have wood.`,
       }
     }
 
@@ -292,7 +292,7 @@ export class ActionService implements GameActionService {
     if (!isSuccess) {
       return {
         ok: false,
-        message: `${player.userName}, not enough wood.`,
+        message: `${player.name}, not enough wood.`,
       }
     }
 
@@ -302,7 +302,7 @@ export class ActionService implements GameActionService {
 
     return {
       ok: true,
-      message: `${player.userName}, you helped refuel the Wagon.`,
+      message: `${player.name}, you helped refuel the Wagon.`,
     }
   }
 
@@ -355,7 +355,7 @@ export class ActionService implements GameActionService {
     if (player.script && !player.script.isInterruptible) {
       return {
         ok: false,
-        message: `${player.userName}, you're busy right now.`,
+        message: `${player.name}, you're busy right now.`,
       }
     }
 
@@ -363,7 +363,7 @@ export class ActionService implements GameActionService {
     if (!target) {
       return {
         ok: false,
-        message: `${player.userName}, there is no available stone.`,
+        message: `${player.name}, there is no available stone.`,
       }
     }
 
@@ -398,7 +398,7 @@ export class ActionService implements GameActionService {
     if (player.script && !player.script.isInterruptible) {
       return {
         ok: false,
-        message: `${player.userName}, you're busy right now.`,
+        message: `${player.name}, you're busy right now.`,
       }
     }
 
@@ -407,7 +407,7 @@ export class ActionService implements GameActionService {
       if (!target) {
         return {
           ok: false,
-          message: `${player.userName}, no space available.`,
+          message: `${player.name}, no space available.`,
         }
       }
 
@@ -512,7 +512,7 @@ export class ActionService implements GameActionService {
 
     return {
       ok: true,
-      message: `${player.userName}, this is an interactive chat game that any viewer can participate in! Basic commands: !chop, !mine. The remaining commands appear in events (on the right of the screen). Join our community: ${DISCORD_SERVER_INVITE_URL}`,
+      message: `${player.name}, this is an interactive chat game that any viewer can participate in! Basic commands: !chop, !mine. The remaining commands appear in events (on the right of the screen). Join our community: ${DISCORD_SERVER_INVITE_URL}`,
     }
   }
 
@@ -523,7 +523,7 @@ export class ActionService implements GameActionService {
 
     return {
       ok: true,
-      message: `${player.userName}, the game code is in the repository: ${GITHUB_REPO_URL}`,
+      message: `${player.name}, the game code is in the repository: ${GITHUB_REPO_URL}`,
     }
   }
 
@@ -533,7 +533,7 @@ export class ActionService implements GameActionService {
     }
     return {
       ok: true,
-      message: `${player.userName}, support the game: ${DONATE_URL}`,
+      message: `${player.name}, support the game: ${DONATE_URL}`,
     }
   }
 
@@ -545,7 +545,7 @@ export class ActionService implements GameActionService {
     if (!params) {
       return {
         ok: false,
-        message: `${player.userName}, be more specific.`,
+        message: `${player.name}, be more specific.`,
       }
     }
 
@@ -553,7 +553,7 @@ export class ActionService implements GameActionService {
     if (!item) {
       return {
         ok: false,
-        message: `${player.userName}, be more specific.`,
+        message: `${player.name}, be more specific.`,
       }
     }
 
@@ -561,7 +561,7 @@ export class ActionService implements GameActionService {
     if (!amount) {
       return {
         ok: false,
-        message: `${player.userName}, be more specific.`,
+        message: `${player.name}, be more specific.`,
       }
     }
 
@@ -572,7 +572,7 @@ export class ActionService implements GameActionService {
       if (!isSuccess) {
         return {
           ok: false,
-          message: `${player.userName}, you don't have enough wood.`,
+          message: `${player.name}, you don't have enough wood.`,
         }
       }
 
@@ -581,7 +581,7 @@ export class ActionService implements GameActionService {
 
       return {
         ok: true,
-        message: `${player.userName}, you gave wood to the village! Your reputation has increased.`,
+        message: `${player.name}, you gave wood to the village! Your reputation has increased.`,
       }
     }
     if (item === 'STONE') {
@@ -589,7 +589,7 @@ export class ActionService implements GameActionService {
       if (!isSuccess) {
         return {
           ok: false,
-          message: `${player.userName}, you don't have enough stone.`,
+          message: `${player.name}, you don't have enough stone.`,
         }
       }
 
@@ -598,13 +598,13 @@ export class ActionService implements GameActionService {
 
       return {
         ok: true,
-        message: `${player.userName}, you gave stones to the village! Your reputation has increased.`,
+        message: `${player.name}, you gave stones to the village! Your reputation has increased.`,
       }
     }
 
     return {
       ok: false,
-      message: `${player.userName}, be more specific.`,
+      message: `${player.name}, be more specific.`,
     }
   }
 
@@ -656,7 +656,7 @@ export class ActionService implements GameActionService {
 
     return {
       ok: true,
-      message: `${player.userName}, successful trade deal!`,
+      message: `${player.name}, successful trade deal!`,
     }
   }
 
@@ -665,7 +665,7 @@ export class ActionService implements GameActionService {
 
     this.game.eventService.initEvent({
       title: 'New idea from Twitch Viewer!',
-      description: `${player.userName}: ${text}`,
+      description: `${player.name}: ${text}`,
       type: 'IDEA_CREATED',
       secondsToEnd: 60 * 3,
     })

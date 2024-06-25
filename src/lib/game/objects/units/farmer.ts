@@ -22,7 +22,7 @@ export class Farmer extends UnitObject implements IGameObjectFarmer {
 
     this.speedPerSecond = 70
     this.minDistance = 10
-    this.userName = generateUnitUserName()
+    this.name = generateUnitUserName()
 
     this.initVisual({
       head: '1',

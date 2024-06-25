@@ -19,28 +19,33 @@ export class WebSocketService implements GameWebSocketService {
 
   update() {}
 
-  #handleMessage(message: WebSocketMessage): void {
+  async #handleMessage(message: WebSocketMessage) {
     if (message.type === 'COMMAND') {
       console.log('handling command from user', message)
+      const id = message.data.player.id
+      if (id) {
+        const player = await this.game.playerService.findOrCreatePlayer(id)
+        this.game.addChild(player)
+      }
     }
     if (message.type === 'MESSAGE') {
       console.log('handling message from user', message)
     }
-    if (message.type === 'RAID_STARTED') {
-      this.game.audio.playSound('MARCHING_WITH_HORNS')
-    }
-    if (message.type === 'GROUP_FORM_STARTED') {
-      this.game.audio.playSound('MARCHING_WITH_HORNS')
-    }
-    if (message.type === 'MAIN_QUEST_STARTED') {
-      this.game.audio.playSound('MARCHING_WITH_HORNS')
-    }
-    if (message.type === 'SCENE_CHANGED') {
-      this.game.rebuildScene()
-    }
-    if (message.type === 'IDEA_CREATED') {
-      this.game.audio.playSound('YEAH')
-    }
+    // if (message.type === 'RAID_STARTED') {
+    //   this.game.audio.playSound('MARCHING_WITH_HORNS')
+    // }
+    // if (message.type === 'GROUP_FORM_STARTED') {
+    //   this.game.audio.playSound('MARCHING_WITH_HORNS')
+    // }
+    // if (message.type === 'MAIN_QUEST_STARTED') {
+    //   this.game.audio.playSound('MARCHING_WITH_HORNS')
+    // }
+    // if (message.type === 'SCENE_CHANGED') {
+    //   this.game.rebuildScene()
+    // }
+    // if (message.type === 'IDEA_CREATED') {
+    //   this.game.audio.playSound('YEAH')
+    // }
   }
 
   #init() {
@@ -62,7 +67,7 @@ export class WebSocketService implements GameWebSocketService {
       const bytes = JSON.stringify(message).length
       this.kbitPerSecond += Math.round((bytes * 8) / 1024)
 
-      this.#handleMessage(message)
+      void this.#handleMessage(message)
     })
   }
 
