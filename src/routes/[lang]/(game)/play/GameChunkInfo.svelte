@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import Home from 'lucide-svelte/icons/home'
+  import House from 'lucide-svelte/icons/house'
   import TreeDeciduous from 'lucide-svelte/icons/tree-deciduous'
   import Waves from 'lucide-svelte/icons/waves'
   import type { GameChunk } from '$lib/game/services/chunk/interface'
@@ -10,7 +10,7 @@
 
 <div class='block'>
   {#if type === 'VILLAGE'}
-    <Home />
+    <House />
   {:else if type === 'FOREST'}
     <TreeDeciduous />
   {:else if type === 'LAKE'}
