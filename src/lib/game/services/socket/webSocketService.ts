@@ -1,8 +1,8 @@
 import type { WebSocketMessage } from '@hmbanan666/chat-game-api'
 import type { Game } from '$lib/game/types'
 import type { GameWebSocketService } from '$lib/game/services/socket/interface'
-import { env } from '$env/dynamic/public'
 import { browser } from '$app/environment'
+import { config } from '$lib/config'
 
 export class WebSocketService implements GameWebSocketService {
   socket!: WebSocket
@@ -47,7 +47,7 @@ export class WebSocketService implements GameWebSocketService {
   }
 
   #init() {
-    this.socket = new WebSocket(env.PUBLIC_WEBSOCKET_URL ?? '', [this.game.id])
+    this.socket = new WebSocket(config.websocketUrl ?? '', [this.game.id])
 
     this.#setMessagesPerSecondHandler()
 

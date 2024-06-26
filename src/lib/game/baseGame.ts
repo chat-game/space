@@ -34,6 +34,8 @@ import { PlayerService } from '$lib/game/services/player/playerService'
 import { Raider } from '$lib/game/objects/units/raider'
 import { QuestService } from '$lib/game/services/quest/questService'
 import type { Wagon } from '$lib/game/services/wagon/interface'
+import type { Broker } from '$lib/game/services/broker/interface'
+import { BrokerService } from '$lib/game/services/broker/brokerService'
 
 interface BaseGameOptions {
   isSocketOn?: boolean
@@ -52,6 +54,7 @@ export class BaseGame extends Container implements Game {
   tick: Game['tick'] = 0
   group: Group
 
+  brokerService: Broker
   actionService: ActionService
   eventService: EventService
   tradeService: TradeService
@@ -82,6 +85,7 @@ export class BaseGame extends Container implements Game {
     this.bg = new BackgroundGenerator(this.app)
     this.group = new Group()
 
+    this.brokerService = new BrokerService()
     this.actionService = new ActionService(this)
     this.eventService = new EventService(this)
     this.tradeService = new TradeService(this)
@@ -234,6 +238,14 @@ export class BaseGame extends Container implements Game {
 
   rebuildScene(): void {
     this.removeChild(...this.children)
+  }
+
+  subscribe(event: string, callback: Function) {
+    return this.brokerService.register(event, callback)
+  }
+
+  dispatch<T>(event: string, arg?: T) {
+    this.brokerService.dispatch(event, arg)
   }
 
   #updateObjects() {

@@ -1,13 +1,13 @@
 import { type Handle, redirect } from '@sveltejs/kit'
 import jwt from 'jsonwebtoken'
 import { sequence } from '@sveltejs/kit/hooks'
-import { env as privateEnv } from '$env/dynamic/private'
-import { env as publicEnv } from '$env/dynamic/public'
 import type { Profile } from '$lib/types'
 import { type Locale, defaultLocale, supportedLocales } from '$lib/translations'
+import { env as privateEnv } from '$env/dynamic/private'
+import { config } from '$lib/config'
 
 const handleJWT: Handle = ({ event, resolve }) => {
-  const cookieKey = publicEnv.PUBLIC_COOKIE_KEY ?? ''
+  const cookieKey = config.cookieKey
   const jwtSecret = privateEnv.PRIVATE_JWT_SECRET_KEY
 
   const token = event.cookies.get(cookieKey)

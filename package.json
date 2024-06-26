@@ -40,7 +40,8 @@
     "howler": "^2.2.4",
     "jsonwebtoken": "^9.0.2",
     "lucide-svelte": "^0.396.0",
-    "pixi.js": "^8.2.0"
+    "pixi.js": "^8.2.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.21.1",

@@ -1,5 +1,5 @@
 import { type RequestHandler, error, json } from '@sveltejs/kit'
-import { env } from '$env/dynamic/public'
+import { config } from '$lib/config'
 
 export const GET: RequestHandler = async ({ locals }) => {
   if (!locals.profile) {
@@ -10,7 +10,7 @@ export const GET: RequestHandler = async ({ locals }) => {
 }
 
 export const DELETE: RequestHandler = async ({ cookies }) => {
-  const cookieKey = env.PUBLIC_COOKIE_KEY
+  const cookieKey = config.cookieKey
   if (!cookieKey) {
     error(500, 'Config problem')
   }
