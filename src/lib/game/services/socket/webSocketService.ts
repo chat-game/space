@@ -22,15 +22,12 @@ export class WebSocketService implements GameWebSocketService {
 
   async #handleMessage(message: WebSocketMessage) {
     if (message.type === 'COMMAND') {
-      console.log('handling command from user', message)
-      const id = message.data.player.id
-      if (id) {
-        const player = await this.game.playerService.findOrCreatePlayer(id)
-        this.game.addChild(player)
-      }
+      const { command, player, params } = message.data
+      this.game.actionService.handleCommand({ command, playerId: player.id, params })
     }
     if (message.type === 'MESSAGE') {
-      console.log('handling message from user', message)
+      const { text, player } = message.data
+      this.game.actionService.handleMessage({ text, playerId: player.id })
     }
     // if (message.type === 'RAID_STARTED') {
     //   this.game.audio.playSound('MARCHING_WITH_HORNS')
@@ -73,7 +70,6 @@ export class WebSocketService implements GameWebSocketService {
   }
 
   #parse(message: string): WebSocketMessage | undefined {
-    console.log(message)
     const parsed = JSON.parse(message)
     if (parsed) {
       return parsed as WebSocketMessage
@@ -85,7 +81,7 @@ export class WebSocketService implements GameWebSocketService {
   #setMessagesPerSecondHandler() {
     return setInterval(() => {
       // console.log(
-      //   `${WebSocketManager.messagesPerSecond} msg/s, ${WebSocketManager.kbitPerSecond} kbit/s`,
+      //   `${this.messagesPerSecond} msg/s, ${this.kbitPerSecond} kbit/s`,
       // )
       this.messagesPerSecond = 0
       this.kbitPerSecond = 0
