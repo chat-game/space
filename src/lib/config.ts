@@ -1,6 +1,14 @@
 import { z } from 'zod'
 import { env as publicEnv } from '$env/dynamic/public'
-import { env as privateEnv } from '$env/dynamic/private'
+
+/**
+ * Здесь объявляется схема конфигурации приложения.
+ * Содержит только публичные переменные окружения.
+ *
+ * Приватные переменные окружения хранятся в '$env/dynamic/private'
+ * По политике безопасности они не должны быть доступны на клиенте.
+ * И каждое использование приватной переменной окружения должно в ручном режиме.
+ */
 
 const allEnv = z.object({
   PRIVATE_JWT_SECRET_KEY: z.string().default(''),
@@ -21,7 +29,7 @@ const allEnv = z.object({
   })),
 })
 
-const serverConfigSchema = allEnv.transform((value) => {
+const ConfigSchema = allEnv.transform((value) => {
   return {
     jwtSecretKey: value.PRIVATE_JWT_SECRET_KEY,
     websiteBearer: value.PRIVATE_WEBSITE_BEARER,
@@ -42,8 +50,5 @@ const serverConfigSchema = allEnv.transform((value) => {
   }
 })
 
-export const serverConfig = serverConfigSchema.parse({ ...privateEnv, ...publicEnv })
-export const clientConfig = {}
-
-export type ServerConfig = z.infer<typeof serverConfigSchema>
-export type ClientConfig = typeof clientConfig
+export type Config = z.infer<typeof ConfigSchema>
+export const config = ConfigSchema.parse(publicEnv)

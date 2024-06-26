@@ -1,6 +1,6 @@
 import { error, json } from '@sveltejs/kit'
 import type { RequestHandler } from './$types'
-import { serverConfig } from '$lib/config'
+import { config } from '$lib/config'
 
 export const GET: RequestHandler = async ({ locals }) => {
   if (!locals.profile) {
@@ -11,7 +11,7 @@ export const GET: RequestHandler = async ({ locals }) => {
 }
 
 export const DELETE: RequestHandler = async ({ cookies }) => {
-  const cookieKey = serverConfig.cookieKey
+  const cookieKey = config.cookieKey
   if (!cookieKey) {
     error(500, 'Config problem')
   }

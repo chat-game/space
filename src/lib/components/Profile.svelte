@@ -1,11 +1,11 @@
 <script>
   import { page } from '$app/stores'
   import twitchIcon from '$lib/assets/website/icons/twitch/112.png'
-  import { serverConfig } from '$lib/config.js'
+  import { config } from '$lib/config'
 
   const url = new URL('https://id.twitch.tv/oauth2/authorize')
-  url.searchParams.set('client_id', serverConfig.twitch.clientId)
-  url.searchParams.set('redirect_uri', serverConfig.signInRedirectUrl)
+  url.searchParams.set('client_id', config.twitch.clientId)
+  url.searchParams.set('redirect_uri', config.signInRedirectUrl)
   url.searchParams.set('response_type', 'token')
   url.searchParams.set('scope', 'chat:read channel:read:redemptions')
 

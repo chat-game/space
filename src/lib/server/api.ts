@@ -1,4 +1,4 @@
 import { ChatGameAPI } from '@hmbanan666/chat-game-api'
-import { serverConfig } from '$lib/config'
+import { env as privateEnv } from '$env/dynamic/private'
 
-export const api = new ChatGameAPI(serverConfig.websiteBearer)
+export const api = new ChatGameAPI(privateEnv.PRIVATE_WEBSITE_BEARER ?? '')
