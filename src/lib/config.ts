@@ -11,8 +11,6 @@ import { env as publicEnv } from '$env/dynamic/public'
  */
 
 const allEnv = z.object({
-  PRIVATE_JWT_SECRET_KEY: z.string().default(''),
-  PRIVATE_WEBSITE_BEARER: z.string().default(''),
   PUBLIC_COOKIE_KEY: z.string().default(''),
   PUBLIC_SIGNIN_REDIRECT_URL: z.string().default(''),
   PUBLIC_WEBSOCKET_URL: z.string().default(''),
@@ -31,8 +29,6 @@ const allEnv = z.object({
 
 const ConfigSchema = allEnv.transform((value) => {
   return {
-    jwtSecretKey: value.PRIVATE_JWT_SECRET_KEY,
-    websiteBearer: value.PRIVATE_WEBSITE_BEARER,
     cookieKey: value.PUBLIC_COOKIE_KEY,
     signInRedirectUrl: value.PUBLIC_SIGNIN_REDIRECT_URL,
     websocketUrl: value.PUBLIC_WEBSOCKET_URL,
