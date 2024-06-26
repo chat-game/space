@@ -2,6 +2,7 @@ import { Application, Container } from 'pixi.js'
 import { createId } from '@paralleldrive/cuid2'
 import { WebSocketService } from './services/socket/webSocketService'
 import { gameOptions } from './store.svelte'
+import { ServerService } from './services/server/serverService'
 import type {
   Game,
   GameObject,
@@ -60,6 +61,7 @@ export class BaseGame extends Container implements Game {
   playerService: PlayerService
   questService: QuestService
   websocketService: WebSocketService
+  serverService: ServerService
 
   #cameraX = 0
   #cameraY = 0
@@ -89,6 +91,7 @@ export class BaseGame extends Container implements Game {
     this.playerService = new PlayerService(this)
     this.questService = new QuestService(this)
     this.websocketService = new WebSocketService(this)
+    this.serverService = new ServerService(this)
   }
 
   async init() {

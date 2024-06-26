@@ -1,4 +1,5 @@
 import type { Container, TilingSprite } from 'pixi.js'
+import type { GameServerService } from './services/server/interface'
 import type { GameAction } from '$lib/game/actions/interface'
 import type {
   GameChunk,
@@ -40,6 +41,7 @@ export interface Game extends Container {
   chunkService: GameChunkService
   playerService: GamePlayerService
   questService: GameQuestService
+  serverService: GameServerService
   play: () => void
   checkIfThisFlagIsTarget: (id: string) => boolean
   initScene: (scene: GameSceneType) => void
@@ -184,28 +186,6 @@ export type IGameObjectState =
   | 'MINING'
   | 'DESTROYED'
 export type IGameObjectDirection = 'LEFT' | 'RIGHT'
-
-export interface WebSocketEventCommand {
-  type: 'COMMAND'
-  data: {
-    command: string
-    params: string[]
-    player: GameObjectPlayer
-    text: string
-  }
-}
-
-export interface WebSocketEventMessage {
-  type: 'MESSAGE'
-  data: {
-    player: GameObjectPlayer
-    text: string
-  }
-}
-
-type WebSocketEvents = WebSocketEventCommand | WebSocketEventMessage
-
-export type WebSocketMessage = { id: string } & WebSocketEvents
 
 export type GameObjectBuildingType =
   | 'CAMPFIRE'

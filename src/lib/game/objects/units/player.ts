@@ -122,19 +122,18 @@ export class Player extends UnitObject implements GameObjectPlayer {
   }
 
   async #readFromDB() {
-    // const res = await fetch(`/mock/game/player/${this.id}`)
-    // const player = await res.json()
-    // if (!player) {
-    //   return
-    // }
+    const player = await this.game.serverService.getPlayerData(this.id)
+    if (!player) {
+      return
+    }
 
-    // this.name = player.name
-    // this.coins = player.coins
-    // this.reputation = player.reputation
-    // this.villainPoints = player.villainPoints
-    // this.refuellerPoints = player.refuellerPoints
-    // this.raiderPoints = player.raiderPoints
-    // this.inventoryId = player.inventoryId
+    this.name = player.name
+    this.coins = player.coins
+    this.reputation = player.reputation
+    this.villainPoints = player.villainPoints
+    this.refuellerPoints = player.refuellerPoints
+    this.raiderPoints = player.raiderPoints
+    this.inventoryId = player.inventoryId
   }
 
   updateLastActionAt(): void {

@@ -1,4 +1,5 @@
-import type { Game, WebSocketMessage } from '$lib/game/types'
+import type { WebSocketMessage } from '@hmbanan666/chat-game-api'
+import type { Game } from '$lib/game/types'
 import type { GameWebSocketService } from '$lib/game/services/socket/interface'
 import { env } from '$env/dynamic/public'
 import { browser } from '$app/environment'

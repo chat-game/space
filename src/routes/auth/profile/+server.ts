@@ -1,5 +1,4 @@
-import { error, json } from '@sveltejs/kit'
-import type { RequestHandler } from './$types'
+import { type RequestHandler, error, json } from '@sveltejs/kit'
 import { env } from '$env/dynamic/public'
 
 export const GET: RequestHandler = async ({ locals }) => {
