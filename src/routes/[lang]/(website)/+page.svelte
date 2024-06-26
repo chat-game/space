@@ -1,6 +1,6 @@
 <script lang='ts'>
   import { onMount } from 'svelte'
-  import { TWITCH_URL } from '$lib/config'
+  import { serverConfig } from '$lib/config'
   import { BaseGame } from '$lib/game/baseGame'
   import { pluralizationRu } from '$lib/utils/locale'
 
@@ -75,7 +75,7 @@
     перерыв, пока зрители развлекаются или...</p>
   <p class='mt-2'>За все время
     создано {profileCount} {profileDesc}. Присоединяйся <a
-      href={TWITCH_URL} target='_blank'
+      href={serverConfig.twitch.url} target='_blank'
       class='twitch-link'>на активном
       стриме</a>!</p>
 </section>

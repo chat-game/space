@@ -9,12 +9,7 @@ import type {
   IGameActionResponse,
   IGameSceneAction, ItemType,
 } from '$lib/game/types'
-import {
-  ADMIN_PLAYER_ID,
-  DISCORD_SERVER_INVITE_URL,
-  DONATE_URL,
-  GITHUB_REPO_URL,
-} from '$lib/config'
+import { serverConfig } from '$lib/config'
 import type { GameAction } from '$lib/game/actions/interface'
 import { TreeObject } from '$lib/game/objects/treeObject'
 import { Route } from '$lib/game/services/route/route'
@@ -119,21 +114,21 @@ export class ActionService implements GameActionService {
     }
     if (action === 'START_CHANGING_SCENE') {
       // Admin only
-      if (player.id !== ADMIN_PLAYER_ID) {
+      if (player.id !== serverConfig.game.adminPlayerId) {
         return ANSWER.ERROR
       }
       return this.startChangingSceneAction(player, params)
     }
     if (action === 'START_GROUP_BUILD') {
       // Admin only
-      if (player.id !== ADMIN_PLAYER_ID) {
+      if (player.id !== serverConfig.game.adminPlayerId) {
         return ANSWER.ERROR
       }
       return this.startGroupBuildAction(player, params)
     }
     if (action === 'DISBAND_GROUP') {
       // Admin only
-      if (player.id !== ADMIN_PLAYER_ID) {
+      if (player.id !== serverConfig.game.adminPlayerId) {
         return ANSWER.ERROR
       }
       return this.disbandGroupAction()
@@ -512,7 +507,7 @@ export class ActionService implements GameActionService {
 
     return {
       ok: true,
-      message: `${player.name}, this is an interactive chat game that any viewer can participate in! Basic commands: !chop, !mine. The remaining commands appear in events (on the right of the screen). Join our community: ${DISCORD_SERVER_INVITE_URL}`,
+      message: `${player.name}, this is an interactive chat game that any viewer can participate in! Basic commands: !chop, !mine. The remaining commands appear in events (on the right of the screen). Join our community: ${serverConfig.discordServerInviteUrl}`,
     }
   }
 
@@ -523,7 +518,7 @@ export class ActionService implements GameActionService {
 
     return {
       ok: true,
-      message: `${player.name}, the game code is in the repository: ${GITHUB_REPO_URL}`,
+      message: `${player.name}, the game code is in the repository: ${serverConfig.githubRepoUrl}`,
     }
   }
 
@@ -533,7 +528,7 @@ export class ActionService implements GameActionService {
     }
     return {
       ok: true,
-      message: `${player.name}, support the game: ${DONATE_URL}`,
+      message: `${player.name}, support the game: ${serverConfig.donateUrl}`,
     }
   }
 

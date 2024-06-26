@@ -1,25 +1,20 @@
 <script>
-  import {
-    DISCORD_SERVER_INVITE_URL,
-    DONATE_URL,
-    GITHUB_REPO_URL,
-    TWITCH_URL,
-  } from '$lib/config'
+  import { serverConfig } from '$lib/config'
 </script>
 
 <footer>
   <ul>
     <li>
-      <a href={GITHUB_REPO_URL} target='_blank'>Код на GitHub</a>
+      <a href={serverConfig.githubRepoUrl} target='_blank'>Код на GitHub</a>
     </li>
     <li>
-      <a href={DISCORD_SERVER_INVITE_URL} target='_blank'>Discord</a>
+      <a href={serverConfig.discordServerInviteUrl} target='_blank'>Discord</a>
     </li>
     <li>
-      <a href={TWITCH_URL} target='_blank'>Twitch</a>
+      <a href={serverConfig.twitch.url} target='_blank'>Twitch</a>
     </li>
     <li>
-      <a href={DONATE_URL} target='_blank'>Донат</a>
+      <a href={serverConfig.donateUrl} target='_blank'>Донат</a>
     </li>
   </ul>
 
