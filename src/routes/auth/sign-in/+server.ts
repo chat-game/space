@@ -4,9 +4,9 @@ import { StaticAuthProvider, getTokenInfo } from '@twurple/auth'
 import jwt from 'jsonwebtoken'
 import type { RequestHandler } from './$types'
 import type { Profile } from '$lib/types'
-import { env as publicEnv } from '$env/dynamic/public'
-import { env as privateEnv } from '$env/dynamic/private'
 import { api } from '$lib/server/api'
+import { config } from '$lib/config'
+import { env as privateEnv } from '$env/dynamic/private'
 
 async function findOrCreateProfile({ twitchId, userName }: Pick<Profile, 'twitchId' | 'userName'>) {
   const profile = await api.profile.getByTwitchId(twitchId)
@@ -27,7 +27,7 @@ async function findOrCreateProfile({ twitchId, userName }: Pick<Profile, 'twitch
 }
 
 async function prepareJwtToken(accessToken: string) {
-  const clientId = publicEnv.PUBLIC_TWITCH_CLIENT_ID
+  const { clientId } = config.twitch
   if (!clientId) {
     error(500, 'Config problem')
   }
@@ -70,7 +70,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
     error(400, 'Wrong data')
   }
 
-  const cookieKey = publicEnv.PUBLIC_COOKIE_KEY
+  const cookieKey = config.cookieKey
   if (!cookieKey) {
     error(500, 'Config problem')
   }
