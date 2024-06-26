@@ -51,4 +51,4 @@ const ConfigSchema = allEnv.transform((value) => {
 })
 
 export type Config = z.infer<typeof ConfigSchema>
-export const config = ConfigSchema.parse(publicEnv)
+export const config: Config = ConfigSchema.parse(publicEnv)
