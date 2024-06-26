@@ -1,32 +1,33 @@
 import { createId } from '@paralleldrive/cuid2'
 import type {
+  GameObject,
   IGameInventory,
   IGameInventoryItem,
   ItemType,
 } from '$lib/game/types'
 
 interface InventoryOptions {
-  objectId: string
-  saveInDb: boolean
+  object: GameObject
+  saveInDb?: boolean
 }
 
 export class Inventory implements IGameInventory {
-  public id: string
-  public objectId: string
-  public items: IGameInventoryItem[] = []
-  public saveInDb: boolean
+  id: string
+  object: GameObject
+  items: IGameInventoryItem[] = []
+  saveInDb: boolean
 
-  constructor({ objectId, saveInDb }: InventoryOptions) {
+  constructor({ object, saveInDb }: InventoryOptions) {
     this.id = createId()
-    this.objectId = objectId
-    this.saveInDb = saveInDb
+    this.object = object
+    this.saveInDb = saveInDb ?? false
   }
 
   public async init(inventoryId?: string) {
     if (inventoryId) {
       this.id = inventoryId
+      await this.#readFromDB()
     }
-    await this.updateFromDB()
   }
 
   public async destroyItem(id: string) {
@@ -84,19 +85,19 @@ export class Inventory implements IGameInventory {
     const item = { id: '123' }
     if (!item) {
       await this.createItemInDB(this.id, type, amount)
-      await this.updateFromDB()
+      await this.#readFromDB()
       return
     }
 
     await this.incrementAmountOfItemInDB(item.id, amount)
-    await this.updateFromDB()
+    await this.#readFromDB()
   }
 
   async destroyItemInDB(_id: string) {
     // await db.inventoryItem.delete({
     //   where: { id },
     // })
-    await this.updateFromDB()
+    await this.#readFromDB()
   }
 
   public tryGetItemInDB(type: ItemType) {
@@ -106,7 +107,7 @@ export class Inventory implements IGameInventory {
   async checkAndBreakItem(item: IGameInventoryItem, decrement: number) {
     if (item.durability <= decrement) {
       await this.destroyItemInDB(item.id)
-      await this.updateFromDB()
+      await this.#readFromDB()
       return
     }
 
@@ -175,10 +176,12 @@ export class Inventory implements IGameInventory {
     this.items.push(item)
   }
 
-  async updateFromDB() {
-    // const items = await db.inventoryItem.findMany({
-    //   where: { inventoryId: this.id },
-    // })
-    // this.items = items as IGameInventoryItem[]
+  async #readFromDB() {
+    const inventory = await this.object.game.serverService.getInventory(this.id)
+    if (!inventory) {
+      return
+    }
+
+    this.items = inventory.items
   }
 }

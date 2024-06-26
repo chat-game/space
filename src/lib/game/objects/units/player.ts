@@ -34,8 +34,8 @@ export class Player extends UnitObject implements GameObjectPlayer {
 
   async init() {
     await this.#readFromDB()
+    await this.#initInventoryFromDB()
     // await this.#initSkillsFromDB()
-    // await this.#initInventoryFromDB()
 
     super.initVisual({
       head: '1',
@@ -122,7 +122,7 @@ export class Player extends UnitObject implements GameObjectPlayer {
   }
 
   async #readFromDB() {
-    const player = await this.game.serverService.getPlayerData(this.id)
+    const player = await this.game.serverService.getPlayer(this.id)
     if (!player) {
       return
     }
@@ -152,7 +152,7 @@ export class Player extends UnitObject implements GameObjectPlayer {
     }
 
     const inventory = new Inventory({
-      objectId: this.id,
+      object: this,
       saveInDb: true,
     })
     await inventory.init(this.inventoryId)

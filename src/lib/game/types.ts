@@ -152,7 +152,7 @@ export type ItemType = 'WOOD' | 'STONE' | 'AXE' | 'PICKAXE' | 'COIN'
 
 export interface IGameInventory {
   id: string
-  objectId: string
+  object: GameObject
   items: IGameInventoryItem[]
   reduceOrDestroyItem: (type: ItemType, amount: number) => Promise<boolean>
   addOrCreateItem: (type: ItemType, amount: number) => Promise<void>

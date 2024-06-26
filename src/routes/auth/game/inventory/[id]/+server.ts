@@ -6,12 +6,12 @@ export const GET: RequestHandler = async ({ locals, params }) => {
     return error(401)
   }
 
-  const playerId = params.id ?? ''
+  const inventoryId = params.id ?? ''
 
-  const player = await api.player.getById(playerId)
-  if (!player || player instanceof Error) {
+  const inventory = await api.inventory.getById(inventoryId)
+  if (!inventory || inventory instanceof Error) {
     return error(404)
   }
 
-  return json(player)
+  return json(inventory)
 }

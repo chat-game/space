@@ -1,4 +1,4 @@
-import type { Player } from '@hmbanan666/chat-game-api'
+import type { Inventory, Player } from '@hmbanan666/chat-game-api'
 import type { GameServerService } from './interface'
 import type { Game } from '$lib/game/types'
 
@@ -11,7 +11,7 @@ export class ServerService implements GameServerService {
 
   update() {}
 
-  async getPlayerData(id: string): Promise<Player | null> {
+  async getPlayer(id: string): Promise<Player | null> {
     try {
       const res = await fetch(`/auth/game/player/${id}`)
       const player = await res.json() as Player
@@ -20,6 +20,20 @@ export class ServerService implements GameServerService {
       }
 
       return player
+    } catch (err) {
+      return null
+    }
+  }
+
+  async getInventory(id: string): Promise<Inventory | null> {
+    try {
+      const res = await fetch(`/auth/game/inventory/${id}`)
+      const inventory = await res.json() as Inventory
+      if (!inventory) {
+        return null
+      }
+
+      return inventory
     } catch (err) {
       return null
     }
