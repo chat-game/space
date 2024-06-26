@@ -1,10 +1,11 @@
 <script lang='ts'>
-  import { onMount } from 'svelte'
+  import { onMount, setContext } from 'svelte'
   import GameInterface from './GameInterface.svelte'
   import { BaseGame } from '$lib/game/baseGame'
   import { page } from '$app/stores'
 
   const game = new BaseGame({ isSocketOn: true, profileJWT: $page.data.gameProfileJWT })
+  setContext('game', game)
   let gameElement: HTMLElement
 
   const handleVisibilityChange = () => {
