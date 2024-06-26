@@ -4,7 +4,7 @@ import type { Game, GameObjectPlayer } from '$lib/game/types'
 import { VillageChunk } from '$lib/game/services/chunk/villageChunk'
 import type { GameAction } from '$lib/game/actions/interface'
 
-interface IPlantTreeActionOptions {
+interface PlantTreeActionOptions {
   game: Game
 }
 
@@ -13,7 +13,7 @@ export class PlantTreeAction implements GameAction {
   commandDescription = '!plant'
   game: Game
 
-  constructor({ game }: IPlantTreeActionOptions) {
+  constructor({ game }: PlantTreeActionOptions) {
     this.game = game
   }
 

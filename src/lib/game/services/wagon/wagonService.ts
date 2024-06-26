@@ -39,10 +39,7 @@ export class WagonService implements GameWagonService {
   }
 
   setCargo() {
-    this.cargo = new Inventory({
-      saveInDb: false,
-      objectId: this.wagon.id,
-    })
+    this.cargo = new Inventory({ object: this.wagon })
     void this.cargo.addOrCreateItem('WOOD', 100)
     this.wagon.cargoType = 'CHEST'
   }

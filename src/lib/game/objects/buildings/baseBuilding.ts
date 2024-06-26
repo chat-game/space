@@ -36,9 +36,6 @@ export class BaseBuilding extends BaseObject implements IGameObjectBuilding {
   }
 
   #initInventory() {
-    this.inventory = new Inventory({
-      objectId: this.id,
-      saveInDb: false,
-    })
+    this.inventory = new Inventory({ object: this })
   }
 }

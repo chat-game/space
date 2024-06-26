@@ -52,10 +52,7 @@ export class UnitObject extends BaseObject implements IGameObjectUnit {
     this.#animationMovingRight = AssetsManager.getAnimatedSpriteHero('RIGHT')
     this.#animationMovingLeft = AssetsManager.getAnimatedSpriteHero('LEFT')
 
-    this.inventory = new Inventory({
-      objectId: this.id,
-      saveInDb: false,
-    })
+    this.inventory = new Inventory({ object: this })
 
     this.#initDialogue()
 

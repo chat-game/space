@@ -5,7 +5,7 @@ import type { IGameObjectUnit } from '$lib/game/types'
 export class DialogueInterface extends GraphicsContainer {
   public unit: IGameObjectUnit
   public messages: { id: string, text: string, isShowed: boolean }[]
-  public showingSpeed: number
+  #showingSpeed: number
 
   constructor(unit: IGameObjectUnit) {
     super({ type: 'INTERFACE' })
@@ -13,7 +13,7 @@ export class DialogueInterface extends GraphicsContainer {
     this.unit = unit
     this.messages = []
 
-    this.showingSpeed = 0.0005
+    this.#showingSpeed = 0.05
 
     this.x = 0
     this.y = 0
@@ -28,10 +28,10 @@ export class DialogueInterface extends GraphicsContainer {
         fontFamily: 'Noto Serif',
         fontSize: 16,
         fontWeight: '500',
-        fill: 0x694F62,
+        fill: 0x451A03,
         align: 'left',
         wordWrap: true,
-        wordWrapWidth: 300,
+        wordWrapWidth: 350,
       },
     })
 
@@ -41,8 +41,8 @@ export class DialogueInterface extends GraphicsContainer {
     const rectHeight = basicText.height + rectOffsetY * 2
 
     const graphics = new Graphics()
-    graphics.roundRect(-rectOffsetX, -rectOffsetY, rectWidth, rectHeight, 8)
-    graphics.fill(0xFFFFFF)
+    graphics.rect(-rectOffsetX, -rectOffsetY, rectWidth, rectHeight)
+    graphics.fill(0xFEF3C7)
 
     container.addChild(graphics, basicText)
 
@@ -76,7 +76,7 @@ export class DialogueInterface extends GraphicsContainer {
       this.create(needToShowMessages[0])
 
       needToShowMessages[0].isShowed = true
-      this.showingSpeed = this.getShowingSpeed(
+      this.#showingSpeed = this.#getShowingSpeed(
         needToShowMessages[0].text.length,
       )
     }
@@ -84,7 +84,7 @@ export class DialogueInterface extends GraphicsContainer {
     for (const container of this.children) {
       container.visible = true
       container.zIndex = 0
-      container.alpha -= this.showingSpeed
+      container.alpha -= this.#showingSpeed
 
       if (container.alpha <= 0.8) {
         this.remove(container)
@@ -92,7 +92,7 @@ export class DialogueInterface extends GraphicsContainer {
     }
   }
 
-  getShowingSpeed(messageLength: number) {
-    return 0.0006 - (messageLength * 4) / 1000000
+  #getShowingSpeed(messageLength: number) {
+    return (0.05 - ((messageLength * 4) / 10000)) / this.unit.game.tick
   }
 }

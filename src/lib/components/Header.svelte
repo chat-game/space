@@ -21,13 +21,13 @@
 
   <nav>
     <ul>
-      <li aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
+      <li aria-current={$page.url.pathname === `/${locale}` ? 'page' : undefined}>
         <a href='/{locale}'>{t.header.menu.home}</a>
       </li>
-      <li aria-current={$page.url.pathname === '/about' ? 'page' : undefined}>
+      <li aria-current={$page.url.pathname === `/${locale}/about` ? 'page' : undefined}>
         <a href='/{locale}/about'>{t.header.menu.about}</a>
       </li>
-      <li aria-current={$page.url.pathname === '/character' ? 'page' : undefined}>
+      <li aria-current={$page.url.pathname === `/${locale}/character` ? 'page' : undefined}>
         <a href='/{locale}/character'>{t.header.menu.characters}</a>
       </li>
     </ul>

@@ -65,11 +65,30 @@ export class ActionService implements GameActionService {
     this.activeActions = this.possibleActions
   }
 
-  public findActionByCommand(command: string) {
-    return this.possibleCommands.find((a) => a.command === command)
+  async handleCommand({ command, playerId, params }: { command: string, playerId: string, params: string[] }): Promise<IGameActionResponse> {
+    const player = await this.#initPlayer(playerId)
+    if (!player) {
+      return ANSWER.NO_PLAYER_ERROR
+    }
+
+    const action = this.#findAction(command)
+    if (!action) {
+      return ANSWER.ERROR
+    }
+
+    return this.#handleAction(action, player, params)
   }
 
-  public findDynamicActionByCommand(command: string) {
+  async handleMessage({ playerId, text }: { playerId: string, text: string }): Promise<IGameActionResponse> {
+    const player = await this.#initPlayer(playerId)
+    if (!player) {
+      return ANSWER.NO_PLAYER_ERROR
+    }
+
+    return this.#handleMessage(player, text)
+  }
+
+  #findAction(command: string): GameAction | undefined {
     const quest = this.game.questService.findActionByCommand(command)
     if (quest) {
       return quest
@@ -81,11 +100,11 @@ export class ActionService implements GameActionService {
     }
   }
 
-  public async handleAction(
+  async handleAction(
     action: IGameSceneAction,
     playerId: string,
     params?: string[],
-  ) {
+  ): Promise<IGameActionResponse> {
     const player = await this.game.playerService.findOrCreatePlayer(playerId)
     if (!player) {
       return ANSWER.NO_PLAYER_ERROR
@@ -158,25 +177,40 @@ export class ActionService implements GameActionService {
     return ANSWER.ERROR
   }
 
-  public async handleDynamicAction(
-    action: GameAction,
-    playerId: string,
-    params: string[],
-  ): Promise<IGameActionResponse> {
-    const player = await this.game.playerService.findOrCreatePlayer(playerId)
+  async #initPlayer(id: string) {
+    const player = await this.game.playerService.findOrCreatePlayer(id)
     if (!player) {
-      return ANSWER.NO_PLAYER_ERROR
+      return
     }
 
     this.game.group.join(player)
+    this.game.addChild(player)
     player.updateLastActionAt()
 
+    return player
+  }
+
+  async #handleAction(
+    action: GameAction,
+    player: GameObjectPlayer,
+    params: string[],
+  ): Promise<IGameActionResponse> {
     const answer = await action.live(player, params)
     if (answer) {
       return answer
     }
 
     return ANSWER.ERROR
+  }
+
+  async #handleMessage(player: GameObjectPlayer, text: string): Promise<IGameActionResponse> {
+    if (!this.isActionPossible('SHOW_MESSAGE')) {
+      return ANSWER.ERROR
+    }
+
+    player.addMessage(text)
+
+    return ANSWER.OK
   }
 
   public getAvailableCommands() {
