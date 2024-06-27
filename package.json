@@ -1,5 +1,5 @@
 {
-  "name": "chat-game",
+  "name": "app",
   "type": "module",
   "version": "0.2.0",
   "description": "Chat Game for Twitch",
