@@ -8,10 +8,10 @@
   "homepage": "https://chatgame.space",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hmbanan666/chat-game.git"
+    "url": "git+https://github.com/chat-game/app.git"
   },
   "bugs": {
-    "url": "https://github.com/hmbanan666/chat-game/issues"
+    "url": "https://github.com/chat-game/app/issues"
   },
   "keywords": [
     "game",
