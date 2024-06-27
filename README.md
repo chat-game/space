@@ -4,7 +4,7 @@
 - 📺 [Developing and playing it live](https://www.twitch.tv/hmbanan666)
 - 👾 [Our community in Discord](https://discord.gg/B6etUajrGZ)
 
-![Screen](https://github.com/hmbanan666/chat-game/assets/25910785/a22468a4-0bf1-43e3-91fc-23a1e2a675fc)
+![Screen](https://github.com/chat-game/app/assets/25910785/a22468a4-0bf1-43e3-91fc-23a1e2a675fc)
 
 🤔 Imagine procedurally generated world where you and your viewers can:
 
@@ -32,12 +32,12 @@ Let's build a similar world together! ⭐️ Become a Stargazer ⭐️
 
 You can develop in isolated container with prepared options:
 
-[![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/hmbanan666/chat-game)
+[![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/chat-game/app)
 
 Make a fork. Or clone this repo and use standard commands:
 
 ```shell
-git clone https://github.com/hmbanan666/chat-game
+git clone https://github.com/chat-game/app
 yarn install
 yarn run dev
 ```
@@ -46,8 +46,8 @@ yarn run dev
 
 A huge thank you to everyone who is helping to improve. Thanks to you, the project can evolve!
 
-<img src="https://raw.githubusercontent.com/hmbanan666/chat-game/main/.github/static/contributors.svg" alt="Chat Game Contributors" width="100%"/>
+<img src="https://raw.githubusercontent.com/chat-game/app/main/.github/static/contributors.svg" alt="Chat Game Contributors" width="100%"/>
 
 ## 🪀 License
 
-This project is licensed under the MIT License - see the [**MIT License**](https://github.com/hmbanan666/chat-game/blob/main/LICENSE) file for details.
+This project is licensed under the MIT License - see the [**MIT License**](https://github.com/chat-game/app/blob/main/LICENSE) file for details.

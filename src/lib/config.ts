@@ -2,12 +2,12 @@ import { z } from 'zod'
 import { env as publicEnv } from '$env/dynamic/public'
 
 /**
- * Здесь объявляется схема конфигурации приложения.
- * Содержит только публичные переменные окружения.
+ * This is where the application configuration schema is declared.
+ * Contains only public environment variables.
  *
- * Приватные переменные окружения хранятся в '$env/dynamic/private'
- * По политике безопасности они не должны быть доступны на клиенте.
- * И каждое использование приватной переменной окружения должно в ручном режиме.
+ * Private environment variables are stored in '$env/dynamic/private'
+ * According to security policy, they should not be available on the client.
+ * Every use of a private environment variable must be done manually.
  */
 
 const allEnv = z.object({
@@ -15,7 +15,7 @@ const allEnv = z.object({
   PUBLIC_SIGNIN_REDIRECT_URL: z.string().default(''),
   PUBLIC_WEBSOCKET_URL: z.string().default(''),
   PUBLIC_DONATE_URL: z.string().default('https://www.donationalerts.com/r/hmbanan666'),
-  PUBLIC_GITHUB_REPO_URL: z.string().default('https://github.com/hmbanan666/chat-game'),
+  PUBLIC_GITHUB_REPO_URL: z.string().default('https://github.com/chat-game/app'),
   PUBLIC_DISCORD_SERVER_INVITE_URL: z.string().default('https://discord.gg/B6etUajrGZ'),
   PUBLIC_GAME_ADMIN_PLAYER_ID: z.string().default('svhjz9p5467wne9ybasf1bwy'),
   PUBLIC_TWITCH_CLIENT_ID: z.string().default(''),
