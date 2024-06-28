@@ -1,12 +1,17 @@
 <script lang='ts'>
   import { page } from '$app/stores'
   import unit from '$lib/assets/website/unit-64.png'
-  import Profile from '$lib/components/Profile.svelte'
-  import Locale from '$lib/components/Locale.svelte'
+    import MenuSmartphone from './MenuSmartphone.svelte';
+    import MenuDesktop from './MenuDesktop.svelte';
+    import Locale from './Locale.svelte';
 
   const locale = $page.data.locale
-  const t = $page.data.t
+
+  let innerWidth = 0
+  let open = false
 </script>
+
+<svelte:window bind:innerWidth />
 
 <header>
   <div class='left logo'>
@@ -17,30 +22,15 @@
         <img src={unit} alt="" />
       </a>
     {/if}
+
+    <Locale />
   </div>
 
-  <nav>
-    <ul>
-      <li aria-current={$page.url.pathname === `/${locale}` ? 'page' : undefined}>
-        <a href='/{locale}'>{t.header.menu.home}</a>
-      </li>
-      <li aria-current={$page.url.pathname === `/${locale}/about` ? 'page' : undefined}>
-        <a href='/{locale}/about'>{t.header.menu.about}</a>
-      </li>
-      <li aria-current={$page.url.pathname === `/${locale}/character` ? 'page' : undefined}>
-        <a href='/{locale}/character'>{t.header.menu.characters}</a>
-      </li>
-      <li aria-current={$page.url.pathname === `/${locale}/coupon` ? 'page' : undefined}>
-        <a href='/{locale}/coupon'>{t.header.menu.coupon}</a>
-      </li>
-    </ul>
-  </nav>
-
-  <Locale />
-
-  <div class='right'>
-    <Profile />
-  </div>
+  {#if innerWidth < 768}
+    <MenuSmartphone bind:sidebar={open} />
+  {:else}
+    <MenuDesktop />
+  {/if}
 </header>
 
 <style>
@@ -52,9 +42,11 @@
         align-items: center;
     }
 
-    .left, .right {
+    .left {
         flex-grow: 1;
         flex-basis: 0;
+        display: flex;
+        align-items: center;
     }
 
     @keyframes skewRandom {
@@ -83,49 +75,5 @@
         animation-timing-function: ease-in-out;
         animation-direction: alternate-reverse;
         transform-origin: 50% 50%;
-    }
-
-    nav {
-        display: flex;
-        justify-content: center;
-    }
-
-    nav a {
-        display: flex;
-        height: 100%;
-        align-items: center;
-        color: var(--color-text);
-        font-weight: 700;
-        font-size: 1rem;
-        text-transform: uppercase;
-        letter-spacing: 0;
-        text-decoration: none;
-        transition: color 0.2s linear;
-    }
-
-    nav a:hover {
-        color: var(--color-accent-1);
-    }
-
-    ul {
-        position: relative;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 1.2em;
-        list-style: none;
-    }
-
-    li {
-        position: relative;
-        display: flex;
-        gap: 0.2em;
-        height: 100%;
-    }
-
-    li[aria-current='page'] a {
-        color: var(--color-accent-1);
     }
 </style>

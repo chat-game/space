@@ -19,6 +19,6 @@
 
 <style>
   select {
-    margin: 0 2em;
+    margin: 0;
   }
 </style>
