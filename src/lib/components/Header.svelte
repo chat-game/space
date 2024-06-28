@@ -30,6 +30,9 @@
       <li aria-current={$page.url.pathname === `/${locale}/character` ? 'page' : undefined}>
         <a href='/{locale}/character'>{t.header.menu.characters}</a>
       </li>
+      <li aria-current={$page.url.pathname === `/${locale}/coupon` ? 'page' : undefined}>
+        <a href='/{locale}/coupon'>{t.header.menu.coupon}</a>
+      </li>
     </ul>
   </nav>
 
