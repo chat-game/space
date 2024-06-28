@@ -1,6 +1,16 @@
 <script>
-  import coupon from '$lib/assets/website/coupon-256.png'
+  import TimeAgo from 'javascript-time-ago'
+  import ru from 'javascript-time-ago/locale/ru'
+  import couponHuge from '$lib/assets/website/coupon-256.png'
+  import couponSmall from '$lib/assets/website/coupon-64.png'
+  import unit from '$lib/assets/website/unit-64.png'
   import { config } from '$lib/config'
+
+  export let data
+
+  TimeAgo.addLocale(ru)
+
+  const timeAgo = new TimeAgo('ru-RU')
 </script>
 
 <svelte:head>
@@ -14,7 +24,27 @@
   </h1>
   <h2>Уже встречался <a href={config.twitch.url} target='_blank'>на стриме?</a></h2>
 
-  <img src={coupon} alt='banana coupon' class='mt-4' />
+  <img src={couponHuge} alt='banana coupon' class='mt-4' />
+</section>
+
+<section class='latest-coupons'>
+  <h2 class='title'>Последние активации</h2>
+  <p class='desc'>На стриме периодически появляются сообщения с инструкциями.</p>
+
+  <div class='block'>
+    {#each data.latestCoupons as coupon}
+      <div class='card'>
+        <div>
+          <img src={unit} alt="" />
+          <div class='coupon'>
+            <div class='coupons-counter'>{coupon.profile.coupons}</div> <img src={couponSmall} alt="" width='32' height='32' />
+          </div>
+        </div>
+        <p>{coupon.profile.userName}</p>
+        <time>{timeAgo.format(new Date(coupon.createdAt))}</time>
+      </div>
+    {/each}
+  </div>
 </section>
 
 <section class='game-info'>
@@ -65,6 +95,50 @@
       padding-top: 4em;
       padding-bottom: 4em;
       max-width: 64em;
+    }
+
+    .latest-coupons {
+    padding-top: 2em;
+      padding-bottom: 4em;
+      max-width: 64em;
+    }
+
+    .latest-coupons .title {
+        margin-bottom: 0.25em;
+    }
+
+    .latest-coupons .desc {
+        margin-bottom: 1em;
+    }
+
+    .latest-coupons .block {
+        display: flex;
+        gap: 1em;
+    }
+
+    .latest-coupons .block .card {
+      border: 2px solid var(--color-border-2);
+      padding: 1em;
+    }
+
+    .latest-coupons .block .card time {
+        font-size: 0.8rem;
+    }
+
+    .latest-coupons .block .card .coupon {
+        position: relative;
+        display: inline;
+    }
+
+    .latest-coupons .block .card .coupons-counter {
+        position: absolute;
+        bottom: 10px;
+        right: 8px;
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.8rem;
+        background: var(--color-bg-accent-2);
+        padding: 0 0.2em;
     }
 
     .game-info {
