@@ -1,9 +1,9 @@
 <script lang='ts'>
-  import { page } from '$app/stores'
+  import MenuSmartphone from './MenuSmartphone.svelte'
+  import MenuDesktop from './MenuDesktop.svelte'
+  import Locale from './Locale.svelte'
   import unit from '$lib/assets/website/unit-64.png'
-    import MenuSmartphone from './MenuSmartphone.svelte';
-    import MenuDesktop from './MenuDesktop.svelte';
-    import Locale from './Locale.svelte';
+  import { page } from '$app/stores'
 
   const locale = $page.data.locale
 

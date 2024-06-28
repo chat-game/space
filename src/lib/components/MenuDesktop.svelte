@@ -1,33 +1,33 @@
 <script>
-    import { page } from '$app/stores'
-    import Profile from "./Profile.svelte"
+  import Profile from './Profile.svelte'
+  import { page } from '$app/stores'
 
-    const locale = $page.data.locale
-    const t = $page.data.t
+  const locale = $page.data.locale
+  const t = $page.data.t
 </script>
 
 <nav>
-    <ul>
-      <li aria-current={$page.url.pathname === `/${locale}` ? 'page' : undefined}>
-        <a href='/{locale}'>{t.header.menu.home}</a>
-      </li>
-      <li aria-current={$page.url.pathname === `/${locale}/about` ? 'page' : undefined}>
-        <a href='/{locale}/about'>{t.header.menu.about}</a>
-      </li>
-      <li aria-current={$page.url.pathname === `/${locale}/character` ? 'page' : undefined}>
-        <a href='/{locale}/character'>{t.header.menu.characters}</a>
-      </li>
-      <li aria-current={$page.url.pathname === `/${locale}/coupon` ? 'page' : undefined}>
-        <a href='/{locale}/coupon'>{t.header.menu.coupon}</a>
-      </li>
-    </ul>
-  </nav>
+  <ul>
+    <li aria-current={$page.url.pathname === `/${locale}` ? 'page' : undefined}>
+      <a href='/{locale}'>{t.header.menu.home}</a>
+    </li>
+    <li aria-current={$page.url.pathname === `/${locale}/about` ? 'page' : undefined}>
+      <a href='/{locale}/about'>{t.header.menu.about}</a>
+    </li>
+    <li aria-current={$page.url.pathname === `/${locale}/character` ? 'page' : undefined}>
+      <a href='/{locale}/character'>{t.header.menu.characters}</a>
+    </li>
+    <li aria-current={$page.url.pathname === `/${locale}/coupon` ? 'page' : undefined}>
+      <a href='/{locale}/coupon'>{t.header.menu.coupon}</a>
+    </li>
+  </ul>
+</nav>
 
-  <div class='right'>
-    <Profile />
-  </div>
+<div class='right'>
+  <Profile />
+</div>
 
-  <style>
+<style>
     .right {
         flex-grow: 1;
         flex-basis: 0;
