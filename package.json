@@ -32,12 +32,13 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@hmbanan666/chat-game-api": "^0.1.8",
+    "@hmbanan666/chat-game-api": "^0.1.10",
     "@paralleldrive/cuid2": "^2.2.2",
     "@radix-ui/colors": "^3.0.0",
     "@twurple/api": "^7.1.0",
     "@twurple/auth": "^7.1.0",
     "howler": "^2.2.4",
+    "javascript-time-ago": "^2.5.10",
     "jsonwebtoken": "^9.0.2",
     "lucide-svelte": "^0.396.0",
     "pixi.js": "^8.2.0",
@@ -52,6 +53,7 @@
     "@sveltejs/vite-plugin-svelte": "^3.1.1",
     "@testing-library/svelte": "^5.1.0",
     "@types/howler": "^2.2.11",
+    "@types/javascript-time-ago": "^2.0.8",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.14.8",
     "@vitest/coverage-v8": "^1.6.0",

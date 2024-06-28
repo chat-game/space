@@ -14,6 +14,7 @@ export const ru = {
       home: 'Главная',
       about: 'Об игре',
       characters: 'Персонажи',
+      coupon: 'Купон',
     },
   },
   home: undefined,

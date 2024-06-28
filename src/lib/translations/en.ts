@@ -14,6 +14,7 @@ export const en = {
       home: 'Home',
       about: 'About',
       characters: 'Characters',
+      coupon: 'Coupon',
     },
   },
   home: undefined,

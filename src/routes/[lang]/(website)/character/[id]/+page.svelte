@@ -1,5 +1,6 @@
 <script lang='ts'>
   import unitAvatar from '$lib/assets/website/unit-512.png'
+  import userAvatar from '$lib/assets/website/unit-64.png'
   import { page } from '$app/stores'
 
   export let data
@@ -8,6 +9,9 @@
 <section class='hero'>
   <h1>{data.character.name}</h1>
   <h2>Игровой персонаж, созданный <a href='/{$page.data.locale}/p/valentina8177'>valentina8177</a></h2>
+  <div class='rights-block'>
+    Сейчас под управлением <a href='/{$page.data.locale}/p/hmbanan666'>hmbanan666</a>
+  </div>
 
   <div class='unit-avatar'>
     <img src={unitAvatar} alt="" />
@@ -45,31 +49,19 @@
 </section>
 
 <section>
-  <div class='rights-block'>
-    Сейчас управляет: Никто
-  </div>
   <div class='feed'>
     <div class='post'>
-      <p>Пример поста 3</p>
-      <div class='info'>
-        <div class='date'>8 часов назад</div>
-        <div class='interactions'></div>
-      </div>
-    </div>
-
-    <div class='post'>
-      <p>Пример поста 2</p>
-      <div class='info'>
-        <div class='date'>2 дня назад</div>
-        <div class='interactions'></div>
-      </div>
-    </div>
-
-    <div class='post'>
-      <p>Пример поста 1</p>
-      <div class='info'>
-        <div class='date'>6 дней назад</div>
-        <div class='interactions'></div>
+      <img src={userAvatar} alt="" class='avatar' />
+      <div class='content'>
+        <div class='info'>
+          <div class='desc'><em>hmbanan666</em> добавил новую заметку</div>
+          <time datetime={new Date().toISOString()}>8 часов назад</time>
+        </div>
+        <div class='message'>
+          Вот была история... Альварес помог королю вылечиться от неизвестного заболевания при помощи особого печенья. Рецепт прост:
+          - выбрать особое печенье
+          - использовать особое печенье
+        </div>
       </div>
     </div>
   </div>
@@ -94,9 +86,8 @@
     }
 
     .rights-block {
-        display: flex;
+        display: block;
         margin: 1em auto;
-        justify-content: center;
     }
 
     .unit-avatar {
@@ -212,18 +203,65 @@
     }
 
     .post {
-        border: 2px solid var(--color-border);
-        padding: 1em 1em;
-        text-align: left;
-    }
-
-    .post .info {
         display: flex;
-        justify-content: space-between;
-        margin-top: 0.3em;
+        position: relative;
+        text-align: left;
+        margin-bottom: 1em;
     }
 
-    .post .info .date {
+    .post::before {
+        background-color: var(--color-border);
+        bottom: -32px;
+        content: "";
+        left: calc(28px - 1px);
+        position: absolute;
+        top: -32px;
+        width: 2px;
+    }
+
+    .post:first-child:before {
+        top: 48px;
+    }
+
+    .post:last-child:before {
+        visibility: hidden;
+    }
+
+    .post .avatar {
+      height: 48px;
+      width: 48px;
+      background-color: #EAE6DB;
+      padding: 0.2em;
+      margin-right: 1em;
+      position: relative;
+      flex-shrink: 0;
+      z-index: 1;
+    }
+
+    .post .content {
+      flex-grow: 1;
+    }
+
+    .post .content .info .desc {
+      line-height: 1.1;
+    }
+
+    .post .content .info .desc em {
+        font-style: normal;
+        font-weight: 600;
+    }
+
+    .post .content .info time {
         font-size: 0.8rem;
+        color: var(--color-bg-accent-2);
+    }
+
+    .post .content .message {
+      border: 2px solid var(--color-border-2);
+        padding: 0.5em 1em;
+        margin-top: 0.85em;
+        unicode-bidi: embed;
+        white-space: pre-wrap;
+        word-wrap: break-word;
     }
 </style>

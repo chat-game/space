@@ -54,7 +54,7 @@
 <section>
   <h3 class='mb-2'>Благодарности</h3>
   <p>Спасибо моим зрителям: <b>sava5621</b> за вкусные шавухи, <b>BezSovesty</b> за помощь на
-  старте, <b>flack_zombi</b> за упорство в рубке деревьев, <b>PeregonStream</b> за крутые рейды.
+  старте, <b>flack_zombi</b> за упорство в рубке деревьев, <b>hywax</b> за open-source вклад, <b>PeregonStream</b> и <b>siberiacancode</b> за крутые рейды.
   Спасибо <b>tozikab_</b>, <b>6alt1ca</b>, <b>derailon</b>, <b>sloghniy</b>, <b>MaN0ol</b>, <b>dO_Oy</b>, <b>VombatDrago</b>,
     <b>sleeplessness8</b>.
     <br>Вы все крутые!</p>
