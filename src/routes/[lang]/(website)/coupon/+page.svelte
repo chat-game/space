@@ -113,8 +113,16 @@
 
     .latest-coupons .block {
         display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
         gap: 1em;
     }
+
+    @media (max-width: 620px) {
+        .latest-coupons .block {
+            flex-direction: column;
+        }
+  }
 
     .latest-coupons .block .card {
       border: 2px solid var(--color-border-2);
