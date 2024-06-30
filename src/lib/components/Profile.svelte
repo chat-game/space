@@ -1,4 +1,4 @@
-<script>
+<script lang='ts'>
   import { page } from '$app/stores'
   import twitchIcon from '$lib/assets/website/icons/twitch/112.png'
   import { config } from '$lib/config'
@@ -25,11 +25,19 @@
   const handleMenuClick = () => {
     menuOpened = !menuOpened
   }
+
+  const onfocusout = ({ relatedTarget, currentTarget }: { relatedTarget: EventTarget | null, currentTarget: HTMLElement }) => {
+    if (relatedTarget instanceof HTMLElement && currentTarget.contains(relatedTarget)) {
+      return
+    }
+
+    menuOpened = false
+  }
 </script>
 
-<div class='wrapper'>
+<div class='wrapper' {onfocusout}>
   {#if isSignedIn}
-    <button class='profile-avatar' on:click={handleMenuClick}>
+    <button class='profile-avatar' onclick={handleMenuClick}>
       <img src={twitchIcon} alt="" />
     </button>
     {#if menuOpened}
@@ -38,7 +46,7 @@
           <a href='/{$page.data.locale}/p/{$page.data.profile.userName}'>{$page.data.profile.userName}</a>
           <a href='/{$page.data.locale}/play'>Играть</a>
         </div>
-        <button on:click={handleSignOut}>Выйти</button>
+        <button onclick={handleSignOut}>Выйти</button>
       </div>
     {/if}
   {:else}
