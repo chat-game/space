@@ -15,8 +15,9 @@
   }
 
   const locale = $page.data.locale as Locale
+  let redirectUrl = $derived($page.url.pathname.substring(3))
 
-  let isOpened = false
+  let isOpened = $state(false)
 
   const onfocusout = ({ relatedTarget, currentTarget }: { relatedTarget: EventTarget | null, currentTarget: HTMLElement }) => {
     if (relatedTarget instanceof HTMLElement && currentTarget.contains(relatedTarget)) {
@@ -36,9 +37,9 @@
   </button>
 
   {#if isOpened}
-    <div class='dropdown'>
+    <div class='dropdown-menu'>
       {#each supportedLocales as locale}
-        <button onclick={() => window.location.href = `/${locale}`}>{dictionary[locale].long}</button>
+        <button onclick={() => window.location.href = `/${locale}${redirectUrl}`}>{dictionary[locale].long}</button>
       {/each}
     </div>
   {/if}
@@ -51,7 +52,7 @@
 
   .select-lang {
     padding: 0.25em 0.35em 0.25em 0.25em;
-    background-color: #F6EEE7;
+    background-color: var(--color-background-2);
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -68,20 +69,5 @@
   .select-lang .icon {
     pointer-events: none;
     height: 24px;
-  }
-
-  .dropdown {
-    position: absolute;
-    top: 2.25em;
-    padding: 0.25em 0.25em;
-    background-color: #F6EEE7;
-  }
-
-  .dropdown button {
-    padding: 0.25em 0.25em;
-  }
-
-  .dropdown button:hover {
-    color: var(--color-accent-1)
   }
 </style>

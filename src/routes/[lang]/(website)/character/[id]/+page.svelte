@@ -230,7 +230,7 @@
     .post .avatar {
       height: 48px;
       width: 48px;
-      background-color: #EAE6DB;
+      background-color: var(--color-background-2);
       padding: 0.2em;
       margin-right: 1em;
       position: relative;

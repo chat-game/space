@@ -41,11 +41,9 @@
       <img src={twitchIcon} alt="" />
     </button>
     {#if menuOpened}
-      <div class='profile-menu'>
-        <div>
-          <a href='/{$page.data.locale}/p/{$page.data.profile.userName}'>{$page.data.profile.userName}</a>
-          <a href='/{$page.data.locale}/play'>Играть</a>
-        </div>
+      <div class='dropdown-menu position-left'>
+        <a href='/{$page.data.locale}/p/{$page.data.profile.userName}'>Профиль</a>
+        <a href='/{$page.data.locale}/play'>Играть</a>
         <button onclick={handleSignOut}>Выйти</button>
       </div>
     {/if}
@@ -93,12 +91,7 @@
         height: auto;
     }
 
-    .profile-menu {
-        position: absolute;
-        top: calc(58px + 4px);
-        right: 0;
-        padding: 4px 8px;
-        background-color: var(--color-background);
-        border: 2px solid var(--color-border);
+    .position-left {
+      right: 0;
     }
 </style>
