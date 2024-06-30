@@ -5,6 +5,7 @@
     --color-text: #331E0B;
     --color-twitch: #8E4EC6;
     --color-background: #FFF7ED;
+    --color-background-2: #F6EEE7;
     --color-border: #DCBC9F;
     --color-border-2: #E1DCCF;
     --color-bg-accent-1: #56468B;
@@ -126,3 +127,24 @@ button:focus:not(:focus-visible) {
     background-position: bottom;
     background-size: cover;
 }
+
+.dropdown-menu {
+    position: absolute;
+    bottom: -0.25em;
+    transform: translateY(100%);
+    padding: 0.5em;
+    background-color: var(--color-background-2);
+  }
+
+  .dropdown-menu button:not(:last-child), .dropdown-menu a:not(:last-child) {
+    margin-bottom: 0.25em;
+  }
+
+  .dropdown-menu a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .dropdown-menu button:hover, .dropdown-menu a:hover {
+    color: var(--color-accent-1);
+  }

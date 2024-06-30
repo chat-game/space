@@ -42,6 +42,12 @@
         align-items: center;
     }
 
+    @media (max-width: 768px) {
+      header {
+        padding: 0.5em 0.5em;
+      }
+    }
+
     .left {
         flex-grow: 1;
         flex-basis: 0;
@@ -66,6 +72,10 @@
 
     .logo {
         transition: all 0.2s;
+    }
+
+    .logo a {
+      font-size: 0;
     }
 
     .logo a:hover img {

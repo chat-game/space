@@ -48,7 +48,7 @@
         text-transform: uppercase;
         letter-spacing: 0;
         text-decoration: none;
-        transition: color 0.2s linear;
+        transition: color 0.2s;
     }
 
     nav a:hover {
