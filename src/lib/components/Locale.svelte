@@ -15,7 +15,7 @@
   }
 
   const locale = $page.data.locale as Locale
-  let redirectUrl = $derived($page.url.pathname.substring(3))
+  const redirectUrl = $derived($page.url.pathname.substring(3))
 
   let isOpened = $state(false)
 
