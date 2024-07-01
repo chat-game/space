@@ -32,7 +32,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@hmbanan666/chat-game-api": "^0.1.11",
+    "@hmbanan666/chat-game-api": "^0.1.13",
     "@paralleldrive/cuid2": "^2.2.2",
     "@radix-ui/colors": "^3.0.0",
     "@twurple/api": "^7.1.0",

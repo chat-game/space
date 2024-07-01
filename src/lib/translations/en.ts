@@ -19,6 +19,7 @@ export const en = {
       about: 'About',
       characters: 'Characters',
       coupon: 'Coupon',
+      trophy: 'Trophies',
     },
   },
   footer: {

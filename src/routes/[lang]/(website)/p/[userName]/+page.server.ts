@@ -7,7 +7,13 @@ export async function load({ params }) {
     error(404, 'Not found')
   }
 
+  let trophies = await api.trophy.getProfileProgressList(profile.id)
+  if (!trophies || trophies instanceof Error) {
+    trophies = []
+  }
+
   return {
     pageProfile: profile,
+    trophies,
   }
 }

@@ -19,6 +19,7 @@ export const ru = {
       about: 'Об игре',
       characters: 'Персонажи',
       coupon: 'Купон',
+      trophy: 'Трофеи',
     },
   },
   footer: {

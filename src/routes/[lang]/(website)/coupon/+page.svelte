@@ -9,6 +9,8 @@
 
   export let data
 
+  const latestCoupons = data.latestCoupons.slice(0, 6)
+
   TimeAgo.addLocale(ru)
 
   const timeAgo = new TimeAgo('ru-RU')
@@ -31,7 +33,7 @@
   <p class='desc'>На стриме периодически появляются сообщения с инструкцией, как получить купон.</p>
 
   <div class='block'>
-    {#each data.latestCoupons as coupon}
+    {#each latestCoupons as coupon}
       <div class='card'>
         <div>
           <img src={unit} alt="" />
@@ -113,17 +115,22 @@
     }
 
     .latest-coupons .block {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 1em;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5em;
     }
 
-    @media (max-width: 620px) {
+    @media (min-width: 768px) {
         .latest-coupons .block {
-            flex-direction: column;
+          grid-template-columns: repeat(4, 1fr);
         }
-  }
+    }
+
+    @media (min-width: 1200px) {
+        .latest-coupons .block {
+          grid-template-columns: repeat(6, 1fr);
+        }
+    }
 
     .latest-coupons .block .card {
       border: 2px solid var(--color-border-2);
