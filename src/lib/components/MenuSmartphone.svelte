@@ -28,6 +28,9 @@
       <li aria-current={$page.url.pathname === `/${locale}/coupon` ? 'page' : undefined}>
         <a href='/{locale}/coupon' onclick={closeSidebar}>{t.header.menu.coupon}</a>
       </li>
+      <li aria-current={$page.url.pathname === `/${locale}/trophy` ? 'page' : undefined}>
+        <a href='/{locale}/trophy' onclick={closeSidebar}>{t.header.menu.trophy}</a>
+      </li>
     </ul>
   </nav>
 </aside>

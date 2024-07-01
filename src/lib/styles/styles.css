@@ -140,6 +140,7 @@ button:focus:not(:focus-visible) {
     transform: translateY(100%);
     padding: 0.5em;
     background-color: var(--color-background-2);
+    z-index: 5;
   }
 
   .dropdown-menu a {

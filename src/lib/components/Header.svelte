@@ -26,7 +26,7 @@
     <Locale />
   </div>
 
-  {#if innerWidth < 768}
+  {#if innerWidth < 920}
     <MenuSmartphone bind:sidebar={open} />
   {:else}
     <MenuDesktop />

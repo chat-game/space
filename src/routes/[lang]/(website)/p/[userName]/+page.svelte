@@ -3,11 +3,17 @@
   import FileQuestion from 'lucide-svelte/icons/file-question'
   import Trophy from 'lucide-svelte/icons/trophy'
   import Handshake from 'lucide-svelte/icons/handshake'
+  import TimeAgo from 'javascript-time-ago'
+  import ru from 'javascript-time-ago/locale/ru'
   import unitAvatar from '$lib/assets/website/unit-512.png'
   import { pluralizationRu } from '$lib/utils/locale'
   import couponSmall from '$lib/assets/website/coupon-64.png'
 
   export let data
+
+  TimeAgo.addLocale(ru)
+
+  const timeAgo = new TimeAgo('ru-RU')
 </script>
 
 <section class='hero'>
@@ -59,6 +65,27 @@
     <p>Меценат</p>
     <div class='points'>{data.pageProfile.patronPoints} {pluralizationRu(data.pageProfile.patronPoints, ['очко', 'очка', 'очков'])}</div>
   </div>
+</section>
+
+<section class='trophies'>
+  {#each data.trophies as progress}
+    <div class='trophy-block'>
+      <div class='info'>
+        <p class='name'>{progress.trophy.name}</p>
+        <p class='description'>{progress.trophy.description}</p>
+        <p class='date'>{progress.status === 'COMPLETED' ? `Получен ${timeAgo.format(new Date(progress.completedAt))}` : 'Еще не получен'}</p>
+      </div>
+      <div class='completion'>
+        <div class='trophy' data-completed={progress.status === 'COMPLETED'}>
+          <Trophy size='64' />
+        </div>
+        <div>
+          <p class='points'>{progress.trophy.points}</p>
+          <p>Очков</p>
+        </div>
+      </div>
+    </div>
+  {/each}
 </section>
 
 <style>
@@ -142,5 +169,61 @@
       color: var(--color-common);
       margin-top: 0.25em;
       font-size: 0.8rem;
+    }
+
+    .trophy-block {
+      background-color: #FFEFD6;
+      border: 2px solid var(--color-border);
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      margin-bottom: 0.5em;
+    }
+
+    .trophy-block .info {
+      position: relative;
+      padding: 0.5em 1em;
+    }
+
+    .trophy-block .info .name {
+      font-weight: 600;
+      font-size: 1.1rem;
+      opacity: 0.8;
+    }
+
+    .trophy-block .info .description {
+      font-size: 0.9rem;
+    }
+
+    .trophy-block .info .date {
+      font-size: 0.9rem;
+      margin-top: 0.5em;
+      opacity: 0.8;
+    }
+
+    .trophy-block .completion {
+      position: relative;
+      padding: 0.5em 1em;
+      color: #A07553;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5em;
+    }
+
+    .trophy-block .completion .points {
+      font-size: 1.5rem;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .trophy-block .completion .trophy {
+      opacity: 0.3;
+      color: #AD7F58;
+    }
+
+    .trophy-block .completion .trophy[data-completed=true] {
+      opacity: 1;
     }
 </style>
