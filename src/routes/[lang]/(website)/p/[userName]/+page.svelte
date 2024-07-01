@@ -171,7 +171,7 @@
       font-size: 0.8rem;
     }
 
-    .trophy-block {
+  .trophy-block {
       background-color: #FFEFD6;
       border: 2px solid var(--color-border);
       display: grid;
