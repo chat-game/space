@@ -3,6 +3,8 @@
   import twitchIcon from '$lib/assets/website/icons/twitch/112.png'
   import { config } from '$lib/config'
 
+  const t = $page.data.t
+
   const url = new URL('https://id.twitch.tv/oauth2/authorize')
   url.searchParams.set('client_id', config.twitch.clientId)
   url.searchParams.set('redirect_uri', config.signInRedirectUrl)
@@ -42,9 +44,9 @@
     </button>
     {#if menuOpened}
       <div class='dropdown-menu position-left'>
-        <a href='/{$page.data.locale}/p/{$page.data.profile.userName}'>Профиль</a>
-        <a href='/{$page.data.locale}/play'>Играть</a>
-        <button onclick={handleSignOut}>Выйти</button>
+        <a href='/{$page.data.locale}/p/{$page.data.profile.userName}'>{t.profile.link}</a>
+        <a href='/{$page.data.locale}/play'>{t.profile.play}</a>
+        <button onclick={handleSignOut}>{t.profile.signOut}</button>
       </div>
     {/if}
   {:else}
@@ -77,8 +79,7 @@
         padding: 4px;
         width: 58px;
         height: 58px;
-        background-image: linear-gradient(to top, #a18cd1 0%, #fbc2eb 100%);
-        border: 2px solid var(--color-border);
+        background-color: var(--color-background-2);
         transition: all 0.2s;
     }
 

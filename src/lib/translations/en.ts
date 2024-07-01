@@ -2,7 +2,11 @@ export type Dictionary = typeof en
 
 export const en = {
   about: undefined,
-  character: undefined,
+  profile: {
+    link: 'My profile',
+    play: 'Play',
+    signOut: 'Sign out',
+  },
   error: {
     404: 'Page not found.',
     500: 'Server internal error.',
@@ -17,5 +21,9 @@ export const en = {
       coupon: 'Coupon',
     },
   },
-  home: undefined,
+  footer: {
+    text: 'Created with thrill and ❤️',
+    github: 'Source on GitHub',
+    donate: 'Donate',
+  },
 }
