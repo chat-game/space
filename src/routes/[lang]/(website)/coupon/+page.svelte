@@ -20,9 +20,7 @@
 </svelte:head>
 
 <section class='hero'>
-  <h1>
-    Купон
-  </h1>
+  <h1>Купон</h1>
   <h2>Уже встречался <a href={config.twitch.url} target='_blank'>на стриме?</a></h2>
 
   <img src={couponHuge} alt='banana coupon' class='mt-4' />
@@ -38,7 +36,7 @@
         <div>
           <img src={unit} alt="" />
           <div class='coupon'>
-            <div class='coupons-counter'>{coupon.profile.coupons}</div> <img src={couponSmall} alt="" width='32' height='32' />
+            <img src={couponSmall} alt="" width='48' height='48' />
           </div>
         </div>
         <div>
@@ -139,17 +137,6 @@
     .latest-coupons .block .card .coupon {
         position: relative;
         display: inline;
-    }
-
-    .latest-coupons .block .card .coupons-counter {
-        position: absolute;
-        bottom: 10px;
-        right: 8px;
-        color: #fff;
-        font-weight: 700;
-        font-size: 0.8rem;
-        background: var(--color-bg-accent-2);
-        padding: 0 0.2em;
     }
 
     .game-info {

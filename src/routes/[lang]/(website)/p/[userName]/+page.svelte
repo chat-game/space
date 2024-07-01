@@ -5,12 +5,21 @@
   import Handshake from 'lucide-svelte/icons/handshake'
   import unitAvatar from '$lib/assets/website/unit-512.png'
   import { pluralizationRu } from '$lib/utils/locale'
+  import couponSmall from '$lib/assets/website/coupon-64.png'
 
   export let data
 </script>
 
 <section class='hero'>
-  <h1>{data.pageProfile.userName}</h1>
+  <div class='header-block'>
+    <h1>{data.pageProfile.userName}</h1>
+
+    {#if data.pageProfile.coupons > 0}
+      <div class='coupon'>
+        <div class='coupons-counter'>{data.pageProfile.coupons}</div> <img src={couponSmall} alt="" width='48' height='48' />
+      </div>
+    {/if}
+  </div>
   <h2>Профиль игрока <span class='profile-lvl'>{data.pageProfile.level} уровня</span></h2>
 
   <div class='unit-avatar'>
@@ -59,11 +68,35 @@
         max-width: 64em;
     }
 
+    .hero .header-block {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75em;
+    }
+
     .hero .profile-lvl {
       color: var(--color-common);
     }
 
-    h1 {
+    .hero .coupon {
+        position: relative;
+        display: inline-block;
+    }
+
+    .hero .coupons-counter {
+        position: absolute;
+        top: 6px;
+        left: 3px;
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.8rem;
+        background: var(--color-text);
+        padding: 0 0.4em;
+        border-radius: 50%;
+    }
+
+    .hero h1 {
         margin-bottom: 0.25em;
     }
 
