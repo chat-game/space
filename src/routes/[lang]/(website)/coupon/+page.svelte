@@ -5,6 +5,7 @@
   import couponSmall from '$lib/assets/website/coupon-64.png'
   import unit from '$lib/assets/website/unit-64.png'
   import { config } from '$lib/config'
+  import { page } from '$app/stores'
 
   export let data
 
@@ -29,7 +30,7 @@
 
 <section class='latest-coupons'>
   <h2 class='title'>Последние активации</h2>
-  <p class='desc'>На стриме периодически появляются сообщения с инструкциями.</p>
+  <p class='desc'>На стриме периодически появляются сообщения с инструкцией, как получить купон.</p>
 
   <div class='block'>
     {#each data.latestCoupons as coupon}
@@ -40,7 +41,9 @@
             <div class='coupons-counter'>{coupon.profile.coupons}</div> <img src={couponSmall} alt="" width='32' height='32' />
           </div>
         </div>
-        <p>{coupon.profile.userName}</p>
+        <div>
+          <a href='/{$page.data.locale}/p/{coupon.profile.userName}'>{coupon.profile.userName}</a>
+        </div>
         <time>{timeAgo.format(new Date(coupon.createdAt))}</time>
       </div>
     {/each}
