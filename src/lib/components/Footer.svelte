@@ -1,11 +1,14 @@
 <script>
   import { config } from '$lib/config'
+  import { page } from '$app/stores'
+
+  const t = $page.data.t
 </script>
 
 <footer>
   <ul>
     <li>
-      <a href={config.githubRepoUrl} target='_blank'>Код на GitHub</a>
+      <a href={config.githubRepoUrl} target='_blank'>{t.footer.github}</a>
     </li>
     <li>
       <a href={config.discordServerInviteUrl} target='_blank'>Discord</a>
@@ -14,11 +17,11 @@
       <a href={config.twitch.url} target='_blank'>Twitch</a>
     </li>
     <li>
-      <a href={config.donateUrl} target='_blank'>Донат</a>
+      <a href={config.donateUrl} target='_blank'>{t.footer.donate}</a>
     </li>
   </ul>
 
-  <p>Создается с трепетом и ❤️</p>
+  <p>{t.footer.text}</p>
 </footer>
 
 <style>

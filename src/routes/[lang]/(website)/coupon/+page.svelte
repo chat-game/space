@@ -5,6 +5,7 @@
   import couponSmall from '$lib/assets/website/coupon-64.png'
   import unit from '$lib/assets/website/unit-64.png'
   import { config } from '$lib/config'
+  import { page } from '$app/stores'
 
   export let data
 
@@ -19,9 +20,7 @@
 </svelte:head>
 
 <section class='hero'>
-  <h1>
-    Купон
-  </h1>
+  <h1>Купон</h1>
   <h2>Уже встречался <a href={config.twitch.url} target='_blank'>на стриме?</a></h2>
 
   <img src={couponHuge} alt='banana coupon' class='mt-4' />
@@ -29,7 +28,7 @@
 
 <section class='latest-coupons'>
   <h2 class='title'>Последние активации</h2>
-  <p class='desc'>На стриме периодически появляются сообщения с инструкциями.</p>
+  <p class='desc'>На стриме периодически появляются сообщения с инструкцией, как получить купон.</p>
 
   <div class='block'>
     {#each data.latestCoupons as coupon}
@@ -37,10 +36,12 @@
         <div>
           <img src={unit} alt="" />
           <div class='coupon'>
-            <div class='coupons-counter'>{coupon.profile.coupons}</div> <img src={couponSmall} alt="" width='32' height='32' />
+            <img src={couponSmall} alt="" width='48' height='48' />
           </div>
         </div>
-        <p>{coupon.profile.userName}</p>
+        <div>
+          <a href='/{$page.data.locale}/p/{coupon.profile.userName}'>{coupon.profile.userName}</a>
+        </div>
         <time>{timeAgo.format(new Date(coupon.createdAt))}</time>
       </div>
     {/each}
@@ -136,17 +137,6 @@
     .latest-coupons .block .card .coupon {
         position: relative;
         display: inline;
-    }
-
-    .latest-coupons .block .card .coupons-counter {
-        position: absolute;
-        bottom: 10px;
-        right: 8px;
-        color: #fff;
-        font-weight: 700;
-        font-size: 0.8rem;
-        background: var(--color-bg-accent-2);
-        padding: 0 0.2em;
     }
 
     .game-info {

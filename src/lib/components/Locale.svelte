@@ -52,7 +52,6 @@
 
   .select-lang {
     padding: 0.25em 0.35em 0.25em 0.25em;
-    background-color: var(--color-background-2);
     display: flex;
     flex-direction: row;
     align-items: center;
