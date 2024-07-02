@@ -6,6 +6,7 @@
   import TimeAgo from 'javascript-time-ago'
   import ru from 'javascript-time-ago/locale/ru'
   import unitAvatar from '$lib/assets/website/unit-512.png'
+  import trophyImage from '$lib/assets/website/trophy-128.png'
   import { pluralizationRu } from '$lib/utils/locale'
   import couponSmall from '$lib/assets/website/coupon-64.png'
 
@@ -77,7 +78,7 @@
       </div>
       <div class='completion'>
         <div class='trophy' data-completed={progress.status === 'COMPLETED'}>
-          <Trophy size='64' />
+          <img src={trophyImage} alt="" width='64' height='64' />
         </div>
         <div>
           <p class='points'>{progress.trophy.points}</p>
@@ -197,13 +198,13 @@
     .trophy-block .info .date {
       font-size: 0.9rem;
       margin-top: 0.5em;
-      opacity: 0.8;
+      opacity: 0.5;
     }
 
     .trophy-block .completion {
       position: relative;
       padding: 0.5em 1em;
-      color: #A07553;
+      color: #F76B15;
       display: flex;
       flex-direction: row;
       flex-wrap: nowrap;
@@ -218,12 +219,7 @@
       line-height: 1.2;
     }
 
-    .trophy-block .completion .trophy {
+    .trophy-block .completion .trophy[data-completed=false] {
       opacity: 0.3;
-      color: #AD7F58;
-    }
-
-    .trophy-block .completion .trophy[data-completed=true] {
-      opacity: 1;
     }
 </style>

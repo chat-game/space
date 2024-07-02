@@ -1,5 +1,5 @@
 <script>
-  import Trophy from 'lucide-svelte/icons/trophy'
+  import trophyImage from '$lib/assets/website/trophy-128.png'
 
   export let data
 </script>
@@ -18,7 +18,7 @@
       </div>
       <div class='completion'>
         <div class='trophy'>
-          <Trophy size='64' />
+          <img src={trophyImage} alt="" width='64' height='64' />
         </div>
         <div>
           <p class='points'>{trophy.points}</p>
@@ -73,7 +73,7 @@
     .trophy-block .completion {
       position: relative;
       padding: 0.5em 1em;
-      color: #A07553;
+      color: #F76B15;
       display: flex;
       flex-direction: row;
       flex-wrap: nowrap;
@@ -89,7 +89,6 @@
     }
 
     .trophy-block .completion .trophy {
-      opacity: 0.3;
-      color: #AD7F58;
+      opacity: 1;
     }
 </style>
