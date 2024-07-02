@@ -528,10 +528,10 @@
   resolved "https://registry.yarnpkg.com/@eslint/object-schema/-/object-schema-2.1.4.tgz#9e69f8bb4031e11df79e03db09f9dbbae1740843"
   integrity sha512-BsWiH1yFGjXXS2yvrf5LyuoSIIbPrGUWob917o+BTKuZ7qJdxX8aJLRxs1fS9n6r7vESrq1OUqb68dANcFXuQQ==
 
-"@hmbanan666/chat-game-api@^0.1.13":
-  version "0.1.13"
-  resolved "https://registry.yarnpkg.com/@hmbanan666/chat-game-api/-/chat-game-api-0.1.13.tgz#8552c79bc73aef9fb2b6bb8eb468c6e383f9916b"
-  integrity sha512-SwjB2g3TQVqIsuNTP12gC+XCc8V0BAqvRt6LCmVKlemyn0JxFGcAT9WKaNSG/hCHXe1ZuMb1bSwG/Lq9v1rnqw==
+"@hmbanan666/chat-game-api@^0.1.15":
+  version "0.1.15"
+  resolved "https://registry.yarnpkg.com/@hmbanan666/chat-game-api/-/chat-game-api-0.1.15.tgz#4ca76ac95aa9e96554eef238de191bc02b13e742"
+  integrity sha512-NEehogrHYFrf2U/V+b8L7dRDXvhHZRoNdKUj2C4JHk1/EZjQEO3cD2+nVZGnQbvbi+VKP+4A2ofg2EsgihH4qg==
 
 "@humanwhocodes/module-importer@^1.0.1":
   version "1.0.1"

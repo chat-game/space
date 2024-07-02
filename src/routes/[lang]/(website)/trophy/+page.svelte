@@ -1,5 +1,6 @@
 <script>
-  import Trophy from 'lucide-svelte/icons/trophy'
+  import trophyImage from '$lib/assets/website/trophy-128.png'
+  import { page } from '$app/stores'
 
   export let data
 </script>
@@ -11,21 +12,23 @@
 
 <section class='trophies'>
   {#each data.trophies as trophy}
-    <div class='trophy-block'>
-      <div class='info'>
-        <p class='name'>{trophy.name}</p>
-        <p class='description'>{trophy.description}</p>
-      </div>
-      <div class='completion'>
-        <div class='trophy'>
-          <Trophy size='64' />
+    <a href='/{$page.data.locale}/trophy/{trophy.id}'>
+      <div class='trophy-block'>
+        <div class='info'>
+          <p class='name'>{trophy.name}</p>
+          <p class='description'>{trophy.description}</p>
         </div>
-        <div>
-          <p class='points'>{trophy.points}</p>
-          <p>Очков</p>
+        <div class='completion'>
+          <div class='trophy'>
+            <img src={trophyImage} alt="" width='64' height='64' />
+          </div>
+          <div>
+            <p class='points'>{trophy.points}</p>
+            <p>Очков</p>
+          </div>
         </div>
       </div>
-    </div>
+    </a>
   {/each}
 </section>
 
@@ -47,12 +50,22 @@
         max-width: 42em;
     }
 
-.trophy-block {
+    .trophies a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .trophy-block {
       background-color: #FFEFD6;
       border: 2px solid var(--color-border);
       display: grid;
       grid-template-columns: 2fr 1fr;
       margin-bottom: 0.5em;
+      transition: all 0.2s;
+    }
+
+    .trophy-block:hover {
+      transform: scale(0.98);
     }
 
     .trophy-block .info {
@@ -73,7 +86,7 @@
     .trophy-block .completion {
       position: relative;
       padding: 0.5em 1em;
-      color: #A07553;
+      color: #F76B15;
       display: flex;
       flex-direction: row;
       flex-wrap: nowrap;
@@ -89,7 +102,6 @@
     }
 
     .trophy-block .completion .trophy {
-      opacity: 0.3;
-      color: #AD7F58;
+      opacity: 1;
     }
 </style>
