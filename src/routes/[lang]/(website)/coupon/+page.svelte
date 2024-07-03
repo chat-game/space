@@ -1,7 +1,7 @@
 <script>
   import TimeAgo from 'javascript-time-ago'
   import ru from 'javascript-time-ago/locale/ru'
-  import couponHuge from '$lib/assets/website/coupon-256.png'
+  import couponHuge from '$lib/assets/website/coupon-128.png'
   import couponSmall from '$lib/assets/website/coupon-64.png'
   import unit from '$lib/assets/website/unit-64.png'
   import { config } from '$lib/config'
@@ -27,7 +27,11 @@
     Уже встречался <a href={config.twitch.url} target='_blank'>на стриме?</a>
   </h2>
 
-  <img src={couponHuge} alt='banana coupon' class='mt-4' />
+  <div class='coupons-block mt-4'>
+    <img src={couponHuge} alt='banana coupon' />
+    <img src={couponHuge} alt='banana coupon' />
+    <img src={couponHuge} alt='banana coupon' />
+  </div>
 </section>
 
 <section class='latest-coupons'>
@@ -118,6 +122,30 @@
     padding-top: 4em;
     padding-bottom: 4em;
     max-width: 64em;
+
+    & .coupons-block {
+      position: relative;
+      width: 10em;
+      margin: 1.5em auto 0;
+
+      & img:first-child {
+        position: absolute;
+        top: 1em;
+        left: -3.5em;
+        width: 4em;
+        height: 4em;
+        opacity: 0.8;
+      }
+
+      & img:last-child {
+        position: absolute;
+        bottom: 1em;
+        right: -2em;
+        width: 2.5em;
+        height: 2.5em;
+        opacity: 0.7;
+      }
+    }
   }
 
   .latest-coupons {

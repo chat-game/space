@@ -1,9 +1,12 @@
 <script>
   import Profile from './Profile.svelte'
   import { page } from '$app/stores'
+  import couponSmall from '$lib/assets/website/coupon-64.png'
+  import coinSmall from '$lib/assets/website/coin-64.png'
 
   const locale = $page.data.locale
   const t = $page.data.t
+  const profile = $page.data.profileData
 </script>
 
 <nav>
@@ -27,13 +30,36 @@
 </nav>
 
 <div class='right'>
-  <Profile />
+  <div class='items'>
+    {#if profile?.coins > 0}
+      <div class='currency'>
+        <div class='counter'>{profile.coins}</div> <img src={coinSmall} alt="" width='32' height='32' />
+      </div>
+    {/if}
+
+    {#if profile?.coupons > 0}
+      <div class='currency'>
+        <div class='counter'>{profile.coupons}</div> <img src={couponSmall} alt="" width='32' height='32' />
+      </div>
+    {/if}
+
+    <Profile />
+  </div>
 </div>
 
 <style>
     .right {
         flex-grow: 1;
         flex-basis: 0;
+        margin-left: auto;
+
+        & .items {
+          margin-left: auto;
+          width: fit-content;
+          display: flex;
+          align-items: center;
+          gap: 0.5em;
+        }
     }
 
     nav {
@@ -78,5 +104,23 @@
 
     li[aria-current='page'] a {
         color: var(--green-9);
+    }
+
+    .currency {
+        position: relative;
+        display: inline-block;
+
+        & .counter {
+          position: absolute;
+          bottom: -4px;
+          left: 50%;
+          transform: translateX(-50%);
+          color: #fff;
+          font-weight: 700;
+          font-size: 0.8rem;
+          background: var(--bronze-10);
+          padding: 0 0.4em;
+          border-radius: 6px;
+      }
     }
   </style>

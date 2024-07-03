@@ -11,9 +11,7 @@
 
   const timeAgo = new TimeAgo('ru-RU')
 
-  const latestProfiles = data.trophy.progress
-    .filter((t) => t.status === 'COMPLETED')
-    .slice(0, 12)
+  const latestProfiles = data.trophy.progress.slice(0, 12)
 </script>
 
 <section class='hero'>

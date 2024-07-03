@@ -7,8 +7,8 @@
 </script>
 
 <section class='hero'>
-  <h1>{data.character.name}</h1>
-  <h2>Игровой персонаж, созданный <a href='/{$page.data.locale}/p/valentina8177'>valentina8177</a></h2>
+  <h1>"{data.character.nickname}" {data.character.name}</h1>
+  <h2>Игровой персонаж, созданный <a href='/{$page.data.locale}/p/{data.character.profile.userName}'>{data.character.profile.userName}</a></h2>
   <div class='rights-block'>
     Сейчас под управлением <a href='/{$page.data.locale}/p/hmbanan666'>hmbanan666</a>
   </div>
@@ -21,7 +21,7 @@
 <section class='info-block'>
   <div class='progression'>
     <div class='info'>
-      <p class='lvl'>Малый</p>
+      <p class='lvl'>Обычный</p>
       <p>Уровень проработанности</p>
     </div>
 

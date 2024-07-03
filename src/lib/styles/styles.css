@@ -2,8 +2,10 @@
 
 @import '@radix-ui/colors/bronze.css';
 @import '@radix-ui/colors/brown.css';
+@import '@radix-ui/colors/gray.css';
 @import '@radix-ui/colors/green.css';
 @import '@radix-ui/colors/orange.css';
+@import '@radix-ui/colors/violet.css';
 
 :root {
     --color-twitch: #8E4EC6;
@@ -13,7 +15,7 @@
     --color-border-2: #E1DCCF;
     --color-bg-accent-1: #56468B;
     --color-bg-accent-2: #6F5F58;
-    --color-common: #BBBBBB;
+    --color-common: var(--gray-9);
     --color-uncommon: #33B074;
     --color-rare: #0090FF;
     --color-epic: #7D66D9;
