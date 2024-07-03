@@ -37,11 +37,11 @@
 
     a {
         font-weight: 600;
-        color: var(--color-text);
+        color: inherit;
     }
 
     a:hover {
-        color: var(--color-accent-1);
+        color: var(--green-9);
     }
 
     @media (min-width: 480px) {

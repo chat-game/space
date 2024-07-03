@@ -119,7 +119,7 @@
         color: #fff;
         font-weight: 700;
         font-size: 0.8rem;
-        background: var(--color-text);
+        background: var(--bronze-12);
         padding: 0 0.4em;
         border-radius: 50%;
     }

@@ -45,7 +45,7 @@
         display: flex;
         height: 100%;
         align-items: center;
-        color: var(--color-text);
+        color: inherit;
         font-weight: 700;
         font-size: 1rem;
         text-transform: uppercase;
@@ -55,7 +55,7 @@
     }
 
     nav a:hover {
-        color: var(--color-accent-1);
+        color: var(--green-9);
     }
 
     ul {
@@ -77,6 +77,6 @@
     }
 
     li[aria-current='page'] a {
-        color: var(--color-accent-1);
+        color: var(--green-9);
     }
   </style>
