@@ -17,12 +17,18 @@
     <div class='currency'>
       <img src={coinSmall} alt="" width='48' height='48' />
       <div class='right'>
-        <p class='counter'>{profile?.coins}</p>
-        <p class='description'>Монет</p>
+        {#if !profile}
+          <p class='description'>Войди на сайт</p>
+        {:else}
+          <p class='counter'>{profile?.coins}</p>
+          <p class='description'>Монет</p>
+        {/if}
       </div>
     </div>
 
-    <a href='/{$page.data.locale}/character/new'>Создать нового [в разработке]</a>
+    {#if profile}
+      <a href='/{$page.data.locale}/character/new'>Создать нового [в разработке]</a>
+    {/if}
   </div>
 </section>
 
