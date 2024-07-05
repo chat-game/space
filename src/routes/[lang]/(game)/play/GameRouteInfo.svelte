@@ -61,7 +61,7 @@
   .progress-bar {
     z-index: 10;
     height: 1.5em;
-    background-color: var(--color-accent-1);
+    background-color: var(--green-9);
     border-radius: 1em;
   }
 </style>

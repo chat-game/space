@@ -1,5 +1,6 @@
 <script lang='ts'>
   import { page } from '$app/stores'
+  import coinSmall from '$lib/assets/website/coin-64.png'
 
   export let data
 </script>
@@ -8,6 +9,18 @@
   <h1>Игровые персонажи</h1>
   <h2>Игроки сами создают и "прокачивают" персонажей. Можно "арендовать" на неделю, получить доступ к странице,
     создавать посты и делать активности.</h2>
+
+  <div class='currency-block'>
+    <div class='currency'>
+      <img src={coinSmall} alt="" width='48' height='48' />
+      <div class='right'>
+        <p class='counter'>{$page.data.profileData.coins}</p>
+        <p class='description'>Монет</p>
+      </div>
+    </div>
+
+    <a href='/{$page.data.locale}/character/new'>Создать нового [в разработке]</a>
+  </div>
 </section>
 
 <section class='characters'>
@@ -86,5 +99,60 @@
 
     .block .info p {
         font-weight: 500;
+    }
+
+    .currency-block {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5em;
+      margin-top: 2em;
+      background-color: var(--bronze-3);
+      border: 2px solid var(--bronze-5);
+      padding: 1em;
+
+      & .currency {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75em;
+
+        & .right {
+          display: flex;
+          flex-direction: column;
+          flex-wrap: nowrap;
+          align-items: flex-start;
+          justify-content: center;
+
+          & .counter {
+            font-size: 1.5rem;
+            font-weight: 600;
+            line-height: 1.2;
+            color: var(--green-10);
+          }
+
+          & .description {
+            font-size: 0.9rem;
+          }
+        }
+      }
+
+      & a {
+        padding: 0.5em 1em;
+        border: 2px solid var(--brown-7);
+        background-color: var(--violet-10);
+        color: var(--brown-3);
+        font-weight: 600;
+        transition: all 0.2s;
+
+        &:hover {
+          opacity: 0.9;
+          text-decoration: none;
+        }
+      }
     }
 </style>

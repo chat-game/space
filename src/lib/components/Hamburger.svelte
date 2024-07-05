@@ -32,7 +32,6 @@
 svg {
     min-height: 24px;
     transition: transform 0.2s ease-in-out;
-    color: var(--color-text);
 }
 
 svg line {

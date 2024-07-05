@@ -65,7 +65,7 @@
     width: 100%;
     height: 100%;
     display: none;
-    background-color: var(--color-accent-1);
+    background-color: var(--green-9);
   }
 
   .votes {

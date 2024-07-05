@@ -9,6 +9,7 @@
   import trophyImage from '$lib/assets/website/trophy-128.png'
   import { pluralizationRu } from '$lib/utils/locale'
   import couponSmall from '$lib/assets/website/coupon-64.png'
+  import coinSmall from '$lib/assets/website/coin-64.png'
 
   export let data
 
@@ -21,9 +22,15 @@
   <div class='header-block'>
     <h1>{data.pageProfile.userName}</h1>
 
+    {#if data.pageProfile.coins > 0}
+      <div class='currency'>
+        <div class='counter'>{data.pageProfile.coins}</div> <img src={coinSmall} alt="" width='48' height='48' />
+      </div>
+    {/if}
+
     {#if data.pageProfile.coupons > 0}
-      <div class='coupon'>
-        <div class='coupons-counter'>{data.pageProfile.coupons}</div> <img src={couponSmall} alt="" width='48' height='48' />
+      <div class='currency'>
+        <div class='counter'>{data.pageProfile.coupons}</div> <img src={couponSmall} alt="" width='48' height='48' />
       </div>
     {/if}
   </div>
@@ -89,6 +96,10 @@
   {/each}
 </section>
 
+<div class='profile-id'>
+  {data.pageProfile.id}
+</div>
+
 <style>
     .hero {
         padding-top: 4em;
@@ -107,21 +118,22 @@
       color: var(--color-common);
     }
 
-    .hero .coupon {
+    .hero .currency {
         position: relative;
         display: inline-block;
     }
 
-    .hero .coupons-counter {
+    .hero .currency .counter {
         position: absolute;
-        top: 6px;
-        left: 3px;
+        bottom: -4px;
+        left: 50%;
+        transform: translateX(-50%);
         color: #fff;
         font-weight: 700;
         font-size: 0.8rem;
-        background: var(--color-text);
+        background: var(--bronze-10);
         padding: 0 0.4em;
-        border-radius: 50%;
+        border-radius: 6px;
     }
 
     .hero h1 {
@@ -221,5 +233,12 @@
 
     .trophy-block .completion .trophy[data-completed=false] {
       opacity: 0.3;
+    }
+
+    .profile-id {
+      font-size: 0.8rem;
+      opacity: 0.3;
+      margin-top: 2em;
+      text-align: center;
     }
 </style>

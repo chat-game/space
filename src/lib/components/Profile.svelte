@@ -58,7 +58,7 @@
     .wrapper {
         position: relative;
         width: fit-content;
-        margin-left: auto;
+        display: inline-block;
     }
 
     .twitch {

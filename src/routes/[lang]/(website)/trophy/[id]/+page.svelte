@@ -11,12 +11,14 @@
 
   const timeAgo = new TimeAgo('ru-RU')
 
-  const latestProfiles = data.trophy.progress.filter((t) => t.status === 'COMPLETED').slice(0, 12)
+  const latestProfiles = data.trophy.progress.slice(0, 12)
 </script>
 
 <section class='hero'>
   <h1>{data.trophy.name}</h1>
-  <h2>Трофей, созданный <a href='/{$page.data.locale}/p/hmbanan666'>hmbanan666</a></h2>
+  <h2>
+    Трофей, созданный <a href='/{$page.data.locale}/p/hmbanan666'>hmbanan666</a>
+  </h2>
 </section>
 
 <section class='trophies'>
@@ -56,101 +58,101 @@
 </section>
 
 <style>
-    .hero {
-        padding-top: 4em;
-        padding-bottom: 4em;
-        max-width: 64em;
-    }
+  .hero {
+    padding-top: 4em;
+    padding-bottom: 4em;
+    max-width: 64em;
+  }
 
-    .hero h1 {
-        margin-bottom: 0.25em;
-    }
+  .hero h1 {
+    margin-bottom: 0.25em;
+  }
 
-    section {
-        text-align: center;
-        padding: 2em 1em;
-        margin: 0 auto;
-        max-width: 42em;
-    }
+  section {
+    text-align: center;
+    padding: 2em 1em;
+    margin: 0 auto;
+    max-width: 42em;
+  }
 
-    .trophy-block {
-      background-color: #FFEFD6;
-      border: 2px solid var(--color-border);
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      margin-bottom: 0.5em;
-    }
+  .trophy-block {
+    background-color: #ffefd6;
+    border: 2px solid var(--color-border);
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    margin-bottom: 0.5em;
+  }
 
-    .trophy-block .info {
-      position: relative;
-      padding: 1em 1em;
-    }
+  .trophy-block .info {
+    position: relative;
+    padding: 1em 1em;
+  }
 
-    .trophy-block .info .description {
-      font-size: 0.9rem;
-    }
+  .trophy-block .info .description {
+    font-size: 0.9rem;
+  }
 
-    .trophy-block .completion {
-      position: relative;
-      padding: 0.5em 1em;
-      color: #F76B15;
-      display: flex;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5em;
-    }
+  .trophy-block .completion {
+    position: relative;
+    padding: 0.5em 1em;
+    color: #f76b15;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+  }
 
-    .trophy-block .completion .points {
-      font-size: 1.5rem;
-      font-weight: 600;
-      line-height: 1.2;
-    }
+  .trophy-block .completion .points {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
 
-    .trophy-block .completion .trophy {
-      opacity: 1;
-    }
+  .trophy-block .completion .trophy {
+    opacity: 1;
+  }
 
-    .progress {
+  .progress {
     padding-top: 2em;
-      padding-bottom: 4em;
-      max-width: 64em;
-    }
+    padding-bottom: 4em;
+    max-width: 64em;
+  }
 
-    .progress .title {
-        margin-bottom: 0.25em;
-    }
+  .progress .title {
+    margin-bottom: 0.25em;
+  }
 
-    .progress .desc {
-        margin-bottom: 1em;
-    }
+  .progress .desc {
+    margin-bottom: 1em;
+  }
 
+  .progress .block {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5em;
+  }
+
+  @media (min-width: 768px) {
     .progress .block {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.5em;
+      grid-template-columns: repeat(4, 1fr);
     }
+  }
 
-    @media (min-width: 768px) {
-        .progress .block {
-          grid-template-columns: repeat(4, 1fr);
-        }
+  @media (min-width: 1200px) {
+    .progress .block {
+      grid-template-columns: repeat(6, 1fr);
     }
+  }
 
-    @media (min-width: 1200px) {
-        .progress .block {
-          grid-template-columns: repeat(6, 1fr);
-        }
-    }
+  .progress .block .card {
+    background-color: var(--color-background-2);
+    border: 2px solid var(--color-border-2);
+    padding: 1em;
+  }
 
-    .progress .block .card {
-      background-color: var(--color-background-2);
-      border: 2px solid var(--color-border-2);
-      padding: 1em;
-    }
-
-    .progress .block .card time {
-        font-size: 0.8rem;
-    }
+  .progress .block .card time {
+    font-size: 0.8rem;
+  }
 </style>
