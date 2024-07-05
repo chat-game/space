@@ -17,7 +17,7 @@
 <section class='hero'>
   <h1>{data.trophy.name}</h1>
   <h2>
-    Трофей, созданный <a href='/{$page.data.locale}/p/hmbanan666'>hmbanan666</a>
+    Трофей, созданный <a href='/{$page.data.locale}/p/{data.trophy.profile.userName}'>{data.trophy.profile.userName}</a>
   </h2>
 </section>
 
