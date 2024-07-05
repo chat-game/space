@@ -1,12 +1,13 @@
-<script>
+<script lang='ts'>
   import Profile from './Profile.svelte'
   import { page } from '$app/stores'
   import couponSmall from '$lib/assets/website/coupon-64.png'
   import coinSmall from '$lib/assets/website/coin-64.png'
+  import type { Profile as IProfile } from '@hmbanan666/chat-game-api'
 
   const locale = $page.data.locale
   const t = $page.data.t
-  const profile = $page.data.profileData
+  const profile = $page.data.profileData as IProfile | null
 </script>
 
 <nav>
@@ -31,13 +32,13 @@
 
 <div class='right'>
   <div class='items'>
-    {#if profile?.coins > 0}
+    {#if profile && profile?.coins > 0}
       <div class='currency'>
         <div class='counter'>{profile.coins}</div> <img src={coinSmall} alt="" width='32' height='32' />
       </div>
     {/if}
 
-    {#if profile?.coupons > 0}
+    {#if profile && profile?.coupons > 0}
       <div class='currency'>
         <div class='counter'>{profile.coupons}</div> <img src={couponSmall} alt="" width='32' height='32' />
       </div>
