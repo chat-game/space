@@ -7,10 +7,6 @@
 </div>
 
 <style>
-  :global(html, body) {
-    background: transparent;
-  }
-
   .app {
     min-height: 100vh;
   }
