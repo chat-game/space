@@ -27,13 +27,15 @@ html {
     font-size: 16px;
 }
 
-html,
-body {
+html, body {
     font-family: "Noto Serif", "Times New Roman", "Georgia", serif;
     font-optical-sizing: auto;
     font-weight: 500;
     font-style: normal;
     font-variation-settings: "wdth" 100;
+}
+
+:global(html, body) {
     background-color: var(--orange-2);
     color: var(--bronze-12);
 }
