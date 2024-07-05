@@ -1,8 +1,11 @@
 <script lang='ts'>
+  import type { Profile } from '@hmbanan666/chat-game-api'
   import { page } from '$app/stores'
   import coinSmall from '$lib/assets/website/coin-64.png'
 
   export let data
+
+  const profile = $page.data.profileData as Profile | null
 </script>
 
 <section class='hero'>
@@ -14,7 +17,7 @@
     <div class='currency'>
       <img src={coinSmall} alt="" width='48' height='48' />
       <div class='right'>
-        <p class='counter'>{$page.data.profileData.coins}</p>
+        <p class='counter'>{profile?.coins}</p>
         <p class='description'>Монет</p>
       </div>
     </div>

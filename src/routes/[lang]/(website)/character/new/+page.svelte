@@ -2,7 +2,7 @@
   import coinSmall from '$lib/assets/website/coin-64.png'
   import { page } from '$app/stores'
 
-  const isEnoughCoins = $page.data.profileData.coins >= 5
+  const isEnoughCoins = $page.data.profileData?.coins >= 5
   let isCheckedTerms = $state(false)
   let isNicknameUnique = $state(false)
   let nickname = $state('')
