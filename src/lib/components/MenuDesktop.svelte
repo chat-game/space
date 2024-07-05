@@ -1,9 +1,9 @@
 <script lang='ts'>
+  import type { Profile as IProfile } from '@hmbanan666/chat-game-api'
   import Profile from './Profile.svelte'
   import { page } from '$app/stores'
   import couponSmall from '$lib/assets/website/coupon-64.png'
   import coinSmall from '$lib/assets/website/coin-64.png'
-  import type { Profile as IProfile } from '@hmbanan666/chat-game-api'
 
   const locale = $page.data.locale
   const t = $page.data.t

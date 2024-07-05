@@ -1,11 +1,11 @@
 <script lang='ts'>
+  import type { Profile } from '@hmbanan666/chat-game-api'
   import { page } from '$app/stores'
   import coinSmall from '$lib/assets/website/coin-64.png'
-  import type { Profile } from '@hmbanan666/chat-game-api'
 
   export let data
 
-  let profile = $page.data.profileData as Profile | null
+  const profile = $page.data.profileData as Profile | null
 </script>
 
 <section class='hero'>
