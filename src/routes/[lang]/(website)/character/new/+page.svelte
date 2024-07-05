@@ -1,16 +1,34 @@
-<script>
+<script lang='ts'>
   import coinSmall from '$lib/assets/website/coin-64.png'
+  import { page } from '$app/stores'
+
+  const isEnoughCoins = $page.data.profileData.coins >= 5
+  let isCheckedTerms = $state(false)
+  let isNicknameUnique = $state(false)
+  let nickname = $state('')
+  const isFormReady = $derived(isEnoughCoins && isCheckedTerms && isNicknameUnique)
+  const errorLabel: string = $derived(!isFormReady ? 'Заполните все поля' : '')
+
+  async function checkNickname() {
+    new Promise((resolve) => setTimeout(resolve, 500)).then(() => {
+      isNicknameUnique = nickname.length >= 2
+
+      if (nickname === 'Пекарь') {
+        isNicknameUnique = false
+      }
+    })
+  }
 </script>
 
 <section class='hero'>
   <h1>Создание нового персонажа</h1>
-  <h2>Не торопись. Заполни все поля и нажми "Создать".</h2>
+  <h2>Не торопись. Заполни все поля и ознакомься с правилами.</h2>
 </section>
 
 <section class='form'>
   <form method='get'>
     <div class='form-control'>
-      <input type='text' placeholder='Прозвище' />
+      <input type='text' placeholder='Прозвище' bind:value={nickname} oninput={checkNickname} />
     </div>
 
     <div class='form-control'>
@@ -22,12 +40,12 @@
     </div>
 
     <div class='form-control checkbox-block'>
-      <input type='checkbox' id='terms' />
+      <input type='checkbox' id='terms' bind:checked={isCheckedTerms} />
       <label for='terms'>Мой контент не нарушает Правила публикации контента</label>
     </div>
 
-    <button type='submit' class='submit-button'>
-      <div>Создать персонажа</div>
+    <button type='submit' class='submit-button' data-ready={isFormReady} disabled={!isFormReady}>
+      <div>{isFormReady ? 'Создать персонажа' : errorLabel}</div>
       <div class='price'>Стоимость: 5 монет <img src={coinSmall} alt="" width='22' height='22' /></div>
     </button>
   </form>
@@ -120,7 +138,7 @@
         width: 100%;
         padding: 0.75em 1em;
         border: 2px solid var(--bronze-7);
-        background-color: var(--green-9);
+        background-color: var(--gray-9);
         color: var(--bronze-3);
         font-family: inherit;
         font-size: 1.2rem;
@@ -140,6 +158,14 @@
             margin-top: 0.5em;
             font-size: 0.9rem;
             text-transform: none;
+        }
+
+        &[data-ready=true] {
+          background-color: var(--green-9);
+        }
+
+        &:disabled {
+          cursor: not-allowed;
         }
     }
 
