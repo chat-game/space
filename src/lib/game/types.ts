@@ -22,6 +22,26 @@ import type {
 import type { GameActionService } from '$lib/game/services/action/interface'
 import type { GameQuestService } from '$lib/game/services/quest/interface'
 
+export interface UnitsOnStream extends Container {
+  id: string
+  profileJWT?: string
+  options: GameOptions
+  children: GameObject[]
+  tick: number
+  scene: GameScene
+  group: IGameGroup
+  activePlayers: GameObjectPlayer[]
+  eventService: GameEventService
+  playerService: GamePlayerService
+  serverService: GameServerService
+  play: () => void
+  checkIfThisFlagIsTarget: (id: string) => boolean
+  findObject: (id: string) => GameObject | undefined
+  removeObject: (obj: GameObject) => void
+  rebuildScene: () => void
+  handleMessage: ({ playerId, text }: { playerId: string, text: string }) => Promise<IGameActionResponse>
+}
+
 export interface Game extends Container {
   id: string
   profileJWT?: string
