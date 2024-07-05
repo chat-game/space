@@ -257,7 +257,7 @@ export class UnitsOnStreamPlugin extends Container implements UnitsOnStream {
 
   #removeInactivePlayers() {
     for (const player of this.activePlayers) {
-      const checkTime = getDateMinusMinutes(8)
+      const checkTime = getDateMinusMinutes(4)
       if (player.lastActionAt.getTime() <= checkTime.getTime()) {
         if (player.script) {
           continue
@@ -266,6 +266,7 @@ export class UnitsOnStreamPlugin extends Container implements UnitsOnStream {
         const target = this.randomOutFlag
         const selfDestroyFunc = () => {
           this.group.remove(player)
+          player.state = 'DESTROYED'
         }
 
         player.script = new MoveOffScreenAndSelfDestroyScript({
@@ -279,6 +280,7 @@ export class UnitsOnStreamPlugin extends Container implements UnitsOnStream {
 
   async #handleMessage(player: GameObjectPlayer, text: string): Promise<IGameActionResponse> {
     player.addMessage(text)
+    player.updateLastActionAt()
 
     return ANSWER.OK
   }

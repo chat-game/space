@@ -2,6 +2,7 @@
   import Footer from '$lib/components/Footer.svelte'
   import Header from '$lib/components/Header.svelte'
   import '$lib/styles/styles.css'
+  import '$lib/styles/website.css'
 </script>
 
 <div class='app'>

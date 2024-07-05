@@ -35,11 +35,6 @@ html, body {
     font-variation-settings: "wdth" 100;
 }
 
-:global(html, body) {
-    background-color: var(--orange-2);
-    color: var(--bronze-12);
-}
-
 body {
     min-height: 100vh;
     margin: 0;

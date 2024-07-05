@@ -1,0 +1,4 @@
+html, body {
+    background-color: var(--orange-2);
+    color: var(--bronze-12);
+}
