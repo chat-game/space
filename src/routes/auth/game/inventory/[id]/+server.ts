@@ -1,10 +1,10 @@
 import { type RequestHandler, error, json } from '@sveltejs/kit'
 import { api } from '$lib/server/api'
 
-export const GET: RequestHandler = async ({ locals, params }) => {
-  if (!locals.profile) {
-    return error(401)
-  }
+export const GET: RequestHandler = async ({ params }) => {
+  // if (!locals.profile) {
+  //   return error(401)
+  // }
 
   const inventoryId = params.id ?? ''
 
