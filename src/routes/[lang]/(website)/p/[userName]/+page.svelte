@@ -16,6 +16,59 @@
   TimeAgo.addLocale(ru)
 
   const timeAgo = new TimeAgo('ru-RU')
+
+  const levelProgress = [
+    { level: 1, points: 0 }, // x2
+    { level: 2, points: 25 },
+    { level: 3, points: 50 },
+    { level: 4, points: 100 },
+    { level: 5, points: 200 },
+    { level: 6, points: 400 },
+    { level: 7, points: 800 },
+    { level: 8, points: 1600 },
+    { level: 9, points: 3200 },
+    { level: 10, points: 6400 },
+    { level: 11, points: 9600 }, // x1.5
+    { level: 12, points: 14400 },
+    { level: 13, points: 21600 },
+    { level: 14, points: 32400 },
+    { level: 15, points: 48600 },
+    { level: 16, points: 72900 },
+    { level: 17, points: 110000 },
+    { level: 18, points: 165000 },
+    { level: 19, points: 247000 },
+    { level: 20, points: 370000 },
+    { level: 21, points: 444000 }, // x1.2
+    { level: 22, points: 532000 },
+    { level: 23, points: 638000 },
+    { level: 24, points: 765000 },
+    { level: 25, points: 918000 },
+    { level: 26, points: 1100000 },
+    { level: 27, points: 1320000 },
+    { level: 28, points: 1580000 },
+    { level: 29, points: 1890000 },
+    { level: 30, points: 2260000 },
+    { level: 31, points: 2480000 }, // x1.1
+    { level: 32, points: 2720000 },
+    { level: 33, points: 2990000 },
+    { level: 34, points: 3200000 },
+    { level: 35, points: 3500000 },
+    { level: 36, points: 3800000 },
+    { level: 37, points: 4100000 },
+    { level: 38, points: 4500000 },
+    { level: 39, points: 4900000 },
+    { level: 40, points: 5300000 },
+    { level: 41, points: 5800000 },
+    { level: 42, points: 6300000 },
+    { level: 43, points: 6900000 },
+    { level: 44, points: 7500000 },
+    { level: 45, points: 8200000 },
+    { level: 46, points: 9000000 },
+    { level: 47, points: 9900000 },
+    { level: 48, points: 11000000 },
+    { level: 49, points: 13000000 },
+    { level: 50, points: 15000000 },
+  ]
 </script>
 
 <section class='hero'>
@@ -76,6 +129,12 @@
 </section>
 
 <section class='trophies'>
+  <h2>Последние полученные трофеи</h2>
+
+  {#if !data.trophies.length}
+    <p>Пока нет</p>
+  {/if}
+
   {#each data.trophies as progress}
     <div class='trophy-block'>
       <div class='info'>
@@ -94,6 +153,16 @@
       </div>
     </div>
   {/each}
+</section>
+
+<section class='levels'>
+  <h2>Прокачка уровня профиля</h2>
+  <p>Развивая титулы "Рассказчик", "Создатель квестов", "Охотник за трофеями", "Меценат" ты получаешь очки. При накоплении очков профиль получает новый уровень.</p>
+  <ul>
+    {#each levelProgress as level}
+      <li>{level.level} уровень: {level.points} очков</li>
+    {/each}
+  </ul>
 </section>
 
 <div class='profile-id'>
@@ -240,5 +309,28 @@
       opacity: 0.3;
       margin-top: 2em;
       text-align: center;
+    }
+
+    .trophies {
+      h2 {
+        margin-bottom: 0.5em;
+      }
+    }
+
+    .levels {
+      margin-top: 1em;
+
+      ul {
+        text-align: left;
+        list-style: image-set(url($lib/assets/website/coin-16.png));
+
+        li {
+          margin-bottom: 0.5em;
+        }
+      }
+
+      h2 {
+        margin-bottom: 0.25em;
+      }
     }
 </style>

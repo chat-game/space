@@ -9,7 +9,6 @@
   url.searchParams.set('client_id', config.twitch.clientId)
   url.searchParams.set('redirect_uri', config.signInRedirectUrl)
   url.searchParams.set('response_type', 'token')
-  url.searchParams.set('scope', 'chat:read channel:read:redemptions')
 
   const isSignedIn = !!$page.data.profile
 

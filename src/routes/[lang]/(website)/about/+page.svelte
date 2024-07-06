@@ -1,5 +1,6 @@
 <script>
   import wagon from '$lib/assets/website/wagon-full.png'
+  import { page } from '$app/stores'
 </script>
 
 <svelte:head>
@@ -51,12 +52,12 @@
   </div>
 </div>
 
-<section>
+<section class='thanks'>
   <h3 class='mb-2'>Благодарности</h3>
-  <p>Спасибо моим зрителям: <b>sava5621</b> за вкусные шавухи, <b>BezSovesty</b> за помощь на
-  старте, <b>flack_zombi</b> за упорство в рубке деревьев, <b>hywax</b> за open-source вклад, <b>PeregonStream</b> и <b>siberiacancode</b> за крутые рейды.
-  Спасибо <b>tozikab_</b>, <b>6alt1ca</b>, <b>derailon</b>, <b>sloghniy</b>, <b>MaN0ol</b>, <b>dO_Oy</b>, <b>VombatDrago</b>,
-    <b>sleeplessness8</b>.
+  <p>Спасибо моим зрителям: <a href='/{$page.data.locale}/p/sava5621'>sava5621</a> за вкусные шавухи, <a href='/{$page.data.locale}/p/bezsovesty'>BezSovesty</a> за помощь на
+  старте, <a href='/{$page.data.locale}/p/flack_zombi'>flack_zombi</a> за упорство в рубке деревьев, <a href='/{$page.data.locale}/p/a_hywax'>a_hywax</a> за помощь с open source, <a href='/{$page.data.locale}/p/peregonstream'>PeregonStream</a> и <a href='/{$page.data.locale}/p/siberiacancode'>siberiacancode</a> за крутые рейды.
+  Спасибо <a href='/{$page.data.locale}/p/tozikab_'>tozikab_</a>, <a href='/{$page.data.locale}/p/6alt1ca'>6alt1ca</a>, <a href='/{$page.data.locale}/p/derailon'>derailon</a>, <a href='/{$page.data.locale}/p/sloghniy'>sloghniy</a>, <a href='/{$page.data.locale}/p/man0ol'>MaN0ol</a>, <a href='/{$page.data.locale}/p/do_oy'>dO_Oy</a>, <a href='/{$page.data.locale}/p/vombatdrago'>VombatDrago</a>,
+    <a href='/{$page.data.locale}/p/sleeplessness8'>sleeplessness8</a>.
     <br>Вы все крутые!</p>
 </section>
 
@@ -141,5 +142,11 @@
   .wagon img {
     width: 60vw;
     max-width: fit-content;
+  }
+
+  .thanks {
+    a {
+      font-weight: 600;
+    }
   }
 </style>

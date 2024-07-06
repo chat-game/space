@@ -8,9 +8,6 @@
 <footer>
   <ul>
     <li>
-      <a href={config.githubRepoUrl} target='_blank'>{t.footer.github}</a>
-    </li>
-    <li>
       <a href={config.discordServerInviteUrl} target='_blank'>Discord</a>
     </li>
     <li>
