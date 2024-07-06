@@ -24,7 +24,6 @@ export const ru = {
   },
   footer: {
     text: 'Создается с трепетом и ❤️',
-    github: 'Код на GitHub',
     donate: 'Донат',
   },
 } satisfies Dictionary

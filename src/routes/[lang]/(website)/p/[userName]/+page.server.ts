@@ -11,6 +11,7 @@ export async function load({ params }) {
   if (!trophies || trophies instanceof Error) {
     trophies = []
   }
+  trophies = trophies.filter((t) => t.status === 'COMPLETED')
 
   return {
     pageProfile: profile,

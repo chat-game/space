@@ -24,7 +24,6 @@ export const en = {
   },
   footer: {
     text: 'Created with thrill and ❤️',
-    github: 'Source on GitHub',
     donate: 'Donate',
   },
 }
