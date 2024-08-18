@@ -1,5 +1,5 @@
 {
-  "name": "app",
+  "name": "space",
   "type": "module",
   "version": "0.2.0",
   "description": "Chat Game for Twitch",
@@ -8,10 +8,10 @@
   "homepage": "https://chatgame.space",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chat-game/app.git"
+    "url": "git+https://github.com/chat-game/space.git"
   },
   "bugs": {
-    "url": "https://github.com/chat-game/app/issues"
+    "url": "https://github.com/chat-game/space/issues"
   },
   "keywords": [
     "game",
