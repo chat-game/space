@@ -35,3 +35,21 @@ build
 .output
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+.nx/cache
+.nx/workspace-data
+
+# Nuxt dev/build outputs
+.data
+.nuxt
+.nitro
+.cache
