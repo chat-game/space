@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true
+  },
+  "include": [".nuxt/nuxt.d.ts", "src/**/*"],
+  "exclude": []
+}

@@ -7,7 +7,7 @@
   // "features": {},
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  "forwardPorts": [3000],
+  // "forwardPorts": [3000, 4200],
 
   // Use 'postCreateCommand' to run commands after the container is created.
   "postCreateCommand": "yarn install",
@@ -19,18 +19,26 @@
       // Add the IDs of extensions you want installed when the container is created.
       "extensions": [
         "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
         "svelte.svelte-vscode",
+        "Vue.volar",
+        "nrwl.angular-console",
+        "ms-playwright.playwright",
         "ms-azuretools.vscode-docker",
         "vitest.explorer",
         "Codeium.codeium"
       ]
     }
-  },
-
-  "portsAttributes": {
-    "3000": {
-      "label": "Application",
-      "onAutoForward": "openPreview"
-    }
   }
+
+  // "portsAttributes": {
+  //   "3000": {
+  //     "label": "Svelte App",
+  //     "onAutoForward": "openPreview"
+  //   },
+  //   "4200": {
+  //     "label": "Website",
+  //     "onAutoForward": "openPreview"
+  //   }
+  // }
 }
