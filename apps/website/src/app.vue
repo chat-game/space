@@ -4,7 +4,7 @@
   <main>
     <header>
       <nav>
-        <NuxtLink to="/"> Home </NuxtLink>
+        <NuxtLink to="/">Главная</NuxtLink>
         <NuxtLink to="/about"> About </NuxtLink>
       </nav>
     </header>
