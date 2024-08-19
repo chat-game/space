@@ -14,7 +14,7 @@ RUN yarn nx run website:build
 
 FROM $NODE
 WORKDIR /app
-COPY --from=builder /app/apps/website/.output /.output
+COPY --from=builder /app/apps/website/.output .output/
 
 ARG VERSION=nightly
 ENV VERSION=${VERSION}
