@@ -29,5 +29,11 @@ export default defineNuxtConfig({
     plugins: [nxViteTsPaths()],
   },
 
+  modules: [
+    '@nuxt/eslint',
+    '@vueuse/nuxt',
+    '@pinia/nuxt',
+  ],
+
   compatibilityDate: '2024-08-18',
 });
