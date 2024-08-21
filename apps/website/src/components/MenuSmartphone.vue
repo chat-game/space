@@ -12,19 +12,44 @@ function closeSidebar() {
     <nav>
       <ul>
         <li :aria-current="route.path === `/` ? 'page' : undefined">
-          <NuxtLink to='/' @click="closeSidebar">Главная</NuxtLink>
+          <NuxtLink
+            to="/"
+            @click="closeSidebar"
+          >
+            Главная
+          </NuxtLink>
         </li>
         <li :aria-current="route.path === `/character` ? 'page' : undefined">
-          <NuxtLink to='/character' @click="closeSidebar">Персонажи</NuxtLink>
+          <NuxtLink
+            to="/character"
+            @click="closeSidebar"
+          >
+            Персонажи
+          </NuxtLink>
         </li>
         <li :aria-current="route.path === `/quest` ? 'page' : undefined">
-          <NuxtLink href='/quest' @click="closeSidebar">Задания</NuxtLink>
+          <NuxtLink
+            href="/quest"
+            @click="closeSidebar"
+          >
+            Задания
+          </NuxtLink>
         </li>
         <li :aria-current="route.path === `/trophy` ? 'page' : undefined">
-          <NuxtLink href='/trophy' @click="closeSidebar">Трофеи</NuxtLink>
+          <NuxtLink
+            href="/trophy"
+            @click="closeSidebar"
+          >
+            Трофеи
+          </NuxtLink>
         </li>
         <li :aria-current="route.path === `/coupon` ? 'page' : undefined">
-          <NuxtLink href='/coupon' @click="closeSidebar">Купон</NuxtLink>
+          <NuxtLink
+            href="/coupon"
+            @click="closeSidebar"
+          >
+            Купон
+          </NuxtLink>
         </li>
         <!-- 
         {#if profile}
@@ -36,7 +61,7 @@ function closeSidebar() {
     </nav>
   </aside>
 
-  <div class='profile-block'>
+  <div class="profile-block">
     <Profile />
   </div>
 
