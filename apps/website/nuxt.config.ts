@@ -26,7 +26,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       twitchClientId: '', // NUXT_PUBLIC_TWITCH_CLIENT_ID
-      signInRedirectUrl: '', // NUXT_PUBLIC_SIGNIN_REDIRECT_URL
+      signInRedirectUrl: '', // NUXT_PUBLIC_SIGN_IN_REDIRECT_URL
+      cookieKey: '', // NUXT_PUBLIC_COOKIE_KEY
     },
   },
   modules: [

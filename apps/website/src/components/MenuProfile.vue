@@ -1,7 +1,6 @@
 <script setup lang="ts">
 const { public: publicEnv } = useRuntimeConfig()
 const website = useWebsiteStore()
-const isSignedIn = false
 
 const handleMenuClick = () => {
 	website.isFeedOpened = !website.isFeedOpened
@@ -10,7 +9,10 @@ const handleMenuClick = () => {
 const url = new URL('https://id.twitch.tv/oauth2/authorize')
 url.searchParams.set('client_id', publicEnv.twitchClientId)
 url.searchParams.set('redirect_uri', publicEnv.signInRedirectUrl)
-url.searchParams.set('response_type', 'token')
+url.searchParams.set('response_type', 'code')
+
+const { data: profile } = await useFetch('/api/auth/me')
+const isSignedIn = profile?.id
 </script>
 
 <template>
