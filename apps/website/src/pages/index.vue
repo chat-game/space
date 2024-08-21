@@ -12,7 +12,6 @@ const profileCount = 1
 <template>
   <div>
     <section class="hero">
-
       <h1>Интерактивная чат-игра для Twitch</h1>
       <h2>
         Группа игроков сопровождает Машину из точки А в точку Б, не зная, доберутся
@@ -27,7 +26,11 @@ const profileCount = 1
         зрители развлекаются или...
       </p>
       <p class="mt-2">
-        За все время {{ pluralizationRu(profileCount, ['создан','создано','создано']) }} {{profileCount}} {{ pluralizationRu(profileCount, ['профиль','профиля','профилей']) }}. Присоединяйся <a href={config.twitch.url} target="_blank" class="twitch-link">на активном стриме</a>!
+        За все время {{ pluralizationRu(profileCount, ['создан','создано','создано']) }} {{ profileCount }} {{ pluralizationRu(profileCount, ['профиль','профиля','профилей']) }}. Присоединяйся <a
+          href="{config.twitch.url}"
+          target="_blank"
+          class="twitch-link"
+        >на активном стриме</a>!
       </p>
     </section>
   </div>

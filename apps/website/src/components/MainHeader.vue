@@ -4,7 +4,7 @@ const { width } = useWindowSize()
 
 <template>
   <header>
-    <div class='left'>
+    <div class="left">
       <MainLogo />
 
       <!-- <Locale /> -->

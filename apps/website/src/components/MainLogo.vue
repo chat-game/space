@@ -17,9 +17,19 @@ const randomCharUrl = `url(/units/${randomChar}/128.png)`
 
 <template>
   <div>
-    <div v-if="$route.path === '/'" class="logo" :style="{ backgroundImage: randomCharUrl }"/>
-    <NuxtLink v-else href='/'>
-      <div class="logo shake" :style="{ backgroundImage: randomCharUrl }"/>
+    <div
+      v-if="$route.path === '/'"
+      class="logo"
+      :style="{ backgroundImage: randomCharUrl }"
+    />
+    <NuxtLink
+      v-else
+      href="/"
+    >
+      <div
+        class="logo shake"
+        :style="{ backgroundImage: randomCharUrl }"
+      />
     </NuxtLink>
   </div>
 </template>

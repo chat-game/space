@@ -6,22 +6,34 @@ const route = useRoute()
   <nav>
     <ul>
       <li :aria-current="route.path === `/` ? 'page' : undefined">
-        <NuxtLink to='/'>Главная</NuxtLink>
+        <NuxtLink to="/">
+          Главная
+        </NuxtLink>
       </li>
       <li :aria-current="route.path === `/about` ? 'page' : undefined">
-        <NuxtLink to='/about'>About</NuxtLink>
+        <NuxtLink to="/about">
+          About
+        </NuxtLink>
       </li>
       <li :aria-current="route.path === `/character` ? 'page' : undefined">
-        <NuxtLink to='/character'>Персонажи</NuxtLink>
+        <NuxtLink to="/character">
+          Персонажи
+        </NuxtLink>
       </li>
       <li :aria-current="route.path === `/quest` ? 'page' : undefined">
-        <NuxtLink href='/quest'>Задания</NuxtLink>
+        <NuxtLink href="/quest">
+          Задания
+        </NuxtLink>
       </li>
       <li :aria-current="route.path === `/trophy` ? 'page' : undefined">
-        <NuxtLink href='/trophy'>Трофеи</NuxtLink>
+        <NuxtLink href="/trophy">
+          Трофеи
+        </NuxtLink>
       </li>
       <li :aria-current="route.path === `/coupon` ? 'page' : undefined">
-        <NuxtLink href='/coupon'>Купон</NuxtLink>
+        <NuxtLink href="/coupon">
+          Купон
+        </NuxtLink>
       </li>
       <!-- 
       {#if profile}
@@ -32,7 +44,7 @@ const route = useRoute()
     </ul>
   </nav>
 
-  <div class='right'>
+  <div class="right">
     <div class="items">
       <Profile />
     </div>

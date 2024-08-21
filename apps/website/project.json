@@ -4,5 +4,11 @@
   "projectType": "application",
   "sourceRoot": "apps/website/src",
   "// targets": "to see all targets run: nx show project website --web",
-  "targets": {}
+  "targets": {
+    "lint": {
+      "options": {
+        "fix": true
+      }
+    }
+  }
 }
