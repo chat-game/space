@@ -18,16 +18,14 @@
     "twitch"
   ],
   "scripts": {
-    "dev": "vite dev",
-    "build": "svelte-kit sync && vite build",
-    "preview": "vite preview",
-    "check": "svelte-kit sync && svelte-check --tsconfig tsconfig.json",
-    "check:watch": "svelte-kit sync && svelte-check --tsconfig tsconfig.json --watch",
-    "test": "vitest run --coverage",
-    "lint": "eslint",
-    "lint:fix": "eslint --fix",
+    "start": "nx run-many -t serve",
+    "test": "nx affected:test",
+    "lint": "nx affected:lint",
     "release": "yarn run check && yarn run test && yarn run lint && yarn run build && changelogen --release --push",
-    "prepare": "husky"
+    "prepare": "husky",
+    "update": "nx migrate latest",
+    "dep-graph": "nx dep-graph",
+    "help": "nx help"
   },
   "dependencies": {
     "@hmbanan666/chat-game-api": "^0.1.18",
@@ -106,6 +104,5 @@
   },
   "lint-staged": {
     "*.ts": "yarn run lint"
-  },
-  "nx": {}
+  }
 }
