@@ -20,7 +20,6 @@
       "extensions": [
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
-        "svelte.svelte-vscode",
         "Vue.volar",
         "nrwl.angular-console",
         "ms-playwright.playwright",

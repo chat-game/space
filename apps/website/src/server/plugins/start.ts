@@ -4,6 +4,6 @@ export default defineNitroPlugin(() => {
   log('Server started!')
 
   setInterval(() => {
-    log('Server is OK...')
+    //log('Server is OK...')
   }, 60000)
 })
