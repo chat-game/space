@@ -12,15 +12,26 @@ url.searchParams.set('redirect_uri', publicEnv.signInRedirectUrl)
 url.searchParams.set('response_type', 'code')
 
 const { data: profile } = await useFetch('/api/auth/me')
-const isSignedIn = profile?.id
+const isSignedIn = !!profile?.id
 </script>
 
 <template>
-  <div class='wrapper'>
-    <button v-if="isSignedIn" class='profile-avatar' @click={handleMenuClick}>
-      <img src="~/assets/img/icons/twitch/112.png" alt="" >
+  <div class="wrapper">
+    <button
+      v-if="isSignedIn"
+      class="profile-avatar"
+      @click="{handleMenuClick}"
+    >
+      <img
+        src="~/assets/img/icons/twitch/112.png"
+        alt=""
+      >
     </button>
-    <a v-else class='twitch' :href="url.href">Войти</a>
+    <a
+      v-else
+      class="twitch"
+      :href="url.href"
+    >Войти</a>
   </div>
 </template>
 
