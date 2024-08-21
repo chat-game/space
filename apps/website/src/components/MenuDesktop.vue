@@ -1,36 +1,32 @@
-<script setup lang="ts">
-const route = useRoute()
-</script>
-
 <template>
   <nav>
     <ul>
-      <li :aria-current="route.path === `/` ? 'page' : undefined">
+      <li :aria-current="$route.path === `/` ? 'page' : undefined">
         <NuxtLink to="/">
           Главная
         </NuxtLink>
       </li>
-      <li :aria-current="route.path === `/about` ? 'page' : undefined">
+      <li :aria-current="$route.path === `/about` ? 'page' : undefined">
         <NuxtLink to="/about">
           About
         </NuxtLink>
       </li>
-      <li :aria-current="route.path === `/character` ? 'page' : undefined">
+      <li :aria-current="$route.path === `/character` ? 'page' : undefined">
         <NuxtLink to="/character">
           Персонажи
         </NuxtLink>
       </li>
-      <li :aria-current="route.path === `/quest` ? 'page' : undefined">
+      <li :aria-current="$route.path === `/quest` ? 'page' : undefined">
         <NuxtLink href="/quest">
           Задания
         </NuxtLink>
       </li>
-      <li :aria-current="route.path === `/trophy` ? 'page' : undefined">
+      <li :aria-current="$route.path === `/trophy` ? 'page' : undefined">
         <NuxtLink href="/trophy">
           Трофеи
         </NuxtLink>
       </li>
-      <li :aria-current="route.path === `/coupon` ? 'page' : undefined">
+      <li :aria-current="$route.path === `/coupon` ? 'page' : undefined">
         <NuxtLink href="/coupon">
           Купон
         </NuxtLink>
@@ -46,7 +42,7 @@ const route = useRoute()
 
   <div class="right">
     <div class="items">
-      <Profile />
+      <MenuProfile />
     </div>
   </div>
 </template>

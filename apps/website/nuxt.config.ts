@@ -6,34 +6,33 @@ export default defineNuxtConfig({
   workspaceDir: '../../',
   srcDir: 'src',
   devtools: { enabled: true },
-
   devServer: {
     host: '0.0.0.0',
     port: 4200,
   },
-
   typescript: {
     typeCheck: true,
     tsConfig: {
       extends: '../tsconfig.app.json', // Nuxt copies this string as-is to the `./.nuxt/tsconfig.json`, therefore it needs to be relative to that directory
     },
   },
-
   imports: {
     autoImport: true,
   },
-
   css: ['~/assets/css/styles.css'],
-
   vite: {
     plugins: [nxViteTsPaths()],
   },
-
+  runtimeConfig: {
+    public: {
+      twitchClientId: '', // NUXT_PUBLIC_TWITCH_CLIENT_ID
+      signInRedirectUrl: '', // NUXT_PUBLIC_SIGNIN_REDIRECT_URL
+    },
+  },
   modules: [
     '@nuxt/eslint',
     '@vueuse/nuxt',
     '@pinia/nuxt',
   ],
-
   compatibilityDate: '2024-08-18',
 });

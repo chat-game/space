@@ -39,7 +39,7 @@ Make a fork. Or clone this repo and use standard commands:
 ```shell
 git clone https://github.com/chat-game/space
 yarn install
-yarn run dev
+yarn run start
 ```
 
 ## 🏆 Contributors

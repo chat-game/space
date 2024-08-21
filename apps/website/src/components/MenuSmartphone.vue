@@ -1,5 +1,4 @@
 <script setup lang="ts">
-const route = useRoute()
 const website = useWebsiteStore()
 
 function closeSidebar() {
@@ -11,7 +10,7 @@ function closeSidebar() {
   <aside :class="{open: website.isMobileMenuOpened}">
     <nav>
       <ul>
-        <li :aria-current="route.path === `/` ? 'page' : undefined">
+        <li :aria-current="$route.path === `/` ? 'page' : undefined">
           <NuxtLink
             to="/"
             @click="closeSidebar"
@@ -19,7 +18,7 @@ function closeSidebar() {
             Главная
           </NuxtLink>
         </li>
-        <li :aria-current="route.path === `/character` ? 'page' : undefined">
+        <li :aria-current="$route.path === `/character` ? 'page' : undefined">
           <NuxtLink
             to="/character"
             @click="closeSidebar"
@@ -27,7 +26,7 @@ function closeSidebar() {
             Персонажи
           </NuxtLink>
         </li>
-        <li :aria-current="route.path === `/quest` ? 'page' : undefined">
+        <li :aria-current="$route.path === `/quest` ? 'page' : undefined">
           <NuxtLink
             href="/quest"
             @click="closeSidebar"
@@ -35,7 +34,7 @@ function closeSidebar() {
             Задания
           </NuxtLink>
         </li>
-        <li :aria-current="route.path === `/trophy` ? 'page' : undefined">
+        <li :aria-current="$route.path === `/trophy` ? 'page' : undefined">
           <NuxtLink
             href="/trophy"
             @click="closeSidebar"
@@ -43,7 +42,7 @@ function closeSidebar() {
             Трофеи
           </NuxtLink>
         </li>
-        <li :aria-current="route.path === `/coupon` ? 'page' : undefined">
+        <li :aria-current="$route.path === `/coupon` ? 'page' : undefined">
           <NuxtLink
             href="/coupon"
             @click="closeSidebar"
@@ -62,7 +61,7 @@ function closeSidebar() {
   </aside>
 
   <div class="profile-block">
-    <Profile />
+    <MenuProfile />
   </div>
 
   <MenuHamburger />
