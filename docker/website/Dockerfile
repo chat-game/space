@@ -7,8 +7,8 @@ WORKDIR /app
 
 COPY . .
 RUN yarn install
-RUN yarn nx run prisma-schema:generate
-RUN yarn nx run website:build
+RUN yarn prisma-schema:generate
+RUN yarn website:build
 
 ################# Website ##############
 
