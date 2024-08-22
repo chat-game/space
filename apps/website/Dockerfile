@@ -8,6 +8,7 @@ COPY package.json .
 COPY yarn.lock .
 RUN yarn install
 COPY . .
+RUN yarn nx run prisma-schema:generate
 RUN yarn nx run website:build
 
 ################# Web App ##############

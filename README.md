@@ -20,11 +20,8 @@ Let's build a similar world together! ⭐️ Become a Stargazer ⭐️
 ## 🧱 Stack
 
 - [PixiJS](https://pixijs.com/): The HTML5 Creation Engine.
-- [Svelte](https://svelte.dev/): A new way to build web applications. It's a compiler that takes your declarative components and converts them into efficient JavaScript that surgically updates the DOM.
-- [SvelteKit](https://kit.svelte.dev/): A framework for rapidly developing robust, performant web applications using Svelte.
 - [Twurple](https://twurple.js.org/): A set of libraries that aims to cover all existing Twitch APIs.
 - [Howler.js](https://howlerjs.com/): Audio library for the modern web.
-- [Lucide Svelte](https://lucide.dev/guide/packages/lucide-svelte): An open-source icon library.
 - [TypeScript](https://www.typescriptlang.org/): A strongly typed programming language that builds on JavaScript, giving you better tooling at any scale.
 - [ESLint](https://eslint.org/): Statically analyzes a code to quickly find problems.
 

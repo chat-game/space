@@ -11,7 +11,7 @@
         "cwd": "libs/prisma-schema"
       }
     },
-    "generate-types": {
+    "generate": {
       "command": "prisma generate",
       "options": {
         "cwd": "libs/prisma-schema"

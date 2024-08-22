@@ -154,7 +154,7 @@ button:focus:not(:focus-visible) {
 }
 
 .bg-paper {
-  background-image: url($lib/assets/website/background-paper-2.webp);
+  background-image: url(~/assets/img/background-paper.webp);
   background-repeat: no-repeat;
   background-position: bottom;
   background-size: cover;
