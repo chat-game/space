@@ -2,9 +2,7 @@ import type { Game } from '$lib/game/types'
 import { Player } from '$lib/game/objects/units/player'
 import type { GamePlayerService } from '$lib/game/services/player/interface'
 import { getDateMinusMinutes } from '$lib/utils/date'
-import {
-  MoveOffScreenAndSelfDestroyScript,
-} from '$lib/game/scripts/moveOffScreenAndSelfDestroyScript'
+import { MoveOffScreenAndSelfDestroyScript } from '$lib/game/scripts/moveOffScreenAndSelfDestroyScript'
 
 export class PlayerService implements GamePlayerService {
   game: Game

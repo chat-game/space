@@ -11,11 +11,7 @@ export class BuildScript extends Script {
   constructor({ target, object, buildFunc }: IBuildScriptOptions) {
     super({ object })
 
-    this.tasks = [
-      this.setTarget(target),
-      this.runToTarget(),
-      this.build(buildFunc),
-    ]
+    this.tasks = [this.setTarget(target), this.runToTarget(), this.build(buildFunc)]
   }
 
   build(func: () => boolean): IGameTask {

@@ -1,11 +1,7 @@
 import { createId } from '@paralleldrive/cuid2'
 import { VoteAction } from '../actions/voteAction'
 import { getRandomInRange } from '$lib/utils/random'
-import type {
-  Game,
-  GameObjectPlayer,
-  IGamePoll,
-} from '$lib/game/types'
+import type { Game, GameObjectPlayer, IGamePoll } from '$lib/game/types'
 
 interface IPollOptions {
   game: Game

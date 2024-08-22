@@ -18,7 +18,7 @@ export class UnitHairContainer extends GraphicsContainer {
   static create(
     spriteIndex: string,
     direction: IGameObjectDirection,
-    visual: IGameObjectUnit['visual']['hairstyle'],
+    visual: IGameObjectUnit['visual']['hairstyle']
   ) {
     const sprite = Sprite.from(spriteIndex)
     sprite.anchor.set(0.5, 1)
@@ -36,7 +36,7 @@ export class UnitHairContainer extends GraphicsContainer {
 
   static createWithBothDirections(
     spriteIndex: string,
-    visual: IGameObjectUnit['visual']['hairstyle'],
+    visual: IGameObjectUnit['visual']['hairstyle']
   ) {
     const containers = []
 
@@ -48,18 +48,9 @@ export class UnitHairContainer extends GraphicsContainer {
 
   static getAll() {
     return [
-      ...UnitHairContainer.createWithBothDirections(
-        'unitHairClassic',
-        'CLASSIC',
-      ),
-      ...UnitHairContainer.createWithBothDirections(
-        'unitHairCoalLong',
-        'COAL_LONG',
-      ),
-      ...UnitHairContainer.createWithBothDirections(
-        'unitHairOrangeWithBeard',
-        'ORANGE_WITH_BEARD',
-      ),
+      ...UnitHairContainer.createWithBothDirections('unitHairClassic', 'CLASSIC'),
+      ...UnitHairContainer.createWithBothDirections('unitHairCoalLong', 'COAL_LONG'),
+      ...UnitHairContainer.createWithBothDirections('unitHairOrangeWithBeard', 'ORANGE_WITH_BEARD'),
     ]
   }
 }

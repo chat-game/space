@@ -8,18 +8,10 @@ interface IMoveToTradePostAndTradeScriptOptions {
 }
 
 export class MoveToTradePostAndTradeScript extends Script {
-  constructor({
-    target,
-    object,
-    startTradeFunc,
-  }: IMoveToTradePostAndTradeScriptOptions) {
+  constructor({ target, object, startTradeFunc }: IMoveToTradePostAndTradeScriptOptions) {
     super({ object })
 
-    this.tasks = [
-      this.setTarget(target),
-      this.runToTarget(),
-      this.startTrade(startTradeFunc),
-    ]
+    this.tasks = [this.setTarget(target), this.runToTarget(), this.startTrade(startTradeFunc)]
   }
 
   startTrade(func: () => void): IGameTask {

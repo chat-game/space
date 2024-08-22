@@ -103,30 +103,30 @@ export class BaseWagon extends BaseObject implements Wagon {
     }
   }
 
-  checkIfPointInCollisionArea(point: { x: number, y: number }) {
+  checkIfPointInCollisionArea(point: { x: number; y: number }) {
     return (
-      this.collisionArea.startX < point.x
-      && point.x < this.collisionArea.endX
-      && this.collisionArea.startY < point.y
-      && point.y < this.collisionArea.endY
+      this.collisionArea.startX < point.x &&
+      point.x < this.collisionArea.endX &&
+      this.collisionArea.startY < point.y &&
+      point.y < this.collisionArea.endY
     )
   }
 
-  public checkIfPointInVisibilityArea(point: { x: number, y: number }) {
+  public checkIfPointInVisibilityArea(point: { x: number; y: number }) {
     return (
-      this.visibilityArea.startX < point.x
-      && point.x < this.visibilityArea.endX
-      && this.visibilityArea.startY < point.y
-      && point.y < this.visibilityArea.endY
+      this.visibilityArea.startX < point.x &&
+      point.x < this.visibilityArea.endX &&
+      this.visibilityArea.startY < point.y &&
+      point.y < this.visibilityArea.endY
     )
   }
 
-  public checkIfPointInServerDataArea(point: { x: number, y: number }) {
+  public checkIfPointInServerDataArea(point: { x: number; y: number }) {
     return (
-      this.serverDataArea.startX < point.x
-      && point.x < this.serverDataArea.endX
-      && this.serverDataArea.startY < point.y
-      && point.y < this.serverDataArea.endY
+      this.serverDataArea.startX < point.x &&
+      point.x < this.serverDataArea.endX &&
+      this.serverDataArea.startY < point.y &&
+      point.y < this.serverDataArea.endY
     )
   }
 
@@ -190,16 +190,7 @@ export class BaseWagon extends BaseObject implements Wagon {
 
     const clouds = new WagonEngineCloudsContainer({ wagon: this })
 
-    this.addChild(
-      spriteBase,
-      engine,
-      cargo,
-      spriteSide,
-      storage,
-      wheel1,
-      wheel2,
-      clouds,
-    )
+    this.addChild(spriteBase, engine, cargo, spriteSide, storage, wheel1, wheel2, clouds)
   }
 
   #drawWheels(container: GraphicsContainer) {

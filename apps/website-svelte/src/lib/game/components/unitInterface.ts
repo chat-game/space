@@ -35,19 +35,11 @@ export class UnitInterface extends GraphicsContainer {
 
   init() {
     this.coins = this.unit.coins
-    this.wood
-      = this.unit.inventory.items.find((item) => item.type === 'WOOD')?.amount
-      ?? 0
-    this.stone
-      = this.unit.inventory.items.find((item) => item.type === 'STONE')?.amount
-      ?? 0
+    this.wood = this.unit.inventory.items.find((item) => item.type === 'WOOD')?.amount ?? 0
+    this.stone = this.unit.inventory.items.find((item) => item.type === 'STONE')?.amount ?? 0
 
-    this.haveAxe = !!this.unit.inventory.items.find(
-      (item) => item.type === 'AXE',
-    )
-    this.havePickaxe = !!this.unit.inventory.items.find(
-      (item) => item.type === 'PICKAXE',
-    )
+    this.haveAxe = !!this.unit.inventory.items.find((item) => item.type === 'AXE')
+    this.havePickaxe = !!this.unit.inventory.items.find((item) => item.type === 'PICKAXE')
 
     this.drawUserName()
     this.drawWood()
@@ -71,26 +63,18 @@ export class UnitInterface extends GraphicsContainer {
 
   update() {
     const name = this.unit.name
-    const wood
-      = this.unit.inventory.items.find((item) => item.type === 'WOOD')?.amount
-      ?? 0
-    const stone
-      = this.unit.inventory.items.find((item) => item.type === 'STONE')?.amount
-      ?? 0
-    const haveAxe = !!this.unit.inventory.items.find(
-      (item) => item.type === 'AXE',
-    )
-    const havePickaxe = !!this.unit.inventory.items.find(
-      (item) => item.type === 'PICKAXE',
-    )
+    const wood = this.unit.inventory.items.find((item) => item.type === 'WOOD')?.amount ?? 0
+    const stone = this.unit.inventory.items.find((item) => item.type === 'STONE')?.amount ?? 0
+    const haveAxe = !!this.unit.inventory.items.find((item) => item.type === 'AXE')
+    const havePickaxe = !!this.unit.inventory.items.find((item) => item.type === 'PICKAXE')
 
     if (
-      name !== this.name
-      || this.unit.coins !== this.coins
-      || wood !== this.wood
-      || stone !== this.stone
-      || haveAxe !== this.haveAxe
-      || havePickaxe !== this.havePickaxe
+      name !== this.name ||
+      this.unit.coins !== this.coins ||
+      wood !== this.wood ||
+      stone !== this.stone ||
+      haveAxe !== this.haveAxe ||
+      havePickaxe !== this.havePickaxe
     ) {
       this.name = name
       this.coins = this.unit.coins
@@ -161,14 +145,14 @@ export class UnitInterface extends GraphicsContainer {
         fontFamily: 'Noto Serif',
         fontSize: 14,
         fontWeight: '600',
-        fill: 0x451A03,
+        fill: 0x451a03,
         align: 'center',
       },
     })
 
     const graphics = new Graphics()
     graphics.roundRect(-6, -2, basicText.width + 12, basicText.height + 4, 0)
-    graphics.fill(0xFEF3C7)
+    graphics.fill(0xfef3c7)
 
     container.addChild(graphics, basicText)
 
@@ -280,9 +264,7 @@ export class UnitInterface extends GraphicsContainer {
   }
 
   getResourcesArray() {
-    return this.unit.inventory.items.filter(
-      (item) => item.type === 'WOOD' || item.type === 'STONE',
-    )
+    return this.unit.inventory.items.filter((item) => item.type === 'WOOD' || item.type === 'STONE')
   }
 
   showNextItem() {

@@ -21,7 +21,7 @@
     "start": "nx run-many -t serve",
     "build": "nx affected:build",
     "test": "nx affected:test",
-    "lint": "nx affected:lint",
+    "lint": "nx affected:lint && nx format:write --all",
     "release": "yarn run check && yarn run test && yarn run lint && yarn run build && changelogen --release --push",
     "prepare": "husky",
     "update": "nx migrate latest",

@@ -7,7 +7,8 @@ import type {
   GameObjectPlayer,
   GameSceneType,
   IGameActionResponse,
-  IGameSceneAction, ItemType,
+  IGameSceneAction,
+  ItemType,
 } from '$lib/game/types'
 import { config } from '$lib/config'
 import type { GameAction } from '$lib/game/actions/interface'
@@ -65,7 +66,15 @@ export class ActionService implements GameActionService {
     this.activeActions = this.possibleActions
   }
 
-  async handleCommand({ command, playerId, params }: { command: string, playerId: string, params: string[] }): Promise<IGameActionResponse> {
+  async handleCommand({
+    command,
+    playerId,
+    params,
+  }: {
+    command: string
+    playerId: string
+    params: string[]
+  }): Promise<IGameActionResponse> {
     const player = await this.#initPlayer(playerId)
     if (!player) {
       return ANSWER.NO_PLAYER_ERROR
@@ -79,7 +88,13 @@ export class ActionService implements GameActionService {
     return this.#handleAction(action, player, params)
   }
 
-  async handleMessage({ playerId, text }: { playerId: string, text: string }): Promise<IGameActionResponse> {
+  async handleMessage({
+    playerId,
+    text,
+  }: {
+    playerId: string
+    text: string
+  }): Promise<IGameActionResponse> {
     const player = await this.#initPlayer(playerId)
     if (!player) {
       return ANSWER.NO_PLAYER_ERROR
@@ -103,7 +118,7 @@ export class ActionService implements GameActionService {
   async handleAction(
     action: IGameSceneAction,
     playerId: string,
-    params?: string[],
+    params?: string[]
   ): Promise<IGameActionResponse> {
     const player = await this.game.playerService.findOrCreatePlayer(playerId)
     if (!player) {
@@ -193,7 +208,7 @@ export class ActionService implements GameActionService {
   async #handleAction(
     action: GameAction,
     player: GameObjectPlayer,
-    params: string[],
+    params: string[]
   ): Promise<IGameActionResponse> {
     const answer = await action.live(player, params)
     if (answer) {
@@ -314,10 +329,7 @@ export class ActionService implements GameActionService {
       }
     }
 
-    const isSuccess = await player.inventory?.reduceOrDestroyItem(
-      itemExist.type,
-      count,
-    )
+    const isSuccess = await player.inventory?.reduceOrDestroyItem(itemExist.type, count)
     if (!isSuccess) {
       return {
         ok: false,
@@ -401,10 +413,7 @@ export class ActionService implements GameActionService {
       if (!player.target || player.target.state === 'DESTROYED') {
         player.state = 'IDLE'
         if (player.target instanceof StoneObject) {
-          void player.inventory.addOrCreateItem(
-            'STONE',
-            player.target?.resource,
-          )
+          void player.inventory.addOrCreateItem('STONE', player.target?.resource)
         }
         return true
       }
@@ -668,11 +677,7 @@ export class ActionService implements GameActionService {
       return ANSWER.WRONG_AMOUNT_ERROR
     }
 
-    const status = await this.game.tradeService.findActiveOfferAndTrade(
-      params[0],
-      amount,
-      player,
-    )
+    const status = await this.game.tradeService.findActiveOfferAndTrade(params[0], amount, player)
     if (status === 'OFFER_ERROR') {
       return {
         ok: false,
@@ -706,25 +711,22 @@ export class ActionService implements GameActionService {
     // Part 1: Check trees on Wagon Path
     const onlyOnPath = this.game.children.filter(
       (obj) =>
-        obj instanceof TreeObject
-        && obj.state !== 'DESTROYED'
-        && !obj.isReserved
-        && obj.isOnWagonPath,
+        obj instanceof TreeObject &&
+        obj.state !== 'DESTROYED' &&
+        !obj.isReserved &&
+        obj.isOnWagonPath
     )
     if (onlyOnPath && onlyOnPath.length > 0) {
-      return this.determineNearestObject(
-        this.game.wagonService.wagon,
-        onlyOnPath,
-      ) as TreeObject
+      return this.determineNearestObject(this.game.wagonService.wagon, onlyOnPath) as TreeObject
     }
 
     // Part 2: Check nearest free tree
     const other = this.game.children.filter(
       (obj) =>
-        obj instanceof TreeObject
-        && obj.state !== 'DESTROYED'
-        && !obj.isReserved
-        && obj.isReadyToChop,
+        obj instanceof TreeObject &&
+        obj.state !== 'DESTROYED' &&
+        !obj.isReserved &&
+        obj.isReadyToChop
     )
     if (other && other.length > 0) {
       return this.determineNearestObject(this.game.wagonService.wagon, other) as TreeObject
@@ -735,28 +737,21 @@ export class ActionService implements GameActionService {
     // Part 1: Check on Wagon Path
     const onlyOnPath = this.game.children.filter(
       (obj) =>
-        obj instanceof StoneObject
-        && obj.state !== 'DESTROYED'
-        && !obj.isReserved
-        && obj.isOnWagonPath,
+        obj instanceof StoneObject &&
+        obj.state !== 'DESTROYED' &&
+        !obj.isReserved &&
+        obj.isOnWagonPath
     )
     if (onlyOnPath && onlyOnPath.length > 0) {
-      return this.determineNearestObject(
-        this.game.wagonService.wagon,
-        onlyOnPath,
-      ) as StoneObject
+      return this.determineNearestObject(this.game.wagonService.wagon, onlyOnPath) as StoneObject
     }
 
     // Part 2: Check nearest free
     const other = this.game.children.filter(
-      (obj) =>
-        obj instanceof StoneObject && obj.state !== 'DESTROYED' && !obj.isReserved,
+      (obj) => obj instanceof StoneObject && obj.state !== 'DESTROYED' && !obj.isReserved
     )
     if (other && other.length > 0) {
-      return this.determineNearestObject(
-        this.game.wagonService.wagon,
-        other,
-      ) as StoneObject
+      return this.determineNearestObject(this.game.wagonService.wagon, other) as StoneObject
     }
   }
 
@@ -765,7 +760,7 @@ export class ActionService implements GameActionService {
       x: number
       y: number
     },
-    objects: GameObject[],
+    objects: GameObject[]
   ) {
     let closestObject = objects[0]
     let shortestDistance

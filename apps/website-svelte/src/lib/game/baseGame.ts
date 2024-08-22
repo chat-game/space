@@ -10,15 +10,14 @@ import type {
   GameOptions,
   GameSceneType,
   GameStateResponse,
-  IGameInventoryItem, IGameObjectRaider,
+  IGameInventoryItem,
+  IGameObjectRaider,
 } from '$lib/game/types'
 import { AudioManager } from '$lib/game/utils/audioManager'
 import { BackgroundGenerator } from '$lib/game/utils/generators/background'
 import { AssetsManager } from '$lib/game/utils/assetsManager'
 import { MovingScene } from '$lib/game/scenes/movingScene'
-import {
-  MoveOffScreenAndSelfDestroyScript,
-} from '$lib/game/scripts/moveOffScreenAndSelfDestroyScript'
+import { MoveOffScreenAndSelfDestroyScript } from '$lib/game/scripts/moveOffScreenAndSelfDestroyScript'
 import { getRandomInRange } from '$lib/utils/random'
 import { MoveToTargetScript } from '$lib/game/scripts/moveToTargetScript'
 import { ChopTreeScript } from '$lib/game/scripts/chopTreeScript'
@@ -293,10 +292,7 @@ export class BaseGame extends Container implements Game {
         if (!object.target || object.target.state === 'DESTROYED') {
           object.state = 'IDLE'
           if (object.target instanceof TreeObject) {
-            void object.inventory.addOrCreateItem(
-              'WOOD',
-              object.target?.resource,
-            )
+            void object.inventory.addOrCreateItem('WOOD', object.target?.resource)
           }
           return true
         }
@@ -338,8 +334,7 @@ export class BaseGame extends Container implements Game {
     const columnWidth = this.app.screen.width / 6
     const rowHeight = this.app.screen.height / 6
 
-    let leftPadding
-      = wagon.direction === 'LEFT' ? columnWidth * 4 : columnWidth * 2
+    let leftPadding = wagon.direction === 'LEFT' ? columnWidth * 4 : columnWidth * 2
     let topPadding = rowHeight * 3
 
     if (wagon.speedPerSecond === 0) {

@@ -14,7 +14,7 @@ export class ServerService implements GameServerService {
   async getPlayer(id: string): Promise<Player | null> {
     try {
       const res = await fetch(`/auth/game/player/${id}`)
-      const player = await res.json() as Player
+      const player = (await res.json()) as Player
       if (!player?.id) {
         return null
       }
@@ -28,7 +28,7 @@ export class ServerService implements GameServerService {
   async getInventory(id: string): Promise<Inventory | null> {
     try {
       const res = await fetch(`/auth/game/inventory/${id}`)
-      const inventory = await res.json() as Inventory
+      const inventory = (await res.json()) as Inventory
       if (!inventory) {
         return null
       }

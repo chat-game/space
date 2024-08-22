@@ -1,8 +1,5 @@
 import { Container, Sprite } from 'pixi.js'
-import type {
-  GraphicsContainerType,
-  IGameObjectDirection,
-} from '$lib/game/types'
+import type { GraphicsContainerType, IGameObjectDirection } from '$lib/game/types'
 
 interface IGraphicsContainerOptions {
   type: GraphicsContainerType
@@ -25,7 +22,7 @@ export class GraphicsContainer extends Container {
   static createWithSprite(
     spriteIndex: string,
     direction: IGameObjectDirection,
-    type: GraphicsContainerType,
+    type: GraphicsContainerType
   ) {
     const sprite = Sprite.from(spriteIndex)
     sprite.anchor.set(0.5, 1)

@@ -1,9 +1,5 @@
 import { BaseObject } from '../baseObject'
-import type {
-  Game,
-  GameObjectBuildingType,
-  IGameObjectBuilding,
-} from '$lib/game/types'
+import type { Game, GameObjectBuildingType, IGameObjectBuilding } from '$lib/game/types'
 import { Inventory } from '$lib/game/common/inventory'
 
 interface IBuildingOptions {

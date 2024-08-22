@@ -91,10 +91,7 @@ export class Route implements IGameRoute {
 
   #isInArea(area: IRouteArea, point: IRoutePoint) {
     return (
-      area.startX < point.x
-      && point.x < area.endX
-      && area.startY < point.y
-      && point.y < area.endY
+      area.startX < point.x && point.x < area.endX && area.startY < point.y && point.y < area.endY
     )
   }
 
@@ -136,7 +133,7 @@ export class Route implements IGameRoute {
     point2: {
       x: number
       y: number
-    },
+    }
   ) {
     return Math.sqrt((point1.x - point2.x) ** 2 + (point1.y - point2.y) ** 2)
   }

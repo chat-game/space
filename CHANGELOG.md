@@ -1,6 +1,5 @@
 # Changelog
 
-
 ## v0.2.0
 
 [compare changes](https://github.com/hmbanan666/chat-game/compare/v0.1.0...v0.2.0)
@@ -20,7 +19,7 @@
 
 ### 📦 Build
 
-- ⚠️  Migrate npm to yarn ([b314be9](https://github.com/hmbanan666/chat-game/commit/b314be9))
+- ⚠️ Migrate npm to yarn ([b314be9](https://github.com/hmbanan666/chat-game/commit/b314be9))
 
 ### 🏡 Chore
 
@@ -31,7 +30,7 @@
 
 #### ⚠️ Breaking Changes
 
-- ⚠️  Migrate npm to yarn ([b314be9](https://github.com/hmbanan666/chat-game/commit/b314be9))
+- ⚠️ Migrate npm to yarn ([b314be9](https://github.com/hmbanan666/chat-game/commit/b314be9))
 
 ### ❤️ Contributors
 
@@ -41,13 +40,12 @@
 
 ## v0.1.0
 
-
 ### 🚀 Enhancements
 
 - Tests ([8dd5cb7](https://github.com/hmbanan666/chat-game/commit/8dd5cb7))
 - Conventional commits ([4cc6d9b](https://github.com/hmbanan666/chat-game/commit/4cc6d9b))
 - Migrate dependabot to renovate ([31bfaca](https://github.com/hmbanan666/chat-game/commit/31bfaca))
-- ⚠️  Support i18n ([a07e69e](https://github.com/hmbanan666/chat-game/commit/a07e69e))
+- ⚠️ Support i18n ([a07e69e](https://github.com/hmbanan666/chat-game/commit/a07e69e))
 
 ### 🩹 Fixes
 
@@ -85,9 +83,8 @@
 
 #### ⚠️ Breaking Changes
 
-- ⚠️  Support i18n ([a07e69e](https://github.com/hmbanan666/chat-game/commit/a07e69e))
+- ⚠️ Support i18n ([a07e69e](https://github.com/hmbanan666/chat-game/commit/a07e69e))
 
 ### ❤️ Contributors
 
 - Hywax ([@hywax](http://github.com/hywax))
-

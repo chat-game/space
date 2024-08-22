@@ -22,7 +22,7 @@ export class WagonService implements GameWagonService {
     this.#updateFlags()
   }
 
-  initWagon({ x, y }: { x: number, y: number }) {
+  initWagon({ x, y }: { x: number; y: number }) {
     this.wagon = new BaseWagon({ game: this.game, x, y })
     this.wagon.init()
 
@@ -50,10 +50,8 @@ export class WagonService implements GameWagonService {
   }
 
   #updateWagon() {
-    const collisionObjects
-      = this.game.children.filter(
-        (obj) => obj.isOnWagonPath && obj.state !== 'DESTROYED',
-      ) ?? []
+    const collisionObjects =
+      this.game.children.filter((obj) => obj.isOnWagonPath && obj.state !== 'DESTROYED') ?? []
     for (const collisionObject of collisionObjects) {
       const isInArea = this.wagon.checkIfPointInCollisionArea({
         x: collisionObject.x,
@@ -126,10 +124,8 @@ export class WagonService implements GameWagonService {
     const minOffsetX = 1800
     const minOffsetY = 1200
 
-    const offsetX
-      = getRandomInRange(minOffsetX, minOffsetX * 1.5) * getMinusOrPlus()
-    const offsetY
-      = getRandomInRange(minOffsetY, minOffsetY * 1.5) * getMinusOrPlus()
+    const offsetX = getRandomInRange(minOffsetX, minOffsetX * 1.5) * getMinusOrPlus()
+    const offsetY = getRandomInRange(minOffsetY, minOffsetY * 1.5) * getMinusOrPlus()
 
     return new FlagObject({
       game: this.game,

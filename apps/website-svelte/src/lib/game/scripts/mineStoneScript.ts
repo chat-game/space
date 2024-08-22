@@ -11,11 +11,7 @@ export class MineStoneScript extends Script {
   constructor({ target, object, mineStoneFunc }: IMineStoneScriptOptions) {
     super({ object })
 
-    this.tasks = [
-      this.setTarget(target),
-      this.runToTarget(),
-      this.mineStone(mineStoneFunc),
-    ]
+    this.tasks = [this.setTarget(target), this.runToTarget(), this.mineStone(mineStoneFunc)]
   }
 
   mineStone(func: () => boolean): IGameTask {

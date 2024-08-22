@@ -4,7 +4,7 @@ import type { IGameObjectUnit } from '$lib/game/types'
 
 export class DialogueInterface extends GraphicsContainer {
   public unit: IGameObjectUnit
-  public messages: { id: string, text: string, isShowed: boolean }[]
+  public messages: { id: string; text: string; isShowed: boolean }[]
   #showingSpeed: number
 
   constructor(unit: IGameObjectUnit) {
@@ -19,7 +19,7 @@ export class DialogueInterface extends GraphicsContainer {
     this.y = 0
   }
 
-  create(message: { id: string, text: string }) {
+  create(message: { id: string; text: string }) {
     const container = new GraphicsContainer({ type: 'INTERFACE' })
 
     const basicText = new Text({
@@ -28,7 +28,7 @@ export class DialogueInterface extends GraphicsContainer {
         fontFamily: 'Noto Serif',
         fontSize: 16,
         fontWeight: '500',
-        fill: 0x451A03,
+        fill: 0x451a03,
         align: 'left',
         wordWrap: true,
         wordWrapWidth: 350,
@@ -42,7 +42,7 @@ export class DialogueInterface extends GraphicsContainer {
 
     const graphics = new Graphics()
     graphics.rect(-rectOffsetX, -rectOffsetY, rectWidth, rectHeight)
-    graphics.fill(0xFEF3C7)
+    graphics.fill(0xfef3c7)
 
     container.addChild(graphics, basicText)
 
@@ -76,9 +76,7 @@ export class DialogueInterface extends GraphicsContainer {
       this.create(needToShowMessages[0])
 
       needToShowMessages[0].isShowed = true
-      this.#showingSpeed = this.#getShowingSpeed(
-        needToShowMessages[0].text.length,
-      )
+      this.#showingSpeed = this.#getShowingSpeed(needToShowMessages[0].text.length)
     }
 
     for (const container of this.children) {
@@ -93,6 +91,6 @@ export class DialogueInterface extends GraphicsContainer {
   }
 
   #getShowingSpeed(messageLength: number) {
-    return (0.05 - ((messageLength * 4) / 10000)) / this.unit.game.tick
+    return (0.05 - (messageLength * 4) / 10000) / this.unit.game.tick
   }
 }

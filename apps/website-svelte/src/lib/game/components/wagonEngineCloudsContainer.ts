@@ -24,8 +24,7 @@ export class WagonEngineCloudsContainer extends GraphicsContainer {
     this.#offset -= speed + 1
 
     const cloudsActive = speed * 8 + 1
-    const canCreateCloud
-      = this.children.length < cloudsActive && this.#offset <= 0
+    const canCreateCloud = this.children.length < cloudsActive && this.#offset <= 0
     if (canCreateCloud) {
       this.#createRandom()
       this.#offset = speed * getRandomInRange(170, 190) + 3

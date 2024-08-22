@@ -20,12 +20,8 @@ export class BuildingInterface extends GraphicsContainer {
   }
 
   init() {
-    this.wood
-      = this.building.inventory.items.find((item) => item.type === 'WOOD')
-        ?.amount ?? 0
-    this.stone
-      = this.building.inventory.items.find((item) => item.type === 'STONE')
-        ?.amount ?? 0
+    this.wood = this.building.inventory.items.find((item) => item.type === 'WOOD')?.amount ?? 0
+    this.stone = this.building.inventory.items.find((item) => item.type === 'STONE')?.amount ?? 0
 
     this.drawWood()
     this.drawStone()
@@ -43,12 +39,8 @@ export class BuildingInterface extends GraphicsContainer {
   }
 
   update() {
-    const wood = this.building.inventory.items.find(
-      (item) => item.type === 'WOOD',
-    )?.amount
-    const stone = this.building.inventory.items.find(
-      (item) => item.type === 'STONE',
-    )?.amount
+    const wood = this.building.inventory.items.find((item) => item.type === 'WOOD')?.amount
+    const stone = this.building.inventory.items.find((item) => item.type === 'STONE')?.amount
 
     if (wood !== this.wood || stone !== this.stone) {
       this.wood = wood

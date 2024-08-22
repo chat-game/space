@@ -1,6 +1,4 @@
-import type {
-  Game,
-} from '$lib/game/types'
+import type { Game } from '$lib/game/types'
 
 export interface GameService {
   game: Game

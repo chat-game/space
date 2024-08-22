@@ -7,7 +7,7 @@ export interface GameTradeService extends GameService {
   findActiveOfferAndTrade: (
     offerId: string,
     amount: number,
-    player: GameObjectPlayer,
+    player: GameObjectPlayer
   ) => Promise<FindActiveOfferAndTrade>
 }
 

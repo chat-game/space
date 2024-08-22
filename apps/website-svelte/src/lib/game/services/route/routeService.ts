@@ -1,15 +1,7 @@
-import type {
-  Game,
-} from '$lib/game/types'
+import type { Game } from '$lib/game/types'
 import { Route } from '$lib/game/services/route/route'
-import type {
-  GameRouteService,
-  IGameRoute,
-} from '$lib/game/services/route/interface'
-import type {
-  GameChunk,
-  IGameVillageChunk,
-} from '$lib/game/services/chunk/interface'
+import type { GameRouteService, IGameRoute } from '$lib/game/services/route/interface'
+import type { GameChunk, IGameVillageChunk } from '$lib/game/services/chunk/interface'
 import { TreeObject } from '$lib/game/objects/treeObject'
 import { StoneObject } from '$lib/game/objects/stoneObject'
 import type { FlagObject } from '$lib/game/objects/flagObject'
@@ -24,11 +16,7 @@ export class RouteService implements GameRouteService {
 
   update() {
     if (!this.route?.flags || this.route.flags.length <= 0) {
-      if (
-        this.game.eventService.events.find(
-          (e) => e.type === 'MAIN_QUEST_STARTED',
-        )
-      ) {
+      if (this.game.eventService.events.find((e) => e.type === 'MAIN_QUEST_STARTED')) {
         return this.#finishAdventure()
       }
     }

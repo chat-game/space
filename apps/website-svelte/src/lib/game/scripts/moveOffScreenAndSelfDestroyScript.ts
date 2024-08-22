@@ -8,18 +8,10 @@ interface IMoveOffScreenAndSelfDestroyScriptOptions {
 }
 
 export class MoveOffScreenAndSelfDestroyScript extends Script {
-  constructor({
-    target,
-    object,
-    selfDestroyFunc,
-  }: IMoveOffScreenAndSelfDestroyScriptOptions) {
+  constructor({ target, object, selfDestroyFunc }: IMoveOffScreenAndSelfDestroyScriptOptions) {
     super({ object })
 
-    this.tasks = [
-      this.setTarget(target),
-      this.runToTarget(),
-      this.selfDestroy(selfDestroyFunc),
-    ]
+    this.tasks = [this.setTarget(target), this.runToTarget(), this.selfDestroy(selfDestroyFunc)]
   }
 
   selfDestroy(func: () => void): IGameTask {

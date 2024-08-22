@@ -154,7 +154,7 @@ export class UnitsOnStreamPlugin extends Container implements UnitsOnStream {
     return this.#nearFlags[Math.floor(Math.random() * this.#nearFlags.length)]
   }
 
-  #initWagon({ x, y }: { x: number, y: number }) {
+  #initWagon({ x, y }: { x: number; y: number }) {
     this.wagon = new BaseWagon({ game: this as any, x, y })
     this.wagon.init()
 
@@ -193,8 +193,7 @@ export class UnitsOnStreamPlugin extends Container implements UnitsOnStream {
   #generateRandomNearFlag() {
     const minOffsetX = 200
 
-    const offsetX
-      = getRandomInRange(minOffsetX, this.app.screen.width - 500)
+    const offsetX = getRandomInRange(minOffsetX, this.app.screen.width - 500)
     const offsetY = 30
 
     const flag = new FlagObject({
@@ -209,7 +208,13 @@ export class UnitsOnStreamPlugin extends Container implements UnitsOnStream {
     return flag
   }
 
-  async handleMessage({ playerId, text }: { playerId: string, text: string }): Promise<IGameActionResponse> {
+  async handleMessage({
+    playerId,
+    text,
+  }: {
+    playerId: string
+    text: string
+  }): Promise<IGameActionResponse> {
     const player = await this.#initPlayer(playerId)
     if (!player) {
       return ANSWER.NO_PLAYER_ERROR

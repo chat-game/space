@@ -8,18 +8,10 @@ interface IPlaceItemInWarehouseScriptOptions {
 }
 
 export class PlaceItemInWarehouseScript extends Script {
-  constructor({
-    target,
-    object,
-    placeItemFunc,
-  }: IPlaceItemInWarehouseScriptOptions) {
+  constructor({ target, object, placeItemFunc }: IPlaceItemInWarehouseScriptOptions) {
     super({ object })
 
-    this.tasks = [
-      this.setTarget(target),
-      this.runToTarget(),
-      this.placeItem(placeItemFunc),
-    ]
+    this.tasks = [this.setTarget(target), this.runToTarget(), this.placeItem(placeItemFunc)]
   }
 
   placeItem(func: () => void): IGameTask {

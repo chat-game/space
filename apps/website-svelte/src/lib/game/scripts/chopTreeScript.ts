@@ -11,11 +11,7 @@ export class ChopTreeScript extends Script {
   constructor({ target, object, chopTreeFunc }: IPlantNewTreeScriptOptions) {
     super({ object })
 
-    this.tasks = [
-      this.setTarget(target),
-      this.runToTarget(),
-      this.chopTree(chopTreeFunc),
-    ]
+    this.tasks = [this.setTarget(target), this.runToTarget(), this.chopTree(chopTreeFunc)]
   }
 
   chopTree(func: () => boolean): IGameTask {

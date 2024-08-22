@@ -1,10 +1,6 @@
 import { UnitObject } from './unitObject'
 import { getRandomInRange } from '$lib/utils/random'
-import type {
-  Game,
-  GameObjectPlayer,
-  IGameSkill,
-} from '$lib/game/types'
+import type { Game, GameObjectPlayer, IGameSkill } from '$lib/game/types'
 import { Skill } from '$lib/game/common/skill'
 import { Inventory } from '$lib/game/common/inventory'
 

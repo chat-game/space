@@ -1,6 +1,6 @@
 export default defineEventHandler((event) => {
-  const { public: publicEnv } = useRuntimeConfig();
-  const query = getQuery(event);
+  const { public: publicEnv } = useRuntimeConfig()
+  const query = getQuery(event)
 
   if (!query.code) {
     throw createError({
@@ -9,14 +9,14 @@ export default defineEventHandler((event) => {
     })
   }
 
-  const code = query.code.toString();
+  const code = query.code.toString()
 
-  log(JSON.stringify(query));
+  log(JSON.stringify(query))
 
   setCookie(event, publicEnv.cookieKey, code, {
     path: '/',
     httpOnly: true,
-  });
+  })
 
-  sendRedirect(event, '/');
-});
+  sendRedirect(event, '/')
+})

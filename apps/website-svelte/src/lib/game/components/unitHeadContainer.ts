@@ -18,7 +18,7 @@ export class UnitHeadContainer extends GraphicsContainer {
   static create(
     spriteIndex: string,
     direction: IGameObjectDirection,
-    visual: IGameObjectUnit['visual']['head'],
+    visual: IGameObjectUnit['visual']['head']
   ) {
     const sprite = Sprite.from(spriteIndex)
     sprite.anchor.set(0.5, 1)
@@ -34,10 +34,7 @@ export class UnitHeadContainer extends GraphicsContainer {
     return container
   }
 
-  static createWithBothDirections(
-    spriteIndex: string,
-    visual: IGameObjectUnit['visual']['head'],
-  ) {
+  static createWithBothDirections(spriteIndex: string, visual: IGameObjectUnit['visual']['head']) {
     const containers = []
 
     containers.push(UnitHeadContainer.create(spriteIndex, 'LEFT', visual))

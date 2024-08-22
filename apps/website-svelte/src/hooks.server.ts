@@ -31,9 +31,15 @@ const handleJWT: Handle = ({ event, resolve }) => {
 const handleLocale: Handle = async ({ event, resolve }) => {
   const { pathname, search } = event.url
 
-  const browserLang = `${`${event.request.headers.get('accept-language')}`.match(/[a-z]+(?=[\-_,;])/i)}`.toLowerCase()
-  const browserLocale = supportedLocales.find((locale) => locale === browserLang) ? browserLang as Locale : defaultLocale
-  const locale = supportedLocales.find((locale) => locale === event.params.lang) ? event.params.lang as Locale : browserLocale
+  const browserLang = `${`${event.request.headers.get('accept-language')}`.match(
+    /[a-z]+(?=[\-_,;])/i
+  )}`.toLowerCase()
+  const browserLocale = supportedLocales.find((locale) => locale === browserLang)
+    ? (browserLang as Locale)
+    : defaultLocale
+  const locale = supportedLocales.find((locale) => locale === event.params.lang)
+    ? (event.params.lang as Locale)
+    : browserLocale
 
   event.locals.locale = locale
 

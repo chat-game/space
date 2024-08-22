@@ -1,7 +1,8 @@
 import type { Game } from '$lib/game/types'
 import type {
   GameChunk,
-  GameChunkService, IGameChunkTheme,
+  GameChunkService,
+  IGameChunkTheme,
 } from '$lib/game/services/chunk/interface'
 import { VillageChunk } from '$lib/game/services/chunk/villageChunk'
 import { ForestChunk } from '$lib/game/services/chunk/forestChunk'
@@ -46,7 +47,7 @@ export class ChunkService implements GameChunkService {
     }
   }
 
-  generateChunks(startPoint: { x: number, y: number }, amount: number) {
+  generateChunks(startPoint: { x: number; y: number }, amount: number) {
     let outPoint = startPoint
 
     for (let i = 1; i <= amount; i++) {
@@ -81,7 +82,7 @@ export class ChunkService implements GameChunkService {
     }
   }
 
-  generateRandomChunk(startPoint: { x: number, y: number }) {
+  generateRandomChunk(startPoint: { x: number; y: number }) {
     const random = getRandomInRange(1, 2)
 
     const width = getRandomInRange(2000, 3000)
@@ -117,25 +118,18 @@ export class ChunkService implements GameChunkService {
   }
 
   getRandomTheme(): IGameChunkTheme {
-    const themes: IGameChunkTheme[] = [
-      'GREEN',
-      'BLUE',
-      'STONE',
-      'TEAL',
-      'VIOLET',
-      'TOXIC',
-    ]
+    const themes: IGameChunkTheme[] = ['GREEN', 'BLUE', 'STONE', 'TEAL', 'VIOLET', 'TOXIC']
     return themes[Math.floor(Math.random() * themes.length)]
   }
 
   generateRandomVillage({
     center,
-                          width,
-                          height,
-                          theme,
-                          game,
+    width,
+    height,
+    theme,
+    game,
   }: {
-    center: { x: number, y: number }
+    center: { x: number; y: number }
     width: number
     height: number
     theme: IGameChunkTheme
@@ -149,11 +143,11 @@ export class ChunkService implements GameChunkService {
 
   generateRandomForest({
     center,
-                         width,
-                         height,
-                         theme,
+    width,
+    height,
+    theme,
   }: {
-    center: { x: number, y: number }
+    center: { x: number; y: number }
     width: number
     height: number
     theme: IGameChunkTheme
@@ -172,11 +166,11 @@ export class ChunkService implements GameChunkService {
 
   generateRandomLake({
     center,
-                       width,
-                       height,
-                       theme,
+    width,
+    height,
+    theme,
   }: {
-    center: { x: number, y: number }
+    center: { x: number; y: number }
     width: number
     height: number
     theme: IGameChunkTheme
