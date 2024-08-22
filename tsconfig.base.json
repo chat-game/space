@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@chat-game/prisma-client": ["libs/prisma-client/src/index.ts"],
       "@chat-game/prisma-schema": ["libs/prisma-schema/src/index.ts"]
     }
   },

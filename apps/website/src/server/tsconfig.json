@@ -1,3 +1,8 @@
 {
+  "compilerOptions": {
+    "paths": {
+      "@chat-game/prisma-client": ["../../../../libs/prisma-client/src/index.ts"]
+    }
+  },
   "extends": "../../.nuxt/tsconfig.server.json"
 }
