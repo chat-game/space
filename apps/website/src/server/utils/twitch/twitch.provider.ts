@@ -25,7 +25,7 @@ class TwitchProvider {
       twitchSecretId,
       twitchOauthCode,
     } = useRuntimeConfig()
-    this.#userId = twitchChannelId
+    this.#userId = twitchChannelId.toString()
     this.#clientSecret = twitchSecretId
     this.#code = twitchOauthCode
     this.#clientId = publicEnv.twitchClientId

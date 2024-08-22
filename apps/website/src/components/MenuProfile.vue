@@ -11,8 +11,8 @@ url.searchParams.set('client_id', publicEnv.twitchClientId)
 url.searchParams.set('redirect_uri', publicEnv.signInRedirectUrl)
 url.searchParams.set('response_type', 'code')
 
-const { data: profile } = await useFetch('/api/auth/me')
-const isSignedIn = !!profile?.id
+const { data } = await useFetch('/api/auth/me')
+const isSignedIn = !!data.value?.id
 </script>
 
 <template>
