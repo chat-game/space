@@ -506,7 +506,6 @@ export interface TwitchAccessToken {
 
 export interface WebsiteProfile {
   id: string
-  twitchToken: string
   twitchId: string
   userName: string
 }
