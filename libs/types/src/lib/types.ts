@@ -503,3 +503,10 @@ export interface TwitchAccessToken {
   expiresIn: number | null
   obtainmentTimestamp: number
 }
+
+export interface WebsiteProfile {
+  id: string
+  twitchToken: string
+  twitchId: string
+  userName: string
+}

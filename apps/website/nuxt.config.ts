@@ -25,6 +25,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     websiteBearer: '', // NUXT_PRIVATE_WEBSITE_BEARER
+    jwtSecretKey: '', // NUXT_PRIVATE_JWT_SECRET_KEY
     twitchSecretId: '', // NUXT_PRIVATE_TWITCH_SECRET_ID
     twitchChannelName: '', // NUXT_PRIVATE_TWITCH_CHANNEL_NAME
     twitchChannelId: '', // NUXT_PRIVATE_TWITCH_CHANNEL_ID

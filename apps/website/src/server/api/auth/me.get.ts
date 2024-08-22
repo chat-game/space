@@ -1,17 +1,28 @@
-export default defineEventHandler((event) => {
-  const { public: publicEnv } = useRuntimeConfig()
+import jwt, { verify } from 'jsonwebtoken'
+import type { WebsiteProfile } from '@chat-game/types'
 
-  const jwt = getCookie(event, publicEnv.cookieKey)
-  if (!jwt) {
+export default defineEventHandler((event) => {
+  const { public: publicEnv, jwtSecretKey } = useRuntimeConfig()
+
+  const token = getCookie(event, publicEnv.cookieKey)
+  if (!token) {
     throw createError({
       statusCode: 401,
       statusMessage: 'Unauthorized',
     })
   }
 
-  return {
-    id: '1234',
-    twitchId: '12345',
-    userName: 'testuser',
+  try {
+    const { profile } = verify(token, jwtSecretKey) as { profile: WebsiteProfile }
+    return profile
+  } catch (error) {
+    if (error instanceof jwt.TokenExpiredError) {
+      deleteCookie(event, publicEnv.cookieKey, { path: '/' })
+    }
   }
+
+  throw createError({
+    statusCode: 401,
+    statusMessage: 'Unauthorized',
+  })
 })
