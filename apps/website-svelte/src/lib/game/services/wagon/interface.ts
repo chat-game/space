@@ -1,8 +1,4 @@
-import type {
-  GameObject,
-  GameObjectFlag,
-  IGameInventory,
-} from '$lib/game/types'
+import type { GameObject, GameObjectFlag, IGameInventory } from '$lib/game/types'
 import type { GameService } from '$lib/game/services/interface'
 
 export interface GameWagonService extends GameService {
@@ -10,7 +6,7 @@ export interface GameWagonService extends GameService {
   cargo: IGameInventory | undefined
   randomOutFlag: GameObjectFlag
   randomNearFlag: GameObjectFlag
-  initWagon: (point: { x: number, y: number }) => void
+  initWagon: (point: { x: number; y: number }) => void
   setCargo: () => void
   emptyCargo: () => void
 }

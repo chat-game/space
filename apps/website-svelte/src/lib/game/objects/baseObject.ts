@@ -136,10 +136,7 @@ export class BaseObject extends Container implements GameObject {
   }
 
   #checkIfIsOnTarget() {
-    return (
-      this.#getDistanceToTargetX() + this.#getDistanceToTargetY()
-      <= this.minDistance
-    )
+    return this.#getDistanceToTargetX() + this.#getDistanceToTargetY() <= this.minDistance
   }
 
   #getDistanceToTargetX() {

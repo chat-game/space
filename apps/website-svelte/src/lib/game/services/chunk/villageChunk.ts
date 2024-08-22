@@ -10,19 +10,13 @@ import { PlaceItemInWarehouseScript } from '../../scripts/placeItemInWarehouseSc
 import { PlantNewTreeScript } from '../../scripts/plantNewTreeScript'
 import { BaseChunk } from './baseChunk'
 import { getRandomInRange } from '$lib/utils/random'
-import type {
-  Game,
-  GameObjectFlag,
-} from '$lib/game/types'
+import type { Game, GameObjectFlag } from '$lib/game/types'
 import { Farmer } from '$lib/game/objects/units/farmer'
 import { Courier } from '$lib/game/objects/units/courier'
 import { TreeObject } from '$lib/game/objects/treeObject'
 import { FlagObject } from '$lib/game/objects/flagObject'
 import { StoneObject } from '$lib/game/objects/stoneObject'
-import type {
-  IGameChunkTheme,
-  IGameVillageChunk,
-} from '$lib/game/services/chunk/interface'
+import type { IGameChunkTheme, IGameVillageChunk } from '$lib/game/services/chunk/interface'
 
 interface VillageChunkOptions {
   game: Game
@@ -65,7 +59,7 @@ export class VillageChunk extends BaseChunk implements IGameVillageChunk {
 
   checkIfNeedToPlantTree() {
     const treesNow = this.game.children.filter(
-      (t) => t instanceof TreeObject && t.chunkId === this.id && t.state !== 'DESTROYED',
+      (t) => t instanceof TreeObject && t.chunkId === this.id && t.state !== 'DESTROYED'
     )
     if (treesNow.length < 40) {
       return this.#getRandomEmptyResourceFlagInVillage()
@@ -91,7 +85,7 @@ export class VillageChunk extends BaseChunk implements IGameVillageChunk {
 
   getTreesAmount() {
     return this.game.children.filter(
-      (obj) => obj instanceof TreeObject && obj.chunkId === this.id && obj.state !== 'DESTROYED',
+      (obj) => obj instanceof TreeObject && obj.chunkId === this.id && obj.state !== 'DESTROYED'
     ).length
   }
 
@@ -163,10 +157,7 @@ export class VillageChunk extends BaseChunk implements IGameVillageChunk {
         if (!object.target || object.target.state === 'DESTROYED') {
           object.state = 'IDLE'
           if (object.target instanceof TreeObject) {
-            void object.inventory.addOrCreateItem(
-              'WOOD',
-              object.target?.resource,
-            )
+            void object.inventory.addOrCreateItem('WOOD', object.target?.resource)
           }
           return true
         }
@@ -345,11 +336,11 @@ export class VillageChunk extends BaseChunk implements IGameVillageChunk {
   #getRandomEmptyResourceFlagInVillage() {
     const flags = this.game.children.filter(
       (f) =>
-        f instanceof FlagObject
-        && f.chunkId === this.id
-        && f.variant === 'RESOURCE'
-        && !f.target
-        && !f.isReserved,
+        f instanceof FlagObject &&
+        f.chunkId === this.id &&
+        f.variant === 'RESOURCE' &&
+        !f.target &&
+        !f.isReserved
     )
     return flags.length > 0
       ? (flags[Math.floor(Math.random() * flags.length)] as FlagObject)
@@ -358,17 +349,15 @@ export class VillageChunk extends BaseChunk implements IGameVillageChunk {
 
   #getResourceFlagInVillageAmount() {
     return this.game.children.filter(
-      (f) => f instanceof FlagObject && f.chunkId === this.id && f.variant === 'RESOURCE',
+      (f) => f instanceof FlagObject && f.chunkId === this.id && f.variant === 'RESOURCE'
     ).length
   }
 
   #getRandomMovementFlagInVillage() {
     const flags = this.game.children.filter(
-      (f) => f instanceof FlagObject && f.chunkId === this.id && f.variant === 'MOVEMENT',
+      (f) => f instanceof FlagObject && f.chunkId === this.id && f.variant === 'MOVEMENT'
     )
-    return flags.length > 0
-      ? flags[Math.floor(Math.random() * flags.length)]
-      : undefined
+    return flags.length > 0 ? flags[Math.floor(Math.random() * flags.length)] : undefined
   }
 
   #getRandomTitle() {

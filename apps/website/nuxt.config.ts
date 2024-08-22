@@ -1,5 +1,5 @@
-import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
-import { defineNuxtConfig } from 'nuxt/config';
+import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin'
+import { defineNuxtConfig } from 'nuxt/config'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -30,10 +30,6 @@ export default defineNuxtConfig({
       cookieKey: '', // NUXT_PUBLIC_COOKIE_KEY
     },
   },
-  modules: [
-    '@nuxt/eslint',
-    '@vueuse/nuxt',
-    '@pinia/nuxt',
-  ],
+  modules: ['@nuxt/eslint', '@vueuse/nuxt', '@pinia/nuxt'],
   compatibilityDate: '2024-08-18',
-});
+})

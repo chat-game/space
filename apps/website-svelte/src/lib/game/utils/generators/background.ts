@@ -173,25 +173,20 @@ export class BackgroundGenerator {
     ctx.canvas.height = blob.height
     ctx.drawImage(blob, 0, 0)
 
-    const imageData = ctx.getImageData(
-      0,
-      0,
-      ctx.canvas.width,
-      ctx.canvas.height,
-    )
+    const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height)
 
     const pixels: number[] = []
 
     for (let y = 0; y < blob.width; y++) {
       for (let x = 0; x < blob.width; x++) {
-        const [redIndex, greenIndex, blueIndex, _]
-          = this.getColorIndicesForCoord(x, y, ctx.canvas.width)
+        const [redIndex, greenIndex, blueIndex, _] = this.getColorIndicesForCoord(
+          x,
+          y,
+          ctx.canvas.width
+        )
 
         const average = Math.round(
-          (imageData?.data[redIndex]
-          + imageData?.data[greenIndex]
-          + imageData?.data[blueIndex])
-          / 3,
+          (imageData?.data[redIndex] + imageData?.data[greenIndex] + imageData?.data[blueIndex]) / 3
         )
 
         pixels.push(average)
@@ -227,13 +222,7 @@ export class BackgroundGenerator {
     })
   }
 
-  generateRandomGridBackground({
-    width,
-    height,
-  }: {
-    width: number
-    height: number
-  }) {
+  generateRandomGridBackground({ width, height }: { width: number; height: number }) {
     const gridX = Math.ceil(width / 64)
     const gridY = Math.floor(height / 64)
 

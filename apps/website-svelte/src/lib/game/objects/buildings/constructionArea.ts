@@ -1,9 +1,6 @@
 import { Sprite } from 'pixi.js'
 import { BaseBuilding } from './baseBuilding'
-import type {
-  Game,
-  IGameBuildingConstructionArea,
-} from '$lib/game/types'
+import type { Game, IGameBuildingConstructionArea } from '$lib/game/types'
 
 interface IConstructionAreaOptions {
   game: Game
@@ -12,9 +9,7 @@ interface IConstructionAreaOptions {
   chunkId?: string
 }
 
-export class ConstructionArea
-  extends BaseBuilding
-  implements IGameBuildingConstructionArea {
+export class ConstructionArea extends BaseBuilding implements IGameBuildingConstructionArea {
   constructor({ game, x, y, chunkId }: IConstructionAreaOptions) {
     super({ game, x, y, chunkId, type: 'CONSTRUCTION_AREA' })
 

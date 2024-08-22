@@ -20,11 +20,13 @@ const allEnv = z.object({
   PUBLIC_GAME_ADMIN_PLAYER_ID: z.string().default('svhjz9p5467wne9ybasf1bwy'),
   PUBLIC_TWITCH_CLIENT_ID: z.string().default(''),
   PUBLIC_TWITCH_URL: z.string().default('https://www.twitch.tv/hmbanan666'),
-  PUBLIC_TWITCH_CHANNEL_REWARDS: z.string().default(JSON.stringify({
-    add150ViewerPointsId: 'd8237822-c943-434f-9d7e-87a9f549f4c4',
-    villainStealFuelId: 'd5956de4-54ff-49e4-afbe-ee4e62718eee',
-    addNewIdea: '289457e8-18c2-4b68-8564-fc61dd60b2a2',
-  })),
+  PUBLIC_TWITCH_CHANNEL_REWARDS: z.string().default(
+    JSON.stringify({
+      add150ViewerPointsId: 'd8237822-c943-434f-9d7e-87a9f549f4c4',
+      villainStealFuelId: 'd5956de4-54ff-49e4-afbe-ee4e62718eee',
+      addNewIdea: '289457e8-18c2-4b68-8564-fc61dd60b2a2',
+    })
+  ),
 })
 
 const ConfigSchema = allEnv.transform((value) => {

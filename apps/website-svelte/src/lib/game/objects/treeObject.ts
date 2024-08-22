@@ -28,17 +28,7 @@ export class TreeObject extends BaseObject implements GameObjectTree {
   private growSpeedPerSecond = 0.5
   private animationSpeedPerSecond = 3
 
-  constructor({
-    game,
-    x,
-    y,
-    resource,
-    size,
-    health,
-    theme,
-    variant,
-    chunkId,
-  }: TreeOptions) {
+  constructor({ game, x, y, resource, size, health, theme, variant, chunkId }: TreeOptions) {
     super({ game, x, y, type: 'TREE' })
 
     this.chunkId = chunkId
@@ -135,8 +125,7 @@ export class TreeObject extends BaseObject implements GameObjectTree {
     }
 
     this.animationSpeedPerSecond *= -1
-    this.angle
-      += ((this.animationSpeedPerSecond * 5) / this.game.tick) * 10
+    this.angle += ((this.animationSpeedPerSecond * 5) / this.game.tick) * 10
   }
 
   #shakeOnWind() {
@@ -182,14 +171,7 @@ export class TreeObject extends BaseObject implements GameObjectTree {
   }
 
   #getRandomTheme(): GameObjectTree['theme'] {
-    const themes: GameObjectTree['theme'][] = [
-      'GREEN',
-      'BLUE',
-      'STONE',
-      'TEAL',
-      'TOXIC',
-      'VIOLET',
-    ]
+    const themes: GameObjectTree['theme'][] = ['GREEN', 'BLUE', 'STONE', 'TEAL', 'TOXIC', 'VIOLET']
     const index = getRandomInRange(0, themes.length - 1)
     return themes[index]
   }

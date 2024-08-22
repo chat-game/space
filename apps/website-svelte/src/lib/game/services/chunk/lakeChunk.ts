@@ -1,15 +1,10 @@
 import { BaseChunk } from './baseChunk'
 import { getRandomInRange } from '$lib/utils/random'
-import type {
-  Game,
-} from '$lib/game/types'
+import type { Game } from '$lib/game/types'
 import { Lake } from '$lib/game/objects/lake'
 import { TreeObject } from '$lib/game/objects/treeObject'
 import { StoneObject } from '$lib/game/objects/stoneObject'
-import type {
-  IGameChunkTheme,
-  IGameLakeChunk,
-} from '$lib/game/services/chunk/interface'
+import type { IGameChunkTheme, IGameLakeChunk } from '$lib/game/services/chunk/interface'
 
 interface LakeChunkOptions {
   game: Game
@@ -31,9 +26,7 @@ export class LakeChunk extends BaseChunk implements IGameLakeChunk {
       type: 'LAKE',
     })
 
-    const treesToPrepare = Math.round(
-      (this.area.area.endX - this.area.area.startX) / 30,
-    )
+    const treesToPrepare = Math.round((this.area.area.endX - this.area.area.startX) / 30)
     this.#initTrees(treesToPrepare)
     this.#initStones(3)
     this.#initLake()

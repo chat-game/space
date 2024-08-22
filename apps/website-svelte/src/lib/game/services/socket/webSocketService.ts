@@ -52,7 +52,13 @@ export class WebSocketService implements GameWebSocketService {
     this.#setMessagesPerSecondHandler()
 
     this.socket.addEventListener('open', () => {
-      this.socket.send(JSON.stringify({ type: 'GAME_HANDSHAKE', id: this.game.id, profileJWT: this.game.profileJWT }))
+      this.socket.send(
+        JSON.stringify({
+          type: 'GAME_HANDSHAKE',
+          id: this.game.id,
+          profileJWT: this.game.profileJWT,
+        })
+      )
     })
 
     this.socket.addEventListener('message', (event) => {

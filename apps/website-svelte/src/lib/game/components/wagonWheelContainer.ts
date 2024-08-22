@@ -18,7 +18,7 @@ export class WagonWheelContainer extends GraphicsContainer {
   static create(
     spriteIndex: string,
     direction: IGameObjectDirection,
-    side: IWagonWheelContainerOptions['side'],
+    side: IWagonWheelContainerOptions['side']
   ) {
     const sprite = Sprite.from(spriteIndex)
     sprite.anchor.set(0.5, 0.5)

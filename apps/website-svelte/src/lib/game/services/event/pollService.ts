@@ -1,7 +1,4 @@
-import type {
-  Game,
-  GameObjectPlayer, IGamePoll,
-} from '$lib/game/types'
+import type { Game, GameObjectPlayer, IGamePoll } from '$lib/game/types'
 import type { GameService } from '$lib/game/services/interface'
 
 export class PollService implements GameService {

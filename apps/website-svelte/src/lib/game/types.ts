@@ -3,22 +3,14 @@ import type { GameServerService } from './services/server/interface'
 import type { GameAction } from '$lib/game/actions/interface'
 import type {
   GameChunk,
-  GameChunkService, IGameChunkTheme,
+  GameChunkService,
+  IGameChunkTheme,
 } from '$lib/game/services/chunk/interface'
 import type { GamePlayerService } from '$lib/game/services/player/interface'
 import type { GameTradeService } from '$lib/game/services/trade/interface'
-import type {
-  GameEventService,
-  IGameEvent,
-} from '$lib/game/services/event/interface'
-import type {
-  GameWagonService,
-  Wagon,
-} from '$lib/game/services/wagon/interface'
-import type {
-  GameRouteService,
-  IGameRoute,
-} from '$lib/game/services/route/interface'
+import type { GameEventService, IGameEvent } from '$lib/game/services/event/interface'
+import type { GameWagonService, Wagon } from '$lib/game/services/wagon/interface'
+import type { GameRouteService, IGameRoute } from '$lib/game/services/route/interface'
 import type { GameActionService } from '$lib/game/services/action/interface'
 import type { GameQuestService } from '$lib/game/services/quest/interface'
 
@@ -39,7 +31,13 @@ export interface UnitsOnStream extends Container {
   findObject: (id: string) => GameObject | undefined
   removeObject: (obj: GameObject) => void
   rebuildScene: () => void
-  handleMessage: ({ playerId, text }: { playerId: string, text: string }) => Promise<IGameActionResponse>
+  handleMessage: ({
+    playerId,
+    text,
+  }: {
+    playerId: string
+    text: string
+  }) => Promise<IGameActionResponse>
 }
 
 export interface Game extends Container {
@@ -198,13 +196,7 @@ export interface IGameSkill {
   xpNextLvl: number
 }
 
-export type IGameObjectState =
-  | 'MOVING'
-  | 'IDLE'
-  | 'WAITING'
-  | 'CHOPPING'
-  | 'MINING'
-  | 'DESTROYED'
+export type IGameObjectState = 'MOVING' | 'IDLE' | 'WAITING' | 'CHOPPING' | 'MINING' | 'DESTROYED'
 export type IGameObjectDirection = 'LEFT' | 'RIGHT'
 
 export type GameObjectBuildingType =
@@ -275,15 +267,10 @@ export interface IGameObjectUnit extends GameObject {
   visual: {
     head: '1'
     hairstyle: 'BOLD' | 'CLASSIC' | 'COAL_LONG' | 'ORANGE_WITH_BEARD'
-    top:
-      | 'VIOLET_SHIRT'
-      | 'BLACK_SHIRT'
-      | 'GREEN_SHIRT'
-      | 'BLUE_SHIRT'
-      | 'DARK_SILVER_SHIRT'
+    top: 'VIOLET_SHIRT' | 'BLACK_SHIRT' | 'GREEN_SHIRT' | 'BLUE_SHIRT' | 'DARK_SILVER_SHIRT'
   }
   dialogue: {
-    messages: { id: string, text: string }[]
+    messages: { id: string; text: string }[]
   }
   chopTree: () => void
   mineStone: () => void
@@ -347,7 +334,7 @@ export interface IGamePoll {
   id: string
   action: GameAction
   votesToSuccess: number
-  votes: { id: string, userName: string }[]
+  votes: { id: string; userName: string }[]
 }
 
 export type GameSceneType = 'VILLAGE' | 'DEFENCE' | 'MOVING'
@@ -373,15 +360,7 @@ export interface IGameGroup {
 
 export interface PlayerTitle {
   title: string
-  type:
-    | 'RICH'
-    | 'FAMOUS'
-    | 'VIEWER'
-    | 'RAIDER'
-    | 'VILLAIN'
-    | 'REFUELLER'
-    | 'WOODSMAN'
-    | 'MINER'
+  type: 'RICH' | 'FAMOUS' | 'VIEWER' | 'RAIDER' | 'VILLAIN' | 'REFUELLER' | 'WOODSMAN' | 'MINER'
 }
 
 export type GraphicsContainerType =

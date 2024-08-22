@@ -11,9 +11,5 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
-  "exclude": [
-    "node_modules",
-    "tmp",
-    "build"
-  ]
+  "exclude": ["node_modules", "tmp", "build"]
 }

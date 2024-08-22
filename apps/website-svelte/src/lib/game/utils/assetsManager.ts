@@ -303,7 +303,7 @@ export abstract class AssetsManager {
 
   public static getRandomSpriteForBackground(app: Application) {
     const graphics1 = new Graphics()
-    graphics1.rect(0, 0, 64, 64).fill(0x0B8A8F)
+    graphics1.rect(0, 0, 64, 64).fill(0x0b8a8f)
     const texture1 = app.renderer.generateTexture(graphics1)
 
     const sprite1 = Sprite.from(texture1)
@@ -407,10 +407,7 @@ export abstract class AssetsManager {
     })
   }
 
-  public static async saveCanvasAsWebp(
-    app: Application,
-    imageName = 'untitled',
-  ) {
+  public static async saveCanvasAsWebp(app: Application, imageName = 'untitled') {
     const blob = await app.renderer.extract.image({
       target: app.stage,
       format: 'webp',

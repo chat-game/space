@@ -5,14 +5,12 @@ import type {
   GameObjectFlag,
   IGameBuildingConstructionArea,
   IGameBuildingStore,
-  IGameBuildingWagonStop, IGameBuildingWarehouse,
+  IGameBuildingWagonStop,
+  IGameBuildingWarehouse,
 } from '$lib/game/types'
 import { Area } from '$lib/game/objects/area'
 import { TreeObject } from '$lib/game/objects/treeObject'
-import type {
-  GameChunk,
-  IGameChunkTheme,
-} from '$lib/game/services/chunk/interface'
+import type { GameChunk, IGameChunkTheme } from '$lib/game/services/chunk/interface'
 import { FlagObject } from '$lib/game/objects/flagObject'
 
 interface BaseChunkOptions {
@@ -33,15 +31,7 @@ export class BaseChunk implements GameChunk {
   area!: GameChunk['area']
   game: Game
 
-  constructor({
-    title,
-    type,
-    theme,
-    width,
-    height,
-    center,
-    game,
-  }: BaseChunkOptions) {
+  constructor({ title, type, theme, width, height, center, game }: BaseChunkOptions) {
     this.id = createId()
     this.center = center
     this.title = title
@@ -66,14 +56,11 @@ export class BaseChunk implements GameChunk {
 
     return {
       x: this.area.area.endX,
-      y: getRandomInRange(
-        this.area.area.startY + offsetFromTop,
-        this.area.area.endY,
-      ),
+      y: getRandomInRange(this.area.area.startY + offsetFromTop, this.area.area.endY),
     }
   }
 
-  isPointInArea(point: { x: number, y: number }): boolean {
+  isPointInArea(point: { x: number; y: number }): boolean {
     if (point.x >= this.area.area.startX && point.x <= this.area.area.endX) {
       if (point.y >= this.area.area.startY && point.y <= this.area.area.endY) {
         return true
@@ -86,11 +73,11 @@ export class BaseChunk implements GameChunk {
   get availableTree() {
     const trees = this.game.children.filter(
       (obj) =>
-        obj instanceof TreeObject
-        && obj.chunkId === this.id
-        && obj.state !== 'DESTROYED'
-        && !obj.isReserved
-        && obj.isReadyToChop,
+        obj instanceof TreeObject &&
+        obj.chunkId === this.id &&
+        obj.state !== 'DESTROYED' &&
+        !obj.isReserved &&
+        obj.isReadyToChop
     )
     if (!trees || !trees.length) {
       return undefined
@@ -101,16 +88,18 @@ export class BaseChunk implements GameChunk {
 
   get randomMovementFlag() {
     const flags = this.game.children.filter(
-      (f) => f instanceof FlagObject && f.chunkId === this.id && f.variant === 'MOVEMENT',
+      (f) => f instanceof FlagObject && f.chunkId === this.id && f.variant === 'MOVEMENT'
     )
 
     return flags.length > 0
-      ? flags[Math.floor(Math.random() * flags.length)] as GameObjectFlag
+      ? (flags[Math.floor(Math.random() * flags.length)] as GameObjectFlag)
       : undefined
   }
 
   get warehouse() {
-    return this.game.children.find((b) => b.type === 'WAREHOUSE') as IGameBuildingWarehouse | undefined
+    return this.game.children.find((b) => b.type === 'WAREHOUSE') as
+      | IGameBuildingWarehouse
+      | undefined
   }
 
   get store() {
@@ -118,20 +107,18 @@ export class BaseChunk implements GameChunk {
   }
 
   get constructionArea() {
-    return this.game.children.find((b) => b.type === 'CONSTRUCTION_AREA') as IGameBuildingConstructionArea | undefined
+    return this.game.children.find((b) => b.type === 'CONSTRUCTION_AREA') as
+      | IGameBuildingConstructionArea
+      | undefined
   }
 
   get wagonStop(): IGameBuildingWagonStop | undefined {
-    return this.game.children.find((b) => b.type === 'WAGON_STOP') as IGameBuildingWagonStop | undefined
+    return this.game.children.find((b) => b.type === 'WAGON_STOP') as
+      | IGameBuildingWagonStop
+      | undefined
   }
 
-  #initArea({
-    width, height, theme,
-  }: {
-    width: number
-    height: number
-    theme: IGameChunkTheme
-  }) {
+  #initArea({ width, height, theme }: { width: number; height: number; theme: IGameChunkTheme }) {
     const halfWidth = Math.round(width / 2)
     const halfHeight = Math.round(height / 2)
 

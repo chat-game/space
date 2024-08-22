@@ -1,6 +1,6 @@
 export default defineEventHandler((event) => {
-  const { public: publicEnv } = useRuntimeConfig();
-  
+  const { public: publicEnv } = useRuntimeConfig()
+
   const jwt = getCookie(event, publicEnv.cookieKey)
   if (!jwt) {
     throw createError({
@@ -14,4 +14,4 @@ export default defineEventHandler((event) => {
     twitchId: '12345',
     userName: 'testuser',
   }
-});
+})

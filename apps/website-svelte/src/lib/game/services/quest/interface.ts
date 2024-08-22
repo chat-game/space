@@ -51,5 +51,5 @@ export interface IGameQuestTask {
 }
 
 export type IGameQuestTaskFunc = (
-  progressToSuccess?: IGameQuestTask['progressToSuccess'],
+  progressToSuccess?: IGameQuestTask['progressToSuccess']
 ) => Partial<IGameQuestTask>

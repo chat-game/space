@@ -3,13 +3,13 @@ import { DonateWoodToVillageAction } from '../../actions/donateWoodToVillageActi
 import { PlantTreeAction } from '../../actions/plantTreeAction'
 import { NoTradingPostQuest } from '../../quests/noTradingPostQuest'
 import { TreesAreRunningOutQuest } from '../../quests/treesAreRunningOutQuest'
-import type {
-  Game,
-} from '$lib/game/types'
+import type { Game } from '$lib/game/types'
 import { VillageChunk } from '$lib/game/services/chunk/villageChunk'
 import type {
   GameQuestService,
-  IGameQuest, IGameQuestTask, IGameQuestTaskFunc,
+  IGameQuest,
+  IGameQuestTask,
+  IGameQuestTaskFunc,
 } from '$lib/game/services/quest/interface'
 import type { GameAction } from '$lib/game/actions/interface'
 
@@ -84,9 +84,7 @@ export class QuestService implements GameQuestService {
   findActionByCommand(command: string): GameAction | undefined {
     for (const q of this.quests) {
       if (q?.tasks) {
-        const task = q.tasks.find(
-          (q) => q.action?.command === command,
-        )
+        const task = q.tasks.find((q) => q.action?.command === command)
         if (task?.action) {
           return task.action
         }
@@ -131,9 +129,7 @@ export class QuestService implements GameQuestService {
   }
 
   #generateSecondSideQuest() {
-    const sideQuests = this.game.eventService.events.filter(
-      (e) => e.type === 'SIDE_QUEST_STARTED',
-    )
+    const sideQuests = this.game.eventService.events.filter((e) => e.type === 'SIDE_QUEST_STARTED')
     if (sideQuests.length >= 1) {
       return
     }
@@ -193,9 +189,7 @@ export class QuestService implements GameQuestService {
       }
     }
 
-    const sideQuests = this.game.eventService.events.filter(
-      (e) => e.type === 'SIDE_QUEST_STARTED',
-    )
+    const sideQuests = this.game.eventService.events.filter((e) => e.type === 'SIDE_QUEST_STARTED')
     if (sideQuests.length >= 1) {
       return
     }

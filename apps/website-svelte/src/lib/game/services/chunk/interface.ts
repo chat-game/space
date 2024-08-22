@@ -6,7 +6,8 @@ import type {
   IGameBuildingConstructionArea,
   IGameBuildingStore,
   IGameBuildingWagonStop,
-  IGameBuildingWarehouse, IGameObjectArea,
+  IGameBuildingWarehouse,
+  IGameObjectArea,
 } from '$lib/game/types'
 
 export interface GameChunkService extends GameService {
@@ -15,9 +16,9 @@ export interface GameChunkService extends GameService {
   chunks: GameChunk[]
   removeChunk: (chunk: GameChunk) => void
   removeAllOutsideChunks: () => void
-  generateChunks: (startPoint: { x: number, y: number }, amount: number) => void
+  generateChunks: (startPoint: { x: number; y: number }, amount: number) => void
   generateRandomVillage: (data: {
-    center: { x: number, y: number }
+    center: { x: number; y: number }
     width: number
     height: number
     theme: IGameChunkTheme
@@ -41,18 +42,12 @@ export interface GameChunk {
   wagonStop: IGameBuildingWagonStop | undefined
   availableTree: GameObjectTree | undefined
   randomMovementFlag: GameObjectFlag | undefined
-  randomOutPoint: { x: number, y: number }
+  randomOutPoint: { x: number; y: number }
   live: () => void
-  isPointInArea: (point: { x: number, y: number }) => boolean
+  isPointInArea: (point: { x: number; y: number }) => boolean
 }
 
-export type IGameChunkTheme =
-  | 'GREEN'
-  | 'TOXIC'
-  | 'STONE'
-  | 'TEAL'
-  | 'BLUE'
-  | 'VIOLET'
+export type IGameChunkTheme = 'GREEN' | 'TOXIC' | 'STONE' | 'TEAL' | 'BLUE' | 'VIOLET'
 
 export interface IGameVillageChunk extends GameChunk {}
 

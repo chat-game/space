@@ -11,11 +11,7 @@ import { BaseObject } from '../baseObject'
 import { StoneObject } from '../stoneObject'
 import { TreeObject } from '../treeObject'
 import { getRandomInRange } from '$lib/utils/random'
-import type {
-  Game,
-  GameObject,
-  IGameObjectUnit,
-} from '$lib/game/types'
+import type { Game, GameObject, IGameObjectUnit } from '$lib/game/types'
 import { Inventory } from '$lib/game/common/inventory'
 import { AssetsManager } from '$lib/game/utils/assetsManager'
 
@@ -86,9 +82,8 @@ export class UnitObject extends BaseObject implements IGameObjectUnit {
 
   addMessage(message: string): void {
     const MAX_CHARS = 100
-    const messagePrepared
-      = message.trim().slice(0, MAX_CHARS)
-      + (message.length > MAX_CHARS ? '...' : '')
+    const messagePrepared =
+      message.trim().slice(0, MAX_CHARS) + (message.length > MAX_CHARS ? '...' : '')
 
     this.dialogue.messages.push({
       id: createId(),
@@ -146,7 +141,7 @@ export class UnitObject extends BaseObject implements IGameObjectUnit {
       this.#animationMovingLeft,
       this.#animationMovingRight,
       this.#interface,
-      this.#dialogueInterface,
+      this.#dialogueInterface
     )
   }
 
@@ -184,11 +179,7 @@ export class UnitObject extends BaseObject implements IGameObjectUnit {
         }
       }
 
-      if (
-        this.state === 'IDLE'
-        || this.state === 'CHOPPING'
-        || this.state === 'MINING'
-      ) {
+      if (this.state === 'IDLE' || this.state === 'CHOPPING' || this.state === 'MINING') {
         this.#animationMovingLeft.animationSpeed = 0
         this.#animationMovingRight.animationSpeed = 0
         this.#animationMovingLeft.currentFrame = 0

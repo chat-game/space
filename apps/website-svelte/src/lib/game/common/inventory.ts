@@ -1,10 +1,5 @@
 import { createId } from '@paralleldrive/cuid2'
-import type {
-  GameObject,
-  IGameInventory,
-  IGameInventoryItem,
-  ItemType,
-} from '$lib/game/types'
+import type { GameObject, IGameInventory, IGameInventoryItem, ItemType } from '$lib/game/types'
 
 interface InventoryOptions {
   object: GameObject

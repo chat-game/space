@@ -1,14 +1,9 @@
 import { BaseChunk } from './baseChunk'
 import { getRandomInRange } from '$lib/utils/random'
-import type {
-  Game,
-} from '$lib/game/types'
+import type { Game } from '$lib/game/types'
 import { TreeObject } from '$lib/game/objects/treeObject'
 import { StoneObject } from '$lib/game/objects/stoneObject'
-import type {
-  IGameChunkTheme,
-  IGameForestChunk,
-} from '$lib/game/services/chunk/interface'
+import type { IGameChunkTheme, IGameForestChunk } from '$lib/game/services/chunk/interface'
 
 interface ForestChunkOptions {
   center: IGameForestChunk['center']
@@ -30,9 +25,7 @@ export class ForestChunk extends BaseChunk implements IGameForestChunk {
       game,
     })
 
-    const treesToPrepare = Math.round(
-      (this.area.area.endX - this.area.area.startX) / 10,
-    )
+    const treesToPrepare = Math.round((this.area.area.endX - this.area.area.startX) / 10)
     this.#initTrees(treesToPrepare)
     this.#initStones(3)
   }

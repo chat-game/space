@@ -72,9 +72,9 @@ export class FlagObject extends BaseObject implements GameObjectFlag {
 
   #getSprite() {
     if (
-      this.variant === 'MOVEMENT'
-      || this.variant === 'WAGON_NEAR_MOVEMENT'
-      || this.variant === 'WAGON_MOVEMENT'
+      this.variant === 'MOVEMENT' ||
+      this.variant === 'WAGON_NEAR_MOVEMENT' ||
+      this.variant === 'WAGON_MOVEMENT'
     ) {
       return Sprite.from('flag1')
     }

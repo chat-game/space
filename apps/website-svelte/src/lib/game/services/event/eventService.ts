@@ -1,17 +1,9 @@
 import { PollService } from './pollService'
-import type {
-  Game,
-  GameSceneType,
-} from '$lib/game/types'
+import type { Game, GameSceneType } from '$lib/game/types'
 import { Event } from '$lib/game/services/event/event'
 import { VillageChunk } from '$lib/game/services/chunk/villageChunk'
-import type {
-  GameEventService,
-  IGameEvent,
-} from '$lib/game/services/event/interface'
-import type {
-  IGameQuestTask,
-} from '$lib/game/services/quest/interface'
+import type { GameEventService, IGameEvent } from '$lib/game/services/event/interface'
+import type { IGameQuestTask } from '$lib/game/services/quest/interface'
 import type { GameAction } from '$lib/game/actions/interface'
 
 export class EventService implements GameEventService {
@@ -121,16 +113,15 @@ export class EventService implements GameEventService {
 
     const updateProgress1: IGameQuestTask['updateProgress'] = () => {
       if (
-        !this.game.routeService.route
-        && this.events.find((e) => e.type === 'MAIN_QUEST_STARTED')
+        !this.game.routeService.route &&
+        this.events.find((e) => e.type === 'MAIN_QUEST_STARTED')
       ) {
         return {
           status: 'SUCCESS',
         }
       }
 
-      const items
-        = this.game.wagonService.cargo?.checkIfAlreadyHaveItem('WOOD')
+      const items = this.game.wagonService.cargo?.checkIfAlreadyHaveItem('WOOD')
       if (!items) {
         return {
           status: 'FAILED',
@@ -171,7 +162,7 @@ export class EventService implements GameEventService {
     if (this.game.chunkService.chunk instanceof VillageChunk) {
       this.game.routeService.generateAdventure(
         this.game.chunkService.chunk,
-        event.quest.conditions.chunks ?? 3,
+        event.quest.conditions.chunks ?? 3
       )
     }
 

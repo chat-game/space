@@ -8,18 +8,10 @@ interface IPlantNewTreeScriptOptions {
 }
 
 export class PlantNewTreeScript extends Script {
-  constructor({
-    target,
-    object,
-    plantNewTreeFunc,
-  }: IPlantNewTreeScriptOptions) {
+  constructor({ target, object, plantNewTreeFunc }: IPlantNewTreeScriptOptions) {
     super({ object })
 
-    this.tasks = [
-      this.setTarget(target),
-      this.runToTarget(),
-      this.plantNewTree(plantNewTreeFunc),
-    ]
+    this.tasks = [this.setTarget(target), this.runToTarget(), this.plantNewTree(plantNewTreeFunc)]
   }
 
   plantNewTree(func: () => void): IGameTask {

@@ -10,16 +10,11 @@ interface ITreesAreRunningOutQuestOptions {
 }
 
 export class TreesAreRunningOutQuest extends BaseQuest {
-  constructor({
-    creatorId,
-    taskUpdateFunc1,
-    taskAction1,
-  }: ITreesAreRunningOutQuestOptions) {
+  constructor({ creatorId, taskUpdateFunc1, taskAction1 }: ITreesAreRunningOutQuestOptions) {
     super({
       type: 'SIDE',
       title: 'The trees are running out!',
-      description:
-        'In the village, someone is actively cutting down trees. Help is needed!',
+      description: 'In the village, someone is actively cutting down trees. Help is needed!',
     })
 
     this.creatorId = creatorId

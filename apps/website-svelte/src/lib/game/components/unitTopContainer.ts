@@ -18,7 +18,7 @@ export class UnitTopContainer extends GraphicsContainer {
   static create(
     spriteIndex: string,
     direction: IGameObjectDirection,
-    visual: IGameObjectUnit['visual']['top'],
+    visual: IGameObjectUnit['visual']['top']
   ) {
     const sprite = Sprite.from(spriteIndex)
     sprite.anchor.set(0.5, 1)
@@ -34,10 +34,7 @@ export class UnitTopContainer extends GraphicsContainer {
     return container
   }
 
-  static createWithBothDirections(
-    spriteIndex: string,
-    visual: IGameObjectUnit['visual']['top'],
-  ) {
+  static createWithBothDirections(spriteIndex: string, visual: IGameObjectUnit['visual']['top']) {
     const containers = []
 
     containers.push(UnitTopContainer.create(spriteIndex, 'LEFT', visual))
@@ -52,10 +49,7 @@ export class UnitTopContainer extends GraphicsContainer {
       ...UnitTopContainer.createWithBothDirections('blackTop', 'BLACK_SHIRT'),
       ...UnitTopContainer.createWithBothDirections('greenTop', 'GREEN_SHIRT'),
       ...UnitTopContainer.createWithBothDirections('blueTop', 'BLUE_SHIRT'),
-      ...UnitTopContainer.createWithBothDirections(
-        'darkSilverTop',
-        'DARK_SILVER_SHIRT',
-      ),
+      ...UnitTopContainer.createWithBothDirections('darkSilverTop', 'DARK_SILVER_SHIRT'),
     ]
   }
 }

@@ -2,17 +2,12 @@ import { MoveOffScreenAndSelfDestroyScript } from '../../scripts/moveOffScreenAn
 import { MoveToTargetScript } from '../../scripts/moveToTargetScript'
 import { MoveToTradePostAndTradeScript } from '../../scripts/moveToTradePostAndTradeScript'
 import { getRandomInRange } from '$lib/utils/random'
-import type {
-  Game,
-  GameObjectPlayer, ITradeOffer,
-} from '$lib/game/types'
+import type { Game, GameObjectPlayer, ITradeOffer } from '$lib/game/types'
 import { VillageChunk } from '$lib/game/services/chunk/villageChunk'
 import { FlagObject } from '$lib/game/objects/flagObject'
 import { Trader } from '$lib/game/objects/units/trader'
 import { Poll } from '$lib/game/common/poll'
-import type {
-  FindActiveOfferAndTrade, GameTradeService,
-} from '$lib/game/services/trade/interface'
+import type { FindActiveOfferAndTrade, GameTradeService } from '$lib/game/services/trade/interface'
 
 export class TradeService implements GameTradeService {
   offers: ITradeOffer[] = []
@@ -39,7 +34,7 @@ export class TradeService implements GameTradeService {
   async findActiveOfferAndTrade(
     offerId: string,
     amount: number,
-    player: GameObjectPlayer,
+    player: GameObjectPlayer
   ): Promise<FindActiveOfferAndTrade> {
     for (const offer of this.offers) {
       if (offer.id === offerId) {
@@ -54,11 +49,7 @@ export class TradeService implements GameTradeService {
     return 'OFFER_NOT_FOUND'
   }
 
-  async trade(
-    offer: ITradeOffer,
-    amount: number,
-    player: GameObjectPlayer,
-  ): Promise<boolean> {
+  async trade(offer: ITradeOffer, amount: number, player: GameObjectPlayer): Promise<boolean> {
     if (offer.amount < amount) {
       return false
     }
@@ -161,15 +152,13 @@ export class TradeService implements GameTradeService {
       return false
     }
 
-    const activeTrade = this.game.eventService.events.find(
-      (e) => e.type === 'TRADE_STARTED',
-    )
+    const activeTrade = this.game.eventService.events.find((e) => e.type === 'TRADE_STARTED')
     return !activeTrade
   }
 
   #getTradePointFlag() {
     return this.game.children.find(
-      (obj) => obj instanceof FlagObject && obj.variant === 'TRADE_POINT',
+      (obj) => obj instanceof FlagObject && obj.variant === 'TRADE_POINT'
     ) as FlagObject | undefined
   }
 
@@ -265,37 +254,33 @@ export class TradeService implements GameTradeService {
     }
 
     const votingEvents = this.game.eventService.events.filter(
-      (e) => e.type === 'VOTING_FOR_NEW_MAIN_QUEST_STARTED',
+      (e) => e.type === 'VOTING_FOR_NEW_MAIN_QUEST_STARTED'
     )
     if (votingEvents.length >= 1) {
       return
     }
 
     const adventureEvents = this.game.eventService.events.filter(
-      (e) => e.type === 'MAIN_QUEST_STARTED',
+      (e) => e.type === 'MAIN_QUEST_STARTED'
     )
     if (adventureEvents.length >= 1) {
       return
     }
 
-    const votesToSuccess
-      = this.game.activePlayers.length >= 2
-        ? this.game.activePlayers.length
-        : 1
+    const votesToSuccess = this.game.activePlayers.length >= 2 ? this.game.activePlayers.length : 1
 
     const poll = new Poll({ votesToSuccess, game: this.game })
 
     this.game.eventService.initEvent({
       type: 'VOTING_FOR_NEW_MAIN_QUEST_STARTED',
       title: 'The merchant offers a quest',
-      description: 'Let\'s make the quest active? Vote in chat.',
+      description: "Let's make the quest active? Vote in chat.",
       secondsToEnd: 180,
       quest: this.game.questService.create({
         status: 'INACTIVE',
         type: 'MAIN',
         title: 'Transport cargo to a neighboring village',
-        description:
-          'The merchant is worried about the safety of the items in the chest.',
+        description: 'The merchant is worried about the safety of the items in the chest.',
         creatorId: trader.id,
         tasks: [],
         conditions: {

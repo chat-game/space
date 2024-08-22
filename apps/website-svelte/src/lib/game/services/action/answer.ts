@@ -17,7 +17,7 @@ export const ANSWER = {
   },
   BUSY_ERROR: {
     ok: false,
-    message: 'You\'re busy right now',
+    message: "You're busy right now",
   },
   CANT_DO_THIS_NOW_ERROR: {
     ok: false,
@@ -45,7 +45,7 @@ export const ANSWER = {
   },
   ALREADY_VOTED_ERROR: {
     ok: false,
-    message: 'You\'ve already voted.',
+    message: "You've already voted.",
   },
   NOT_ENOUGH_PARAMS_ERROR: {
     ok: false,
@@ -53,6 +53,6 @@ export const ANSWER = {
   },
   NOT_ENOUGH_WOOD_ERROR: {
     ok: false,
-    message: 'You don\'t have enough wood.',
+    message: "You don't have enough wood.",
   },
 }
