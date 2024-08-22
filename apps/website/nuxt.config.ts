@@ -1,4 +1,5 @@
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin'
+import { join } from 'node:path'
 import { defineNuxtConfig } from 'nuxt/config'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
@@ -15,6 +16,10 @@ export default defineNuxtConfig({
     tsConfig: {
       extends: '../tsconfig.app.json', // Nuxt copies this string as-is to the `./.nuxt/tsconfig.json`, therefore it needs to be relative to that directory
     },
+  },
+  alias: {
+    '@chat-game/prisma-client': join(__dirname, '../../libs/prisma-client/src/index.ts'),
+    '@chat-game/types': join(__dirname, '../../libs/types/src/index.ts'),
   },
   imports: {
     autoImport: true,
