@@ -485,3 +485,28 @@ export interface PaymentCreateResponse {
     redirectUrl: string
   }
 }
+
+export interface TwitchAccessTokenResponse {
+  access_token: string
+  refresh_token: string
+  scope: string[]
+  expires_in: number
+  token_type: 'bearer'
+}
+
+export interface TwitchAccessToken {
+  id: string
+  userId: string
+  accessToken: string
+  refreshToken: string | null
+  scope: string[]
+  expiresIn: number | null
+  obtainmentTimestamp: number
+}
+
+export interface WebsiteProfile {
+  id: string
+  twitchToken: string
+  twitchId: string
+  userName: string
+}
