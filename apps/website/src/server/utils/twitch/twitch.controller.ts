@@ -19,7 +19,7 @@ class TwitchController {
   constructor() {
     const { twitchChannelName, twitchChannelId } = useRuntimeConfig()
     this.#channel = twitchChannelName
-    this.#userId = twitchChannelId
+    this.#userId = twitchChannelId.toString()
 
     this.#service = new TwitchService()
     this.#repository = new DBRepository()
