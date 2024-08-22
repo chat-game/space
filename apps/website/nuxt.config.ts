@@ -25,6 +25,12 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     websiteBearer: '', // NUXT_PRIVATE_WEBSITE_BEARER
+    twitchSecretId: '', // NUXT_PRIVATE_TWITCH_SECRET_ID
+    twitchChannelName: '', // NUXT_PRIVATE_TWITCH_CHANNEL_NAME
+    twitchChannelId: '', // NUXT_PRIVATE_TWITCH_CHANNEL_ID
+    twitchOauthCode: '', // NUXT_PRIVATE_TWITCH_OAUTH_CODE
+    yookassaShopId: '', // NUXT_PRIVATE_YOOKASSA_SHOP_ID
+    yookassaApiKey: '', // NUXT_PRIVATE_YOOKASSA_API_KEY
     public: {
       twitchClientId: '', // NUXT_PUBLIC_TWITCH_CLIENT_ID
       signInRedirectUrl: '', // NUXT_PUBLIC_SIGN_IN_REDIRECT_URL

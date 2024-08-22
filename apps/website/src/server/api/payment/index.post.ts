@@ -1,4 +1,3 @@
-import process from 'node:process'
 import type { EventHandlerRequest } from 'h3'
 import { createId } from '@paralleldrive/cuid2'
 import type { Payment, PaymentCreateResponse } from '@chat-game/types'
@@ -51,9 +50,8 @@ export default defineEventHandler<EventHandlerRequest, Promise<PaymentCreateResp
       },
     }
 
-    const credentials = btoa(
-      `${process.env.PRIVATE_YOOKASSA_SHOP_ID}:${process.env.PRIVATE_YOOKASSA_API_KEY}`
-    )
+    const { yookassaShopId, yookassaApiKey } = useRuntimeConfig()
+    const credentials = btoa(`${yookassaShopId}:${yookassaApiKey}`)
     const res = await fetch(`https://api.yookassa.ru/v3/payments`, {
       method: 'POST',
       headers: {

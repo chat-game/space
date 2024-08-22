@@ -1,4 +1,3 @@
-import process from 'node:process'
 import { createId } from '@paralleldrive/cuid2'
 import type { EventHandlerRequest } from 'h3'
 import type { TokenCreateResponse, TwitchAccessTokenResponse, TwitchToken } from '@chat-game/types'
@@ -65,12 +64,12 @@ export default defineEventHandler<EventHandlerRequest, Promise<TokenCreateRespon
 )
 
 async function obtainTwitchAccessToken(code: string, redirectUrl: string) {
-  const clientId = process.env.PUBLIC_TWITCH_CLIENT_ID
-  const clientSecret = process.env.PRIVATE_TWITCH_SECRET_ID
+  const { public: publicEnv, twitchSecretId } = useRuntimeConfig()
+  const clientId = publicEnv.twitchClientId
 
   try {
     const response = await fetch(
-      `https://id.twitch.tv/oauth2/token?client_id=${clientId}&client_secret=${clientSecret}&code=${code}&grant_type=authorization_code&redirect_uri=${redirectUrl}`,
+      `https://id.twitch.tv/oauth2/token?client_id=${clientId}&client_secret=${twitchSecretId}&code=${code}&grant_type=authorization_code&redirect_uri=${redirectUrl}`,
       {
         method: 'POST',
       }

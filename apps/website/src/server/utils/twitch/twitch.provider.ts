@@ -1,4 +1,3 @@
-import process from 'node:process'
 import type { AuthProvider } from '@twurple/auth'
 import { RefreshingAuthProvider } from '@twurple/auth'
 import { createId } from '@paralleldrive/cuid2'
@@ -10,15 +9,27 @@ import { DBRepository } from '../repository'
 class TwitchProvider {
   #authProvider!: AuthProvider
   #isStreaming: boolean = false
-  readonly #userId = process.env.PRIVATE_TWITCH_CHANNEL_ID as string
-  readonly #clientId = process.env.PUBLIC_TWITCH_CLIENT_ID as string
-  readonly #clientSecret = process.env.PRIVATE_TWITCH_SECRET_ID as string
-  readonly #code = process.env.PRIVATE_TWITCH_OAUTH_CODE as string
-  readonly #redirectUrl = process.env.PUBLIC_SIGNIN_REDIRECT_URL as string
+  readonly #userId: string
+  readonly #clientId: string
+  readonly #clientSecret: string
+  readonly #code: string
+  readonly #redirectUrl: string
   readonly #repository: DBRepository
 
   constructor() {
     this.#repository = new DBRepository()
+
+    const {
+      public: publicEnv,
+      twitchChannelId,
+      twitchSecretId,
+      twitchOauthCode,
+    } = useRuntimeConfig()
+    this.#userId = twitchChannelId
+    this.#clientSecret = twitchSecretId
+    this.#code = twitchOauthCode
+    this.#clientId = publicEnv.twitchClientId
+    this.#redirectUrl = publicEnv.signInRedirectUrl
 
     void this.getAuthProvider()
   }

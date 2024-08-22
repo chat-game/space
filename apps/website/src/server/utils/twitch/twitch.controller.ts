@@ -1,4 +1,3 @@
-import process from 'node:process'
 import { Bot } from '@twurple/easy-bot'
 import { PubSubClient } from '@twurple/pubsub'
 import { ApiClient } from '@twurple/api'
@@ -8,8 +7,8 @@ import { twitchProvider } from './twitch.provider'
 import { DBRepository } from '../repository'
 
 class TwitchController {
-  readonly #channel = process.env.PRIVATE_TWITCH_CHANNEL_NAME as string
-  readonly #userId = process.env.PRIVATE_TWITCH_CHANNEL_ID as string
+  readonly #channel: string
+  readonly #userId: string
 
   readonly #service: TwitchService
   readonly #repository: DBRepository
@@ -18,6 +17,10 @@ class TwitchController {
   #couponGeneratorId!: ReturnType<typeof setInterval> | null
 
   constructor() {
+    const { twitchChannelName, twitchChannelId } = useRuntimeConfig()
+    this.#channel = twitchChannelName
+    this.#userId = twitchChannelId
+
     this.#service = new TwitchService()
     this.#repository = new DBRepository()
   }

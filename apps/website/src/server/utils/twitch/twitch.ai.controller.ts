@@ -1,4 +1,3 @@
-import process from 'node:process'
 import { ChatClient } from '@twurple/chat'
 import type { Listener } from '@d-fischer/typed-event-emitter'
 import type { AuthProvider } from '@twurple/auth'
@@ -8,8 +7,8 @@ import { DBRepository } from '../repository'
 
 class TwitchAiController {
   readonly #userId = '1115655883' // ai_view
-  readonly #clientId = process.env.PUBLIC_TWITCH_CLIENT_ID as string
-  readonly #clientSecret = process.env.PRIVATE_TWITCH_SECRET_ID as string
+  readonly #clientId: string
+  readonly #clientSecret: string
 
   readonly #repository: DBRepository
   #authProvider!: AuthProvider
@@ -22,6 +21,11 @@ class TwitchAiController {
 
   constructor() {
     this.#repository = new DBRepository()
+
+    const { public: publicEnv, twitchSecretId } = useRuntimeConfig()
+    this.#clientId = publicEnv.twitchClientId
+    this.#clientSecret = twitchSecretId
+
     void this.#init()
   }
 
