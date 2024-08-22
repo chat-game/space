@@ -1,4 +1,4 @@
-import { sign } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 import type { WebsiteProfile } from '@chat-game/types'
 
 export default defineEventHandler((event) => {
@@ -23,7 +23,7 @@ export default defineEventHandler((event) => {
     userName: 'tester',
   }
 
-  const token = sign({ profile }, jwtSecretKey, { expiresIn: '48h' })
+  const token = jwt.sign({ profile }, jwtSecretKey, { expiresIn: '48h' })
 
   setCookie(event, publicEnv.cookieKey, token, {
     path: '/',
