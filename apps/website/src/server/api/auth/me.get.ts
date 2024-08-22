@@ -1,4 +1,4 @@
-import jwt, { verify } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 import type { WebsiteProfile } from '@chat-game/types'
 
 export default defineEventHandler((event) => {
@@ -13,7 +13,7 @@ export default defineEventHandler((event) => {
   }
 
   try {
-    const { profile } = verify(token, jwtSecretKey) as { profile: WebsiteProfile }
+    const { profile } = jwt.verify(token, jwtSecretKey) as { profile: WebsiteProfile }
     return profile
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
