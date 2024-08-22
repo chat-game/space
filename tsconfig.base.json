@@ -14,7 +14,9 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@chat-game/prisma-schema": ["libs/prisma-schema/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
