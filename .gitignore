@@ -35,6 +35,7 @@ build
 .output
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+.turbo
 
 /.sass-cache
 /connect.lock
@@ -53,4 +54,3 @@ testem.log
 .nuxt
 .nitro
 .cache
-eslint.config.mjs

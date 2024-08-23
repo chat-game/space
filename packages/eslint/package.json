@@ -1,0 +1,24 @@
+{
+  "name": "@chat-game/eslint",
+  "type": "module",
+  "private": true,
+  "files": [
+    "base.mjs",
+    "nuxt.mjs"
+  ],
+  "scripts": {
+    "clean": "rm -rf dist",
+    "clean:modules": "rm -rf .turbo node_modules",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix ."
+  },
+  "peerDependencies": {
+    "eslint": "^9.9.0"
+  },
+  "dependencies": {
+    "@antfu/eslint-config": "^2.27.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.9.0"
+  }
+}
