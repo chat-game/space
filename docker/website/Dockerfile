@@ -11,8 +11,7 @@ RUN corepack enable
 
 COPY . .
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm nx run prisma-schema:generate
-RUN pnpm nx run website:build
+RUN pnpm build --filter @chat-game/website
 
 ################# Website ##############
 
