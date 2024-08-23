@@ -1,12 +1,12 @@
 <script setup lang="ts">
-const website = useWebsiteStore()
+const { isMobileMenuOpened } = useApp()
 </script>
 
 <template>
   <button
     class="burger"
-    :class="{ open: website.isMobileMenuOpened }"
-    @click="() => (website.isMobileMenuOpened = !website.isMobileMenuOpened)"
+    :class="{ open: isMobileMenuOpened }"
+    @click="() => (isMobileMenuOpened = !isMobileMenuOpened)"
   >
     <svg width="32" height="24">
       <line id="top" x1="0" y1="2" x2="32" y2="2" />

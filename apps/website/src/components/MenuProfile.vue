@@ -1,9 +1,9 @@
 <script setup lang="ts">
 const { public: publicEnv } = useRuntimeConfig()
-const website = useWebsiteStore()
+const { isFeedOpened } = useApp()
 
 const handleMenuClick = () => {
-  website.isFeedOpened = !website.isFeedOpened
+  isFeedOpened = !isFeedOpened
 }
 
 const url = new URL('https://id.twitch.tv/oauth2/authorize')

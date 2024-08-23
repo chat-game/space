@@ -1,13 +1,13 @@
 <script setup lang="ts">
-const website = useWebsiteStore()
+const { isMobileMenuOpened } = useApp()
 
 function closeSidebar() {
-  website.isMobileMenuOpened = false
+  isMobileMenuOpened = false
 }
 </script>
 
 <template>
-  <aside :class="{ open: website.isMobileMenuOpened }">
+  <aside :class="{ open: isMobileMenuOpened }">
     <nav>
       <ul>
         <li :aria-current="$route.path === `/` ? 'page' : undefined">
