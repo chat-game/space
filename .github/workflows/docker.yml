@@ -39,9 +39,6 @@ jobs:
 
       - name: Build ${{ matrix.package }}
         uses: docker/build-push-action@v6
-
-      - name: Build ${{ matrix.package }}
-        uses: docker/build-push-action@v6
         with:
           context: .
           build-args: VERSION=nightly
