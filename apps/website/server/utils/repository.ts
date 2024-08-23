@@ -1,10 +1,10 @@
 import { createId } from '@paralleldrive/cuid2'
-import type { QuestEdition } from '@prisma/client'
 import type {
   CharacterEditionWithCharacter,
   Coupon,
   Profile,
   ProfileWithTokens,
+  QuestEdition,
   TwitchAccessToken,
   TwitchToken,
 } from '@chat-game/types'
