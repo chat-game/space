@@ -1,14 +1,18 @@
-ARG NODE=node:20.16.0-alpine
+ARG NODE=node:20.17.0-alpine
 
 ################# Base builder ##############
 
 FROM $NODE AS builder
 WORKDIR /app
 
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+
 COPY . .
-RUN yarn install
-RUN yarn nx run prisma-schema:generate
-RUN yarn nx run website:build
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm nx run prisma-schema:generate
+RUN pnpm nx run website:build
 
 ################# Website ##############
 

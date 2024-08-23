@@ -5,3 +5,4 @@
 /.nx/workspace-data
 .output
 .nuxt
+pnpm-lock.yaml
