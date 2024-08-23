@@ -43,6 +43,6 @@ export default defineNuxtConfig({
       cookieKey: '', // NUXT_PUBLIC_COOKIE_KEY
     },
   },
-  modules: ['@nuxt/eslint', '@vueuse/nuxt', '@pinia/nuxt'],
+  modules: ['@nuxt/eslint', '@vueuse/nuxt'],
   compatibilityDate: '2024-08-18',
 })
