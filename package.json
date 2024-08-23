@@ -1,6 +1,7 @@
 {
   "name": "@chat-game/space",
   "version": "0.2.0",
+  "packageManager": "pnpm@9.8.0",
   "description": "Chat Game for Twitch",
   "author": "Nick Kosarev <hmbanan666@hotmail.com>",
   "license": "MIT",
@@ -18,11 +19,12 @@
     "twitch"
   ],
   "scripts": {
+    "start:first": "nx run prisma-schema:generate",
     "start": "nx run-many -t serve",
     "build": "nx affected:build",
     "test": "nx affected:test",
     "lint": "nx affected:lint && nx format:write --all",
-    "release": "yarn run check && yarn run test && yarn run lint && yarn run build && changelogen --release --push",
+    "release": "pnpm run check && pnpm run test && pnpm run lint && pnpm run build && changelogen --release --push",
     "prepare": "husky",
     "update": "nx migrate latest",
     "dep-graph": "nx dep-graph",
