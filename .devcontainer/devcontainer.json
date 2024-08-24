@@ -16,13 +16,10 @@
       // Add the IDs of extensions you want installed when the container is created.
       "extensions": [
         "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode",
         "Vue.volar",
-        "nrwl.angular-console",
-        "ms-playwright.playwright",
         "ms-azuretools.vscode-docker",
-        "vitest.explorer",
-        "Codeium.codeium"
+        "Codeium.codeium",
+        "Vercel.turbo-vsc"
       ]
     }
   }
