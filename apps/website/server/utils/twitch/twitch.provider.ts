@@ -22,13 +22,14 @@ class TwitchProvider {
     const {
       public: publicEnv,
       twitchChannelId,
-      twitchSecretId,
+      oauthTwitchClientId,
+      oauthTwitchClientSecret,
       twitchOauthCode,
     } = useRuntimeConfig()
     this.#userId = twitchChannelId.toString()
-    this.#clientSecret = twitchSecretId
+    this.#clientSecret = oauthTwitchClientSecret
     this.#code = twitchOauthCode
-    this.#clientId = publicEnv.twitchClientId
+    this.#clientId = oauthTwitchClientId
     this.#redirectUrl = publicEnv.signInRedirectUrl
 
     void this.getAuthProvider()

@@ -13,18 +13,12 @@
 </template>
 
 <script setup lang="ts">
-const { public: publicEnv } = useRuntimeConfig()
 const { isFeedOpened } = useApp()
 const { loggedIn, user } = useUserSession()
 
 function handleMenuClick() {
   isFeedOpened.value = !isFeedOpened.value
 }
-
-const url = new URL('https://id.twitch.tv/oauth2/authorize')
-url.searchParams.set('client_id', publicEnv.twitchClientId)
-url.searchParams.set('redirect_uri', publicEnv.signInRedirectUrl)
-url.searchParams.set('response_type', 'code')
 </script>
 
 <style scoped>

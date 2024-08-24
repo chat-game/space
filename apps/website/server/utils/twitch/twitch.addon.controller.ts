@@ -177,13 +177,9 @@ class TwitchAddonController {
     token: string
   }) {
     const strings = text.split(' ')
-
-    if (!strings?.length) {
-      return
-    }
-
-    const firstChar = strings[0].charAt(0)
-    const possibleCommand = strings[0].substring(1)
+    const firstWord = strings[0] ?? ''
+    const firstChar = firstWord.charAt(0)
+    const possibleCommand = firstWord.substring(1)
     const otherStrings = strings.toSpliced(0, 1)
 
     const profile = await this.#repository.findOrCreateProfile({ userId, userName })

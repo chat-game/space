@@ -54,11 +54,11 @@ export default defineEventHandler(async (event) => {
 })
 
 async function obtainTwitchAccessToken(code: string) {
-  const { public: publicEnv, twitchSecretId } = useRuntimeConfig()
+  const { public: publicEnv, oauthTwitchClientId, oauthTwitchClientSecret } = useRuntimeConfig()
 
   try {
     const response = await fetch(
-      `https://id.twitch.tv/oauth2/token?client_id=${publicEnv.twitchClientId}&client_secret=${twitchSecretId}&code=${code}&grant_type=authorization_code&redirect_uri=${publicEnv.signInRedirectUrl}`,
+      `https://id.twitch.tv/oauth2/token?client_id=${oauthTwitchClientId}&client_secret=${oauthTwitchClientSecret}&code=${code}&grant_type=authorization_code&redirect_uri=${publicEnv.signInRedirectUrl}`,
       {
         method: 'POST',
       },
