@@ -1,8 +1,9 @@
 declare module '#auth-utils' {
   interface User {
     id: string
-    twitchId: number
+    twitchId: string
     userName: string
+    imageUrl: string
   }
 
   interface UserSession {

@@ -1,19 +1,42 @@
 const logger = useLogger('twitch-auth')
 
+interface TwitchUser {
+  id: string
+  login: string
+  display_name: string
+  type: string
+  broadcaster_type: 'affiliate' | 'partner'
+  description: string
+  profile_image_url: string
+  offline_image_url: string
+  view_count: number
+  email: string
+  created_at: Date
+}
+
 export default oauthTwitchEventHandler({
   config: {
     emailRequired: true,
   },
-  async onSuccess(event, { user }) {
-    logger.log(JSON.stringify(user))
+  async onSuccess(event, result: { user: TwitchUser }) {
+    logger.success(JSON.stringify(result.user))
+
+    const repository = new DBRepository()
+
+    const profileInDB = await repository.findOrCreateProfile({
+      userId: result.user.id,
+      userName: result.user.login,
+    })
 
     await setUserSession(event, {
       user: {
-        id: user.id,
-        twitchId: user.id,
-        userName: user.userName,
+        id: profileInDB.id,
+        twitchId: profileInDB.twitchId,
+        userName: profileInDB.userName,
+        imageUrl: result.user.profile_image_url,
       },
     })
+
     return sendRedirect(event, '/')
   },
   // Optional, will return a json error and 401 status code by default

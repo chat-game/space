@@ -10,6 +10,10 @@ export default defineEventHandler((event) => {
       return
     }
 
+    if (event.path === '/api/_auth/session') {
+      return
+    }
+
     if (!token || token !== `Bearer ${websiteBearer}`) {
       return createError({
         statusCode: 403,
