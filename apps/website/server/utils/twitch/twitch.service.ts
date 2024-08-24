@@ -27,13 +27,11 @@ export class TwitchService {
     text: string
   }) {
     const strings = text.split(' ')
-    if (!strings?.length) {
-      return
-    }
-
-    const firstChar = strings[0].charAt(0)
-    const possibleCommand = strings[0].substring(1)
+    const firstWord = strings[0] ?? ''
+    const firstChar = firstWord.charAt(0)
+    const possibleCommand = firstWord.substring(1)
     const otherStrings = strings.toSpliced(0, 1)
+    const firstParam = otherStrings[0] ?? ''
 
     const profile = await this.#repository.findProfileByTwitchId(userId)
     if (!profile) {
@@ -44,7 +42,7 @@ export class TwitchService {
 
     if (firstChar === '!' && possibleCommand) {
       if (possibleCommand === 'купон' || possibleCommand === 'coupon') {
-        return this.handleCouponActivation(otherStrings[0], player.profileId)
+        return this.handleCouponActivation(firstParam, player.profileId)
       }
       if (possibleCommand === 'инвентарь' || possibleCommand === 'inventory') {
         return this.handleInventoryCommand(player.profileId)

@@ -23,9 +23,9 @@ class TwitchAiController {
   constructor() {
     this.#repository = new DBRepository()
 
-    const { public: publicEnv, twitchSecretId } = useRuntimeConfig()
-    this.#clientId = publicEnv.twitchClientId
-    this.#clientSecret = twitchSecretId
+    const { oauthTwitchClientSecret, oauthTwitchClientId } = useRuntimeConfig()
+    this.#clientId = oauthTwitchClientId
+    this.#clientSecret = oauthTwitchClientSecret
 
     void this.#init()
   }

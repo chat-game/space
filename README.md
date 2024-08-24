@@ -21,7 +21,11 @@ Let's build a similar world together! ⭐️ Become a Stargazer ⭐️
 
 - [PixiJS](https://pixijs.com/): The HTML5 Creation Engine.
 - [Twurple](https://twurple.js.org/): A set of libraries that aims to cover all existing Twitch APIs.
+- [Vue](https://vuejs.org/): An approachable, performant and versatile framework for building web user interfaces.
+- [Nuxt](https://nuxt.com/): An open source framework that makes web development intuitive and powerful.
+- [Prisma](https://www.prisma.io/orm): Next-generation Node.js and TypeScript ORM.
 - [Howler.js](https://howlerjs.com/): Audio library for the modern web.
+- [Turborepo](https://turbo.build/repo/docs): High-performance build system for JavaScript and TypeScript codebases.
 - [TypeScript](https://www.typescriptlang.org/): A strongly typed programming language that builds on JavaScript, giving you better tooling at any scale.
 - [ESLint](https://eslint.org/): Statically analyzes a code to quickly find problems.
 
