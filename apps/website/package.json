@@ -26,7 +26,6 @@
     "@twurple/eventsub-ws": "^7.1.0",
     "@twurple/pubsub": "^7.1.0",
     "howler": "^2.2.4",
-    "jsonwebtoken": "^9.0.2",
     "pixi.js": "~8.2.6",
     "zod": "^3.23.8"
   },
@@ -36,7 +35,6 @@
     "@nuxt/devtools": "^1.3.9",
     "@nuxt/kit": "^3.10.0",
     "@types/howler": "^2.2.11",
-    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.14.8",
     "@vueuse/core": "^11.0.1",
     "@vueuse/nuxt": "^11.0.1",
