@@ -1,0 +1,89 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: website-deployment
+  namespace: chat-game
+spec:
+  selector:
+    matchLabels:
+      app: website
+  replicas: 1
+  revisionHistoryLimit: 1
+  minReadySeconds: 20
+  template:
+    metadata:
+      labels:
+        app: website
+    spec:
+      securityContext:
+        runAsUser: 1001
+      imagePullSecrets:
+        - name: ghcr-login-secret
+      containers:
+        - name: website
+          image: ghcr.io/chat-game/website:nightly
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: env
+                  key: DATABASE_URL
+            - name: NUXT_SESSION_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: env
+                  key: NUXT_SESSION_PASSWORD
+            - name: NUXT_OAUTH_TWITCH_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: env
+                  key: NUXT_OAUTH_TWITCH_CLIENT_ID
+            - name: NUXT_OAUTH_TWITCH_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: env
+                  key: NUXT_OAUTH_TWITCH_CLIENT_SECRET
+            - name: NUXT_YOOKASSA_SHOP_ID
+              valueFrom:
+                secretKeyRef:
+                  name: env
+                  key: NUXT_YOOKASSA_SHOP_ID
+            - name: NUXT_YOOKASSA_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: env
+                  key: NUXT_YOOKASSA_API_KEY
+            - name: NUXT_TWITCH_CHANNEL_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: env
+                  key: NUXT_TWITCH_CHANNEL_NAME
+            - name: NUXT_TWITCH_CHANNEL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: env
+                  key: NUXT_TWITCH_CHANNEL_ID
+          resources:
+            limits:
+              cpu: 250m
+              memory: 256Mi
+            requests:
+              cpu: 10m
+              memory: 64Mi
+          livenessProbe:
+            httpGet:
+              port: 3000
+              path: /
+            initialDelaySeconds: 20
+            periodSeconds: 30
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
