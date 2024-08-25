@@ -3,11 +3,10 @@
   "globalDependencies": ["**/.env.*local"],
   "tasks": {
     "build": {
-      "dependsOn": ["^db:generate","^build"],
+      "dependsOn": ["^build"],
       "outputs": [".output/**", "dist/**"]
     },
     "dev": {
-      "dependsOn": ["^db:generate"],
       "cache": false
     },
     "lint": {},
