@@ -13,7 +13,6 @@ export default defineNuxtConfig({
   css: ['~/assets/css/styles.css'],
   runtimeConfig: {
     websiteBearer: '', // NUXT_WEBSITE_BEARER
-    jwtSecretKey: '', // NUXT_JWT_SECRET_KEY
     twitchChannelName: '', // NUXT_TWITCH_CHANNEL_NAME
     twitchChannelId: '', // NUXT_TWITCH_CHANNEL_ID
     twitchOauthCode: '', // NUXT_TWITCH_OAUTH_CODE
@@ -23,7 +22,6 @@ export default defineNuxtConfig({
     oauthTwitchClientSecret: '', // NUXT_OAUTH_TWITCH_CLIENT_SECRET
     public: {
       signInRedirectUrl: '', // NUXT_PUBLIC_SIGN_IN_REDIRECT_URL
-      cookieKey: '', // NUXT_PUBLIC_COOKIE_KEY
     },
   },
   modules: ['@vueuse/nuxt', 'nuxt-auth-utils'],
