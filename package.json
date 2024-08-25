@@ -23,7 +23,6 @@
     "build": "turbo build",
     "dev": "dotenv -- turbo dev --parallel",
     "dev:website": "dotenv -- pnpm --filter @chat-game/website dev",
-    "db:generate": "dotenv -- pnpm --filter @chat-game/website db:generate",
     "lint": "turbo lint --",
     "lint:fix": "turbo lint:fix",
     "clean": "turbo clean",
