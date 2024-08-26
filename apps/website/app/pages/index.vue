@@ -17,7 +17,7 @@
         За все время {{ pluralizationRu(profileCount, ['создан', 'создано', 'создано']) }}
         {{ profileCount }} {{ pluralizationRu(profileCount, ['профиль', 'профиля', 'профилей']) }}.
         Присоединяйся
-        <a href="{config.twitch.url}" target="_blank" class="twitch-link">на активном стриме</a>!
+        <a href="https://twitch.tv/hmbanan666" target="_blank" class="twitch-link">на активном стриме</a>!
       </p>
     </section>
   </div>
@@ -34,7 +34,8 @@ useHead({
   ],
 })
 
-const profileCount = 1
+const { data } = await useFetch('/api/profile')
+const profileCount = data.value?.count ?? 0
 </script>
 
 <style scoped>

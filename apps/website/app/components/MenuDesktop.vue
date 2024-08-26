@@ -6,11 +6,6 @@
           Главная
         </NuxtLink>
       </li>
-      <li :aria-current="$route.path === `/about` ? 'page' : undefined">
-        <NuxtLink to="/about">
-          About
-        </NuxtLink>
-      </li>
       <li :aria-current="$route.path === `/character` ? 'page' : undefined">
         <NuxtLink to="/character">
           Персонажи
@@ -31,12 +26,11 @@
           Купон
         </NuxtLink>
       </li>
-      <!--
-      {#if profile}
-        <li aria-current={$page.url.pathname === `/${locale}/p/${profile.userName}` ? 'page' : undefined}>
-          <a href='/{locale}/p/{profile.userName}'>{t.header.menu.profile}</a>
-        </li>
-      {/if} -->
+      <li v-if="loggedIn" :aria-current="$route.path === `/p/${user?.userName}` ? 'page' : undefined">
+        <NuxtLink :href="`/p/${user?.userName}`">
+          Мой профиль
+        </NuxtLink>
+      </li>
     </ul>
   </nav>
 
@@ -46,6 +40,10 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+const { loggedIn, user } = useUserSession()
+</script>
 
 <style scoped>
 .right {

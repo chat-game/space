@@ -1,7 +1,4 @@
-import type { EventHandlerRequest } from 'h3'
-import type { ProfileWithOwnedCharacters } from '@chat-game/types'
-
-export default defineEventHandler<EventHandlerRequest, Promise<ProfileWithOwnedCharacters>>(
+export default defineEventHandler(
   async (event) => {
     const userName = getRouterParam(event, 'userName')
 
@@ -21,6 +18,6 @@ export default defineEventHandler<EventHandlerRequest, Promise<ProfileWithOwnedC
       })
     }
 
-    return profile as ProfileWithOwnedCharacters
+    return profile
   },
 )
