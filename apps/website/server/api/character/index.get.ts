@@ -1,7 +1,4 @@
-import type { EventHandlerRequest } from 'h3'
-import type { CharacterWithEditions } from '@chat-game/types'
-
-export default defineEventHandler<EventHandlerRequest, Promise<CharacterWithEditions[]>>(
+export default defineEventHandler(
   async () => {
     const characters = await prisma.character.findMany({
       orderBy: {
@@ -16,6 +13,6 @@ export default defineEventHandler<EventHandlerRequest, Promise<CharacterWithEdit
       return []
     }
 
-    return characters as CharacterWithEditions[]
+    return characters
   },
 )

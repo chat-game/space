@@ -27,12 +27,11 @@
             Купон
           </NuxtLink>
         </li>
-        <!--
-        {#if profile}
-          <li aria-current={$page.url.pathname === `/${locale}/p/${profile.userName}` ? 'page' : undefined}>
-            <a href='/{locale}/p/{profile.userName}' @click="closeSidebar">{t.header.menu.profile}</a>
-          </li>
-        {/if} -->
+        <li v-if="loggedIn" :aria-current="$route.path === `/p/${user?.userName}` ? 'page' : undefined">
+          <NuxtLink :href="`/p/${user?.userName}`">
+            Мой профиль
+          </NuxtLink>
+        </li>
       </ul>
     </nav>
   </aside>
@@ -46,6 +45,7 @@
 
 <script setup lang="ts">
 const { isMobileMenuOpened } = useApp()
+const { loggedIn, user } = useUserSession()
 </script>
 
 <style scoped>
