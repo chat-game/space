@@ -1,7 +1,4 @@
-import type { EventHandlerRequest } from 'h3'
-import type { Post } from '@chat-game/types'
-
-export default defineEventHandler<EventHandlerRequest, Promise<Post[]>>(async (event) => {
+export default defineEventHandler(async (event) => {
   const characterId = getRouterParam(event, 'id')
 
   const posts = await prisma.post.findMany({
@@ -19,5 +16,5 @@ export default defineEventHandler<EventHandlerRequest, Promise<Post[]>>(async (e
     })
   }
 
-  return posts as Post[]
+  return posts
 })

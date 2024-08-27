@@ -1,7 +1,4 @@
-import type { EventHandlerRequest } from 'h3'
-import type { CharacterEditionWithProfile } from '@chat-game/types'
-
-export default defineEventHandler<EventHandlerRequest, Promise<CharacterEditionWithProfile[]>>(
+export default defineEventHandler(
   async (event) => {
     const characterId = getRouterParam(event, 'id')
 
@@ -20,6 +17,6 @@ export default defineEventHandler<EventHandlerRequest, Promise<CharacterEditionW
       })
     }
 
-    return editions as CharacterEditionWithProfile[]
+    return editions.slice(0, 6)
   },
 )
