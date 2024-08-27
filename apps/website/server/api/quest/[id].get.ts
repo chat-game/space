@@ -1,7 +1,4 @@
-import type { EventHandlerRequest } from 'h3'
-import type { QuestWithEditions } from '@chat-game/types'
-
-export default defineEventHandler<EventHandlerRequest, Promise<QuestWithEditions>>(
+export default defineEventHandler(
   async (event) => {
     const id = getRouterParam(event, 'id')
 
@@ -19,7 +16,7 @@ export default defineEventHandler<EventHandlerRequest, Promise<QuestWithEditions
         rewards: true,
         profile: true,
       },
-    })) as QuestWithEditions
+    }))
     if (!quest) {
       throw createError({
         status: 404,

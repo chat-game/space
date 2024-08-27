@@ -204,7 +204,7 @@ const isReadyToPost = false
 const postText = ''
 </script>
 
-<style>
+<style scoped>
   .empty {
     color: var(--bronze-9)
   }
