@@ -1,14 +1,12 @@
-import type { EventHandlerRequest } from 'h3'
-
 import type { Coupon, Profile } from '@chat-game/types'
 
 export type CouponWithProfile = Coupon & { profile: Profile | null }
 
-export default defineEventHandler<EventHandlerRequest, Promise<CouponWithProfile[]>>(async () => {
+export default defineEventHandler(async () => {
   const latestCoupons = (await prisma.coupon.findMany({
     where: { status: 'TAKEN' },
     orderBy: { createdAt: 'desc' },
-    take: 20,
+    take: 12,
   })) as CouponWithProfile[]
 
   for (const coupon of latestCoupons) {

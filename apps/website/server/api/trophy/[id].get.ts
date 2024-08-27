@@ -1,7 +1,4 @@
-import type { EventHandlerRequest } from 'h3'
-import type { TrophyWithEditions } from '@chat-game/types'
-
-export default defineEventHandler<EventHandlerRequest, Promise<TrophyWithEditions>>(
+export default defineEventHandler(
   async (event) => {
     const id = getRouterParam(event, 'id')
 
@@ -17,7 +14,7 @@ export default defineEventHandler<EventHandlerRequest, Promise<TrophyWithEdition
         },
         profile: true,
       },
-    })) as TrophyWithEditions
+    }))
     if (!trophy) {
       throw createError({
         status: 404,

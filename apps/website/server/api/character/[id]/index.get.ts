@@ -1,7 +1,4 @@
-import type { EventHandlerRequest } from 'h3'
-import type { CharacterWithProfile } from '@chat-game/types'
-
-export default defineEventHandler<EventHandlerRequest, Promise<CharacterWithProfile>>(
+export default defineEventHandler(
   async (event) => {
     const id = getRouterParam(event, 'id')
 
@@ -18,6 +15,6 @@ export default defineEventHandler<EventHandlerRequest, Promise<CharacterWithProf
       })
     }
 
-    return character as CharacterWithProfile
+    return character
   },
 )

@@ -1,4 +1,5 @@
 <template>
+  <ActiveStreamBanner />
   <MainHeader />
   <main>
     <nuxt-page />

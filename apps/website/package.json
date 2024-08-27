@@ -26,6 +26,7 @@
     "@twurple/eventsub-ws": "^7.1.0",
     "@twurple/pubsub": "^7.1.0",
     "howler": "^2.2.4",
+    "lucide-vue-next": "^0.436.0",
     "pixi.js": "~8.2.6",
     "zod": "^3.23.8"
   },

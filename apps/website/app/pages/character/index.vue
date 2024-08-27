@@ -76,7 +76,7 @@ const readyCharacters = characters.value?.filter((c) => c.isReady)
 const notReadyCharacters = characters.value?.filter((c) => !c.isReady)
 </script>
 
-<style>
+<style scoped>
   .characters {
     text-align: center;
     margin: 0 auto;
