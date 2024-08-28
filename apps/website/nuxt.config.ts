@@ -35,6 +35,25 @@ export default defineNuxtConfig({
       signInRedirectUrl: '', // NUXT_PUBLIC_SIGN_IN_REDIRECT_URL
     },
   },
-  modules: ['@vueuse/nuxt', 'nuxt-auth-utils', '@nuxtjs/device'],
+  i18n: {
+    locales: [
+      { code: 'ru', iso: 'ru-RU', name: 'Русский', file: 'ru-RU.json' },
+      { code: 'en', iso: 'en-EN', name: 'English', file: 'en-EN.json' },
+    ],
+    defaultLocale: 'ru',
+    strategy: 'prefix_except_default',
+    langDir: 'locales',
+    detectBrowserLanguage: {
+      useCookie: true,
+      alwaysRedirect: true,
+    },
+  },
+  modules: [
+    '@vueuse/nuxt',
+    'nuxt-auth-utils',
+    '@nuxtjs/device',
+    'nuxt-time',
+    '@nuxtjs/i18n',
+  ],
   compatibilityDate: '2024-08-18',
 })

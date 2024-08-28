@@ -24,7 +24,7 @@
         </div>
 
         <div v-if="profileEdition?.completedAt" class="completed">
-          Выполнено: {{ new Date(profileEdition.completedAt) }}
+          Выполнено: {{ useLocaleTimeAgo(new Date(profileEdition.completedAt)) }}
         </div>
       </div>
       <div class="completion">
@@ -54,7 +54,9 @@
         <div>
           <a :href="`/p/${edition.profile.userName}`">{{ edition.profile.userName }}</a>
         </div>
-        <time v-if="edition.completedAt">{{ new Date(edition.completedAt).toISOString() }}</time>
+        <time v-if="edition.completedAt">
+          {{ useLocaleTimeAgo(new Date(edition.completedAt)) }}
+        </time>
       </div>
     </div>
   </section>
