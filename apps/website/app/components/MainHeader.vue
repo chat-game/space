@@ -2,8 +2,7 @@
   <header>
     <div class="left">
       <MainLogo />
-
-      <!-- <Locale /> -->
+      <MenuLocale />
     </div>
 
     <MenuSmartphone v-if="isMobileOrTablet" />

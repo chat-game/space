@@ -1,13 +1,15 @@
 <template>
   <ClientOnly>
     <div v-if="$route.path === '/'" class="logo" :style="{ backgroundImage: randomCharUrl }" />
-    <NuxtLink v-else href="/">
+    <NuxtLink v-else :to="localePath('/')">
       <div class="logo shake" :style="{ backgroundImage: randomCharUrl }" />
     </NuxtLink>
   </ClientOnly>
 </template>
 
 <script setup lang="ts">
+const localePath = useLocalePath()
+
 const characters = [
   'banana',
   'burger',

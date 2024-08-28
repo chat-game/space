@@ -33,7 +33,7 @@
     </div>
 
     <div class="active-character">
-      <div>Активный Персонаж: <a :href="`/character/${activeCharacter?.character.id}`">{{ activeCharacter?.character.nickname }}</a></div>
+      <div>Активный Персонаж: <a :href="localePath(`/character/${activeCharacter?.character.id}`)">{{ activeCharacter?.character.nickname }}</a></div>
       <div class="level">
         {{ activeCharacter?.level }} уровень <span class="xp">{{ activeCharacter?.xp }} опыта</span>
       </div>
@@ -107,7 +107,7 @@
 
     <div class="collection-block">
       <div v-for="char in pageProfile?.characterEditions" :key="char.id" class="cell" :class="{ active: char.id === activeCharacter?.id }">
-        <a :href="`/character/${char.character.id}`">
+        <a :href="localePath(`/character/${char.character.id}`)">
           <img :src="`/units/${char.character.codename}/128.png`" alt="" class="avatar static">
           <img :src="`/units/${char.character.codename}/idle.gif`" alt="" class="avatar animated">
           <p class="nickname">{{ char.character.nickname }}</p>
@@ -126,7 +126,7 @@
 
     <div class="collection-block">
       <div v-for="trophyEdition in trophies" :key="trophyEdition.id" class="cell" :data-rarity="trophyEdition.trophy.rarity">
-        <a :href="`/trophy/${trophyEdition.trophy.id}`">
+        <a :href="localePath(`/trophy/${trophyEdition.trophy.id}`)">
           <img src="/trophies/default/64.png" alt="" width="64" height="64">
           <div class="name">{{ trophyEdition.trophy.name }}</div>
           <div class="points">{{ trophyEdition.trophy.points }} очков</div>
@@ -165,6 +165,7 @@ definePageMeta({
   },
 })
 
+const localePath = useLocalePath()
 const route = useRoute()
 const { data: pageProfile } = await useFetch(`/api/profile/userName/${route.params.username}`)
 const { data: trophies } = await useFetch(`/api/trophy/profileId/${pageProfile.value?.id}`)

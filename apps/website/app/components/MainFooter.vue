@@ -2,7 +2,7 @@
   <footer>
     <ul>
       <li v-for="link in links" :key="link.url">
-        <NuxtLink :to="link.url" :target="link.isOnNewTab && '_blank'">
+        <NuxtLink :to="localePath(link.url)" :target="link.isOnNewTab && '_blank'">
           {{ link.title }}
         </NuxtLink>
       </li>
@@ -15,6 +15,8 @@
 </template>
 
 <script setup lang="ts">
+const localePath = useLocalePath()
+
 const links = [
   {
     title: 'Boosty',

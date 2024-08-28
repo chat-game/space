@@ -4,14 +4,14 @@
     <h2>Придумываем вместе награды за особые активности на стримах</h2>
 
     <div class="create-new">
-      <a href="/trophy/new">Создать новый <img src="~/assets/img/icons/mana/64.png" alt="" width="32" height="32"></a>
+      <a :href="localePath('/trophy/new')">Создать новый <img src="~/assets/img/icons/mana/64.png" alt="" width="32" height="32"></a>
     </div>
   </section>
 
   <section class="trophies-block">
     <div class="trophies">
       <div v-for="trophy in readyTrophies" :key="trophy.id" class="cell" :data-rarity="trophy.rarity">
-        <a :href="`/trophy/${trophy.id}`">
+        <a :href="localePath(`/trophy/${trophy.id}`)">
           <img src="/trophies/default/64.png" alt="" width="64" height="64">
           <div class="name">{{ trophy.name }}</div>
           <div class="points">{{ trophy.points }} очков</div>
@@ -25,7 +25,7 @@
 
     <div class="trophies">
       <div v-for="trophy in inWorkTrophies" :key="trophy.id" class="cell" :data-rarity="trophy.rarity">
-        <a :href="`/trophy/${trophy.id}`">
+        <a :href="localePath(`/trophy/${trophy.id}`)">
           <img src="/trophies/default/64.png" alt="" width="64" height="64">
           <div class="name">{{ trophy.name }}</div>
           <div class="points">{{ trophy.points }} очков</div>
@@ -36,6 +36,7 @@
 </template>
 
 <script setup lang="ts">
+const localePath = useLocalePath()
 const { data: trophies } = await useFetch('/api/trophy/')
 const readyTrophies = trophies.value?.filter((t) => t.isReady)
 const inWorkTrophies = trophies.value?.filter((t) => !t.isReady)

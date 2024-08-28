@@ -2,7 +2,7 @@
   <section class="hero">
     <h1>{{ trophy?.name }}</h1>
     <h2>
-      Трофей, созданный <a :href="`/p/${trophy?.profile.userName}`">{{ trophy?.profile.userName }}</a>
+      Трофей, созданный <a :href="localePath(`/p/${trophy?.profile.userName}`)">{{ trophy?.profile.userName }}</a>
     </h2>
   </section>
 
@@ -41,7 +41,7 @@
           <img src="/units/twitchy/128.png" alt="" width="64" height="64">
         </div>
         <div>
-          <a :href="`/p/${progress.profile.userName}`">{{ progress.profile.userName }}</a>
+          <a :href="localePath(`/p/${progress.profile.userName}`)">{{ progress.profile.userName }}</a>
         </div>
         <time>{{ useLocaleTimeAgo(new Date(progress.createdAt)) }}</time>
       </div>
@@ -57,6 +57,7 @@ definePageMeta({
   },
 })
 
+const localePath = useLocalePath()
 const route = useRoute()
 const { data: trophy } = await useFetch(`/api/trophy/${route.params.id}`)
 const latestProfiles = trophy.value?.editions.slice(0, 12)

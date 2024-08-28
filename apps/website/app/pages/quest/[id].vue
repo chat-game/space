@@ -2,7 +2,7 @@
   <section class="hero">
     <h1>{{ quest?.name }}</h1>
     <h2>
-      Задание, созданное <a :href="`/p/${quest?.profile.userName}`">{{ quest?.profile.userName }}</a>
+      Задание, созданное <a :href="localePath(`/p/${quest?.profile.userName}`)">{{ quest?.profile.userName }}</a>
     </h2>
   </section>
 
@@ -52,7 +52,7 @@
           <img src="/units/twitchy/128.png" alt="" width="64" height="64">
         </div>
         <div>
-          <a :href="`/p/${edition.profile.userName}`">{{ edition.profile.userName }}</a>
+          <a :href="localePath(`/p/${edition.profile.userName}`)">{{ edition.profile.userName }}</a>
         </div>
         <time v-if="edition.completedAt">
           {{ useLocaleTimeAgo(new Date(edition.completedAt)) }}
@@ -70,6 +70,7 @@ definePageMeta({
   },
 })
 
+const localePath = useLocalePath()
 const route = useRoute()
 const { data: quest } = await useFetch(`/api/quest/${route.params.id}`)
 

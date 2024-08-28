@@ -30,7 +30,7 @@
           </div>
         </div>
         <div>
-          <a :href="`/p/${coupon.profile?.userName}`">{{ coupon.profile?.userName }}</a>
+          <a :href="localePath(`/p/${coupon.profile?.userName}`)">{{ coupon.profile?.userName }}</a>
         </div>
         <time>{{ useLocaleTimeAgo(new Date(coupon.createdAt)) }}</time>
       </div>
@@ -77,6 +77,7 @@
 </template>
 
 <script setup lang="ts">
+const localePath = useLocalePath()
 const { data: coupons } = await useFetch('/api/coupon/latest')
 const isEnoughCoupons = false
 </script>

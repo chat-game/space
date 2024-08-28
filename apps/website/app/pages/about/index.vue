@@ -56,14 +56,18 @@
       Благодарности от hmbanan666
     </h3>
     <p>
-      Спасибо моим зрителям: <a href="/p/sava5621">sava5621</a> за вкусные шавухи, <a href="/p/bezsovesty">BezSovesty</a> за помощь на
-      старте, <a href="/p/flack_zombi">flack_zombi</a> за упорство в рубке деревьев, <a href="/p/player_mmcm">player_mmcm</a> за первые тесты Дополнения, <a href="/p/a_hywax">a_hywax</a> за помощь с open source, <a href="/p/peregonstream">PeregonStream</a> и <a href="/p/siberiacancode">siberiacancode</a> за крутые рейды.
-      Спасибо <a href="/p/tozikab_">tozikab_</a>, <a href="/p/6alt1ca">6alt1ca</a>, <a href="/p/derailon">derailon</a>, <a href="/p/sloghniy">sloghniy</a>, <a href="/p/man0ol">MaN0ol</a>, <a href="/p/do_oy">dO_Oy</a>, <a href="/p/vombatdrago">VombatDrago</a>,
-      <a href="/p/sleeplessness8">sleeplessness8</a>.
+      Спасибо моим зрителям: <a :href="localePath('/p/sava5621')">sava5621</a> за вкусные шавухи, <a :href="localePath('/p/bezsovesty')">BezSovesty</a> за помощь на
+      старте, <a :href="localePath('/p/flack_zombi')">flack_zombi</a> за упорство в рубке деревьев, <a :href="localePath('/p/player_mmcm')">player_mmcm</a> за первые тесты Дополнения, <a :href="localePath('/p/a_hywax')">a_hywax</a> за помощь с open source, <a :href="localePath('/p/peregonstream')">PeregonStream</a> и <a :href="localePath('/p/siberiacancode')">siberiacancode</a> за крутые рейды.
+      Спасибо <a :href="localePath('/p/tozikab_')">tozikab_</a>, <a :href="localePath('/p/6alt1ca')">6alt1ca</a>, <a :href="localePath('/p/derailon')">derailon</a>, <a :href="localePath('/p/sloghniy')">sloghniy</a>, <a :href="localePath('/p/man0ol')">MaN0ol</a>, <a :href="localePath('/p/do_oy')">dO_Oy</a>, <a :href="localePath('/p/vombatdrago')">VombatDrago</a>,
+      <a :href="localePath('/p/sleeplessness8')">sleeplessness8</a>.
       <br>Вы все крутые!
     </p>
   </section>
 </template>
+
+<script setup lang="ts">
+const localePath = useLocalePath()
+</script>
 
 <style scoped>
   .game-info {

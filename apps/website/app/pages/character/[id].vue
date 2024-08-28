@@ -3,7 +3,7 @@
     <h1>"{{ character?.nickname }}" {{ character?.name }}</h1>
     <h2>
       Игровой персонаж, созданный
-      <NuxtLink :to="`/p/${character?.profile.userName}`">
+      <NuxtLink :to="localePath(`/p/${character?.profile.userName}`)">
         {{ character?.profile.userName }}
       </NuxtLink>
     </h2>
@@ -99,7 +99,7 @@
 
     <div v-if="topEditions?.length" class="block">
       <div v-for="edition in topEditions" :key="edition.id">
-        <a :href="`/p/${edition.profile.userName}`">
+        <a :href="localePath(`/p/${edition.profile.userName}`)">
           <p>{{ edition.profile.userName }}</p>
         </a>
         <p class="level">
@@ -155,7 +155,7 @@
         <div class="content">
           <div class="info">
             <div class="desc">
-              <a :href="`/p/${post.profile.userName}`">{{ post.profile.userName }}</a> добавил(а) новую заметку
+              <a :href="localePath(`/p/${post.profile.userName}`)">{{ post.profile.userName }}</a> добавил(а) новую заметку
             </div>
             <time>
               {{ useLocaleTimeAgo(new Date(post.createdAt)) }}
@@ -188,6 +188,7 @@ definePageMeta({
   },
 })
 
+const localePath = useLocalePath()
 const route = useRoute()
 const { data: character } = await useFetch(`/api/character/${route.params.id}`)
 const { data: topEditions } = await useFetch(`/api/character/${route.params.id}/top`)
