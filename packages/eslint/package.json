@@ -13,12 +13,12 @@
     "lint:fix": "eslint --fix ."
   },
   "peerDependencies": {
-    "eslint": "^9.9.0"
+    "eslint": "^9.9.1"
   },
   "dependencies": {
     "@antfu/eslint-config": "^2.27.0"
   },
   "devDependencies": {
-    "eslint": "^9.9.0"
+    "eslint": "^9.9.1"
   }
 }
