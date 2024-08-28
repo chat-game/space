@@ -43,7 +43,7 @@
         <div>
           <a :href="`/p/${progress.profile.userName}`">{{ progress.profile.userName }}</a>
         </div>
-        <time>{{ new Date(progress.createdAt).toISOString() }}</time>
+        <time>{{ useLocaleTimeAgo(new Date(progress.createdAt)) }}</time>
       </div>
     </div>
   </section>

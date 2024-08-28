@@ -36,8 +36,8 @@
     "changelogen": "^0.5.5",
     "dotenv-cli": "^7.4.2",
     "husky": "^9.0.11",
-    "lint-staged": "^15.2.7",
-    "turbo": "^2.0.14"
+    "lint-staged": "^15.2.9",
+    "turbo": "^2.1.0"
   },
   "lint-staged": {
     "*.ts": "pnpm run lint"

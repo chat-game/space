@@ -157,8 +157,8 @@
             <div class="desc">
               <a :href="`/p/${post.profile.userName}`">{{ post.profile.userName }}</a> добавил(а) новую заметку
             </div>
-            <time :datetime="new Date(post.createdAt).toISOString()">
-              {{ new Date(post.createdAt).toISOString() }}
+            <time>
+              {{ useLocaleTimeAgo(new Date(post.createdAt)) }}
             </time>
           </div>
           <div class="message">

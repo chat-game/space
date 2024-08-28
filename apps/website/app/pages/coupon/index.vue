@@ -32,7 +32,7 @@
         <div>
           <a :href="`/p/${coupon.profile?.userName}`">{{ coupon.profile?.userName }}</a>
         </div>
-        <time>{{ new Date(coupon.createdAt).toISOString() }}</time>
+        <time>{{ useLocaleTimeAgo(new Date(coupon.createdAt)) }}</time>
       </div>
     </div>
   </section>
