@@ -5,7 +5,7 @@
   </section>
 
   <section v-if="questsForProfile" class="quests-block">
-    <a v-for="quest in questsForProfile" :key="quest.id" :href="`/quest/${quest.id}`">
+    <a v-for="quest in questsForProfile" :key="quest.id" :href="localePath(`/quest/${quest.id}`)">
       <div class="quest">
         <div class="info">
           <p class="name">{{ quest.name }}</p>
@@ -34,6 +34,7 @@
 </template>
 
 <script setup lang="ts">
+const localePath = useLocalePath()
 const { user } = useUserSession()
 const { data: questsForProfile } = await useFetch(`/api/quest/profileId/${user.value?.id}`)
 </script>

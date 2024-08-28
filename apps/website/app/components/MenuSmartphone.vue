@@ -2,33 +2,14 @@
   <aside :class="{ open: isMobileMenuOpened }">
     <nav>
       <ul>
-        <li :aria-current="$route.path === `/` ? 'page' : undefined">
-          <NuxtLink to="/">
-            Главная
+        <li v-for="link in links" :key="link.path" :class="{ active: $route.path === localePath(link.path) }">
+          <NuxtLink :to="localePath(link.path)">
+            {{ link.name }}
           </NuxtLink>
         </li>
-        <li :aria-current="$route.path === `/character` ? 'page' : undefined">
-          <NuxtLink to="/character">
-            Персонажи
-          </NuxtLink>
-        </li>
-        <li :aria-current="$route.path === `/quest` ? 'page' : undefined">
-          <NuxtLink href="/quest">
-            Задания
-          </NuxtLink>
-        </li>
-        <li :aria-current="$route.path === `/trophy` ? 'page' : undefined">
-          <NuxtLink href="/trophy">
-            Трофеи
-          </NuxtLink>
-        </li>
-        <li :aria-current="$route.path === `/coupon` ? 'page' : undefined">
-          <NuxtLink href="/coupon">
-            Купон
-          </NuxtLink>
-        </li>
-        <li v-if="loggedIn" :aria-current="$route.path === `/p/${user?.userName}` ? 'page' : undefined">
-          <NuxtLink :href="`/p/${user?.userName}`">
+
+        <li v-if="loggedIn" :class="{ active: $route.path === `/p/${user?.userName}` }">
+          <NuxtLink :to="localePath(`/p/${user?.userName}`)">
             Мой профиль
           </NuxtLink>
         </li>
@@ -46,6 +27,30 @@
 <script setup lang="ts">
 const { isMobileMenuOpened } = useApp()
 const { loggedIn, user } = useUserSession()
+const localePath = useLocalePath()
+
+const links = [
+  {
+    name: 'Главная',
+    path: '/',
+  },
+  {
+    name: 'Персонажи',
+    path: '/character',
+  },
+  {
+    name: 'Задания',
+    path: '/quest',
+  },
+  {
+    name: 'Трофеи',
+    path: '/trophy',
+  },
+  {
+    name: 'Купон',
+    path: '/coupon',
+  },
+]
 </script>
 
 <style scoped>

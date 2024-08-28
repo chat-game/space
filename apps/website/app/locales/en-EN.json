@@ -1,4 +1,6 @@
 {
+  "name": "English",
+  "shortName": "Eng",
   "common": {
     "timeAgo": {
       "just-now": "just now",

@@ -26,7 +26,7 @@
         </div>
       </div>
 
-      <a href="/shop">Купить монеты</a>
+      <a :href="localePath('/shop')">Купить монеты</a>
     </div>
   </section>
 
@@ -41,7 +41,7 @@
         :class="{ active: !!char.editions.find(e => e.id === profile?.activeEditionId) }"
         class="cell"
       >
-        <a :href="`/character/${char.id}`">
+        <a :href="localePath(`/character/${char.id}`)">
           <img :src="`/units/${char.codename}/128.png`" alt="" class="avatar static">
           <img :src="`/units/${char.codename}/idle.gif`" alt="" class="avatar animated">
           <p class="nickname">{{ char.nickname }}</p>
@@ -60,7 +60,7 @@
 
     <div class="collection-block">
       <div v-for="char in notReadyCharacters" :key="char.id" class="cell" :data-owned="!!char.editions.find(e => e.profileId === profile?.id)">
-        <a :href="`/character/${char.id}`">
+        <a :href="localePath(`/character/${char.id}`)">
           <p class="nickname">{{ char.nickname }}</p>
         </a>
       </div>
@@ -69,6 +69,7 @@
 </template>
 
 <script setup lang="ts">
+const localePath = useLocalePath()
 const { loggedIn, user } = useUserSession()
 const { data: profile } = await useFetch(`/api/profile/userName/${user.value?.userName}`)
 const { data: characters } = await useFetch('/api/character')

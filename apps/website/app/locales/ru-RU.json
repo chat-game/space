@@ -1,4 +1,6 @@
 {
+  "name": "Русский",
+  "shortName": "Рус",
   "common": {
     "timeAgo": {
       "just-now": "только что",
