@@ -16,8 +16,9 @@
           <div>+110 очков "Мецената"</div>
 
           <div class="price-block">
-            <form method="POST" action="?/buy-1">
-              <button formaction="?/buy-1" class="submit-button">
+            <form method="POST" action="/api/payment">
+              <input type="hidden" name="productId" value="jehj4mxo0g6fp1eopf3jg641">
+              <button class="submit-button">
                 110 рублей
               </button>
             </form>
@@ -46,8 +47,9 @@
             <div class="regular-price">
               600 рублей
             </div>
-            <form method="POST" action="?/buy-2">
-              <button formaction="?/buy-2" class="submit-button">
+            <form method="POST" action="/api/payment">
+              <input type="hidden" name="productId" value="w0895g3t9q75ys2maod0zd1a">
+              <button class="submit-button">
                 450 рублей
               </button>
             </form>
@@ -78,8 +80,9 @@
             <div class="regular-price">
               1800 рублей
             </div>
-            <form method="POST" action="?/buy-3">
-              <button formaction="?/buy-3" class="submit-button">
+            <form method="POST" action="/api/payment">
+              <input type="hidden" name="productId" value="nar1acws8c3s4w3cxs6i8qdn">
+              <button class="submit-button">
                 1250 рублей
               </button>
             </form>
@@ -110,8 +113,9 @@
             <div class="regular-price">
               3300 рублей
             </div>
-            <form method="POST" action="?/buy-4">
-              <button formaction="?/buy-4" class="submit-button">
+            <form method="POST" action="/api/payment">
+              <input type="hidden" name="productId" value="tp5w874gchf6hjfca9vory2r">
+              <button class="submit-button">
                 2150 рублей
               </button>
             </form>
@@ -147,8 +151,9 @@
             <div class="regular-price">
               6500 рублей
             </div>
-            <form method="POST" action="?/buy-5">
-              <button formaction="?/buy-5" class="submit-button">
+            <form method="POST" action="/api/payment">
+              <input type="hidden" name="productId" value="izh5v4vxztqi55gquts9ukn2">
+              <button class="submit-button">
                 3900 рублей
               </button>
             </form>

@@ -1,20 +1,21 @@
-import type { EventHandlerRequest } from 'h3'
 import { createId } from '@paralleldrive/cuid2'
-import type { Payment, PaymentCreateResponse } from '@chat-game/types'
 
-export default defineEventHandler<EventHandlerRequest, Promise<PaymentCreateResponse>>(
+export default defineEventHandler(
   async (event) => {
-    const body = await readBody(event)
+    const formData = await readFormData(event)
+    const session = await getUserSession(event)
 
-    if (!body.profileId || !body.productId) {
+    if (!session?.user || !formData.has('productId')) {
       throw createError({
         statusCode: 400,
-        message: 'No data',
+        message: 'Invalid data',
       })
     }
 
+    const productId = formData.get('productId') as string
+
     const profile = await prisma.profile.findFirst({
-      where: { id: body.profileId },
+      where: { id: session.user.id },
     })
     if (!profile) {
       throw createError({
@@ -23,7 +24,7 @@ export default defineEventHandler<EventHandlerRequest, Promise<PaymentCreateResp
     }
 
     const product = await prisma.product.findFirst({
-      where: { id: body.productId },
+      where: { id: productId },
     })
     if (!product) {
       throw createError({
@@ -45,7 +46,7 @@ export default defineEventHandler<EventHandlerRequest, Promise<PaymentCreateResp
       },
       confirmation: {
         type: 'redirect',
-        return_url: 'https://chatgame.space/ru/shop',
+        return_url: 'https://chatgame.space/shop',
       },
     }
 
@@ -62,33 +63,28 @@ export default defineEventHandler<EventHandlerRequest, Promise<PaymentCreateResp
     })
 
     const paymentOnProvider = await res.json()
-    if (!paymentOnProvider.id) {
+    if (!paymentOnProvider?.id || !paymentOnProvider?.confirmation) {
       throw createError({
         status: 400,
+        message: 'Payment creation error',
       })
     }
 
-    const redirectUrl = paymentOnProvider.confirmation.confirmation_url
+    const redirectUrl: string = paymentOnProvider.confirmation?.confirmation_url ?? '/'
 
     // Create payment
-    const payment = await prisma.payment.create({
+    await prisma.payment.create({
       data: {
         id: createId(),
         externalId: paymentOnProvider.id,
         provider: 'YOOKASSA',
+        status: 'PENDING',
         profileId: profile.id,
         productId: product.id,
-        status: 'PENDING',
         amount: product.price,
       },
     })
 
-    return {
-      ok: true,
-      result: {
-        payment: payment as Payment,
-        redirectUrl,
-      },
-    }
+    return sendRedirect(event, redirectUrl)
   },
 )
