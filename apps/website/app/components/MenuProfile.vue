@@ -13,11 +13,10 @@
 
 <script setup lang="ts">
 const { isFeedOpened } = useApp()
-const { loggedIn, user, clear } = useUserSession()
+const { loggedIn, user } = useUserSession()
 
 function handleMenuClick() {
   isFeedOpened.value = !isFeedOpened.value
-  clear()
 }
 </script>
 

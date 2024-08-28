@@ -1,7 +1,4 @@
-import type { EventHandlerRequest } from 'h3'
-import type { TransactionWithProfile } from '@chat-game/types'
-
-export default defineEventHandler<EventHandlerRequest, Promise<TransactionWithProfile[]>>(
+export default defineEventHandler(
   async () => {
     const transactions = await prisma.transaction.findMany({
       include: {
@@ -10,9 +7,9 @@ export default defineEventHandler<EventHandlerRequest, Promise<TransactionWithPr
       orderBy: {
         createdAt: 'desc',
       },
-      take: 50,
+      take: 15,
     })
 
-    return transactions as TransactionWithProfile[]
+    return transactions
   },
 )
