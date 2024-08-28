@@ -35,6 +35,6 @@ export default defineNuxtConfig({
       signInRedirectUrl: '', // NUXT_PUBLIC_SIGN_IN_REDIRECT_URL
     },
   },
-  modules: ['@vueuse/nuxt', 'nuxt-auth-utils'],
+  modules: ['@vueuse/nuxt', 'nuxt-auth-utils', '@nuxtjs/device'],
   compatibilityDate: '2024-08-18',
 })

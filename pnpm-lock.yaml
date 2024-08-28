@@ -87,6 +87,9 @@ importers:
       '@nuxt/kit':
         specifier: ^3.10.0
         version: 3.13.0(magicast@0.3.4)(rollup@4.21.0)
+      '@nuxtjs/device':
+        specifier: ^3.1.1
+        version: 3.1.1(magicast@0.3.4)(rollup@4.21.0)
       '@types/howler':
         specifier: ^2.2.11
         version: 2.2.11
@@ -1045,6 +1048,9 @@ packages:
     engines: {node: ^14.18.0 || >=16.10.0}
     peerDependencies:
       vue: ^3.3.4
+
+  '@nuxtjs/device@3.1.1':
+    resolution: {integrity: sha512-wHTziEevt1hdgePQwPhEedWW3COalhP0YGVB+sGLqSrKujX8vdz7lcBFB01KIftpaP8kY5H8pssibNaJbxGcYw==}
 
   '@paralleldrive/cuid2@2.2.2':
     resolution: {integrity: sha512-ZOBkgDwEdoYVlSeRbYYXs0S9MejQofiVYoTbKzy/6GQa39/q5tQU2IX46+shYnUkpEl3wc+J6wRlar7r2EK2xA==}
@@ -6176,6 +6182,15 @@ snapshots:
       - vls
       - vti
       - vue-tsc
+
+  '@nuxtjs/device@3.1.1(magicast@0.3.4)(rollup@4.21.0)':
+    dependencies:
+      '@nuxt/kit': 3.13.0(magicast@0.3.4)(rollup@4.21.0)
+      defu: 6.1.4
+    transitivePeerDependencies:
+      - magicast
+      - rollup
+      - supports-color
 
   '@paralleldrive/cuid2@2.2.2':
     dependencies:

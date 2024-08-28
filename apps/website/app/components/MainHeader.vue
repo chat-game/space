@@ -6,13 +6,13 @@
       <!-- <Locale /> -->
     </div>
 
-    <MenuSmartphone v-if="width <= 1050" />
+    <MenuSmartphone v-if="isMobileOrTablet" />
     <MenuDesktop v-else />
   </header>
 </template>
 
 <script setup lang="ts">
-const { width } = useWindowSize()
+const { isMobileOrTablet } = useDevice()
 </script>
 
 <style scoped>
