@@ -16,7 +16,7 @@
     "eslint": "^9.9.1"
   },
   "dependencies": {
-    "@antfu/eslint-config": "^2.27.0"
+    "@antfu/eslint-config": "^3.0.0"
   },
   "devDependencies": {
     "eslint": "^9.9.1"
