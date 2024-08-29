@@ -15,6 +15,7 @@
     "db:generate": "prisma generate"
   },
   "dependencies": {
+    "@chat-game/addon": "workspace:*",
     "@chat-game/types": "workspace:*",
     "@paralleldrive/cuid2": "^2.2.2",
     "@prisma/client": "^5.19.0",

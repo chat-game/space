@@ -32,6 +32,9 @@ importers:
 
   apps/website:
     dependencies:
+      '@chat-game/addon':
+        specifier: workspace:*
+        version: link:../../packages/addon
       '@chat-game/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -123,6 +126,22 @@ importers:
       vue-tsc:
         specifier: ^2.0.29
         version: 2.0.29(typescript@5.5.4)
+
+  packages/addon:
+    dependencies:
+      '@chat-game/types':
+        specifier: workspace:*
+        version: link:../types
+      '@paralleldrive/cuid2':
+        specifier: ^2.2.2
+        version: 2.2.2
+      pixi.js:
+        specifier: ~8.2.6
+        version: 8.2.6
+    devDependencies:
+      '@chat-game/eslint':
+        specifier: workspace:*
+        version: link:../eslint
 
   packages/eslint:
     dependencies:

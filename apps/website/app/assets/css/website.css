@@ -1,0 +1,23 @@
+html,
+body {
+  background-color: var(--orange-2);
+  color: var(--bronze-12);
+}
+
+section {
+  text-align: center;
+  padding: 2em 1em;
+  margin: 0 auto;
+  max-width: 42em;
+}
+
+.hero {
+  max-width: 64em;
+  text-align: center;
+  margin: 0 auto;
+  padding: 4em 0;
+
+  h1 {
+    margin-bottom: 0.25em;
+  }
+}
