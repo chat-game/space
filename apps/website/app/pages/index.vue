@@ -8,6 +8,12 @@
       </h2>
     </section>
 
+    <div class="wagon-block">
+      <div class="wagon">
+        <img src="~/assets/img/wagon-full.png" alt="">
+      </div>
+    </div>
+
     <section>
       <p>
         Стример играет вместе со своей аудиторией. Либо он делает перерыв, пока зрители развлекаются
@@ -85,19 +91,6 @@ const profileCount = data.value?.count ?? 0
   transform: scale(1.05);
 }
 
-section {
-  text-align: center;
-  padding: 2em 1em;
-  margin: 0 auto;
-  max-width: 42em;
-}
-
-.hero {
-  padding-top: 4em;
-  padding-bottom: 4em;
-  max-width: 64em;
-}
-
 h1 {
   width: 100%;
   margin-bottom: 0.25em;
@@ -114,4 +107,22 @@ h2 {
 .mt-2 {
   margin-top: 1em;
 }
+
+.wagon-block {
+    width: 100%;
+    margin: 2em 0;
+    padding: 4em 0;
+    background-image: url(~/assets/img/background-green.webp);
+  }
+
+  .wagon {
+    margin: 0 auto;
+    width: fit-content;
+    text-align: center;
+  }
+
+  .wagon img {
+    width: 60vw;
+    max-width: fit-content;
+  }
 </style>

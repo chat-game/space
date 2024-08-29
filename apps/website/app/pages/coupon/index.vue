@@ -30,7 +30,9 @@
           </div>
         </div>
         <div>
-          <a :href="localePath(`/p/${coupon.profile?.userName}`)">{{ coupon.profile?.userName }}</a>
+          <NuxtLink :to="localePath(`/p/${coupon.profile?.userName}`)">
+            {{ coupon.profile?.userName }}
+          </NuxtLink>
         </div>
         <time>{{ useLocaleTimeAgo(new Date(coupon.createdAt)) }}</time>
       </div>
