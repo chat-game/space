@@ -49,6 +49,11 @@ export default defineNuxtConfig({
       alwaysRedirect: true,
     },
   },
+  nitro: {
+    experimental: {
+      websocket: true,
+    },
+  },
   modules: [
     '@vueuse/nuxt',
     'nuxt-auth-utils',
