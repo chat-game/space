@@ -4,18 +4,24 @@
     <h2>Придумываем вместе награды за особые активности на стримах</h2>
 
     <div class="create-new">
-      <a :href="localePath('/trophy/new')">Создать новый <img src="~/assets/img/icons/mana/64.png" alt="" width="32" height="32"></a>
+      <NuxtLink :to="localePath('/trophy/new')">
+        Создать новый <img src="~/assets/img/icons/mana/64.png" alt="" width="32" height="32">
+      </NuxtLink>
     </div>
   </section>
 
   <section class="trophies-block">
     <div class="trophies">
       <div v-for="trophy in readyTrophies" :key="trophy.id" class="cell" :data-rarity="trophy.rarity">
-        <a :href="localePath(`/trophy/${trophy.id}`)">
+        <NuxtLink :to="localePath(`/trophy/${trophy.id}`)">
           <img src="/trophies/default/64.png" alt="" width="64" height="64">
-          <div class="name">{{ trophy.name }}</div>
-          <div class="points">{{ trophy.points }} очков</div>
-        </a>
+          <div class="name">
+            {{ trophy.name }}
+          </div>
+          <div class="points">
+            {{ trophy.points }} очков
+          </div>
+        </NuxtLink>
       </div>
     </div>
   </section>
@@ -25,11 +31,15 @@
 
     <div class="trophies">
       <div v-for="trophy in inWorkTrophies" :key="trophy.id" class="cell" :data-rarity="trophy.rarity">
-        <a :href="localePath(`/trophy/${trophy.id}`)">
+        <NuxtLink :to="localePath(`/trophy/${trophy.id}`)">
           <img src="/trophies/default/64.png" alt="" width="64" height="64">
-          <div class="name">{{ trophy.name }}</div>
-          <div class="points">{{ trophy.points }} очков</div>
-        </a>
+          <div class="name">
+            {{ trophy.name }}
+          </div>
+          <div class="points">
+            {{ trophy.points }} очков
+          </div>
+        </NuxtLink>
       </div>
     </div>
   </section>

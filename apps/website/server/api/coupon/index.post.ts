@@ -1,26 +1,29 @@
-import type { EventHandlerRequest } from 'h3'
 import { createId } from '@paralleldrive/cuid2'
 
-export default defineEventHandler<EventHandlerRequest, Promise<{ ok: true }>>(async (event) => {
+export default defineEventHandler(async (event) => {
   const body = await readBody(event)
+  const session = await getUserSession(event)
 
-  if (!body.profileId || !body.type) {
+  if (!session?.user || !body.type) {
     throw createError({
       statusCode: 400,
-      message: 'You must provide profileId and type',
+      message: 'Invalid data',
     })
   }
 
+  const type = body.type as string
+
   const profile = await prisma.profile.findFirst({
-    where: { id: body.profileId },
+    where: { id: session.user.id, coupons: { gte: 1 } },
   })
   if (!profile) {
     throw createError({
       status: 404,
+      message: 'You do not have enough coupons',
     })
   }
 
-  if (body.type === 'COINS' && profile.coupons > 0) {
+  if (type === 'COINS') {
     await prisma.profile.update({
       where: { id: profile.id },
       data: {

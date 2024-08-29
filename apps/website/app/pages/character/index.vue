@@ -26,7 +26,9 @@
         </div>
       </div>
 
-      <a :href="localePath('/shop')">Купить монеты</a>
+      <NuxtLink :to="localePath('/shop')">
+        Купить монеты
+      </NuxtLink>
     </div>
   </section>
 
@@ -41,16 +43,20 @@
         :class="{ active: !!char.editions.find(e => e.id === profile?.activeEditionId) }"
         class="cell"
       >
-        <a :href="localePath(`/character/${char.id}`)">
+        <NuxtLink :to="localePath(`/character/${char.id}`)">
           <img :src="`/units/${char.codename}/128.png`" alt="" class="avatar static">
           <img :src="`/units/${char.codename}/idle.gif`" alt="" class="avatar animated">
-          <p class="nickname">{{ char.nickname }}</p>
-          <div class="level">{{ char.editions.find(e => e.profileId === profile?.id)?.level }} уровень</div>
+          <p class="nickname">
+            {{ char.nickname }}
+          </p>
+          <div class="level">
+            {{ char.editions.find(e => e.profileId === profile?.id)?.level }} уровень
+          </div>
 
           <div v-if="char.price > 0" class="price">
             <img src="~/assets/img/icons/coin/32.png" alt="" width="18" height="18"> {{ char.price }}
           </div>
-        </a>
+        </NuxtLink>
       </div>
     </div>
   </section>
@@ -60,9 +66,11 @@
 
     <div class="collection-block">
       <div v-for="char in notReadyCharacters" :key="char.id" class="cell" :data-owned="!!char.editions.find(e => e.profileId === profile?.id)">
-        <a :href="localePath(`/character/${char.id}`)">
-          <p class="nickname">{{ char.nickname }}</p>
-        </a>
+        <NuxtLink :to="localePath(`/character/${char.id}`)">
+          <p class="nickname">
+            {{ char.nickname }}
+          </p>
+        </NuxtLink>
       </div>
     </div>
   </section>

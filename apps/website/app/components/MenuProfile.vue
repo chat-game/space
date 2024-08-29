@@ -13,11 +13,10 @@
 
 <script setup lang="ts">
 const { isFeedOpened } = useApp()
-const { loggedIn, user, clear } = useUserSession()
+const { loggedIn, user } = useUserSession()
 
 function handleMenuClick() {
   isFeedOpened.value = !isFeedOpened.value
-  clear()
 }
 </script>
 
@@ -51,13 +50,35 @@ function handleMenuClick() {
   transition: all 0.2s;
 
   &:hover {
-    opacity: 0.8;
+    animation-name: skewRandom;
+    animation-duration: 0.5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    animation-direction: alternate-reverse;
+    transform-origin: 50% 50%;
+    scale: 1.1;
+    opacity: 0.9;
   }
 
   img {
     width: 100%;
     height: auto;
     border-radius: 50%;
+  }
+}
+
+@keyframes skewRandom {
+  0% {
+    transform: skewX(0);
+  }
+  50% {
+    transform: skewX(-3deg);
+  }
+  75% {
+    transform: skewX(3deg);
+  }
+  100% {
+    transform: skewX(0);
   }
 }
 </style>

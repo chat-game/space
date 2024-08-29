@@ -1,14 +1,13 @@
-import type { EventHandlerRequest } from 'h3'
 import { createId } from '@paralleldrive/cuid2'
 
-export default defineEventHandler<EventHandlerRequest, Promise<{ ok: boolean }>>(async (event) => {
+export default defineEventHandler(async (event) => {
   const postId = getRouterParam(event, 'id')
-  const body = await readBody(event)
+  const session = await getUserSession(event)
 
-  if (!body.profileId) {
+  if (!session?.user) {
     throw createError({
       statusCode: 400,
-      message: 'You must provide profileId',
+      message: 'Invalid data',
     })
   }
 
@@ -22,7 +21,7 @@ export default defineEventHandler<EventHandlerRequest, Promise<{ ok: boolean }>>
   }
 
   const profile = await prisma.profile.findUnique({
-    where: { id: body.profileId },
+    where: { id: session.user.id },
   })
   if (!profile) {
     throw createError({
@@ -32,7 +31,7 @@ export default defineEventHandler<EventHandlerRequest, Promise<{ ok: boolean }>>
 
   // Check if already have like
   const like = await prisma.like.findFirst({
-    where: { profileId: body.profileId, postId: post.id },
+    where: { profileId: profile.id, postId: post.id },
   })
   if (like?.id) {
     throw createError({

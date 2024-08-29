@@ -1,26 +1,26 @@
-import type { EventHandlerRequest } from 'h3'
 import { createId } from '@paralleldrive/cuid2'
 
-export default defineEventHandler<EventHandlerRequest, Promise<{ ok: boolean }>>(async (event) => {
+export default defineEventHandler(async (event) => {
   const characterId = getRouterParam(event, 'id')
 
+  const session = await getUserSession(event)
   const body = await readBody(event)
 
-  if (!characterId || !body.profileId || !body.text) {
+  if (!characterId || !session?.user || !body.text) {
     throw createError({
       statusCode: 400,
-      message: 'You must provide profileId and text',
+      message: 'You must provide text',
     })
   }
 
-  // Check if not have a coin
+  // Check if not have mana
   const profile = await prisma.profile.findFirst({
-    where: { id: body.profileId, mana: { gte: 5 } },
+    where: { id: session.user.id, mana: { gte: 5 } },
   })
   if (!profile?.id) {
     throw createError({
       status: 400,
-      message: 'You do not have mana',
+      message: 'You do not have enough mana',
     })
   }
 
@@ -41,7 +41,7 @@ export default defineEventHandler<EventHandlerRequest, Promise<{ ok: boolean }>>
       id: createId(),
       text,
       characterId,
-      profileId: body.profileId,
+      profileId: profile.id,
       type: 'NOTE',
     },
   })

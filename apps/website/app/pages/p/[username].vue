@@ -33,7 +33,11 @@
     </div>
 
     <div class="active-character">
-      <div>Активный Персонаж: <a :href="localePath(`/character/${activeCharacter?.character.id}`)">{{ activeCharacter?.character.nickname }}</a></div>
+      <div>
+        Активный Персонаж: <NuxtLink :to="localePath(`/character/${activeCharacter?.character.id}`)">
+          {{ activeCharacter?.character.nickname }}
+        </NuxtLink>
+      </div>
       <div class="level">
         {{ activeCharacter?.level }} уровень <span class="xp">{{ activeCharacter?.xp }} опыта</span>
       </div>
@@ -107,12 +111,16 @@
 
     <div class="collection-block">
       <div v-for="char in pageProfile?.characterEditions" :key="char.id" class="cell" :class="{ active: char.id === activeCharacter?.id }">
-        <a :href="localePath(`/character/${char.character.id}`)">
+        <NuxtLink :to="localePath(`/character/${char.character.id}`)">
           <img :src="`/units/${char.character.codename}/128.png`" alt="" class="avatar static">
           <img :src="`/units/${char.character.codename}/idle.gif`" alt="" class="avatar animated">
-          <p class="nickname">{{ char.character.nickname }}</p>
-          <div class="level">{{ char.level }} уровень</div>
-        </a>
+          <p class="nickname">
+            {{ char.character.nickname }}
+          </p>
+          <div class="level">
+            {{ char.level }} уровень
+          </div>
+        </NuxtLink>
       </div>
     </div>
   </section>
@@ -126,11 +134,15 @@
 
     <div class="collection-block">
       <div v-for="trophyEdition in trophies" :key="trophyEdition.id" class="cell" :data-rarity="trophyEdition.trophy.rarity">
-        <a :href="localePath(`/trophy/${trophyEdition.trophy.id}`)">
+        <NuxtLink :to="localePath(`/trophy/${trophyEdition.trophy.id}`)">
           <img src="/trophies/default/64.png" alt="" width="64" height="64">
-          <div class="name">{{ trophyEdition.trophy.name }}</div>
-          <div class="points">{{ trophyEdition.trophy.points }} очков</div>
-        </a>
+          <div class="name">
+            {{ trophyEdition.trophy.name }}
+          </div>
+          <div class="points">
+            {{ trophyEdition.trophy.points }} очков
+          </div>
+        </NuxtLink>
       </div>
     </div>
   </section>

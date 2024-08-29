@@ -2,7 +2,9 @@
   <section class="hero">
     <h1>{{ trophy?.name }}</h1>
     <h2>
-      Трофей, созданный <a :href="localePath(`/p/${trophy?.profile.userName}`)">{{ trophy?.profile.userName }}</a>
+      Трофей, созданный <NuxtLink :to="localePath(`/p/${trophy?.profile.userName}`)">
+        {{ trophy?.profile.userName }}
+      </NuxtLink>
     </h2>
   </section>
 
@@ -41,7 +43,9 @@
           <img src="/units/twitchy/128.png" alt="" width="64" height="64">
         </div>
         <div>
-          <a :href="localePath(`/p/${progress.profile.userName}`)">{{ progress.profile.userName }}</a>
+          <NuxtLink :to="localePath(`/p/${progress.profile.userName}`)">
+            {{ progress.profile.userName }}
+          </NuxtLink>
         </div>
         <time>{{ useLocaleTimeAgo(new Date(progress.createdAt)) }}</time>
       </div>

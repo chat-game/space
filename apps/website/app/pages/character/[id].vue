@@ -18,12 +18,9 @@
       <div v-if="profileData?.activeEditionId === alreadyHaveCharacter?.id" class="active-character">
         Это твой активный Персонаж {{ alreadyHaveCharacter.level }} уровня
       </div>
-      <form v-else method="POST" action="?/activate">
-        <input type="hidden" name="characterId" :value="character.id">
-        <button formaction="?/activate" type="submit" class="submit-button">
-          <div>Активировать Персонажа</div>
-        </button>
-      </form>
+      <button v-else class="submit-button" @click="activateCharacter">
+        <div>Активировать Персонажа</div>
+      </button>
 
       <div class="bonus">
         + 1 Монета за новый уровень
@@ -34,22 +31,21 @@
     </div>
 
     <div v-else>
-      <form v-if="character.unlockedBy === 'COINS'" method="POST" action="?/unlock">
-        <input type="hidden" name="characterId" :value="character.id">
-        <button formaction="?/unlock" type="submit" class="submit-button" :disabled="!isEnoughCoins">
+      <div v-if="character.unlockedBy === 'COINS'">
+        <button type="submit" class="submit-button" :disabled="!isEnoughCoins" @click="unlockCharacter">
           <div>Разблокировать персонажа</div>
           <div class="price">
             Стоимость: {{ character.price }} Монет <img src="~/assets/img/icons/coin/64.png" alt="" width="22" height="22">
           </div>
         </button>
 
-        <div v-if="character.id === 'staoqh419yy3k22cbtm9wquc'" class="bonus">
+        <div v-if="character.id === twitchyId" class="bonus">
           Стартовый Персонаж
         </div>
         <div v-else class="bonus">
           + {{ character.price }} очков "Коллекционера"
         </div>
-      </form>
+      </div>
       <div v-else>
         Персонажа нельзя разблокировать за Монеты
       </div>
@@ -99,9 +95,9 @@
 
     <div v-if="topEditions?.length" class="block">
       <div v-for="edition in topEditions" :key="edition.id">
-        <a :href="localePath(`/p/${edition.profile.userName}`)">
+        <NuxtLink :to="localePath(`/p/${edition.profile.userName}`)">
           <p>{{ edition.profile.userName }}</p>
-        </a>
+        </NuxtLink>
         <p class="level">
           {{ edition.level }} уровень
         </p>
@@ -119,18 +115,17 @@
     </p>
 
     <div class="feed">
-      <form v-if="profileData" method="POST" action="?/add-post" class="add-post">
-        <input type="hidden" name="characterId" :value="character?.id">
+      <div v-if="profileData" class="add-post">
         <div class="content">
           <div class="action">
             Добавить новый пост
           </div>
 
           <div class="form-control">
-            <textarea name="text" :value="postText" placeholder="Пиши, не стесняйся. Максимум 1500 символов" rows="4" maxlength="1500" />
+            <textarea v-model="postText" name="text" placeholder="Пиши, не стесняйся. Максимум 1500 символов" rows="4" maxlength="1500" />
           </div>
 
-          <button formaction="?/add-post" class="submit-button" :disabled="!isReadyToPost">
+          <button class="submit-button" :disabled="!isReadyToPost" @click="addPost">
             <div>Отправить сообщение</div>
             <div class="price">
               Стоимость: 5 Маны <img src="~/assets/img/icons/mana/64.png" alt="" width="22" height="22">
@@ -144,7 +139,7 @@
             + 1 очко "Рассказчика" за каждый Лайк
           </div>
         </div>
-      </form>
+      </div>
 
       <p v-if="!posts?.length" class="empty">
         Пока нет постов
@@ -155,7 +150,9 @@
         <div class="content">
           <div class="info">
             <div class="desc">
-              <a :href="localePath(`/p/${post.profile.userName}`)">{{ post.profile.userName }}</a> добавил(а) новую заметку
+              <NuxtLink :to="localePath(`/p/${post.profile.userName}`)">
+                {{ post.profile.userName }}
+              </NuxtLink> добавил(а) новую заметку
             </div>
             <time>
               {{ useLocaleTimeAgo(new Date(post.createdAt)) }}
@@ -164,13 +161,12 @@
           <div class="message">
             {{ post.text }}
 
-            <form method="POST" action="?/add-like" class="likes-block">
-              <input type="hidden" name="postId" :value="post.id">
-              <button formaction="?/add-like" type="submit" :data-liked="post.likes.some(l => l.profileId === profileData?.id)">
+            <div class="likes-block">
+              <button :data-liked="post.likes.some(l => l.profileId === profileData?.id)" @click="addLike(post.id)">
                 <ThumbsUp :size="30" />
                 {{ post.rating }}
               </button>
-            </form>
+            </div>
           </div>
         </div>
       </div>
@@ -197,12 +193,58 @@ const { data: posts } = await useFetch(`/api/character/${route.params.id}/post`)
 const { user } = useUserSession()
 const { data: profileData } = await useFetch(`/api/profile/userName/${user.value?.userName}`)
 
+const twitchyId = 'staoqh419yy3k22cbtm9wquc'
 const alreadyHaveCharacter = profileData.value?.characterEditions.find((e) => e.characterId === character.value?.id)
 const coins = profileData.value?.coins ?? 0
+const mana = profileData.value?.mana ?? 0
 const price = character.value?.price ?? 0
 const isEnoughCoins = profileData ? coins >= price : false
-const isReadyToPost = false
-const postText = ''
+
+const postText = ref('')
+const isReadyToPost = computed(() => postText.value.length > 10 && mana >= 5)
+
+async function activateCharacter() {
+  const { data } = await useFetch(`/api/character/${route.params.id}/activate`, {
+    method: 'POST',
+  })
+
+  if (data.value) {
+    location.reload()
+  }
+}
+
+async function unlockCharacter() {
+  const { data } = await useFetch(`/api/character/${route.params.id}/unlock`, {
+    method: 'POST',
+  })
+
+  if (data.value) {
+    location.reload()
+  }
+}
+
+async function addLike(postId: string) {
+  const { data } = await useFetch(`/api/post/${postId}/like`, {
+    method: 'POST',
+  })
+
+  if (data.value) {
+    location.reload()
+  }
+}
+
+async function addPost() {
+  const { data } = await useFetch(`/api/character/${route.params.id}/post`, {
+    method: 'POST',
+    body: {
+      text: postText.value,
+    },
+  })
+
+  if (data.value) {
+    location.reload()
+  }
+}
 </script>
 
 <style scoped>
