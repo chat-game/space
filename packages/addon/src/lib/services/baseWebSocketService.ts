@@ -5,9 +5,7 @@ export class BaseWebSocketService implements WebSocketService {
   socket!: WebSocket
 
   constructor(readonly addon: GameAddon, readonly websocketUrl: string) {
-    if (window) {
-      this.#init()
-    }
+    this.#init()
   }
 
   async #handleMessage(message: WebSocketMessage) {

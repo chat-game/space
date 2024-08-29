@@ -12,10 +12,10 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - staging.chatgame.space
-      secretName: staging.chatgame.space
+        - chatgame.space
+      secretName: chatgame.space
   rules:
-    - host: staging.chatgame.space
+    - host: chatgame.space
       http:
         paths:
           - pathType: Prefix
