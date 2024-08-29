@@ -1,0 +1,21 @@
+{
+  "name": "@chat-game/addon",
+  "type": "module",
+  "private": true,
+  "main": "./src/index.ts",
+  "files": ["src/**/*"],
+  "scripts": {
+    "clean": "rm -rf dist",
+    "clean:modules": "rm -rf .turbo node_modules",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix ."
+  },
+  "dependencies": {
+    "@chat-game/types": "workspace:*",
+    "@paralleldrive/cuid2": "^2.2.2",
+    "pixi.js": "~8.2.6"
+  },
+  "devDependencies": {
+    "@chat-game/eslint": "workspace:*"
+  }
+}
