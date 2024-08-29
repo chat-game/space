@@ -1,6 +1,6 @@
 <template>
   <ClientOnly>
-    <div v-if="$route.path === '/'" class="logo" :style="{ backgroundImage: randomCharUrl }" />
+    <div v-if="$route.path === localePath('/')" class="logo" :style="{ backgroundImage: randomCharUrl }" />
     <NuxtLink v-else :to="localePath('/')">
       <div class="logo shake" :style="{ backgroundImage: randomCharUrl }" />
     </NuxtLink>

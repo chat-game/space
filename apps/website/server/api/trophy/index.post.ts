@@ -1,20 +1,22 @@
-import type { EventHandlerRequest } from 'h3'
 import { createId } from '@paralleldrive/cuid2'
-import type { TrophyCreateResponse } from '@chat-game/types'
 
-export default defineEventHandler<EventHandlerRequest, Promise<TrophyCreateResponse>>(
+export default defineEventHandler(
   async (event) => {
-    const body = await readBody(event)
+    const formData = await readFormData(event)
+    const session = await getUserSession(event)
 
-    if (!body.profileId || !body.name || !body.description) {
+    if (!session?.user || !formData.has('name') || !formData.has('description')) {
       throw createError({
         statusCode: 400,
-        message: 'You must provide data',
+        message: 'Invalid data',
       })
     }
 
+    let name = formData.get('name') as string
+    let description = formData.get('description') as string
+
     const profile = await prisma.profile.findUnique({
-      where: { id: body.profileId, mana: { gte: 5 } },
+      where: { id: session?.user.id, mana: { gte: 5 } },
     })
     if (!profile) {
       throw createError({
@@ -31,23 +33,20 @@ export default defineEventHandler<EventHandlerRequest, Promise<TrophyCreateRespo
     })
 
     // sanitize, max chars
-    const name = body.name.trim().substring(0, 35)
-    const description = body.description.trim().substring(0, 140)
+    name = name.trim().substring(0, 35)
+    description = description.trim().substring(0, 140)
 
     const trophy = await prisma.trophy.create({
       data: {
         id: createId(),
         name,
         description,
-        profileId: body.profileId,
+        profileId: profile.id,
         points: 10,
         rarity: 0,
       },
     })
 
-    return {
-      ok: true,
-      result: trophy,
-    }
+    return sendRedirect(event, `/trophy/${trophy.id}`)
   },
 )

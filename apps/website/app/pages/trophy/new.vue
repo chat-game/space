@@ -5,7 +5,7 @@
   </section>
 
   <section class="form">
-    <form method="post" action="?/create">
+    <form method="POST" action="/api/trophy">
       <div class="form-control">
         <input type="text" name="name" placeholder="Название трофея" maxlength="35">
       </div>
@@ -43,7 +43,9 @@
 </template>
 
 <script setup lang="ts">
-const isEnoughMana = false
+const { user } = useUserSession()
+const { data: profile } = await useFetch(`/api/profile/userName/${user.value?.userName}`)
+const isEnoughMana = profile.value && profile.value.mana >= 5
 
 const isCheckedTerms = ref(false)
 const isCheckedAgreed = ref(false)

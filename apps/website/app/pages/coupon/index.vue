@@ -61,11 +61,9 @@
             <img src="~/assets/img/icons/coin/64.png" alt="" width="32" height="32">
           </div>
 
-          <form method="POST" action="?/coupon-to-coins">
-            <button formaction="?/coupon-to-coins" class="submit-button" :disabled="!isEnoughCoupons">
-              Активировать купон
-            </button>
-          </form>
+          <button class="submit-button" :disabled="!isEnoughCoupons" @click="activateCouponToCoins">
+            Активировать купон
+          </button>
         </div>
       </div>
 
@@ -79,7 +77,23 @@
 <script setup lang="ts">
 const localePath = useLocalePath()
 const { data: coupons } = await useFetch('/api/coupon/latest')
-const isEnoughCoupons = false
+
+const { user } = useUserSession()
+const { data: profileData } = await useFetch(`/api/profile/userName/${user.value?.userName}`)
+const isEnoughCoupons = profileData.value && profileData.value?.coupons > 0
+
+async function activateCouponToCoins() {
+  const { data } = await useFetch('/api/coupon', {
+    method: 'POST',
+    body: {
+      type: 'COINS',
+    },
+  })
+
+  if (data.value) {
+    location.reload()
+  }
+}
 </script>
 
 <style scoped>
