@@ -13,9 +13,10 @@ definePageMeta({
   layout: 'game',
 })
 
+const { public: publicEnv } = useRuntimeConfig()
 const route = useRoute()
 const token = route.query.token?.toString() ?? ''
-const addon = new BaseGameAddon({ token })
+const addon = new BaseGameAddon({ token, websocketUrl: publicEnv.websocketUrl })
 const stage = ref<HTMLElement>()
 
 onMounted(async () => {

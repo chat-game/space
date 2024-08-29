@@ -18,6 +18,7 @@ import type {
 
 interface BaseGameAddonOptions {
   token: string
+  websocketUrl: string
 }
 
 export class BaseGameAddon extends Container implements GameAddon {
@@ -34,7 +35,7 @@ export class BaseGameAddon extends Container implements GameAddon {
   #outFlags: FlagObject[] = []
   #nearFlags: FlagObject[] = []
 
-  constructor({ token }: BaseGameAddonOptions) {
+  constructor({ token, websocketUrl }: BaseGameAddonOptions) {
     super()
 
     this.token = token
@@ -42,7 +43,7 @@ export class BaseGameAddon extends Container implements GameAddon {
     this.app = new Application()
 
     this.playerService = new BasePlayerService(this as GameAddon)
-    this.websocketService = new BaseWebSocketService(this as GameAddon, 'wss://chatgame.space/api/websocket')
+    this.websocketService = new BaseWebSocketService(this as GameAddon, websocketUrl)
     this.serverService = new BaseServerService()
   }
 

@@ -33,6 +33,7 @@ export default defineNuxtConfig({
     oauthTwitchClientSecret: '', // NUXT_OAUTH_TWITCH_CLIENT_SECRET
     public: {
       signInRedirectUrl: '', // NUXT_PUBLIC_SIGN_IN_REDIRECT_URL
+      websocketUrl: '', // NUXT_PUBLIC_WEBSOCKET_URL
     },
   },
   i18n: {
