@@ -16,10 +16,10 @@ definePageMeta({
 const { public: publicEnv } = useRuntimeConfig()
 const route = useRoute()
 const token = route.query.token?.toString() ?? ''
-const addon = new BaseGameAddon({ token, websocketUrl: publicEnv.websocketUrl })
 const stage = ref<HTMLElement>()
 
 onMounted(async () => {
+  const addon = new BaseGameAddon({ token, websocketUrl: publicEnv.websocketUrl })
   await addon.init()
   stage.value?.appendChild(addon.app.canvas)
 
