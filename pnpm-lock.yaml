@@ -71,9 +71,6 @@ importers:
       lucide-vue-next:
         specifier: ^0.436.0
         version: 0.436.0(vue@3.4.38(typescript@5.5.4))
-      pixi.js:
-        specifier: ~8.2.6
-        version: 8.2.6
       zod:
         specifier: ^3.23.8
         version: 3.23.8

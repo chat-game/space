@@ -50,18 +50,16 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
   }
 
   async initVisual(character?: CharacterEditionWithCharacter): Promise<void> {
-    const idle = await Assets.load(
-      character?.character.animationIdle ?? '/units/twitchy/idle.json',
-    )
+    const codename = character?.character.codename ?? 'twitchy'
+
+    const idle = await Assets.load(`${this.addon.cdnUrl}/units/${codename}/idle.json`)
     const idleSprite = new AnimatedSprite(idle.animations.main)
     idleSprite.anchor.set(0.5, 1)
     idleSprite.scale.set(4)
     this.#animationIdle = idleSprite
     this.addChild(this.#animationIdle)
 
-    const moving = await Assets.load(
-      character?.character.animationMoving ?? '/units/twitchy/moving.json',
-    )
+    const moving = await Assets.load(`${this.addon.cdnUrl}/units/${codename}/moving.json`)
     const movingSprite = new AnimatedSprite(moving.animations.main)
     movingSprite.anchor.set(0.5, 1)
     movingSprite.scale.set(4)
