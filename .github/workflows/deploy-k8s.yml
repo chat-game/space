@@ -9,7 +9,7 @@ on:
 
 env:
   APP_URL: https://chatgame.space
-  APP_ENV: production
+  APP_ENV: website-production
 
 jobs:
   deploy:
