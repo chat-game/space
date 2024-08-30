@@ -1,4 +1,4 @@
-name: Deploy Docker Image on Prod
+name: Deploy Docker Image on k8s
 
 on:
   workflow_dispatch:
@@ -26,19 +26,12 @@ jobs:
           environment-url: ${{ env.APP_URL }}
           environment: ${{ env.APP_ENV }}
 
-      - name: Install ssh keys
-        # check this thread to understand why its needed:
-        # <https://stackoverflow.com/a/70447517>
-        run: |
-          install -m 600 -D /dev/null ~/.ssh/id_rsa
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
-
-      - name: Connect and pull
-        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && docker compose pull && docker compose up -d && docker image prune -f && exit"
-
-      - name: Cleanup
-        run: rm -rf ~/.ssh
+      - name: Connect to k8s cluster and deploy
+        uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        with:
+          args: get pods
 
       - name: Update deployment status (success)
         if: success()
