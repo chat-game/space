@@ -60,7 +60,7 @@ class TwitchAddonController {
         }
 
         const xp = await this.#repository.addXpToCharacterEdition(c.id)
-        if (c.level !== this.#getLevelByXp(xp.xp)) {
+        if (c.level < this.#getLevelByXp(xp.xp)) {
           // Level up!
           const newLevel = await this.#repository.addLevelToCharacterEdition(c.id)
           c.level = newLevel.level
