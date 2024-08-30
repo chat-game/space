@@ -19,11 +19,13 @@ import type {
 interface BaseGameAddonOptions {
   token: string
   websocketUrl: string
+  cdnUrl: string
 }
 
 export class BaseGameAddon extends Container implements GameAddon {
   id: string
   token: string
+  cdnUrl: string
   override children: GameAddon['children'] = []
   app: Application
   tick: GameAddon['tick'] = 0
@@ -35,10 +37,11 @@ export class BaseGameAddon extends Container implements GameAddon {
   #outFlags: FlagObject[] = []
   #nearFlags: FlagObject[] = []
 
-  constructor({ token, websocketUrl }: BaseGameAddonOptions) {
+  constructor({ token, websocketUrl, cdnUrl }: BaseGameAddonOptions) {
     super()
 
     this.token = token
+    this.cdnUrl = cdnUrl
     this.id = createId()
     this.app = new Application()
 
@@ -63,8 +66,6 @@ export class BaseGameAddon extends Container implements GameAddon {
     this.#initNearFlags()
 
     this.app.stage.addChild(this)
-
-    this.playerService.init('svhjz9p5467wne9ybasf1bwy', undefined)
 
     this.app.ticker.add(() => {
       this.tick = this.app.ticker.FPS

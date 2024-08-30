@@ -1,88 +1,71 @@
 <template>
   <ClientOnly>
-    <div v-if="$route.path === localePath('/')" class="logo" :style="{ backgroundImage: randomCharUrl }" />
-    <NuxtLink v-else :to="localePath('/')">
-      <div class="logo shake" :style="{ backgroundImage: randomCharUrl }" />
+    <div v-if="$route.path === localePath('/')" class="logo">
+      <img :src="randomCharImage" alt="" class="static-index">
+    </div>
+    <NuxtLink v-else :to="localePath('/')" class="logo">
+      <img :src="randomCharImage" alt="" class="static">
+      <img :src="randomCharAnimatedImage" alt="" class="animated">
     </NuxtLink>
   </ClientOnly>
 </template>
 
 <script setup lang="ts">
+const { public: publicEnv } = useRuntimeConfig()
 const localePath = useLocalePath()
 
 const characters = [
+  'shape',
+  'gentleman',
   'banana',
   'burger',
   'catchy',
-  'claw',
   'marshmallow',
-  'sharky',
   'twitchy',
   'wooly',
-  'woody',
   'pup',
 ]
 const randomChar = characters[Math.floor(Math.random() * characters.length)]
-const randomCharUrl = `url(/units/${randomChar}/128.png)`
+const randomCharImage = `${publicEnv.cdnUrl}/units/${randomChar}/128.png`
+const randomCharAnimatedImage = `${publicEnv.cdnUrl}/units/${randomChar}/idle.gif`
 </script>
 
 <style scoped>
-header {
-  padding: 0.5em 1em;
-  display: flex;
-  justify-content: space-between;
-  justify-items: center;
-  align-items: center;
-
-  @media (max-width: 768px) {
-    & {
-      padding: 0.5em 0.5em;
-    }
-  }
-}
-
-.left {
-  flex-grow: 1;
-  flex-basis: 0;
-  display: flex;
-  align-items: center;
-
-  a {
-    font-size: 0;
-  }
-}
-
-@keyframes skewRandom {
-  0% {
-    transform: skewX(0);
-  }
-  50% {
-    transform: skewX(-3deg);
-  }
-  75% {
-    transform: skewX(3deg);
-  }
-  100% {
-    transform: skewX(0);
-  }
-}
-
 .logo {
   width: 64px;
   height: 64px;
-  margin-top: -14px;
+  margin-top: -22px;
   transition: all 0.2s;
-  background-size: contain;
   scale: 1.2;
 
-  &:hover.shake {
-    animation-name: skewRandom;
-    animation-duration: 0.5s;
-    animation-iteration-count: infinite;
-    animation-timing-function: ease-in-out;
-    animation-direction: alternate-reverse;
-    transform-origin: 50% 50%;
-    scale: 1.1;
+  .static-index {
+    display: block;
+    width: 64px;
+    height: 64px;
+  }
+
+  .static {
+    display: block;
+    width: 64px;
+    height: 64px;
+  }
+
+  .animated {
+    display: none;
+    width: 64px;
+    height: 64px;
+  }
+
+  &:hover {
+    scale: 1.3;
+
+    .static {
+      display: none;
+    }
+
+    .animated {
+      display: block;
+    }
   }
 }
 </style>

@@ -9,7 +9,7 @@
     </h2>
 
     <div class="unit-avatar">
-      <img :src="`/units/${character?.codename}/idle.gif`" alt="" class="game-canvas" width="256" height="256">
+      <img :src="`${publicEnv.cdnUrl}/units/${character?.codename}/idle.gif`" alt="" class="game-canvas" width="256" height="256">
     </div>
   </section>
 
@@ -146,7 +146,7 @@
       </p>
 
       <div v-for="post in posts" :key="post.id" class="post">
-        <img src="/units/twitchy/128.png" alt="" class="avatar">
+        <img :src="`${publicEnv.cdnUrl}/units/twitchy/128.png`" alt="" class="avatar">
         <div class="content">
           <div class="info">
             <div class="desc">
@@ -184,6 +184,7 @@ definePageMeta({
   },
 })
 
+const { public: publicEnv } = useRuntimeConfig()
 const localePath = useLocalePath()
 const route = useRoute()
 const { data: character } = await useFetch(`/api/character/${route.params.id}`)

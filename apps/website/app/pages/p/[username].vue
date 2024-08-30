@@ -29,7 +29,7 @@
     <h2>Профиль игрока <span class="profile-lvl">{{ pageProfile?.level }} уровня</span></h2>
 
     <div class="unit-avatar">
-      <img :src="`/units/${activeCharacter?.character.codename}/idle.gif`" alt="" class="game-canvas" width="256" height="256">
+      <img :src="`${publicEnv.cdnUrl}/units/${activeCharacter?.character.codename}/idle.gif`" alt="" class="game-canvas" width="256" height="256">
     </div>
 
     <div class="active-character">
@@ -112,8 +112,8 @@
     <div class="collection-block">
       <div v-for="char in pageProfile?.characterEditions" :key="char.id" class="cell" :class="{ active: char.id === activeCharacter?.id }">
         <NuxtLink :to="localePath(`/character/${char.character.id}`)">
-          <img :src="`/units/${char.character.codename}/128.png`" alt="" class="avatar static">
-          <img :src="`/units/${char.character.codename}/idle.gif`" alt="" class="avatar animated">
+          <img :src="`${publicEnv.cdnUrl}/units/${char.character.codename}/128.png`" alt="" class="avatar static">
+          <img :src="`${publicEnv.cdnUrl}/units/${char.character.codename}/idle.gif`" alt="" class="avatar animated">
           <p class="nickname">
             {{ char.character.nickname }}
           </p>
@@ -135,7 +135,7 @@
     <div class="collection-block">
       <div v-for="trophyEdition in trophies" :key="trophyEdition.id" class="cell" :data-rarity="trophyEdition.trophy.rarity">
         <NuxtLink :to="localePath(`/trophy/${trophyEdition.trophy.id}`)">
-          <img src="/trophies/default/64.png" alt="" width="64" height="64">
+          <img :src="`${publicEnv.cdnUrl}/trophies/default/64.png`" alt="" width="64" height="64">
           <div class="name">
             {{ trophyEdition.trophy.name }}
           </div>
@@ -177,6 +177,7 @@ definePageMeta({
   },
 })
 
+const { public: publicEnv } = useRuntimeConfig()
 const localePath = useLocalePath()
 const route = useRoute()
 const { data: pageProfile } = await useFetch(`/api/profile/userName/${route.params.username}`)

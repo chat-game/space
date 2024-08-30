@@ -24,7 +24,7 @@
     <div class="block">
       <div v-for="coupon in coupons" :key="coupon.id" class="card">
         <div>
-          <img src="/units/twitchy/128.png" alt="" width="64" height="64">
+          <img :src="`${publicEnv.cdnUrl}/units/twitchy/128.png`" alt="" width="64" height="64">
           <div class="coupon">
             <img src="~/assets/img/icons/coupon/64.png" alt="" width="32" height="32">
           </div>
@@ -77,6 +77,7 @@
 </template>
 
 <script setup lang="ts">
+const { public: publicEnv } = useRuntimeConfig()
 const localePath = useLocalePath()
 const { data: coupons } = await useFetch('/api/coupon/latest')
 

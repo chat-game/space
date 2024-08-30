@@ -94,8 +94,6 @@ export interface Character {
   unlockedBy: 'COINS' | 'SHOP' | 'TROPHY'
   price: number
   codename: string | null
-  animationIdle: string | null
-  animationMoving: string | null
 }
 
 export interface CharacterWithProfile extends Character {
