@@ -1,6 +1,10 @@
 name: Deploy Docker Image on k8s
 
 on:
+  workflow_run:
+    workflows: ["Build and Push Docker"]
+    types:
+      - completed
   workflow_dispatch:
 
 env:
