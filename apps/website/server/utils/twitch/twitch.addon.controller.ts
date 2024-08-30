@@ -48,6 +48,8 @@ class TwitchAddonController {
       return
     }
 
+    this.#logger.info('Starting characters updater...')
+
     this.#activeCharactersUpdater = setInterval(async () => {
       for (const c of this.#activeCharacters) {
         const checkTime = getDateMinusMinutes(4)

@@ -16,6 +16,12 @@ export default defineNuxtConfig({
       ],
     },
   },
+  routeRules: {
+    '/addon': {
+      ssr: false,
+      static: true,
+    },
+  },
   devtools: { enabled: true },
   devServer: {
     host: '0.0.0.0',
