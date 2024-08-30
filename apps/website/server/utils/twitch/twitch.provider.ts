@@ -7,6 +7,7 @@ import { twitchController } from './twitch.controller'
 import { twitchAddonController } from './twitch.addon.controller'
 
 class TwitchProvider {
+  readonly #logger = useLogger('twitch-provider')
   #authProvider!: AuthProvider
   #isStreaming: boolean = false
   readonly #userId: string
@@ -101,6 +102,10 @@ class TwitchProvider {
   }
 
   async #prepareAuthProvider() {
+    if (!this.#userId) {
+      throw new Error('No user id')
+    }
+
     const accessToken = await this.#repository.getTwitchAccessToken(this.#userId)
     if (!accessToken) {
       throw new Error('No access token')

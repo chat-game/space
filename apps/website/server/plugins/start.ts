@@ -1,4 +1,11 @@
 export default defineNitroPlugin(() => {
+  const { twitchChannelId } = useRuntimeConfig()
+
+  if (!twitchChannelId) {
+    // No config provided
+    return
+  }
+
   void twitchController.serve()
   void twitchController.serveStreamOnline()
   void twitchAddonController.serve()

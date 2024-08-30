@@ -44,8 +44,8 @@
         class="cell"
       >
         <NuxtLink :to="localePath(`/character/${char.id}`)">
-          <img :src="`/units/${char.codename}/128.png`" alt="" class="avatar static">
-          <img :src="`/units/${char.codename}/idle.gif`" alt="" class="avatar animated">
+          <img :src="`${publicEnv.cdnUrl}/units/${char.codename}/128.png`" alt="" class="avatar static">
+          <img :src="`${publicEnv.cdnUrl}/units/${char.codename}/idle.gif`" alt="" class="avatar animated">
           <p class="nickname">
             {{ char.nickname }}
           </p>
@@ -77,6 +77,7 @@
 </template>
 
 <script setup lang="ts">
+const { public: publicEnv } = useRuntimeConfig()
 const localePath = useLocalePath()
 const { loggedIn, user } = useUserSession()
 const { data: profile } = await useFetch(`/api/profile/userName/${user.value?.userName}`)

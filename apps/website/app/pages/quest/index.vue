@@ -15,7 +15,7 @@
             <p>Награда:</p>
             <div class="rewards">
               <div class="reward">
-                <img src="/trophies/default/64.png" alt="" width="28" height="28">
+                <img :src="`${publicEnv.cdnUrl}/trophies/default/64.png`" alt="" width="28" height="28">
                 Трофей
               </div>
             </div>
@@ -34,6 +34,7 @@
 </template>
 
 <script setup lang="ts">
+const { public: publicEnv } = useRuntimeConfig()
 const localePath = useLocalePath()
 const { user } = useUserSession()
 const { data: questsForProfile } = await useFetch(`/api/quest/profileId/${user.value?.id}`)

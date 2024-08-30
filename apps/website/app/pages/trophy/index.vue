@@ -14,7 +14,7 @@
     <div class="trophies">
       <div v-for="trophy in readyTrophies" :key="trophy.id" class="cell" :data-rarity="trophy.rarity">
         <NuxtLink :to="localePath(`/trophy/${trophy.id}`)">
-          <img src="/trophies/default/64.png" alt="" width="64" height="64">
+          <img :src="`${publicEnv.cdnUrl}/trophies/default/64.png`" alt="" width="64" height="64">
           <div class="name">
             {{ trophy.name }}
           </div>
@@ -32,7 +32,7 @@
     <div class="trophies">
       <div v-for="trophy in inWorkTrophies" :key="trophy.id" class="cell" :data-rarity="trophy.rarity">
         <NuxtLink :to="localePath(`/trophy/${trophy.id}`)">
-          <img src="/trophies/default/64.png" alt="" width="64" height="64">
+          <img :src="`${publicEnv.cdnUrl}/trophies/default/64.png`" alt="" width="64" height="64">
           <div class="name">
             {{ trophy.name }}
           </div>
@@ -46,6 +46,7 @@
 </template>
 
 <script setup lang="ts">
+const { public: publicEnv } = useRuntimeConfig()
 const localePath = useLocalePath()
 const { data: trophies } = await useFetch('/api/trophy/')
 const readyTrophies = trophies.value?.filter((t) => t.isReady)

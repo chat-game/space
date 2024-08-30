@@ -5,7 +5,7 @@
       class="profile-avatar"
       @click="handleMenuClick"
     >
-      <img :src="user?.imageUrl ?? '/icons/twitch/112.png'" alt="">
+      <img :src="user?.imageUrl ?? defaultImage" alt="">
     </button>
     <a v-else class="twitch" href="/api/auth/twitch">Войти</a>
   </div>
@@ -14,10 +14,13 @@
 <script setup lang="ts">
 const { isFeedOpened } = useApp()
 const { loggedIn, user } = useUserSession()
+const { public: publicEnv } = useRuntimeConfig()
 
 function handleMenuClick() {
   isFeedOpened.value = !isFeedOpened.value
 }
+
+const defaultImage = `${publicEnv.cdnUrl}/icons/twitch/112.png`
 </script>
 
 <style scoped>
