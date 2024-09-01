@@ -1,13 +1,13 @@
 {
   "name": "Chat Game",
   "image": "mcr.microsoft.com/devcontainers/typescript-node:22",
-  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "workspaceFolder": "/workspaces/chat-game/${localWorkspaceFolderBasename}",
 
   // Features to add to the dev container. More info: https://containers.dev/features.
   // "features": {},
 
   // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "npm i -g pnpm@9.8.0 && pnpm i",
+  "postCreateCommand": "npm i -g pnpm@9.9.0 && pnpm i",
 
   // Configure tool-specific properties.
   "customizations": {
