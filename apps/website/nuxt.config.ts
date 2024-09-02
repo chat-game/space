@@ -20,10 +20,10 @@ export default defineNuxtConfig({
     '/addon': {
       ssr: false,
       static: true,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-      },
+      cors: true,
+    },
+    '/cdn/**': {
+      proxy: 'https://cdn.chatgame.space/**',
     },
   },
   devtools: { enabled: true },
