@@ -39,7 +39,7 @@ class TwitchController {
 
       await this.#bot.say(
         this.#channel,
-        `Появился новый Купон! Забирай: пиши команду "!купон ${coupon.activationCommand}". Подробности на https://chatgame.space/ru/coupon :D`,
+        `Появился новый Купон! Забирай: пиши команду "!купон ${coupon.activationCommand}". Подробности на https://chatgame.space/coupon :D`,
       )
     }, 1000 * 60 * 25)
   }
