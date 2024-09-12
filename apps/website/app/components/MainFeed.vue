@@ -44,7 +44,7 @@
           Последние события
         </div>
 
-        <TransactionBlock v-for="transaction in transactions" :key="transaction.id" :transaction="transaction" />
+        <TransactionBlock v-for="transaction in transactions" :key="transaction.id" :transaction="transaction as unknown as TransactionWithProfile" />
       </div>
     </div>
   </aside>
@@ -52,6 +52,7 @@
 
 <script setup lang="ts">
 import { X } from 'lucide-vue-next'
+import type { TransactionWithProfile } from '@chat-game/types'
 
 const { isFeedOpened } = useApp()
 const localePath = useLocalePath()

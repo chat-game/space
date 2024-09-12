@@ -1,5 +1,5 @@
-import type { EventHandlerRequest } from 'h3'
 import type { TwitchTokenWithProfile } from '@chat-game/types'
+import type { EventHandlerRequest } from 'h3'
 import { getDateMinusMinutes } from '../../../utils/date'
 
 export default defineEventHandler<EventHandlerRequest, Promise<TwitchTokenWithProfile[]>>(

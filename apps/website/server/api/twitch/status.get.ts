@@ -1,5 +1,5 @@
-import type { EventHandlerRequest } from 'h3'
 import type { TwitchServiceStatus } from '@chat-game/types'
+import type { EventHandlerRequest } from 'h3'
 import { twitchAddonController } from '../../utils/twitch/twitch.addon.controller'
 import { twitchController } from '../../utils/twitch/twitch.controller'
 import { twitchWoodlandController } from '../../utils/twitch/twitch.woodland.controller'

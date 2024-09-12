@@ -1,10 +1,10 @@
-import type { AuthProvider } from '@twurple/auth'
-import { RefreshingAuthProvider } from '@twurple/auth'
 import { createId } from '@paralleldrive/cuid2'
+import { RefreshingAuthProvider } from '@twurple/auth'
 import type { TwitchAccessTokenResponse } from '@chat-game/types'
+import type { AuthProvider } from '@twurple/auth'
 import { DBRepository } from '../repository'
-import { twitchController } from './twitch.controller'
 import { twitchAddonController } from './twitch.addon.controller'
+import { twitchController } from './twitch.controller'
 
 class TwitchProvider {
   readonly #logger = useLogger('twitch-provider')

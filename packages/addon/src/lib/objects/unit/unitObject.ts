@@ -1,14 +1,14 @@
-import type { CharacterEditionWithCharacter } from '@chat-game/types'
 import { createId } from '@paralleldrive/cuid2'
 import { AnimatedSprite, Assets, Container, Graphics, Text } from 'pixi.js'
+import type { CharacterEditionWithCharacter } from '@chat-game/types'
 import { BaseObject } from '../baseObject'
 import { getRandomInRange } from './../../utils/random'
+import { DialogueInterface } from './dialogueInterface'
 import type {
   GameAddon,
   GameObject,
   GameObjectUnit,
 } from './../../types'
-import { DialogueInterface } from './dialogueInterface'
 
 interface UnitObjectOptions {
   addon: GameAddon

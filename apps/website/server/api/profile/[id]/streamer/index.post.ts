@@ -1,5 +1,5 @@
-import type { EventHandlerRequest } from 'h3'
 import type { StreamerUpdateResponse } from '@chat-game/types'
+import type { EventHandlerRequest } from 'h3'
 
 export default defineEventHandler<EventHandlerRequest, Promise<StreamerUpdateResponse>>(
   async (event) => {

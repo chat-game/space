@@ -1,5 +1,5 @@
-import type { EventHandlerRequest } from 'h3'
 import type { Woodland } from '@chat-game/types'
+import type { EventHandlerRequest } from 'h3'
 
 export default defineEventHandler<EventHandlerRequest, Promise<Woodland[]>>(async (event) => {
   const profileId = getRouterParam(event, 'id')

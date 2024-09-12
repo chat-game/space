@@ -1,5 +1,5 @@
-import type { EventHandlerRequest } from 'h3'
 import type { ProfileCreateResponse } from '@chat-game/types'
+import type { EventHandlerRequest } from 'h3'
 import { DBRepository } from '../../utils/repository'
 
 export default defineEventHandler<EventHandlerRequest, Promise<ProfileCreateResponse>>(

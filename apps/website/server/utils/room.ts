@@ -1,15 +1,13 @@
-import type { Peer } from 'crossws'
-
 interface RoomOptions {
   id: string
   token: string
-  peer: Peer<unknown>
+  peer: any
 }
 
 export class Room {
   id: string
   token: string
-  peer: Peer<unknown>
+  peer: any
 
   constructor({ id, token, peer }: RoomOptions) {
     this.id = id

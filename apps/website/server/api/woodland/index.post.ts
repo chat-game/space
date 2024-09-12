@@ -1,6 +1,6 @@
 import { createId } from '@paralleldrive/cuid2'
-import type { EventHandlerRequest } from 'h3'
 import type { TwitchToken, Woodland, WoodlandCreateResponse } from '@chat-game/types'
+import type { EventHandlerRequest } from 'h3'
 
 export default defineEventHandler<EventHandlerRequest, Promise<WoodlandCreateResponse>>(
   async (event) => {
