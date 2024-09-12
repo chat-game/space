@@ -2,8 +2,8 @@ import type { CharacterEditionWithCharacter } from '@chat-game/types'
 import { PlayerObject } from '../objects/unit/playerObject'
 import { MoveOffScreenAndSelfDestroyScript } from '../scripts/moveOffScreenAndSelfDestroyScript'
 import { MoveToTargetScript } from '../scripts/moveToTargetScript'
-import type { GameAddon, GameObjectPlayer, PlayerService } from '../types'
 import { getDateMinusMinutes } from './../utils/date'
+import type { GameAddon, GameObjectPlayer, PlayerService } from '../types'
 
 export class BasePlayerService implements PlayerService {
   constructor(readonly addon: GameAddon) {}

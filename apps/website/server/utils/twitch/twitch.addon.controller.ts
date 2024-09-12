@@ -1,9 +1,9 @@
 import { ChatClient } from '@twurple/chat'
-import type { Listener } from '@d-fischer/typed-event-emitter'
 import type { ActiveCharacter, ProfileWithTokens } from '@chat-game/types'
+import type { Listener } from '@d-fischer/typed-event-emitter'
+import { sendMessage } from '../../api/websocket'
 import { getDateMinusMinutes } from '../date'
 import { QuestService } from '../quest'
-import { sendMessage } from '../../api/websocket'
 import { DBRepository } from '../repository'
 
 class TwitchAddonController {

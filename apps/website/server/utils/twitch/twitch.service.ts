@@ -1,5 +1,5 @@
-import { DBRepository } from '../repository'
 import { QuestService } from '../quest'
+import { DBRepository } from '../repository'
 
 export const TWITCH_CHANNEL_REWARDS = {
   add150ViewerPointsId: 'd8237822-c943-434f-9d7e-87a9f549f4c4',

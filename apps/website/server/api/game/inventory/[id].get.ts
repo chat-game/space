@@ -1,5 +1,5 @@
-import type { EventHandlerRequest } from 'h3'
 import type { Inventory, InventoryItem } from '@chat-game/types'
+import type { EventHandlerRequest } from 'h3'
 
 export default defineEventHandler<EventHandlerRequest, Promise<Inventory>>(async (event) => {
   const id = getRouterParam(event, 'id')

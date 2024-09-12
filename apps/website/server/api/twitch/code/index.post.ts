@@ -1,6 +1,6 @@
 import { createId } from '@paralleldrive/cuid2'
-import type { EventHandlerRequest } from 'h3'
 import type { TokenCreateResponse, TwitchAccessTokenResponse, TwitchToken } from '@chat-game/types'
+import type { EventHandlerRequest } from 'h3'
 
 export default defineEventHandler<EventHandlerRequest, Promise<TokenCreateResponse>>(
   async (event) => {

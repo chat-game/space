@@ -1,10 +1,10 @@
-import { Bot } from '@twurple/easy-bot'
-import { PubSubClient } from '@twurple/pubsub'
 import { ApiClient } from '@twurple/api'
+import { Bot } from '@twurple/easy-bot'
 import { EventSubWsListener } from '@twurple/eventsub-ws'
+import { PubSubClient } from '@twurple/pubsub'
 import { DBRepository } from '../repository'
-import { TwitchService } from './twitch.service'
 import { twitchProvider } from './twitch.provider'
+import { TwitchService } from './twitch.service'
 
 class TwitchController {
   readonly #channel: string
