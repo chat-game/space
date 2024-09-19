@@ -104,20 +104,28 @@ const notReadyCharacters = characters.value?.filter((c) => !c.isReady)
       gap: 0.5em;
 
       @media (min-width: 375px) {
-        grid-template-columns: repeat(3, 1fr);
+        & {
+          grid-template-columns: repeat(3, 1fr);
+        }
       }
 
       @media (min-width: 620px) {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 0.75em;
+        & {
+          grid-template-columns: repeat(4, 1fr);
+          gap: 0.75em;
+        }
       }
 
       @media (min-width: 768px) {
-        grid-template-columns: repeat(6, 1fr);
+        & {
+          grid-template-columns: repeat(6, 1fr);
+        }
       }
 
       @media (min-width: 1024px) {
-        grid-template-columns: repeat(8, 1fr);
+        & {
+          grid-template-columns: repeat(8, 1fr);
+        }
       }
 
       .cell {
