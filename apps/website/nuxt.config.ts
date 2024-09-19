@@ -69,7 +69,6 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     'nuxt-auth-utils',
     '@nuxtjs/device',
-    'nuxt-time',
     '@nuxtjs/i18n',
   ],
   compatibilityDate: '2024-08-18',
