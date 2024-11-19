@@ -17,7 +17,7 @@
       </div>
       <div class="completion">
         <div class="trophy">
-          <img :src="`${publicEnv.cdnUrl}/trophies/default/64.png`" alt="" width="64" height="64">
+          <img src="/trophies/default/64.png" alt="" width="64" height="64">
         </div>
         <div>
           <p class="points">
@@ -40,7 +40,7 @@
     <div class="block">
       <div v-for="progress in latestProfiles" :key="progress.id" class="card">
         <div>
-          <img :src="`${publicEnv.cdnUrl}/units/twitchy/128.png`" alt="" width="64" height="64">
+          <img src="/units/twitchy/128.png" alt="" width="64" height="64">
         </div>
         <div>
           <NuxtLink :to="localePath(`/p/${progress.profile.userName}`)">
@@ -61,7 +61,6 @@ definePageMeta({
   },
 })
 
-const { public: publicEnv } = useRuntimeConfig()
 const localePath = useLocalePath()
 const route = useRoute()
 const { data: trophy } = await useFetch(`/api/trophy/${route.params.id}`)

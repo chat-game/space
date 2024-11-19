@@ -22,9 +22,6 @@ export default defineNuxtConfig({
       static: true,
       cors: true,
     },
-    '/cdn/**': {
-      proxy: 'https://cdn.chatgame.space/**',
-    },
   },
   devtools: { enabled: true },
   devServer: {
@@ -44,7 +41,6 @@ export default defineNuxtConfig({
     public: {
       signInRedirectUrl: '', // NUXT_PUBLIC_SIGN_IN_REDIRECT_URL
       websocketUrl: '', // NUXT_PUBLIC_WEBSOCKET_URL
-      cdnUrl: '', // NUXT_PUBLIC_CDN_URL
     },
   },
   i18n: {

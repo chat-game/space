@@ -11,7 +11,6 @@
 </template>
 
 <script setup lang="ts">
-const { public: publicEnv } = useRuntimeConfig()
 const localePath = useLocalePath()
 
 const characters = [
@@ -26,8 +25,8 @@ const characters = [
   'pup',
 ]
 const randomChar = characters[Math.floor(Math.random() * characters.length)]
-const randomCharImage = `${publicEnv.cdnUrl}/units/${randomChar}/128.png`
-const randomCharAnimatedImage = `${publicEnv.cdnUrl}/units/${randomChar}/idle.gif`
+const randomCharImage = `/units/${randomChar}/128.png`
+const randomCharAnimatedImage = `/units/${randomChar}/idle.gif`
 </script>
 
 <style scoped>
