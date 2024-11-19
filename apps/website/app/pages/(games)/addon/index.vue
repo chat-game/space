@@ -19,7 +19,7 @@ const token = route.query.token?.toString() ?? ''
 const stage = ref<HTMLElement>()
 
 onMounted(async () => {
-  const addon = new BaseGameAddon({ token, websocketUrl: publicEnv.websocketUrl, cdnUrl: '/cdn' })
+  const addon = new BaseGameAddon({ token, websocketUrl: publicEnv.websocketUrl })
   await addon.init()
   stage.value?.appendChild(addon.app.canvas)
 

@@ -139,7 +139,7 @@
           </div>
 
           <div class="gentleman">
-            <img :src="`${publicEnv.cdnUrl}/units/gentleman/idle.gif`" alt="" width="98" height="98">
+            <img src="/units/gentleman/idle.gif" alt="" width="98" height="98">
             <div>Уникальный персонаж: Джентельмен</div>
           </div>
 
@@ -163,10 +163,6 @@
     </div>
   </section>
 </template>
-
-<script setup lang="ts">
-const { public: publicEnv } = useRuntimeConfig()
-</script>
 
 <style scoped>
   .shop {

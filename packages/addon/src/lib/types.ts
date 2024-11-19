@@ -8,7 +8,6 @@ import type { Container } from 'pixi.js'
 export interface GameAddon extends Container {
   id: string
   token: string
-  cdnUrl: string
   children: GameObject[]
   tick: number
   playerService: PlayerService

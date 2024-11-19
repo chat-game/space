@@ -14,13 +14,12 @@
 <script setup lang="ts">
 const { isFeedOpened } = useApp()
 const { loggedIn, user } = useUserSession()
-const { public: publicEnv } = useRuntimeConfig()
 
 function handleMenuClick() {
   isFeedOpened.value = !isFeedOpened.value
 }
 
-const defaultImage = `${publicEnv.cdnUrl}/icons/twitch/112.png`
+const defaultImage = '/icons/twitch/112.png'
 </script>
 
 <style scoped>

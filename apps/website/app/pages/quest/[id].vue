@@ -20,7 +20,7 @@
           <p>Награда:</p>
           <div class="rewards">
             <div class="reward">
-              <img :src="`${publicEnv.cdnUrl}/trophies/default/64.png`" alt="" width="28" height="28">
+              <img src="/trophies/default/64.png" alt="" width="28" height="28">
               Трофей
             </div>
           </div>
@@ -52,7 +52,7 @@
     <div class="block">
       <div v-for="edition in quest?.editions" :key="edition.id" class="card">
         <div>
-          <img :src="`${publicEnv.cdnUrl}/units/twitchy/128.png`" alt="" width="64" height="64">
+          <img src="/units/twitchy/128.png" alt="" width="64" height="64">
         </div>
         <div>
           <NuxtLink :to="localePath(`/p/${edition.profile.userName}`)">
@@ -75,7 +75,6 @@ definePageMeta({
   },
 })
 
-const { public: publicEnv } = useRuntimeConfig()
 const localePath = useLocalePath()
 const route = useRoute()
 const { data: quest } = await useFetch(`/api/quest/${route.params.id}`)
