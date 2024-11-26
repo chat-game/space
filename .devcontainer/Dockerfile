@@ -1,0 +1,1 @@
+FROM mcr.microsoft.com/devcontainers/base:dev-ubuntu-24.04
