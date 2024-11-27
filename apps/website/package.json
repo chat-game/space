@@ -36,7 +36,7 @@
     "@nuxt/devtools": "^1.6.1",
     "@nuxt/kit": "^3.14.1592",
     "@nuxtjs/device": "^3.2.4",
-    "@nuxtjs/i18n": "^8.5.3",
+    "@nuxtjs/i18n": "^9.1.0",
     "@types/howler": "^2.2.12",
     "@types/node": "*",
     "@vueuse/core": "^11.3.0",
