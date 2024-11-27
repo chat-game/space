@@ -1,6 +1,7 @@
-import type { WebSocketMessage } from '@chat-game/types'
+import type { WebSocketEvents, WebSocketMessage } from '@chat-game/types'
 import type { GameAddon, WebSocketService } from '../types'
 import { createId } from '@paralleldrive/cuid2'
+import { TreeObject } from '../objects/treeObject'
 
 export class BaseWebSocketService implements WebSocketService {
   socket!: WebSocket
@@ -13,7 +14,7 @@ export class BaseWebSocketService implements WebSocketService {
         id: createId(),
         type: 'CONNECT',
         data: {
-          client: 'ADDON',
+          client: 'GAME',
           id: this.addon.id,
           token: this.addon.token,
         },
@@ -31,6 +32,11 @@ export class BaseWebSocketService implements WebSocketService {
     })
   }
 
+  send(event: WebSocketEvents) {
+    const preparedMessage = JSON.stringify({ ...event, id: createId() })
+    this.socket.send(preparedMessage)
+  }
+
   async #handleMessage(message: WebSocketMessage) {
     if (message.type === 'MESSAGE') {
       const { text, player, character } = message.data
@@ -39,6 +45,10 @@ export class BaseWebSocketService implements WebSocketService {
     if (message.type === 'LEVEL_UP') {
       const { text, playerId } = message.data
       this.addon.handleMessage({ text, playerId })
+    }
+    if (message.type === 'NEW_TREE') {
+      const { x } = message.data
+      this.addon.app.stage.addChild(new TreeObject({ addon: this.addon, x, y: 0 }))
     }
   }
 

@@ -1,5 +1,5 @@
-import { createId } from '@paralleldrive/cuid2'
 import type { EventHandlerRequest } from 'h3'
+import { createId } from '@paralleldrive/cuid2'
 
 export default defineEventHandler<EventHandlerRequest, Promise<{ ok: boolean }>>(async (event) => {
   const profileId = getRouterParam(event, 'id')

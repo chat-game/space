@@ -1,6 +1,6 @@
-import { ChatClient } from '@twurple/chat'
 import type { ProfileWithTokens } from '@chat-game/types'
 import type { Listener } from '@d-fischer/typed-event-emitter'
+import { ChatClient } from '@twurple/chat'
 import { sendMessage } from '../../api/websocket'
 import { DBRepository } from '../repository'
 

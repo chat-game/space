@@ -1,5 +1,5 @@
-import { createId } from '@paralleldrive/cuid2'
 import type { QuestReward } from '@chat-game/types'
+import { createId } from '@paralleldrive/cuid2'
 import { DBRepository } from './repository'
 
 export class QuestService {

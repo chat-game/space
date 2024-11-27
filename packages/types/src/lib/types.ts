@@ -328,67 +328,6 @@ export interface InventoryItem {
 
 export type InventoryItemType = 'WOOD' | 'STONE' | 'AXE' | 'PICKAXE' | 'COIN'
 
-export type WebSocketMessage = { id: string } & WebSocketEvents
-
-export type WebSocketEvents =
-  | WebSocketEventCommand
-  | WebSocketEventMessage
-  | WebSocketEventLevelUp
-  | WebSocketWoodlandMessage
-  | WebSocketWoodlandCommand
-
-export interface WebSocketEventCommand {
-  type: 'COMMAND'
-  data: {
-    command: string
-    params: string[]
-    player: Player
-    profile: Profile
-    character: CharacterEditionWithCharacter
-    text: string
-  }
-}
-
-export interface WebSocketEventMessage {
-  type: 'MESSAGE'
-  data: {
-    player: Player
-    profile: Profile
-    character: CharacterEditionWithCharacter
-    text: string
-  }
-}
-
-export interface WebSocketEventLevelUp {
-  type: 'LEVEL_UP'
-  data: {
-    text: string
-    playerId: string
-  }
-}
-
-export interface WebSocketWoodlandCommand {
-  type: 'WOODLAND_COMMAND'
-  data: {
-    command: string
-    params: string[]
-    player: WoodlandPlayer
-    profile: Profile
-    character: CharacterEditionWithCharacter
-    text: string
-  }
-}
-
-export interface WebSocketWoodlandMessage {
-  type: 'WOODLAND_MESSAGE'
-  data: {
-    player: WoodlandPlayer
-    profile: Profile
-    character: CharacterEditionWithCharacter
-    text: string
-  }
-}
-
 export interface TwitchServiceStatus {
   service: 'PUBLIC_ADDON' | 'HMBANAN666_TWITCH' | 'COUPON_GENERATOR' | 'AI_VIEW' | 'WOODLAND'
   status: 'RUNNING' | 'STOPPED'

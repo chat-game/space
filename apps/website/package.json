@@ -15,9 +15,10 @@
   },
   "dependencies": {
     "@chat-game/addon": "workspace:*",
+    "@chat-game/game": "workspace:*",
     "@chat-game/types": "workspace:*",
     "@paralleldrive/cuid2": "^2.2.2",
-    "@prisma/client": "^5.19.1",
+    "@prisma/client": "^5.22.0",
     "@radix-ui/colors": "^3.0.0",
     "@twurple/api": "^7.1.0",
     "@twurple/auth": "^7.1.0",
@@ -26,23 +27,23 @@
     "@twurple/eventsub-ws": "^7.1.0",
     "@twurple/pubsub": "^7.1.0",
     "howler": "^2.2.4",
-    "lucide-vue-next": "^0.440.0",
+    "lucide-vue-next": "^0.461.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@chat-game/eslint": "workspace:*",
     "@d-fischer/typed-event-emitter": "^3.3.3",
-    "@nuxt/devtools": "^1.4.2",
-    "@nuxt/kit": "^3.13.1",
-    "@nuxtjs/device": "^3.2.2",
+    "@nuxt/devtools": "^1.6.1",
+    "@nuxt/kit": "^3.14.1592",
+    "@nuxtjs/device": "^3.2.4",
     "@nuxtjs/i18n": "^8.5.3",
-    "@types/howler": "^2.2.11",
+    "@types/howler": "^2.2.12",
     "@types/node": "*",
-    "@vueuse/core": "^11.0.3",
-    "@vueuse/nuxt": "^11.0.3",
-    "nuxt": "^3.13.1",
-    "nuxt-auth-utils": "^0.3.8",
-    "prisma": "^5.19.1",
-    "vue-tsc": "^2.1.6"
+    "@vueuse/core": "^11.3.0",
+    "@vueuse/nuxt": "^11.3.0",
+    "nuxt": "^3.14.1592",
+    "nuxt-auth-utils": "^0.5.5",
+    "prisma": "^5.22.0",
+    "vue-tsc": "2.1.6"
   }
 }

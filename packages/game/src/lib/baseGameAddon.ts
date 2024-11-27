@@ -10,6 +10,8 @@ import type {
 import { createId } from '@paralleldrive/cuid2'
 import { Application, Container, TextureStyle } from 'pixi.js'
 import { FlagObject } from './objects/flagObject'
+import { TreeObject } from './objects/treeObject'
+import { PlayerObject } from './objects/unit/playerObject'
 import { MoveToTargetScript } from './scripts/moveToTargetScript'
 import { BasePlayerService } from './services/basePlayerService'
 import { BaseServerService } from './services/baseServerService'
@@ -35,11 +37,20 @@ export class BaseGameAddon extends Container implements GameAddon {
   #outFlags: FlagObject[] = []
   #nearFlags: FlagObject[] = []
 
+  cameraOffsetX = 0
+  cameraMovementSpeedX = 0.008
+  cameraOffsetY = 0
+  cameraMovementSpeedY = 0.008
+  cameraX = 0
+  cameraY = 0
+  cameraPerfectX = 0
+  cameraPerfectY = 0
+
   constructor({ token, websocketUrl }: BaseGameAddonOptions) {
     super()
 
-    this.token = token
     this.id = createId()
+    this.token = token
     this.app = new Application()
 
     this.playerService = new BasePlayerService(this as GameAddon)
@@ -58,11 +69,18 @@ export class BaseGameAddon extends Container implements GameAddon {
 
     TextureStyle.defaultOptions.scaleMode = 'nearest'
     this.app.ticker.maxFPS = 60
+    this.app.stage.y = window.innerHeight
 
     this.#initOutFlags()
     this.#initNearFlags()
 
     this.app.stage.addChild(this)
+
+    this.app.stage.addChild(new TreeObject({ addon: this, x: 300, y: 0 }))
+    this.app.stage.addChild(new TreeObject({ addon: this, x: 600, y: 0 }))
+
+    const nick = new PlayerObject({ id: 'svhjz9p5467wne9ybasf1bwy', addon: this, x: 0, y: 0 })
+    await nick.init()
 
     this.app.ticker.add(() => {
       this.tick = this.app.ticker.FPS
@@ -70,6 +88,10 @@ export class BaseGameAddon extends Container implements GameAddon {
       this.playerService.update()
       this.#updateObjects()
       this.#removeDestroyedObjects()
+
+      const target = nick
+      this.changeCameraPosition(target.x)
+      this.moveCamera()
     })
   }
 
@@ -123,7 +145,7 @@ export class BaseGameAddon extends Container implements GameAddon {
 
   #generateRandomOutFlag() {
     const offsetX = -240
-    const offsetY = 200
+    const offsetY = 1
 
     const flag = new FlagObject({
       addon: this as GameAddon,
@@ -137,7 +159,7 @@ export class BaseGameAddon extends Container implements GameAddon {
 
   #generateRandomNearFlag() {
     const offsetX = getRandomInRange(0, this.app.screen.width)
-    const offsetY = 200
+    const offsetY = 1
 
     const flag = new FlagObject({
       addon: this as GameAddon,
@@ -199,5 +221,60 @@ export class BaseGameAddon extends Container implements GameAddon {
         return
       }
     }
+  }
+
+  changeCameraPosition(x: number) {
+    const columnWidth = this.app.screen.width / 6
+
+    const leftPadding = columnWidth * 3
+
+    // if (wagon.speedPerSecond === 0) {
+    //   leftPadding = columnWidth * 3
+
+    //   if (wagon.state === 'IDLE' && !wagon.cargoType) {
+    //     // At Village stop
+    //     leftPadding = columnWidth
+    //     topPadding = rowHeight * 4
+    //   }
+    // }
+
+    this.cameraPerfectX = -x + leftPadding
+
+    // If first load
+    if (Math.abs(-x - this.cameraX) > 3000) {
+      this.cameraX = this.cameraPerfectX
+    }
+  }
+
+  moveCamera() {
+    const cameraMaxSpeed = 1
+    const bufferX = Math.abs(this.cameraPerfectX - this.cameraX)
+    const moduleX = this.cameraPerfectX - this.cameraX > 0 ? 1 : -1
+    const addToX = bufferX > cameraMaxSpeed ? cameraMaxSpeed : bufferX
+
+    if (this.cameraX !== this.cameraPerfectX) {
+      this.cameraX += addToX * moduleX
+    }
+
+    // const bufferY = Math.abs(this.cameraPerfectY - this.cameraY)
+    // const moduleY = this.cameraPerfectY - this.cameraY > 0 ? 1 : -1
+    // const addToY = bufferY > cameraMaxSpeed ? cameraMaxSpeed : bufferY
+
+    // if (this.cameraY !== this.cameraPerfectY) {
+    //   this.cameraY += addToY * moduleY
+    // }
+
+    // if (Math.abs(this.cameraOffsetX) >= 20) {
+    //   this.cameraMovementSpeedX *= -1
+    // }
+    // this.cameraOffsetX += this.cameraMovementSpeedX
+    //
+    // if (Math.abs(this.cameraOffsetY) >= 30) {
+    //   this.cameraMovementSpeedY *= -1
+    // }
+    // this.cameraOffsetY += this.cameraMovementSpeedY
+
+    this.parent.x = this.cameraX
+    // this.parent.y = this.cameraY
   }
 }
