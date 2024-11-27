@@ -1,5 +1,5 @@
-import { BaseObject } from './baseObject'
 import type { GameAddon, GameObjectFlag } from '../types'
+import { BaseObject } from './baseObject'
 
 interface FlagObjectOptions {
   addon: GameAddon

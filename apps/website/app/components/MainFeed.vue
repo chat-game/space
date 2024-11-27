@@ -51,8 +51,8 @@
 </template>
 
 <script setup lang="ts">
-import { X } from 'lucide-vue-next'
 import type { TransactionWithProfile } from '@chat-game/types'
+import { X } from 'lucide-vue-next'
 
 const { isFeedOpened } = useApp()
 const localePath = useLocalePath()

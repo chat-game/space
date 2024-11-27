@@ -1,5 +1,5 @@
-import { BaseScript } from './baseScript'
 import type { GameObject } from '../types'
+import { BaseScript } from './baseScript'
 
 interface IMoveToRandomTargetScriptOptions {
   object: GameObject

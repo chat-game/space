@@ -1,5 +1,5 @@
-import { Container, Graphics, Text } from 'pixi.js'
 import type { GameObjectUnit } from './../../types'
+import { Container, Graphics, Text } from 'pixi.js'
 
 export class DialogueInterface extends Container {
   messages: { id: string, text: string, isShowed: boolean }[]

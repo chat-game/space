@@ -1,5 +1,5 @@
-import { createId } from '@paralleldrive/cuid2'
 import type { GameObject, Script, Task } from '../types'
+import { createId } from '@paralleldrive/cuid2'
 
 interface BaseScriptOptions {
   object: GameObject

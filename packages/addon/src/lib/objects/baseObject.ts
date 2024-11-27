@@ -1,6 +1,6 @@
+import type { GameAddon, GameObject } from '../types'
 import { createId } from '@paralleldrive/cuid2'
 import { Container } from 'pixi.js'
-import type { GameAddon, GameObject } from '../types'
 
 interface GameObjectOptions {
   addon: GameAddon

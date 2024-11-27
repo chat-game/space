@@ -1,5 +1,5 @@
-import { BaseScript } from './baseScript'
 import type { GameObject, Task } from '../types'
+import { BaseScript } from './baseScript'
 
 interface IMoveOffScreenAndSelfDestroyScriptOptions {
   object: GameObject

@@ -1,8 +1,8 @@
-import { RefreshingAuthProvider } from '@twurple/auth'
-import { ChatClient } from '@twurple/chat'
 import type { ProfileWithTokens } from '@chat-game/types'
 import type { Listener } from '@d-fischer/typed-event-emitter'
 import type { AuthProvider } from '@twurple/auth'
+import { RefreshingAuthProvider } from '@twurple/auth'
+import { ChatClient } from '@twurple/chat'
 import { DBRepository } from '../repository'
 
 class TwitchAiController {

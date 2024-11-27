@@ -1,6 +1,6 @@
 import type { CharacterEditionWithCharacter } from '@chat-game/types'
-import { UnitObject } from './unitObject'
 import type { GameAddon, GameObjectPlayer } from './../../types'
+import { UnitObject } from './unitObject'
 
 interface PlayerObjectOptions {
   addon: GameAddon

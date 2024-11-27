@@ -1,4 +1,3 @@
-import { createId } from '@paralleldrive/cuid2'
 import type {
   CharacterEditionWithCharacter,
   Coupon,
@@ -8,6 +7,7 @@ import type {
   TwitchAccessToken,
   TwitchToken,
 } from '@chat-game/types'
+import { createId } from '@paralleldrive/cuid2'
 
 import { getDateMinusMinutes } from './date'
 

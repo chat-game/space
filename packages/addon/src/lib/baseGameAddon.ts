@@ -1,12 +1,4 @@
-import { createId } from '@paralleldrive/cuid2'
-import { Application, Container, TextureStyle } from 'pixi.js'
 import type { CharacterEditionWithCharacter } from '@chat-game/types'
-import { FlagObject } from './objects/flagObject'
-import { MoveToTargetScript } from './scripts/moveToTargetScript'
-import { BasePlayerService } from './services/basePlayerService'
-import { BaseServerService } from './services/baseServerService'
-import { BaseWebSocketService } from './services/baseWebSocketService'
-import { getRandomInRange } from './utils/random'
 import type {
   GameAddon,
   GameObject,
@@ -15,6 +7,14 @@ import type {
   ServerService,
   WebSocketService,
 } from './types'
+import { createId } from '@paralleldrive/cuid2'
+import { Application, Container, TextureStyle } from 'pixi.js'
+import { FlagObject } from './objects/flagObject'
+import { MoveToTargetScript } from './scripts/moveToTargetScript'
+import { BasePlayerService } from './services/basePlayerService'
+import { BaseServerService } from './services/baseServerService'
+import { BaseWebSocketService } from './services/baseWebSocketService'
+import { getRandomInRange } from './utils/random'
 
 interface BaseGameAddonOptions {
   token: string

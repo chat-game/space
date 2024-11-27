@@ -14,7 +14,7 @@ interface TwitchUser {
   created_at: Date
 }
 
-export default oauthTwitchEventHandler({
+export default defineOAuthTwitchEventHandler({
   config: {
     emailRequired: true,
   },
