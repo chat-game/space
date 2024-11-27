@@ -9,6 +9,7 @@ export type WebSocketEvents =
   | WebSocketEventLevelUp
   | WebSocketWoodlandMessage
   | WebSocketWoodlandCommand
+  | WebSocketNewTree
 
 export interface WebSocketConnect {
   type: 'CONNECT'
@@ -68,5 +69,13 @@ export interface WebSocketWoodlandMessage {
     profile: Profile
     character: CharacterEditionWithCharacter
     text: string
+  }
+}
+
+export interface WebSocketNewTree {
+  type: 'NEW_TREE'
+  data: {
+    id: string
+    x: number
   }
 }

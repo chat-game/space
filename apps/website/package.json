@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@chat-game/addon": "workspace:*",
+    "@chat-game/game": "workspace:*",
     "@chat-game/types": "workspace:*",
     "@paralleldrive/cuid2": "^2.2.2",
     "@prisma/client": "^5.22.0",

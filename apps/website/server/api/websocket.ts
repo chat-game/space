@@ -46,6 +46,22 @@ export default defineWebSocketHandler({
           logger.log(`peer subscribed to room id ${activeRoom.id}`, peer.id)
         }
 
+        if (client === 'GAME') {
+          const token = parsed.data.token
+          // Create if not exist
+          if (!activeRooms.find((room) => room.token === token)) {
+            activeRooms.push(new Room({ id, token, type: 'GAME' }))
+          }
+
+          const activeRoom = activeRooms.find((room) => room.token === token) as Room
+          if (!activeRoom.peers.includes(peer.id)) {
+            activeRoom.peers.push(peer.id)
+          }
+
+          peer.subscribe(activeRoom.id)
+          logger.log(`peer subscribed to room id ${activeRoom.id}`, peer.id)
+        }
+
         if (client === 'SERVER') {
           const activeRoom = activeRooms.find((room) => room.id === id)
           if (!activeRoom) {
@@ -58,6 +74,14 @@ export default defineWebSocketHandler({
       }
       if (parsed.type === 'TEST') {
         peer.publish(parsed.data.id, JSON.stringify({ id: createId(), type: 'TEST' }))
+      }
+      if (parsed.type === 'NEW_TREE') {
+        const room = activeRooms.find((room) => room.peers.find((id) => id === peer.id))
+        if (!room) {
+          return
+        }
+        peer.publish(room.id, JSON.stringify({ id: createId(), type: 'NEW_TREE', data: { id: parsed.data.id, x: parsed.data.x } }))
+        peer.send(JSON.stringify({ id: createId(), type: 'NEW_TREE', data: { id: parsed.data.id, x: parsed.data.x } }))
       }
     }
   },
