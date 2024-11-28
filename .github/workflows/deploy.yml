@@ -1,4 +1,4 @@
-name: Deploy Docker Image on k8s
+name: Deploy Docker Image
 
 on:
   workflow_run:
@@ -30,12 +30,11 @@ jobs:
           environment-url: ${{ env.APP_URL }}
           environment: ${{ env.APP_ENV }}
 
-      - name: Connect to k8s cluster and restart deployment
-        uses: actions-hub/kubectl@master
-        env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+      - name: Restart service on Kosarev.Space
+        uses: fjogeleit/http-request-action@v1
         with:
-          args: rollout restart deployment/website-deployment -n chat-game
+          url: "https://kosarev.space/api/service/${{ secrets.SERVICE_ID }}/restart"
+          method: 'POST'
 
       - name: Update deployment status (success)
         if: success()

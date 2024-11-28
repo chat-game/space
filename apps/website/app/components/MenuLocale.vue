@@ -8,7 +8,7 @@
     </button>
 
     <div v-if="isOpened" class="dropdown-menu">
-      <button v-for="chooseLocale in locales" :key="chooseLocale" @click="() => handleLocaleSwitch(chooseLocale.code)">
+      <button v-for="chooseLocale in locales" :key="chooseLocale.code" @click="() => handleLocaleSwitch(chooseLocale.code)">
         {{ chooseLocale.name }}
       </button>
     </div>
@@ -24,7 +24,7 @@ function handleListClick() {
   isOpened.value = !isOpened.value
 }
 
-function handleLocaleSwitch(code: string) {
+function handleLocaleSwitch(code: 'ru' | 'en') {
   isOpened.value = false
   setLocale(code)
 }
