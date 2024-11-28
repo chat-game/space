@@ -10,6 +10,8 @@
         Интерфейс
 
         <MainButton @click="showAlert('Hello!')" />
+
+        {{ userData.initData }}
       </div>
     </div>
   </ClientOnly>
@@ -17,13 +19,14 @@
 
 <script setup lang="ts">
 import { BaseGameAddon } from '@chat-game/game'
-import { MainButton, useWebAppPopup } from 'vue-tg'
+import { MainButton, useWebApp, useWebAppPopup } from 'vue-tg'
 
 definePageMeta({
   layout: 'game',
 })
 
 const { showAlert } = useWebAppPopup()
+const userData = useWebApp()
 
 const { public: publicEnv } = useRuntimeConfig()
 const route = useRoute()
