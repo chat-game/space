@@ -7,11 +7,9 @@
       </div>
       <div id="game-canvas" ref="stage" />
       <div class="game-bottom-interface">
-        Интерфейс
-
-        <MainButton @click="showAlert('Hello!')" />
-
-        {{ userData.initData }}
+        <p @click="showAlert('привет!')">
+          Интерфейс для игры
+        </p>
       </div>
     </div>
   </ClientOnly>
@@ -19,14 +17,14 @@
 
 <script setup lang="ts">
 import { BaseGameAddon } from '@chat-game/game'
-import { MainButton, useWebApp, useWebAppPopup } from 'vue-tg'
+import { useWebAppPopup } from 'vue-tg'
 
 definePageMeta({
   layout: 'game',
 })
 
 const { showAlert } = useWebAppPopup()
-const userData = useWebApp()
+// const userData = useWebApp()
 
 const { public: publicEnv } = useRuntimeConfig()
 const route = useRoute()
@@ -79,7 +77,7 @@ onMounted(async () => {
     right: 0;
     width: 100%;
     height: 200px;
-    background-color: #fed7aa;
-    color: #ffedd5;
+    background-color: #422006;
+    color: #fde68a;
   }
 </style>
