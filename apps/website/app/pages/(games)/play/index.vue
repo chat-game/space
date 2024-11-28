@@ -8,6 +8,10 @@
       <div id="game-canvas" ref="stage" />
       <div class="game-bottom-interface">
         Интерфейс
+
+        <MainButton @click="showAlert('Hello!')" />
+
+        {{ userData.initData }}
       </div>
     </div>
   </ClientOnly>
@@ -15,10 +19,14 @@
 
 <script setup lang="ts">
 import { BaseGameAddon } from '@chat-game/game'
+import { MainButton, useWebApp, useWebAppPopup } from 'vue-tg'
 
 definePageMeta({
   layout: 'game',
 })
+
+const { showAlert } = useWebAppPopup()
+const userData = useWebApp()
 
 const { public: publicEnv } = useRuntimeConfig()
 const route = useRoute()
@@ -37,11 +45,12 @@ onMounted(async () => {
 <style scoped>
   .game-block {
     width: 100vw;
-    height: 100dvh;
+    height: 100vh;
     overflow: hidden;
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
+    background-color: #ffedd5;
   }
 
   #game-canvas {
@@ -60,6 +69,7 @@ onMounted(async () => {
     width: 100%;
     height: 64px;
     background-color: transparent;
+    padding-top: 60px;
   }
 
   .game-bottom-interface {
@@ -69,7 +79,7 @@ onMounted(async () => {
     right: 0;
     width: 100%;
     height: 200px;
-    background-color: #fff7ed;
+    background-color: #fed7aa;
     color: #ffedd5;
   }
 </style>
