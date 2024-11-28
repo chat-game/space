@@ -18,7 +18,7 @@
     "@chat-game/game": "workspace:*",
     "@chat-game/types": "workspace:*",
     "@paralleldrive/cuid2": "^2.2.2",
-    "@prisma/client": "^5.22.0",
+    "@prisma/client": "^6.0.0",
     "@radix-ui/colors": "^3.0.0",
     "@twurple/api": "^7.1.0",
     "@twurple/auth": "^7.1.0",
@@ -45,7 +45,7 @@
     "@vueuse/nuxt": "^11.3.0",
     "nuxt": "^3.14.1592",
     "nuxt-auth-utils": "^0.5.5",
-    "prisma": "^5.22.0",
+    "prisma": "^6.0.0",
     "vue-tsc": "^2.1.10"
   }
 }
