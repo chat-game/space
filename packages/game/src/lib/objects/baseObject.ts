@@ -49,7 +49,7 @@ export class BaseObject extends Container implements GameObject {
   live() {}
 
   animate(): void {
-    this.zIndex = Math.round(this.y)
+    // this.zIndex = Math.round(this.y)
   }
 
   move(): boolean {

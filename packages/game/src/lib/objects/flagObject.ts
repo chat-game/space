@@ -34,6 +34,10 @@ export class FlagObject extends BaseObject implements GameObjectFlag {
     if (this.target?.state === 'DESTROYED') {
       this.target = undefined
     }
+
+    if (this.state === 'DESTROYED') {
+      this.visible = false
+    }
   }
 
   override animate() {

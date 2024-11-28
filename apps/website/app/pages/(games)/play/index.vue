@@ -1,7 +1,14 @@
 <template>
   <ClientOnly>
     <div class="game-block">
+      <div class="game-top-interface">
+        <div>Монеты: 53</div>
+        <div>Энергия: 41</div>
+      </div>
       <div id="game-canvas" ref="stage" />
+      <div class="game-bottom-interface">
+        Интерфейс
+      </div>
     </div>
   </ClientOnly>
 </template>
@@ -30,8 +37,11 @@ onMounted(async () => {
 <style scoped>
   .game-block {
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
     overflow: hidden;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
   }
 
   #game-canvas {
@@ -40,5 +50,26 @@ onMounted(async () => {
     bottom: 0;
     position: absolute;
     overflow: hidden;
+  }
+
+  .game-top-interface {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 64px;
+    background-color: transparent;
+  }
+
+  .game-bottom-interface {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 200px;
+    background-color: #fff7ed;
+    color: #ffedd5;
   }
 </style>

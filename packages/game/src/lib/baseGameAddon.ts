@@ -5,16 +5,17 @@ import type {
   GameObjectPlayer,
   PlayerService,
   ServerService,
+  TreeService,
   WebSocketService,
 } from './types'
 import { createId } from '@paralleldrive/cuid2'
-import { Application, Container, TextureStyle } from 'pixi.js'
+import { Application, Container, Rectangle, TextureStyle } from 'pixi.js'
 import { FlagObject } from './objects/flagObject'
-import { TreeObject } from './objects/treeObject'
 import { PlayerObject } from './objects/unit/playerObject'
-import { MoveToTargetScript } from './scripts/moveToTargetScript'
+import { MoveToFlagScript } from './scripts/moveToFlagScript'
 import { BasePlayerService } from './services/basePlayerService'
 import { BaseServerService } from './services/baseServerService'
+import { BaseTreeService } from './services/baseTreeService'
 import { BaseWebSocketService } from './services/baseWebSocketService'
 import { getRandomInRange } from './utils/random'
 
@@ -31,12 +32,15 @@ export class BaseGameAddon extends Container implements GameAddon {
   tick: GameAddon['tick'] = 0
 
   playerService: PlayerService
+  treeService: TreeService
   websocketService: WebSocketService
   serverService: ServerService
 
   #outFlags: FlagObject[] = []
   #nearFlags: FlagObject[] = []
 
+  bottomY = 0
+  leftX = 0
   cameraOffsetX = 0
   cameraMovementSpeedX = 0.008
   cameraOffsetY = 0
@@ -54,6 +58,7 @@ export class BaseGameAddon extends Container implements GameAddon {
     this.app = new Application()
 
     this.playerService = new BasePlayerService(this as GameAddon)
+    this.treeService = new BaseTreeService(this as GameAddon)
     this.websocketService = new BaseWebSocketService(this as GameAddon, websocketUrl)
     this.serverService = new BaseServerService()
   }
@@ -69,29 +74,51 @@ export class BaseGameAddon extends Container implements GameAddon {
 
     TextureStyle.defaultOptions.scaleMode = 'nearest'
     this.app.ticker.maxFPS = 60
-    this.app.stage.y = window.innerHeight
+    this.bottomY = this.app.screen.height - 200
+
+    this.app.stage.eventMode = 'static'
+    this.app.screen.width = window.innerWidth
+    this.app.screen.height = window.innerHeight
+    const rectangle = new Rectangle(0, 0, this.app.screen.width, this.app.screen.height)
+    this.app.stage.hitArea = rectangle
 
     this.#initOutFlags()
     this.#initNearFlags()
 
     this.app.stage.addChild(this)
 
-    this.app.stage.addChild(new TreeObject({ addon: this, x: 300, y: 0 }))
-    this.app.stage.addChild(new TreeObject({ addon: this, x: 600, y: 0 }))
-
-    const nick = new PlayerObject({ id: 'svhjz9p5467wne9ybasf1bwy', addon: this, x: 0, y: 0 })
+    const nick = new PlayerObject({ id: 'svhjz9p5467wne9ybasf1bwy', addon: this, x: 0, y: this.bottomY })
     await nick.init()
 
+    this.app.stage.addEventListener('pointerdown', (e) => {
+      const middle = this.app.screen.width / 2
+      const offsetX = e.clientX - middle
+      const serverX = offsetX + this.leftX
+
+      const flag = new FlagObject({ addon: this, x: serverX, y: this.bottomY, variant: 'PLAYER_MOVEMENT' })
+      if (nick.target && nick.target.type === 'FLAG') {
+        const flag = nick.target
+        nick.target = undefined
+        flag.state = 'DESTROYED'
+      }
+      nick.target = flag
+    })
+
+    this.treeService.init()
+
     this.app.ticker.add(() => {
+      this.leftX = nick.x
       this.tick = this.app.ticker.FPS
 
       this.playerService.update()
+      this.treeService.update()
       this.#updateObjects()
       this.#removeDestroyedObjects()
 
       const target = nick
       this.changeCameraPosition(target.x)
       this.moveCamera()
+      rectangle.x = nick.x - this.app.screen.width / 2
     })
   }
 
@@ -145,7 +172,7 @@ export class BaseGameAddon extends Container implements GameAddon {
 
   #generateRandomOutFlag() {
     const offsetX = -240
-    const offsetY = 1
+    const offsetY = this.bottomY
 
     const flag = new FlagObject({
       addon: this as GameAddon,
@@ -159,7 +186,7 @@ export class BaseGameAddon extends Container implements GameAddon {
 
   #generateRandomNearFlag() {
     const offsetX = getRandomInRange(0, this.app.screen.width)
-    const offsetY = 1
+    const offsetY = this.bottomY
 
     const flag = new FlagObject({
       addon: this as GameAddon,
@@ -200,16 +227,23 @@ export class BaseGameAddon extends Container implements GameAddon {
       return
     }
 
-    if (object.state === 'IDLE') {
-      const random = getRandomInRange(1, 250)
-      if (random <= 1) {
-        const target = this.randomNearFlag
+    if (object.target && object.target.type === 'FLAG') {
+      object.script = new MoveToFlagScript({
+        object,
+        target: object.target,
+      })
+    }
 
-        object.script = new MoveToTargetScript({
-          object,
-          target,
-        })
-      }
+    if (object.state === 'IDLE') {
+      // const random = getRandomInRange(1, 250)
+      // if (random <= 1) {
+      //   const target = this.randomNearFlag
+
+      //   object.script = new MoveToTargetScript({
+      //     object,
+      //     target,
+      //   })
+      // }
     }
   }
 
@@ -241,13 +275,13 @@ export class BaseGameAddon extends Container implements GameAddon {
     this.cameraPerfectX = -x + leftPadding
 
     // If first load
-    if (Math.abs(-x - this.cameraX) > 3000) {
+    if (Math.abs(-x - this.cameraX) > 300) {
       this.cameraX = this.cameraPerfectX
     }
   }
 
   moveCamera() {
-    const cameraMaxSpeed = 1
+    const cameraMaxSpeed = 2
     const bufferX = Math.abs(this.cameraPerfectX - this.cameraX)
     const moduleX = this.cameraPerfectX - this.cameraX > 0 ? 1 : -1
     const addToX = bufferX > cameraMaxSpeed ? cameraMaxSpeed : bufferX

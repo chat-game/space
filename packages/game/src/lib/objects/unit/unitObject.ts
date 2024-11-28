@@ -132,7 +132,7 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
 
     super.animate()
 
-    this.zIndex = Math.round(this.y + 1)
+    this.zIndex = 0
 
     if (this.state === 'MOVING') {
       this.#animationIdle.visible = false

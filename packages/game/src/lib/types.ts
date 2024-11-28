@@ -11,8 +11,10 @@ export interface GameAddon extends Container {
   token: string
   children: GameObject[]
   tick: number
+  bottomY: number
   app: Application
   playerService: PlayerService
+  treeService: TreeService
   serverService: ServerService
   websocketService: WebSocketService
   play: () => void
@@ -55,7 +57,7 @@ export interface GameObject extends Container {
 }
 
 export interface GameObjectFlag extends GameObject {
-  variant: 'MOVEMENT' | 'OUT_OF_SCREEN'
+  variant: 'MOVEMENT' | 'OUT_OF_SCREEN' | 'PLAYER_MOVEMENT'
 }
 
 export interface GameObjectTree extends GameObject {
@@ -114,6 +116,11 @@ export interface PlayerService {
     id: string,
     character?: CharacterEditionWithCharacter,
   ) => Promise<GameObjectPlayer>
+}
+
+export interface TreeService {
+  update: () => void
+  init: () => void
 }
 
 export type GameObjectState =
