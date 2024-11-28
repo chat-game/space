@@ -35,6 +35,7 @@ jobs:
         with:
           url: "https://kosarev.space/api/service/${{ secrets.SERVICE_ID }}/restart"
           method: 'POST'
+          bearerToken: '${{ secrets.BEARER_TOKEN }}'
 
       - name: Update deployment status (success)
         if: success()
