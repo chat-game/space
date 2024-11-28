@@ -80,4 +80,19 @@ export class BaseScript implements Script {
       },
     }
   }
+
+  runToTargetAndDestroy(): Task {
+    return {
+      id: createId(),
+      status: 'IDLE',
+      live: () => {
+        const isMoving = this.object.move()
+        if (!isMoving && this.object.target) {
+          this.object.target.state = 'DESTROYED'
+          this.object.target = undefined
+          this.markTaskAsDone()
+        }
+      },
+    }
+  }
 }

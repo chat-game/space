@@ -1,20 +1,36 @@
 import type { GameAddon, GameObjectTree } from '../types'
 import { Assets, Sprite } from 'pixi.js'
+import { getRandomInRange } from '../utils/random'
 import { BaseObject } from './baseObject'
 
 interface TreeObjectOptions {
   addon: GameAddon
   x: number
   y: number
+  size?: number
 }
 
 export class TreeObject extends BaseObject implements GameObjectTree {
   variant: GameObjectTree['variant']
+  isReadyToChop!: boolean
 
-  constructor({ addon, x, y }: TreeObjectOptions) {
+  #minSizeToChop = 75
+  #maxSize = 125
+  #growSpeedPerSecond = 3
+  #animationAngle = getRandomInRange(-1, 1)
+  #animationSlowSpeed = 0.04
+  #animationHighSpeed = 0.5
+
+  constructor({ addon, x, y, size }: TreeObjectOptions) {
     super({ addon, x, y, type: 'TREE' })
 
+    this.size = size ?? 100
+    this.#maxSize = getRandomInRange(this.#minSizeToChop, this.#maxSize)
+
+    this.health = 100
     this.variant = 'GREEN'
+
+    this.zIndex = getRandomInRange(-1, 1)
 
     this.initVisual()
   }
@@ -23,7 +39,6 @@ export class TreeObject extends BaseObject implements GameObjectTree {
     const texture = await Assets.load(`/objects/tree/green.png`)
     const sprite = Sprite.from(texture)
     sprite.anchor.set(0.5, 1)
-    sprite.scale.set(1)
     sprite.eventMode = 'static'
     sprite.cursor = 'pointer'
 
@@ -33,19 +48,23 @@ export class TreeObject extends BaseObject implements GameObjectTree {
   }
 
   click() {
-    this.scale.x *= 1.05
-    this.scale.y *= 1.05
+    this.chop()
 
-    const randomX = Math.floor(Math.random() * this.addon.app.stage.width)
-    // this.addon.app.stage.addChild(new TreeObject({ addon: this.addon, x: randomX, y: 0 }))
+    // const randomX = Math.floor(Math.random() * this.addon.app.stage.width)
 
-    this.addon.websocketService.send({
-      type: 'NEW_TREE',
-      data: {
-        id: this.id,
-        x: randomX,
-      },
-    })
+    // this.addon.websocketService.send({
+    //   type: 'NEW_TREE',
+    //   data: {
+    //     id: this.id,
+    //     x: randomX,
+    //   },
+    // })
+  }
+
+  chop() {
+    this.state = 'CHOPPING'
+    this.health -= getRandomInRange(10, 20)
+    this.alpha = 0.9
   }
 
   override live() {
@@ -54,10 +73,35 @@ export class TreeObject extends BaseObject implements GameObjectTree {
     if (this.target?.state === 'DESTROYED') {
       this.target = undefined
     }
+
+    if (this.health <= 0) {
+      this.destroy()
+    }
+
+    switch (this.state) {
+      case 'IDLE':
+        this.#grow()
+        break
+      case 'CHOPPING':
+        this.#handleChoppingState()
+        break
+      case 'DESTROYED':
+        break
+    }
   }
 
   override animate() {
     super.animate()
+
+    this.scale = this.size / 100
+
+    if (this.state === 'IDLE') {
+      this.#shakeOnWind()
+    }
+
+    if (this.state === 'CHOPPING') {
+      this.#shakeAnimation()
+    }
 
     if (this.state === 'DESTROYED') {
       this.visible = false
@@ -65,6 +109,41 @@ export class TreeObject extends BaseObject implements GameObjectTree {
     }
 
     this.visible = true
+  }
+
+  #shakeAnimation() {
+    if (Math.abs(this.#animationAngle) >= 3.5) {
+      this.#animationHighSpeed *= -1
+    }
+    this.#animationAngle += this.#animationHighSpeed
+    this.angle = this.#animationAngle
+  }
+
+  #shakeOnWind() {
+    if (Math.abs(this.#animationAngle) >= 1.5) {
+      this.#animationSlowSpeed *= -1
+    }
+    this.#animationAngle += this.#animationSlowSpeed
+    this.angle = this.#animationAngle
+  }
+
+  #grow() {
+    if (this.size >= this.#minSizeToChop && !this.isReadyToChop) {
+      this.isReadyToChop = true
+    }
+    if (this.size >= this.#maxSize) {
+      return
+    }
+
+    this.size += this.#growSpeedPerSecond / this.addon.tick
+  }
+
+  #handleChoppingState() {
+    const random = getRandomInRange(1, 20)
+    if (random <= 1) {
+      this.state = 'IDLE'
+      this.alpha = 1
+    }
   }
 
   // #getSpriteByType() {
