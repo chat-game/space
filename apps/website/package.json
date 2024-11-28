@@ -28,6 +28,7 @@
     "@twurple/pubsub": "^7.1.0",
     "howler": "^2.2.4",
     "lucide-vue-next": "^0.461.0",
+    "vue-tg": "^0.8.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {

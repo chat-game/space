@@ -83,6 +83,9 @@ importers:
       lucide-vue-next:
         specifier: ^0.461.0
         version: 0.461.0(vue@3.5.13(typescript@5.6.2))
+      vue-tg:
+        specifier: ^0.8.0
+        version: 0.8.0(vue@3.5.13(typescript@5.6.2))
       zod:
         specifier: ^3.23.8
         version: 3.23.8
@@ -1492,6 +1495,9 @@ packages:
 
   '@types/resolve@1.20.2':
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
+
+  '@types/telegram-web-app@7.10.1':
+    resolution: {integrity: sha512-GKL659G6lnHRAt3Dt7L1Fa0dwvc+ZZQtJcYrJVJGwjvsbi/Rcp1qKs9pFwb34/KC04+J+TlQj4D7yKo10sBSEw==}
 
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
@@ -4886,6 +4892,11 @@ packages:
     peerDependencies:
       vue: ^3.2.0
 
+  vue-tg@0.8.0:
+    resolution: {integrity: sha512-0DwRLrxtoOn7iCuEx0+GDHy5vSJPgbqJrEpE8QgRTJbLFI6ogP9jzG58pS8gXbntb3rqqWepxGwUJMn95MqP1g==}
+    peerDependencies:
+      vue: ^3
+
   vue-tsc@2.1.10:
     resolution: {integrity: sha512-RBNSfaaRHcN5uqVqJSZh++Gy/YUzryuv9u1aFWhsammDJXNtUiJMNoJ747lZcQ68wUQFx6E73y4FY3D8E7FGMA==}
     hasBin: true
@@ -6548,6 +6559,8 @@ snapshots:
   '@types/pluralize@0.0.33': {}
 
   '@types/resolve@1.20.2': {}
+
+  '@types/telegram-web-app@7.10.1': {}
 
   '@types/unist@3.0.3': {}
 
@@ -10486,6 +10499,11 @@ snapshots:
   vue-router@4.5.0(vue@3.5.13(typescript@5.6.2)):
     dependencies:
       '@vue/devtools-api': 6.6.4
+      vue: 3.5.13(typescript@5.6.2)
+
+  vue-tg@0.8.0(vue@3.5.13(typescript@5.6.2)):
+    dependencies:
+      '@types/telegram-web-app': 7.10.1
       vue: 3.5.13(typescript@5.6.2)
 
   vue-tsc@2.1.10(typescript@5.6.2):

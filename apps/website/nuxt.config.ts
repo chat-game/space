@@ -14,10 +14,16 @@ export default defineNuxtConfig({
           href: '/favicon.png',
         },
       ],
+      script: [{ src: 'https://telegram.org/js/telegram-web-app.js' }],
     },
   },
   routeRules: {
     '/addon': {
+      ssr: false,
+      static: true,
+      cors: true,
+    },
+    '/play': {
       ssr: false,
       static: true,
       cors: true,
