@@ -32,6 +32,10 @@ export default defineNuxtConfig({
   devServer: {
     host: '0.0.0.0',
     port: 4200,
+    https: {
+      key: './../../.cert/localhost-key.pem',
+      cert: './../../.cert/localhost.pem',
+    },
   },
   fonts: {
     provider: 'google',

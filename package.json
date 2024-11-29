@@ -48,7 +48,8 @@
     "clean": "turbo clean",
     "clean:modules": "turbo clean:modules && rm -rf .turbo node_modules",
     "typecheck": "turbo typecheck",
-    "prepare": "husky"
+    "prepare": "husky",
+    "generate:cert": "mkdir -p .cert && mkcert -key-file ./.cert/localhost-key.pem -cert-file ./.cert/localhost.pem 'app.local'"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.6.0",
