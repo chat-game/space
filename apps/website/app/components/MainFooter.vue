@@ -8,10 +8,10 @@
       </li>
     </ul>
 
-    <p class="mt-2 text-orange-900">
+    <p class="copyright">
       Создается с ❤️ и с 🔥 в глазах
     </p>
-    <p class="mt-2 text-sm text-orange-900">
+    <p class="copyright">
       &copy; 2024, ИП Косарев Н.Н.
     </p>
   </footer>
@@ -98,5 +98,11 @@ const links = [
 
   li {
     position: relative;
+  }
+
+  .copyright {
+    color: var(--bronze-9);
+    text-align: center;
+    margin-top: 0.5em;
   }
 </style>

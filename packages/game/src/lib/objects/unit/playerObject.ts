@@ -29,8 +29,6 @@ export class PlayerObject extends UnitObject implements GameObjectPlayer {
     await this.#readFromDB()
 
     super.initVisual(character)
-
-    this.drawUserName(this.name)
   }
 
   updateCoins(amount: number): void {

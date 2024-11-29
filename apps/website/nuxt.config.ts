@@ -14,18 +14,15 @@ export default defineNuxtConfig({
           href: '/favicon.png',
         },
       ],
-      script: [{ src: 'https://telegram.org/js/telegram-web-app.js' }],
     },
   },
   routeRules: {
     '/addon': {
       ssr: false,
-      static: true,
       cors: true,
     },
     '/play': {
       ssr: false,
-      static: true,
       cors: true,
     },
   },
@@ -33,6 +30,10 @@ export default defineNuxtConfig({
   devServer: {
     host: '0.0.0.0',
     port: 4200,
+    https: {
+      key: './../../.cert/localhost-key.pem',
+      cert: './../../.cert/localhost.pem',
+    },
   },
   fonts: {
     provider: 'google',
@@ -81,7 +82,7 @@ export default defineNuxtConfig({
     '@nuxtjs/device',
     '@nuxtjs/i18n',
     '@nuxt/fonts',
-    '@nuxtjs/tailwindcss',
+    '@nuxt/icon',
   ],
   compatibilityDate: '2024-08-18',
 })
