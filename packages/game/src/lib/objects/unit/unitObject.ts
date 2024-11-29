@@ -5,10 +5,9 @@ import type {
   GameObjectUnit,
 } from './../../types'
 import { createId } from '@paralleldrive/cuid2'
-import { AnimatedSprite, Assets, Container, Graphics, Text } from 'pixi.js'
+import { AnimatedSprite, Assets } from 'pixi.js'
 import { BaseObject } from '../baseObject'
 import { getRandomInRange } from './../../utils/random'
-import { DialogueInterface } from './dialogueInterface'
 
 interface UnitObjectOptions {
   addon: GameAddon
@@ -24,7 +23,6 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
   coins = 0
   dialogue: GameObjectUnit['dialogue']
 
-  #dialogueInterface!: DialogueInterface
   #animationIdle!: AnimatedSprite
   #animationMoving!: AnimatedSprite
 
@@ -37,8 +35,6 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
     this.dialogue = {
       messages: [],
     }
-
-    this.#initInterfaces()
   }
 
   override live() {
@@ -65,43 +61,6 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
     movingSprite.scale.set(4)
     this.#animationMoving = movingSprite
     this.addChild(this.#animationMoving)
-  }
-
-  #initInterfaces() {
-    this.#dialogueInterface = new DialogueInterface(this)
-
-    this.addChild(this.#dialogueInterface)
-  }
-
-  drawUserName(name: string) {
-    if (!name) {
-      return
-    }
-
-    const container = new Container()
-
-    const basicText = new Text({
-      text: name,
-      style: {
-        fontFamily: 'Noto Serif',
-        fontSize: 15,
-        fontWeight: '600',
-        fill: 0x451A03,
-        align: 'center',
-      },
-    })
-
-    const graphics = new Graphics()
-    graphics.rect(-6, -2, basicText.width + 12, basicText.height + 4)
-    graphics.fill(0xFEF3C7)
-
-    container.addChild(graphics, basicText)
-
-    const containerWidth = container.width / 2 - 12
-    container.x = -containerWidth
-    container.y = -120
-
-    this.addChild(container)
   }
 
   addMessage(message: string): void {
@@ -172,7 +131,5 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
         this.#animationIdle.play()
       }
     }
-
-    this.#dialogueInterface.animate()
   }
 }

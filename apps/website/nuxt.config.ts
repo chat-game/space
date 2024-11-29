@@ -14,7 +14,6 @@ export default defineNuxtConfig({
           href: '/favicon.png',
         },
       ],
-      script: [{ src: 'https://telegram.org/js/telegram-web-app.js' }],
     },
   },
   routeRules: {
@@ -82,6 +81,7 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     '@nuxt/fonts',
     '@nuxtjs/tailwindcss',
+    '@nuxt/icon',
   ],
   compatibilityDate: '2024-08-18',
 })

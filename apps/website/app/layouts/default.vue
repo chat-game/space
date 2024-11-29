@@ -1,5 +1,5 @@
 <template>
-  <div class="app" :class="{ overflow: !isFeedOpened }">
+  <div class="app font-serif" :class="{ overflow: !isFeedOpened }">
     <div class="content">
       <ActiveStreamBanner />
       <MainHeader />

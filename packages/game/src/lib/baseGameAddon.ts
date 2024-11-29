@@ -66,15 +66,15 @@ export class BaseGameAddon extends Container implements GameAddon {
   async init() {
     await this.app.init({
       backgroundAlpha: 0,
-      antialias: false,
-      roundPixels: false,
+      antialias: true,
+      roundPixels: true,
       resolution: 1,
       resizeTo: window,
     })
 
     TextureStyle.defaultOptions.scaleMode = 'nearest'
     this.app.ticker.maxFPS = 60
-    this.bottomY = this.app.screen.height - 200
+    this.bottomY = this.app.screen.height - 80
 
     this.app.stage.eventMode = 'static'
     this.app.screen.width = window.innerWidth
@@ -116,8 +116,8 @@ export class BaseGameAddon extends Container implements GameAddon {
       this.#removeDestroyedObjects()
 
       const target = nick
-      this.changeCameraPosition(target.x)
-      this.moveCamera()
+      this.#changeCameraPosition(target.x)
+      this.#moveCamera()
       rectangle.x = nick.x - this.app.screen.width / 2
     })
   }
@@ -257,7 +257,7 @@ export class BaseGameAddon extends Container implements GameAddon {
     }
   }
 
-  changeCameraPosition(x: number) {
+  #changeCameraPosition(x: number) {
     const columnWidth = this.app.screen.width / 6
 
     const leftPadding = columnWidth * 3
@@ -280,7 +280,7 @@ export class BaseGameAddon extends Container implements GameAddon {
     }
   }
 
-  moveCamera() {
+  #moveCamera() {
     const cameraMaxSpeed = 2
     const bufferX = Math.abs(this.cameraPerfectX - this.cameraX)
     const moduleX = this.cameraPerfectX - this.cameraX > 0 ? 1 : -1

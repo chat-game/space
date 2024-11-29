@@ -70,7 +70,7 @@ export class BasePlayerService implements PlayerService {
 
   #removeInactivePlayers() {
     for (const player of this.activePlayers) {
-      const checkTime = getDateMinusMinutes(4)
+      const checkTime = getDateMinusMinutes(30)
       if (player.lastActionAt.getTime() <= checkTime.getTime()) {
         if (player.script) {
           continue
