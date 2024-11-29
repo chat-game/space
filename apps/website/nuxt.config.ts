@@ -19,12 +19,10 @@ export default defineNuxtConfig({
   routeRules: {
     '/addon': {
       ssr: false,
-      static: true,
       cors: true,
     },
     '/play': {
       ssr: false,
-      static: true,
       cors: true,
     },
   },

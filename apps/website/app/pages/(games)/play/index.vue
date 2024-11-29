@@ -12,7 +12,7 @@
       <div class="touch-pan-x absolute bottom-0 left-0 right-0 w-full h-20 bg-amber-950">
         <div class="max-w-[28rem] mx-auto px-5">
           <div class="mt-4 grid grid-cols-3 gap-1">
-            <button v-for="item in menu" :key="item.label" class="flex flex-col items-center justify-center gap-0 px-4 py-1 rounded-md text-sm bg-amber-800 text-amber-500">
+            <button v-for="item in menu" :key="item.label" class="flex flex-col items-center justify-center gap-0 px-4 py-1 rounded-md text-sm bg-amber-800 text-amber-500" @click="() => { hapticFeedback.impactOccurred('light'); }">
               <Icon :name="item.icon" class="w-6 h-6" />
               {{ item.label }}
             </button>
@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import { BaseGameAddon } from '@chat-game/game'
-// import { hapticFeedback } from '@telegram-apps/sdk-vue'
+import { hapticFeedback, init } from '@telegram-apps/sdk-vue'
 
 definePageMeta({
   layout: 'game',
@@ -38,6 +38,8 @@ useHead({
     },
   ],
 })
+
+init()
 
 const { icons } = useAppConfig()
 const { public: publicEnv } = useRuntimeConfig()
@@ -57,14 +59,17 @@ const menu = [
   {
     label: 'Игра',
     icon: icons.play,
+    path: '/play',
   },
   {
     label: 'Инвентарь',
     icon: icons.inventory,
+    path: '/inventory',
   },
   {
     label: 'Стрим',
     icon: icons.connect,
+    path: '/stream',
   },
 ]
 </script>
@@ -72,7 +77,7 @@ const menu = [
 <style scoped>
   .game-block {
     width: 100vw;
-    height: var(--tg-viewport-stable-height);
+    height: 100dvh;
     overflow: hidden;
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */

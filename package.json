@@ -43,6 +43,7 @@
     "build": "turbo build",
     "dev": "dotenv -- turbo dev --parallel",
     "dev:website": "dotenv -- pnpm --filter @chat-game/website dev",
+    "dev:telegram": "dotenv -- pnpm --filter @chat-game/telegram-game dev",
     "lint": "turbo lint --",
     "lint:fix": "turbo lint:fix",
     "clean": "turbo clean",
