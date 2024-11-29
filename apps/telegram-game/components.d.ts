@@ -8,9 +8,6 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Game: typeof import('./src/components/Game.vue')['default']
-    Icon: typeof import('@iconify/vue')['Icon']
-    IHeroiconsOutlineMenuAlt2: typeof import('~icons/heroicons-outline/menu-alt2')['default']
-    ILucideGamepad2: typeof import('~icons/lucide/gamepad2')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

@@ -29,6 +29,39 @@
   --color-bg-loader: #7d66d9;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  font-size: 16px;
+  line-height: 1.5;
+  tab-size: 4;
+  scroll-behavior: smooth;
+}
+body {
+  min-height: 100dvh;
+  font-family: inherit;
+  line-height: inherit;
+  margin: 0;
+}
+html,
+body {
+  font-family: 'Roboto Serif', 'Times New Roman', 'Georgia', serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-variation-settings: 'wdth' 100;
+}
+
+h1,
+h2,
+h3,
+p,
+pre {
+  margin: 0;
+  font-weight: 400;
+}
+h3 {
+  font-weight: 600;
+}
 *,
 ::before,
 ::after {
@@ -103,6 +136,20 @@ input[type='reset'] {
 
 button:focus:not(:focus-visible) {
   outline: none;
+}
+
+@media (min-width: 720px) {
+  html {
+    font-size: 18px;
+  }
+
+  h1 {
+    font-size: 2.4rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
 }
 
 .bg-paper {

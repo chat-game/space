@@ -20,7 +20,6 @@
     "@paralleldrive/cuid2": "^2.2.2",
     "@prisma/client": "^6.0.0",
     "@radix-ui/colors": "^3.0.0",
-    "@telegram-apps/sdk-vue": "^1.0.4",
     "@twurple/api": "^7.2.0",
     "@twurple/auth": "^7.2.0",
     "@twurple/chat": "^7.2.0",
@@ -29,7 +28,6 @@
     "@twurple/pubsub": "^7.2.0",
     "howler": "^2.2.4",
     "lucide-vue-next": "^0.462.0",
-    "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -43,7 +41,6 @@
     "@nuxt/kit": "^3.14.1592",
     "@nuxtjs/device": "^3.2.4",
     "@nuxtjs/i18n": "^9.1.0",
-    "@nuxtjs/tailwindcss": "^6.12.2",
     "@types/howler": "^2.2.12",
     "@types/node": "*",
     "@vueuse/core": "^12.0.0",
@@ -51,8 +48,6 @@
     "nuxt": "^3.14.1592",
     "nuxt-auth-utils": "^0.5.5",
     "prisma": "^6.0.0",
-    "tailwind-merge": "^2.5.5",
-    "tailwindcss": "^3.4.15",
     "vue-tsc": "^2.1.10"
   }
 }

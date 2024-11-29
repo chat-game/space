@@ -82,7 +82,6 @@ export default defineNuxtConfig({
     '@nuxtjs/device',
     '@nuxtjs/i18n',
     '@nuxt/fonts',
-    '@nuxtjs/tailwindcss',
     '@nuxt/icon',
   ],
   compatibilityDate: '2024-08-18',
