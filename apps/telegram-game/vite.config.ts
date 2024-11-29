@@ -1,5 +1,6 @@
 import { fileURLToPath, URL } from 'node:url'
 
+import tailwindcss from '@tailwindcss/vite'
 import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
 import IconsResolver from 'unplugin-icons/resolver'
@@ -7,6 +8,7 @@ import Icons from 'unplugin-icons/vite'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 import vueDevTools from 'vite-plugin-vue-devtools'
+import { createConfig } from './plugins/createConfig'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -19,7 +21,7 @@ export default defineConfig({
         'vue-router',
       ],
       dts: 'auto-imports.d.ts',
-      dirs: ['./src/composables'],
+      dirs: ['./src/composables', './src/utils', './src/types'],
     }),
     Components({
       dts: true,
@@ -37,6 +39,8 @@ export default defineConfig({
       ],
     }),
     Icons(),
+    tailwindcss(),
+    createConfig(),
   ],
   server: {
     port: 4200,

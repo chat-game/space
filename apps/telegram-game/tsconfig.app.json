@@ -8,6 +8,6 @@
     },
     "types": ["unplugin-icons/types/vue"]
   },
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "auto-imports.d.ts", "components.d.ts"],
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "auto-imports.d.ts", "components.d.ts", "plugins/createConfig.ts"],
   "exclude": ["src/**/__tests__/*"]
 }

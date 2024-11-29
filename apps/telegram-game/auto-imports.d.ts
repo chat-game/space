@@ -17,6 +17,7 @@ declare global {
   const eslintConfig: typeof import('./eslint.config.mjs')['default']
   const getCurrentInstance: typeof import('vue')['getCurrentInstance']
   const getCurrentScope: typeof import('vue')['getCurrentScope']
+  const getEnv: typeof import('./src/utils/env')['getEnv']
   const h: typeof import('vue')['h']
   const inject: typeof import('vue')['inject']
   const isProxy: typeof import('vue')['isProxy']
