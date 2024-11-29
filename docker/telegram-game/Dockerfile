@@ -13,7 +13,7 @@ RUN pnpm build --filter @chat-game/telegram-game
 
 FROM nginx:alpine
 
-COPY --from=builder /app/apps/telegram-game /app/dist
+COPY --from=builder /app/apps/telegram-game/dist /app/dist
 COPY --from=builder /app/docker/telegram-game/conf.d/vhost.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /app/docker/telegram-game/entrypoint.sh /docker-entrypoint.d/entrypoint.sh
 
