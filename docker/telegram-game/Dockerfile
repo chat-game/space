@@ -15,7 +15,7 @@ FROM nginx:alpine
 
 COPY --from=builder /app/dist /app/dist
 COPY --from=builder /app/docker/nginx/conf.d/vhost.conf /etc/nginx/conf.d/default.conf
-COPY --from=builder /app/docker/nginx/entrypoint.sh /docker-entrypoint.d/entrypoint.sh
+COPY --from=builder /app/docker/entrypoint.sh /docker-entrypoint.d/entrypoint.sh
 
 RUN chmod +x /docker-entrypoint.d/entrypoint.sh
 
