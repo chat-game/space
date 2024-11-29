@@ -8,8 +8,11 @@
       </li>
     </ul>
 
-    <p class="copyright">
-      Создается с ❤️ и трепетом. &copy; 2024 ChatGame
+    <p class="mt-2 text-orange-900">
+      Создается с ❤️ и с 🔥 в глазах
+    </p>
+    <p class="mt-2 text-sm text-orange-900">
+      &copy; 2024, ИП Косарев Н.Н.
     </p>
   </footer>
 </template>
@@ -95,11 +98,5 @@ const links = [
 
   li {
     position: relative;
-  }
-
-  .copyright {
-    color: var(--bronze-9);
-    text-align: center;
-    margin-top: 0.5em;
   }
 </style>

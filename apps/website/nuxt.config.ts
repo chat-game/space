@@ -34,6 +34,15 @@ export default defineNuxtConfig({
     host: '0.0.0.0',
     port: 4200,
   },
+  fonts: {
+    provider: 'google',
+    families: [
+      {
+        name: 'Roboto Serif',
+        provider: 'google',
+      },
+    ],
+  },
   css: ['~/assets/css/styles.css'],
   runtimeConfig: {
     websiteBearer: '', // NUXT_WEBSITE_BEARER
@@ -71,6 +80,8 @@ export default defineNuxtConfig({
     'nuxt-auth-utils',
     '@nuxtjs/device',
     '@nuxtjs/i18n',
+    '@nuxt/fonts',
+    '@nuxtjs/tailwindcss',
   ],
   compatibilityDate: '2024-08-18',
 })
