@@ -18,9 +18,26 @@ export class Room {
     this.token = token
     this.type = type
 
-    if (type === 'GAME') {
-      const { public: publicEnv } = useRuntimeConfig()
+    const { public: publicEnv } = useRuntimeConfig()
 
+    if (type === 'ADDON') {
+      this.server = new WebSocket(publicEnv.websocketUrl)
+
+      this.server.onopen = () => {
+        const prepearedMessage = JSON.stringify({
+          id: createId(),
+          type: 'CONNECT',
+          data: {
+            client: 'SERVER',
+            id: this.id,
+            token: this.token,
+          },
+        })
+        this.server.send(prepearedMessage)
+      }
+    }
+
+    if (type === 'GAME') {
       this.server = new WebSocket(publicEnv.websocketUrl)
 
       this.server.onopen = () => {
