@@ -1,10 +1,10 @@
-import { init } from '@telegram-apps/sdk-vue'
+import { retrieveLaunchParams } from '@telegram-apps/sdk-vue'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import './assets/main.css'
 
-init()
+init(retrieveLaunchParams().startParam === 'debug' || import.meta.env.DEV)
 
 const app = createApp(App)
 
