@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  APP_URL: https://chatgame.space
+  APP_URL: https://chatgame.space/game
   APP_ENV: telegram-game-production
 
 jobs:
@@ -33,7 +33,7 @@ jobs:
       - name: Restart service on Kosarev.Space
         uses: fjogeleit/http-request-action@v1
         with:
-          url: "https://kosarev.space/api/service/${{ secrets.SERVICE_ID }}/restart"
+          url: "https://kosarev.space/api/service/${{ secrets.TELEGRAM_GAME_SERVICE_ID }}/restart"
           method: 'POST'
           bearerToken: '${{ secrets.BEARER_TOKEN }}'
           timeout: 15000
