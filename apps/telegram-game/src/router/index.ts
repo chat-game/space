@@ -1,21 +1,25 @@
+import GameView from '@/views/GameView.vue'
+import InventoryView from '@/views/InventoryView.vue'
+import ShopView from '@/views/ShopView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
-import Game from '../components/Game.vue'
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Game,
+      name: 'game',
+      component: GameView,
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue'),
+      path: '/inventory',
+      name: 'inventory',
+      component: InventoryView,
+    },
+    {
+      path: '/shop',
+      name: 'shop',
+      component: ShopView,
     },
   ],
 })

@@ -6,7 +6,9 @@ import { TreeObject } from '../objects/treeObject'
 export class BaseWebSocketService implements WebSocketService {
   socket!: WebSocket
 
-  constructor(readonly addon: GameAddon, readonly websocketUrl: string) {
+  constructor(readonly addon: GameAddon, readonly websocketUrl: string) {}
+
+  connect() {
     this.socket = new WebSocket(this.websocketUrl)
 
     this.socket.onopen = () => {
@@ -16,7 +18,6 @@ export class BaseWebSocketService implements WebSocketService {
         data: {
           client: 'GAME',
           id: this.addon.id,
-          token: this.addon.token,
         },
       })
       this.socket.send(prepearedMessage)

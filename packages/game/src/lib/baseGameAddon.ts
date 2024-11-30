@@ -20,13 +20,11 @@ import { BaseWebSocketService } from './services/baseWebSocketService'
 import { getRandomInRange } from './utils/random'
 
 interface BaseGameAddonOptions {
-  token: string
   websocketUrl: string
 }
 
 export class BaseGameAddon extends Container implements GameAddon {
   id: string
-  token: string
   override children: GameAddon['children'] = []
   app: Application
   tick: GameAddon['tick'] = 0
@@ -50,11 +48,10 @@ export class BaseGameAddon extends Container implements GameAddon {
   cameraPerfectX = 0
   cameraPerfectY = 0
 
-  constructor({ token, websocketUrl }: BaseGameAddonOptions) {
+  constructor({ websocketUrl }: BaseGameAddonOptions) {
     super()
 
     this.id = createId()
-    this.token = token
     this.app = new Application()
 
     this.playerService = new BasePlayerService(this as GameAddon)
@@ -74,7 +71,7 @@ export class BaseGameAddon extends Container implements GameAddon {
 
     TextureStyle.defaultOptions.scaleMode = 'nearest'
     this.app.ticker.maxFPS = 60
-    this.bottomY = this.app.screen.height - 80
+    this.bottomY = this.app.screen.height - 100
 
     this.app.stage.eventMode = 'static'
     this.app.screen.width = window.innerWidth
