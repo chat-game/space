@@ -43,7 +43,7 @@ export default defineConfig({
     tailwindcss(),
     createConfig(),
     Terminal({
-      console: 'terminal',
+      output: 'terminal',
     }),
   ],
   server: {
