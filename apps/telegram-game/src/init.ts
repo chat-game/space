@@ -3,10 +3,10 @@ import {
   backButton,
   closingBehavior,
   disableVerticalSwipes,
+  fullScreen,
   initData,
   init as initSDK,
   miniApp,
-  requestFullscreen,
   swipeBehavior,
   themeParams,
   viewport,
@@ -33,6 +33,7 @@ export function init(debug: boolean): void {
   miniApp.mount()
   themeParams.mount()
   swipeBehavior.mount()
+  fullScreen.mount()
   closingBehavior.mount()
   initData.restore()
   void viewport
@@ -42,6 +43,19 @@ export function init(debug: boolean): void {
     })
     .then(() => {
       viewport.bindCssVars()
+
+      if (viewport.requestFullscreen.isAvailable()) {
+        void viewport.requestFullscreen().finally(() => {
+          // Wait
+          setTimeout(() => {
+            // The app is now in fullscreen
+            if (window.innerWidth > 600) {
+              // Application should be in fullscreen mode only on small screens!
+              viewport.exitFullscreen()
+            }
+          }, 50)
+        })
+      }
     })
 
   // Define components-related CSS variables.
@@ -53,9 +67,6 @@ export function init(debug: boolean): void {
   }
   if (closingBehavior.enableConfirmation.isAvailable()) {
     closingBehavior.enableConfirmation()
-  }
-  if (requestFullscreen.isAvailable()) {
-    void requestFullscreen()
   }
 
   // It will listen for changes in viewport size (even with the changes by opening a Virtual Keyboard), then apply the correct size into body of HTML.
