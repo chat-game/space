@@ -1,3 +1,4 @@
+import process from 'node:process'
 import { fileURLToPath, URL } from 'node:url'
 
 import tailwindcss from '@tailwindcss/vite'
@@ -44,6 +45,7 @@ export default defineConfig({
     createConfig(),
     Terminal({
       output: 'terminal',
+      console: process.env.NODE_ENV === 'development' ? 'terminal' : undefined,
     }),
   ],
   server: {
