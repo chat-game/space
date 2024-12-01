@@ -48,8 +48,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/types
       '@telegram-apps/sdk-vue':
-        specifier: ^1.0.4
-        version: 1.0.4(vue@3.5.13(typescript@5.6.2))
+        specifier: ^1.0.5
+        version: 1.0.5(vue@3.5.13(typescript@5.6.2))
       vue:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.6.2)
@@ -81,6 +81,9 @@ importers:
       '@vue/tsconfig':
         specifier: ^0.7.0
         version: 0.7.0(typescript@5.6.2)(vue@3.5.13(typescript@5.6.2))
+      '@vueuse/core':
+        specifier: ^12.0.0
+        version: 12.0.0(typescript@5.6.2)
       tailwindcss:
         specifier: 4.0.0-beta.4
         version: 4.0.0-beta.4
@@ -1622,19 +1625,19 @@ packages:
     peerDependencies:
       vite: ^5.2.0
 
-  '@telegram-apps/bridge@1.4.0':
-    resolution: {integrity: sha512-75FHIYtIg2/c7F1Y1YX8IT4XWTGu8G4Dm0lopIeQIsyIc3hjHtGwcNt5GQ69UFJXIJlYrv6lu+qUC+K4sbgRZw==}
+  '@telegram-apps/bridge@1.5.0':
+    resolution: {integrity: sha512-usfvIf4eAIXoQ78u+3bvDcGCfKe/MYw0qlhG0EaqVqrj81cdwvjx2KB+t9NqqeUrfDsdfdqS+6W267rWyK/Uiw==}
 
-  '@telegram-apps/navigation@1.0.5':
-    resolution: {integrity: sha512-fGOzfFKPe8PUfbtSRlWx/V9xUeLK3hlA5w+2X3by8B4fpwCBPEy+iCrtAKUJNH9qM5i2c3YteQIM56sD3yyXpQ==}
+  '@telegram-apps/navigation@1.0.6':
+    resolution: {integrity: sha512-r1VHoYjZ0RBSfk+ltokNHM1VX3vnKlN6pAWH6qjw/XQTGy4Rlp9w6IyqUPgtENWLKop//QT+xIumfmZRCIMwbA==}
 
-  '@telegram-apps/sdk-vue@1.0.4':
-    resolution: {integrity: sha512-PcvVSiFH+So4s4x9GhRpI4Qy/R49oiZAtZeoaNjHp2gwkajP+q4GStzRVIAcVBTPoOu3XGpjtEwAYHcBhfxMsQ==}
+  '@telegram-apps/sdk-vue@1.0.5':
+    resolution: {integrity: sha512-dZekgflzpo0BQWTbLrhTeOTPe2KaprMr8Ka+B5Z22e4CuSUkVFnLhnms4v/JpjwOdV5VcxdqQsMcO5icRL33+g==}
     peerDependencies:
       vue: ^3.0.0
 
-  '@telegram-apps/sdk@2.6.2':
-    resolution: {integrity: sha512-1Gn8MBkcE+KphOI1hmvwNZriTHFKa1eYbX1Ki7IEWrAyhQZEw00cal/mG7ozOZ6B3EYnYrPM7zW0SdbksKI0VQ==}
+  '@telegram-apps/sdk@2.7.0':
+    resolution: {integrity: sha512-Hv54EguXFIEZIN2ZvobF6yyXfSHblbpml9fI80mLjxDJQrFxOjTsRZig7Rx66srJBEulokH2eyoNLV0gobdAMA==}
 
   '@telegram-apps/signals@1.1.0':
     resolution: {integrity: sha512-5qN7cU8t3l7n0cKcnzc/1TYKJTwAggUinfwbLHL1SYmB47pBHjCvfsRiYliFohk6lb635SBmNuVZL6LHFmGZaw==}
@@ -1642,11 +1645,11 @@ packages:
   '@telegram-apps/toolkit@1.0.0':
     resolution: {integrity: sha512-fSVoveLuMzwRKWeXEufMSXxH+HvjsFKb1DeT3pG5qLpnb2rdtejnNcwAt6WEPtiZ3a4YntYaFuR3KYgVv0ZxeQ==}
 
-  '@telegram-apps/transformers@1.0.1':
-    resolution: {integrity: sha512-SsI+FhCOkkZFUPqr+ib11Fi25fRCpdMsI2Flp51NrdtKaPDnKFkBBG4GcSEaGL8sXquW9uAANjc499jSaZK5jQ==}
+  '@telegram-apps/transformers@1.1.0':
+    resolution: {integrity: sha512-g3cZruuJXpY8EscnO7CnZp/88/P+AyuK7YFId9jS1j4ah8VO/yoXa483JhrtftYEffRfi8tVfBCVADjiu3ms8w==}
 
-  '@telegram-apps/types@1.0.1':
-    resolution: {integrity: sha512-8tGy1zG/1MEt0KF8nR0ffZ93whKveEJIkBI+qxHCRgatKwKVJV2dVSXrrBspFKn7FIIo1/CvmB8zP4vKPzglbg==}
+  '@telegram-apps/types@1.1.0':
+    resolution: {integrity: sha512-8tBIe9N8huDsfvv/EDv5S5tokVjl16adpsSlYdhvNzj0rWIebaf28gBBU9fAUWfwZNIBlDCOhFyk3dqjPhlHzA==}
 
   '@trysound/sax@0.2.0':
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
@@ -7208,41 +7211,42 @@ snapshots:
       - svelte
       - typescript
 
-  '@telegram-apps/bridge@1.4.0':
+  '@telegram-apps/bridge@1.5.0':
     dependencies:
       '@telegram-apps/signals': 1.1.0
       '@telegram-apps/toolkit': 1.0.0
-      '@telegram-apps/transformers': 1.0.1
-      '@telegram-apps/types': 1.0.1
+      '@telegram-apps/transformers': 1.1.0
+      '@telegram-apps/types': 1.1.0
 
-  '@telegram-apps/navigation@1.0.5':
+  '@telegram-apps/navigation@1.0.6':
     dependencies:
-      '@telegram-apps/bridge': 1.4.0
+      '@telegram-apps/bridge': 1.5.0
       '@telegram-apps/signals': 1.1.0
       '@telegram-apps/toolkit': 1.0.0
 
-  '@telegram-apps/sdk-vue@1.0.4(vue@3.5.13(typescript@5.6.2))':
+  '@telegram-apps/sdk-vue@1.0.5(vue@3.5.13(typescript@5.6.2))':
     dependencies:
-      '@telegram-apps/sdk': 2.6.2
+      '@telegram-apps/sdk': 2.7.0
       vue: 3.5.13(typescript@5.6.2)
 
-  '@telegram-apps/sdk@2.6.2':
+  '@telegram-apps/sdk@2.7.0':
     dependencies:
-      '@telegram-apps/bridge': 1.4.0
-      '@telegram-apps/navigation': 1.0.5
+      '@telegram-apps/bridge': 1.5.0
+      '@telegram-apps/navigation': 1.0.6
       '@telegram-apps/signals': 1.1.0
-      '@telegram-apps/transformers': 1.0.1
+      '@telegram-apps/toolkit': 1.0.0
+      '@telegram-apps/transformers': 1.1.0
 
   '@telegram-apps/signals@1.1.0': {}
 
   '@telegram-apps/toolkit@1.0.0': {}
 
-  '@telegram-apps/transformers@1.0.1':
+  '@telegram-apps/transformers@1.1.0':
     dependencies:
       '@telegram-apps/toolkit': 1.0.0
-      '@telegram-apps/types': 1.0.1
+      '@telegram-apps/types': 1.1.0
 
-  '@telegram-apps/types@1.0.1': {}
+  '@telegram-apps/types@1.1.0': {}
 
   '@trysound/sax@0.2.0': {}
 

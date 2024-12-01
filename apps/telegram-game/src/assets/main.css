@@ -1,1 +1,67 @@
-@import "tailwindcss"
+@import "tailwindcss";
+
+@theme {
+  --tg-theme-bg-color: #ffffff;
+  --tg-theme-secondary-bg-color: #f1f1f1;
+  --tg-theme-header-bg-color: #ffffff;
+  --tg-theme-bottom-bar-bg-color: #ffffff;
+
+  --tg-theme-button-color: #40a7e3;
+  --tg-theme-button-text-color: #ffffff;
+
+  --tg-theme-section-bg-color: #ffffff;
+  --tg-theme-section-header-text-color: #168dcd;
+  --tg-theme-section-separator-color: #e7e7e7;
+
+  --tg-theme-text-color: #000000;
+  --tg-theme-subtitle-text-color: #999999;
+  --tg-theme-hint-color: #999999;
+  --tg-theme-link-color: #168dcd;
+  --tg-theme-accent-text-color: #168dcd;
+  --tg-theme-destructive-text-color: #d14e4e;
+}
+
+@utility tg-bg {
+  background-color: var(--tg-theme-bg-color);
+}
+@utility tg-secondary-bg {
+  background-color: var(--tg-theme-secondary-bg-color);
+}
+@utility tg-header-bg {
+  background-color: var(--tg-theme-header-bg-color);
+}
+@utility tg-bottom-bar-bg {
+  background-color: var(--tg-theme-bottom-bar-bg-color);
+}
+@utility tg-section-bg {
+  background-color: var(--tg-theme-section-bg-color);
+}
+
+@utility tg-text {
+  color: var(--tg-theme-text-color);
+}
+@utility tg-accent-text {
+  color: var(--tg-theme-accent-text-color);
+}
+@utility tg-subtitle-text {
+  color: var(--tg-theme-subtitle-text-color);
+}
+@utility tg-destructive-text {
+  color: var(--tg-theme-destructive-text-color);
+}
+@utility tg-hint {
+  color: var(--tg-theme-hint-color);
+}
+@utility tg-link {
+  color: var(--tg-theme-link-color);
+}
+@utility tg-button {
+  background-color: var(--tg-theme-button-color);
+  color: var(--tg-theme-button-text-color);
+}
+@utility tg-section-header-text {
+  color: var(--tg-theme-section-header-text-color);
+}
+@utility tg-section-separator {
+  color: var(--tg-theme-section-separator-color);
+}

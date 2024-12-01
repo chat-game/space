@@ -1,9 +1,13 @@
 import {
   $debug,
   backButton,
+  closingBehavior,
+  disableVerticalSwipes,
   initData,
   init as initSDK,
   miniApp,
+  requestFullscreen,
+  swipeBehavior,
   themeParams,
   viewport,
 } from '@telegram-apps/sdk-vue'
@@ -28,6 +32,8 @@ export function init(debug: boolean): void {
   backButton.mount()
   miniApp.mount()
   themeParams.mount()
+  swipeBehavior.mount()
+  closingBehavior.mount()
   initData.restore()
   void viewport
     .mount()
@@ -41,4 +47,27 @@ export function init(debug: boolean): void {
   // Define components-related CSS variables.
   miniApp.bindCssVars()
   themeParams.bindCssVars()
+
+  if (disableVerticalSwipes.isAvailable()) {
+    disableVerticalSwipes()
+  }
+  if (closingBehavior.enableConfirmation.isAvailable()) {
+    closingBehavior.enableConfirmation()
+  }
+  if (requestFullscreen.isAvailable()) {
+    void requestFullscreen()
+  }
+
+  // It will listen for changes in viewport size (even with the changes by opening a Virtual Keyboard), then apply the correct size into body of HTML.
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', () => {
+      document.body.style.height = `${window.visualViewport?.height}px`
+    })
+  }
+  // This will ensure user never overscroll the page
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 0) {
+      window.scrollTo(0, 0)
+    }
+  })
 }
