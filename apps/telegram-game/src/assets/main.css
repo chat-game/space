@@ -19,6 +19,8 @@
   --tg-theme-link-color: #168dcd;
   --tg-theme-accent-text-color: #168dcd;
   --tg-theme-destructive-text-color: #d14e4e;
+
+  --tg-content-safe-area-inset-top: 100;
 }
 
 @utility tg-bg {
@@ -64,4 +66,9 @@
 }
 @utility tg-section-separator {
   color: var(--tg-theme-section-separator-color);
+}
+
+@utility tg-content-safe-area {
+  padding-top: calc(var(--tg-content-safe-area-inset-top) * 1px);
+  padding-bottom: 200px;
 }

@@ -8,3 +8,7 @@ html, body, #app {
   /* Preserve scrolling behavior */
   overflow-y: auto;
 }
+#app::-webkit-scrollbar {
+  display: none;
+  width: 0;
+}
