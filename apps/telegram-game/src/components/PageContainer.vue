@@ -1,11 +1,19 @@
 <template>
-  <main class="bg font-serif absolute top-0 bottom-0 left-0 right-0 px-4 py-2 flex flex-col">
-    <slot />
-  </main>
+  <div class="tg-secondary-bg tg-text z-30 h-full min-h-dvh w-full pt-20 pb-40 font-serif">
+    <div class="px-4 py-2 max-w-[28rem] mx-auto flex flex-col">
+      <slot />
+    </div>
+  </div>
 </template>
 
-<style scoped>
-.bg {
-  background-color: var(--tg-theme-secondary-bg-color);
-}
-</style>
+<script setup lang="ts">
+import { hideBackButton } from '@telegram-apps/sdk-vue'
+
+const { back = true } = defineProps<{ back?: boolean }>()
+
+onMounted(() => {
+  if (!back) {
+    hideBackButton()
+  }
+})
+</script>
