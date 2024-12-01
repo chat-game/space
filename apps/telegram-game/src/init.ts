@@ -3,7 +3,6 @@ import {
   backButton,
   closingBehavior,
   disableVerticalSwipes,
-  fullScreen,
   initData,
   init as initSDK,
   miniApp,
@@ -33,7 +32,6 @@ export function init(debug: boolean): void {
   miniApp.mount()
   themeParams.mount()
   swipeBehavior.mount()
-  fullScreen.mount()
   closingBehavior.mount()
   initData.restore()
   void viewport
