@@ -2,7 +2,7 @@
   <div class="game-block absolute top-0 left-0 right-0 bottom-0 font-serif" :class="{ hidden: !isOpened }">
     <div id="game-canvas" ref="stage" />
 
-    <div class="font-serif touch-pan-x absolute top-0 left-0 right-0 w-full h-16 py-2">
+    <div class="font-serif touch-pan-x absolute top-0 left-0 right-0 w-full h-16 pt-25">
       <div class="max-w-[28rem] mx-auto px-5">
         <div>Монеты: 53</div>
         <div>Энергия: 41</div>
