@@ -1,6 +1,7 @@
 import type { WebSocketEvents } from '@chat-game/types'
+import type { Room } from '~~/types/room'
 import { createId } from '@paralleldrive/cuid2'
-import { Room } from '../utils/room'
+import { AddonRoom } from '../core/rooms/addon'
 
 const logger = useLogger('ws')
 export const activeRooms: Room[] = []
@@ -10,7 +11,9 @@ export function sendMessage(message: WebSocketEvents, token: string): void {
 
   for (const room of rooms) {
     const preparedMessage = JSON.stringify({ id: createId(), ...message })
-    room.server.send(preparedMessage)
+    if (room.server.peer?.id) {
+      room.server.peer.publish(room.id, preparedMessage)
+    }
   }
 }
 
@@ -37,30 +40,30 @@ export default defineWebSocketHandler({
           const token = parsed.data.token
           // Create if not exist
           if (!activeRooms.find((room) => room.token === token)) {
-            activeRooms.push(new Room({ id, token, type: 'ADDON' }))
+            activeRooms.push(new AddonRoom({ id, token }))
           }
 
-          const activeRoom = activeRooms.find((room) => room.token === token) as Room
+          const activeRoom = activeRooms.find((room) => room.token === token) as AddonRoom
 
           peer.subscribe(activeRoom.id)
-          logger.log(`peer subscribed to room id ${activeRoom.id}`, peer.id)
+          logger.log(`Peer ${peer.id} subscribed to AddonRoom ${activeRoom.id}`)
         }
 
-        if (client === 'GAME') {
-          const token = parsed.data.token
-          // Create if not exist
-          if (!activeRooms.find((room) => room.token === token)) {
-            activeRooms.push(new Room({ id, token, type: 'GAME' }))
-          }
+        // if (client === 'GAME') {
+        //   const token = parsed.data.token
+        //   // Create if not exist
+        //   if (!activeRooms.find((room) => room.token === token)) {
+        //     activeRooms.push(new Room({ id, token, type: 'GAME' }))
+        //   }
 
-          const activeRoom = activeRooms.find((room) => room.token === token) as Room
-          if (!activeRoom.peers.includes(peer.id)) {
-            activeRoom.peers.push(peer.id)
-          }
+        //   const activeRoom = activeRooms.find((room) => room.token === token) as Room
+        //   if (!activeRoom.peers.includes(peer.id)) {
+        //     activeRoom.peers.push(peer.id)
+        //   }
 
-          peer.subscribe(activeRoom.id)
-          logger.log(`peer subscribed to room id ${activeRoom.id}`, peer.id)
-        }
+        //   peer.subscribe(activeRoom.id)
+        //   logger.log(`peer subscribed to room id ${activeRoom.id}`, peer.id)
+        // }
 
         if (client === 'SERVER') {
           const activeRoom = activeRooms.find((room) => room.id === id)
@@ -68,21 +71,22 @@ export default defineWebSocketHandler({
             return
           }
 
+          activeRoom.server.peer = peer
           peer.subscribe(activeRoom.id)
-          logger.log(`server subscribed to room id ${activeRoom.id}`, peer.id)
+          logger.log(`Server subscribed to Room ${activeRoom.id}`, peer.id)
         }
       }
       if (parsed.type === 'TEST') {
         peer.publish(parsed.data.id, JSON.stringify({ id: createId(), type: 'TEST' }))
       }
-      if (parsed.type === 'NEW_TREE') {
-        const room = activeRooms.find((room) => room.peers.find((id) => id === peer.id))
-        if (!room) {
-          return
-        }
-        peer.publish(room.id, JSON.stringify({ id: createId(), type: 'NEW_TREE', data: { id: parsed.data.id, x: parsed.data.x } }))
-        peer.send(JSON.stringify({ id: createId(), type: 'NEW_TREE', data: { id: parsed.data.id, x: parsed.data.x } }))
-      }
+      // if (parsed.type === 'NEW_TREE') {
+      //   const room = activeRooms.find((room) => room.peers.find((id) => id === peer.id))
+      //   if (!room) {
+      //     return
+      //   }
+      //   peer.publish(room.id, JSON.stringify({ id: createId(), type: 'NEW_TREE', data: { id: parsed.data.id, x: parsed.data.x } }))
+      //   peer.send(JSON.stringify({ id: createId(), type: 'NEW_TREE', data: { id: parsed.data.id, x: parsed.data.x } }))
+      // }
     }
   },
 
