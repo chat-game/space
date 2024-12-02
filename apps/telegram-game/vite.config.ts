@@ -49,7 +49,7 @@ export default defineConfig({
     }),
   ],
   server: {
-    port: 4200,
+    port: 4300,
     host: '0.0.0.0',
     https: {
       key: '../../.cert/localhost-key.pem',

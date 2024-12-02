@@ -13,6 +13,7 @@ export class BaseRoom implements Room {
   token: string
   type: Room['type']
   server: { ws: WebSocket, peer: Peer | null }
+  peers: string[] = []
 
   constructor({ id, token, type }: BaseRoomOptions) {
     this.id = id

@@ -14,7 +14,7 @@ export type WebSocketEvents =
 export interface WebSocketConnect {
   type: 'CONNECT'
   data: {
-    client: 'ADDON'
+    client: 'ADDON' | 'TELEGRAM_CLIENT' | 'WAGON_CLIENT'
     id: string
     token?: string
   }

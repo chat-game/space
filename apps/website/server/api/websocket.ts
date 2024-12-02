@@ -2,6 +2,7 @@ import type { WebSocketEvents } from '@chat-game/types'
 import type { Room } from '~~/types/room'
 import { createId } from '@paralleldrive/cuid2'
 import { AddonRoom } from '../core/rooms/addon'
+import { WagonRoom } from '../core/rooms/wagon'
 
 const logger = useLogger('ws')
 export const activeRooms: Room[] = []
@@ -49,21 +50,33 @@ export default defineWebSocketHandler({
           logger.log(`Peer ${peer.id} subscribed to AddonRoom ${activeRoom.id}`)
         }
 
-        // if (client === 'GAME') {
-        //   const token = parsed.data.token
-        //   // Create if not exist
-        //   if (!activeRooms.find((room) => room.token === token)) {
-        //     activeRooms.push(new Room({ id, token, type: 'GAME' }))
-        //   }
+        if (client === 'TELEGRAM_CLIENT') {
+          if (!activeRooms.find((room) => room.id === id)) {
+            return
+          }
 
-        //   const activeRoom = activeRooms.find((room) => room.token === token) as Room
-        //   if (!activeRoom.peers.includes(peer.id)) {
-        //     activeRoom.peers.push(peer.id)
-        //   }
+          const activeRoom = activeRooms.find((room) => room.id === id) as WagonRoom
+          if (!activeRoom.peers.includes(peer.id)) {
+            activeRoom.peers.push(peer.id)
+          }
 
-        //   peer.subscribe(activeRoom.id)
-        //   logger.log(`peer subscribed to room id ${activeRoom.id}`, peer.id)
-        // }
+          peer.subscribe(activeRoom.id)
+          logger.log(`Telegram client subscribed to Wagon Room ${activeRoom.id}`, peer.id)
+        }
+
+        if (client === 'WAGON_CLIENT') {
+          if (!activeRooms.find((room) => room.id === id)) {
+            activeRooms.push(new WagonRoom({ id, token: id }))
+          }
+
+          const activeRoom = activeRooms.find((room) => room.id === id) as WagonRoom
+          if (!activeRoom.peers.includes(peer.id)) {
+            activeRoom.peers.push(peer.id)
+          }
+
+          peer.subscribe(activeRoom.id)
+          logger.log(`Wagon client subscribed to Wagon Room ${activeRoom.id}`, peer.id)
+        }
 
         if (client === 'SERVER') {
           const activeRoom = activeRooms.find((room) => room.id === id)
@@ -93,8 +106,11 @@ export default defineWebSocketHandler({
   close(peer, event) {
     logger.log('close', peer.id, JSON.stringify(event))
 
-    // const findIndex = activeRooms.findIndex((room) => room.peer.id === peer.id)
-    // activeRooms.splice(findIndex, 1)
+    // Remove peer from peers array
+    const room = activeRooms.find((room) => room.peers.find((id) => id === peer.id))
+    if (room) {
+      room.peers = room.peers.filter((id) => id !== peer.id)
+    }
   },
 
   error(peer, error) {

@@ -6,8 +6,6 @@ interface AddonRoomOptions {
 }
 
 export class AddonRoom extends BaseRoom {
-  peers: string[] = []
-
   constructor({ id, token }: AddonRoomOptions) {
     super({ id, token, type: 'ADDON' })
   }

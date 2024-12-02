@@ -21,10 +21,12 @@ import { getRandomInRange } from './utils/random'
 
 interface BaseGameAddonOptions {
   websocketUrl: string
+  client: GameAddon['client']
 }
 
 export class BaseGameAddon extends Container implements GameAddon {
   id: string
+  client: GameAddon['client']
   override children: GameAddon['children'] = []
   app: Application
   tick: GameAddon['tick'] = 0
@@ -48,10 +50,11 @@ export class BaseGameAddon extends Container implements GameAddon {
   cameraPerfectX = 0
   cameraPerfectY = 0
 
-  constructor({ websocketUrl }: BaseGameAddonOptions) {
+  constructor({ websocketUrl, client }: BaseGameAddonOptions) {
     super()
 
     this.id = createId()
+    this.client = client
     this.app = new Application()
 
     this.playerService = new BasePlayerService(this as GameAddon)
