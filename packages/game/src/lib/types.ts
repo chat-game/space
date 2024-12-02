@@ -8,6 +8,7 @@ import type { Application, Container } from 'pixi.js'
 
 export interface GameAddon extends Container {
   id: string
+  client: 'TELEGRAM_CLIENT' | 'WAGON_CLIENT'
   children: GameObject[]
   tick: number
   bottomY: number
@@ -104,7 +105,8 @@ export interface ServerService {
 }
 
 export interface WebSocketService {
-  socket: WebSocket
+  roomId: string | null
+  connect: (roomId: string) => void
   send: (event: WebSocketEvents) => void
 }
 

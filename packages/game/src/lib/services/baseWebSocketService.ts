@@ -1,29 +1,31 @@
-import type { WebSocketEvents, WebSocketMessage } from '@chat-game/types'
+import type { WebSocketConnect, WebSocketEvents, WebSocketMessage } from '@chat-game/types'
 import type { GameAddon, WebSocketService } from '../types'
 import { createId } from '@paralleldrive/cuid2'
 import { TreeObject } from '../objects/treeObject'
 
 export class BaseWebSocketService implements WebSocketService {
-  socket!: WebSocket
+  #socket!: WebSocket
+  roomId: string | null = null
 
   constructor(readonly addon: GameAddon, readonly websocketUrl: string) {}
 
-  connect() {
-    this.socket = new WebSocket(this.websocketUrl)
+  connect(roomId: string) {
+    this.#socket = new WebSocket(this.websocketUrl)
 
-    this.socket.onopen = () => {
-      const prepearedMessage = JSON.stringify({
-        id: createId(),
+    this.#socket.onopen = () => {
+      const connectMessage: WebSocketConnect = {
         type: 'CONNECT',
         data: {
-          client: 'GAME',
-          id: this.addon.id,
+          client: this.addon.client,
+          id: roomId,
         },
-      })
-      this.socket.send(prepearedMessage)
+      }
+      this.#socket.send(JSON.stringify({ id: createId(), ...connectMessage }))
+
+      this.roomId = roomId
     }
 
-    this.socket.addEventListener('message', (event) => {
+    this.#socket.addEventListener('message', (event) => {
       const message = this.#parse(event.data.toString())
       if (!message) {
         return
@@ -35,7 +37,7 @@ export class BaseWebSocketService implements WebSocketService {
 
   send(event: WebSocketEvents) {
     const preparedMessage = JSON.stringify({ ...event, id: createId() })
-    this.socket.send(preparedMessage)
+    this.#socket.send(preparedMessage)
   }
 
   async #handleMessage(message: WebSocketMessage) {

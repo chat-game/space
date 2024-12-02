@@ -6,6 +6,13 @@
       <div class="max-w-[28rem] mx-auto px-5">
         <div>Монеты: 53</div>
         <div>Энергия: 41</div>
+
+        <div v-if="connectedToRoom">
+          Room {{ connectedToRoom }}
+        </div>
+        <button v-else class="z-50 p-4 bg-amber-800 text-white" @click="() => { connectFunc('12345'); connectedToRoom = '12345' }">
+          Подключиться
+        </button>
       </div>
     </div>
   </div>
@@ -17,10 +24,14 @@ import { BaseGameAddon } from '@chat-game/game'
 const router = useRouter()
 const stage = ref<HTMLElement>()
 const isOpened = ref(false)
+const connectFunc = ref<(roomId: string) => void>(() => {})
+const connectedToRoom = ref<string | null>(null)
+
+const addon = new BaseGameAddon({ websocketUrl: getEnv('VITE_WEBSOCKET_URL'), client: 'TELEGRAM_CLIENT' })
 
 onMounted(async () => {
-  const addon = new BaseGameAddon({ websocketUrl: getEnv('VITE_WEBSOCKET_URL') })
   await addon.init()
+  connectFunc.value = addon.websocketService.connect.bind(addon.websocketService)
   stage.value?.appendChild(addon.app.canvas)
 
   return () => addon.destroy()
