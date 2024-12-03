@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "commonjs",
+    "lib": ["ESNext", "DOM"],
+    "rootDir": "./src",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "strict": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
@@ -10,6 +13,7 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
+  "include": ["src/lib/**/*"],
   "exclude": [
     ".turbo",
     "dist",

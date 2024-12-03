@@ -1,5 +1,6 @@
 import GameView from '@/views/GameView.vue'
 import InventoryView from '@/views/InventoryView.vue'
+import QuestView from '@/views/QuestView.vue'
 import ShopView from '@/views/ShopView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import LucideArchiveRestore from '~icons/lucide/archive-restore'
@@ -30,7 +31,7 @@ export const routes = [
   {
     path: '/quest',
     name: 'quest',
-    component: InventoryView,
+    component: QuestView,
     icon: LucideBookCheck,
     meta: {
       title: 'Задания',

@@ -3,8 +3,10 @@ import type {
   Inventory,
   Player,
   WebSocketEvents,
+  WebSocketMessage,
 } from '@chat-game/types'
-import type { Application, Container } from 'pixi.js'
+import type { UseWebSocketReturn } from '@vueuse/core'
+import type { Application, Container, Sprite } from 'pixi.js'
 
 export interface GameAddon extends Container {
   id: string
@@ -13,6 +15,7 @@ export interface GameAddon extends Container {
   tick: number
   bottomY: number
   app: Application
+  assetService: AssetService
   playerService: PlayerService
   treeService: TreeService
   serverService: ServerService
@@ -61,7 +64,12 @@ export interface GameObjectFlag extends GameObject {
 }
 
 export interface GameObjectTree extends GameObject {
-  variant: 'GREEN'
+  variant: 'GREEN' | 'VIOLET' | 'STONE' | 'TEAL' | 'TOXIC' | 'BLUE'
+  treeType: '1' | '2' | '3' | '4' | '5'
+}
+
+export interface GameObjectWagon extends GameObject {
+  setNearestTarget: () => void
 }
 
 export interface GameObjectUnit extends GameObject {
@@ -105,7 +113,7 @@ export interface ServerService {
 }
 
 export interface WebSocketService {
-  roomId: string | null
+  socket: UseWebSocketReturn<WebSocketMessage>
   connect: (roomId: string) => void
   send: (event: WebSocketEvents) => void
 }
@@ -117,6 +125,10 @@ export interface PlayerService {
     id: string,
     character?: CharacterEditionWithCharacter,
   ) => Promise<GameObjectPlayer>
+}
+
+export interface AssetService {
+  sprite: (alias: string) => Sprite
 }
 
 export interface TreeService {
@@ -134,7 +146,7 @@ export type GameObjectState =
 
 export type GameObjectDirection = 'LEFT' | 'RIGHT'
 
-type GameObjectType = 'PLAYER' | 'RAIDER' | 'FLAG' | 'TREE'
+type GameObjectType = 'PLAYER' | 'RAIDER' | 'FLAG' | 'TREE' | 'WAGON'
 
 export interface Script {
   id: string

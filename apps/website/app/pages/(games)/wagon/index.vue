@@ -33,11 +33,12 @@ onMounted(async () => {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
+    position: relative;
   }
 
   #game-canvas {
     width: 100%;
-    height: 250px;
+    height: 350px;
     bottom: -100px;
     position: absolute;
     overflow: hidden;

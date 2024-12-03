@@ -1,31 +1,27 @@
 import type { WebSocketConnect, WebSocketEvents, WebSocketMessage } from '@chat-game/types'
 import type { GameAddon, WebSocketService } from '../types'
 import { createId } from '@paralleldrive/cuid2'
+import { useWebSocket } from '@vueuse/core'
 import { TreeObject } from '../objects/treeObject'
 
 export class BaseWebSocketService implements WebSocketService {
-  #socket!: WebSocket
-  roomId: string | null = null
+  socket: WebSocketService['socket']
 
-  constructor(readonly addon: GameAddon, readonly websocketUrl: string) {}
+  constructor(readonly addon: GameAddon, readonly websocketUrl: string) {
+    this.socket = useWebSocket(this.websocketUrl, {
+      autoReconnect: true,
+      heartbeat: {
+        message: 'ping',
+        interval: 10000,
+        pongTimeout: 10000,
+      },
+    })
 
-  connect(roomId: string) {
-    this.#socket = new WebSocket(this.websocketUrl)
-
-    this.#socket.onopen = () => {
-      const connectMessage: WebSocketConnect = {
-        type: 'CONNECT',
-        data: {
-          client: this.addon.client,
-          id: roomId,
-        },
+    this.socket.ws.value?.addEventListener('message', (event) => {
+      if (event.data.toString() === 'pong') {
+        return
       }
-      this.#socket.send(JSON.stringify({ id: createId(), ...connectMessage }))
 
-      this.roomId = roomId
-    }
-
-    this.#socket.addEventListener('message', (event) => {
       const message = this.#parse(event.data.toString())
       if (!message) {
         return
@@ -35,9 +31,24 @@ export class BaseWebSocketService implements WebSocketService {
     })
   }
 
+  connect(roomId: string) {
+    this.socket.open()
+
+    if (this.socket.status.value === 'CONNECTING' || this.socket.status.value === 'OPEN') {
+      const connectMessage: WebSocketConnect = {
+        type: 'CONNECT',
+        data: {
+          client: this.addon.client,
+          id: roomId,
+        },
+      }
+      this.socket.send(JSON.stringify({ id: createId(), ...connectMessage }))
+    }
+  }
+
   send(event: WebSocketEvents) {
     const preparedMessage = JSON.stringify({ ...event, id: createId() })
-    this.#socket.send(preparedMessage)
+    this.socket.send(preparedMessage)
   }
 
   async #handleMessage(message: WebSocketMessage) {
