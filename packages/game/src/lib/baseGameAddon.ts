@@ -3,6 +3,7 @@ import type {
   GameAddon,
   GameObject,
   GameObjectPlayer,
+  GameObjectWagon,
   PlayerService,
   ServerService,
   TreeService,
@@ -10,9 +11,11 @@ import type {
 } from './types'
 import { createId } from '@paralleldrive/cuid2'
 import { Application, Container, Rectangle, TextureStyle } from 'pixi.js'
+import { BaseWagonObject } from './objects/baseWagonObject'
 import { FlagObject } from './objects/flagObject'
 import { PlayerObject } from './objects/unit/playerObject'
 import { MoveToFlagScript } from './scripts/moveToFlagScript'
+import { BaseAssetService } from './services/baseAssetService'
 import { BasePlayerService } from './services/basePlayerService'
 import { BaseServerService } from './services/baseServerService'
 import { BaseTreeService } from './services/baseTreeService'
@@ -31,6 +34,7 @@ export class BaseGameAddon extends Container implements GameAddon {
   app: Application
   tick: GameAddon['tick'] = 0
 
+  assetService: BaseAssetService
   playerService: PlayerService
   treeService: TreeService
   websocketService: WebSocketService
@@ -41,6 +45,7 @@ export class BaseGameAddon extends Container implements GameAddon {
 
   bottomY = 0
   leftX = 0
+  cameraTarget: GameObjectWagon | GameObjectPlayer | null = null
   cameraOffsetX = 0
   cameraMovementSpeedX = 0.008
   cameraOffsetY = 0
@@ -57,6 +62,7 @@ export class BaseGameAddon extends Container implements GameAddon {
     this.client = client
     this.app = new Application()
 
+    this.assetService = new BaseAssetService(this as GameAddon)
     this.playerService = new BasePlayerService(this as GameAddon)
     this.treeService = new BaseTreeService(this as GameAddon)
     this.websocketService = new BaseWebSocketService(this as GameAddon, websocketUrl)
@@ -71,6 +77,8 @@ export class BaseGameAddon extends Container implements GameAddon {
       resolution: 1,
       resizeTo: window,
     })
+
+    await this.assetService.load()
 
     TextureStyle.defaultOptions.scaleMode = 'nearest'
     this.app.ticker.maxFPS = 60
@@ -87,8 +95,19 @@ export class BaseGameAddon extends Container implements GameAddon {
 
     this.app.stage.addChild(this)
 
-    const nick = new PlayerObject({ id: 'svhjz9p5467wne9ybasf1bwy', addon: this, x: 0, y: this.bottomY })
+    const nick = new PlayerObject({ id: 'svhjz9p5467wne9ybasf1bwy', addon: this, x: 500, y: this.bottomY })
     await nick.init()
+
+    const wagon = new BaseWagonObject({ addon: this, x: 300, y: this.bottomY })
+    this.app.stage.addChild(wagon)
+    this.addChild(wagon)
+
+    if (this.client === 'TELEGRAM_CLIENT') {
+      this.cameraTarget = nick
+    }
+    if (this.client === 'WAGON_CLIENT') {
+      this.cameraTarget = wagon
+    }
 
     this.app.stage.addEventListener('pointerdown', (e) => {
       const middle = this.app.screen.width / 2
@@ -115,8 +134,7 @@ export class BaseGameAddon extends Container implements GameAddon {
       this.#updateObjects()
       this.#removeDestroyedObjects()
 
-      const target = nick
-      this.#changeCameraPosition(target.x)
+      this.#changeCameraPosition(this.cameraTarget ? this.cameraTarget.x : 0)
       this.#moveCamera()
       rectangle.x = nick.x - this.app.screen.width / 2
     })
@@ -233,18 +251,6 @@ export class BaseGameAddon extends Container implements GameAddon {
         target: object.target,
       })
     }
-
-    if (object.state === 'IDLE') {
-      // const random = getRandomInRange(1, 250)
-      // if (random <= 1) {
-      //   const target = this.randomNearFlag
-
-      //   object.script = new MoveToTargetScript({
-      //     object,
-      //     target,
-      //   })
-      // }
-    }
   }
 
   #removeDestroyedObjects() {
@@ -260,19 +266,9 @@ export class BaseGameAddon extends Container implements GameAddon {
   #changeCameraPosition(x: number) {
     const columnWidth = this.app.screen.width / 6
 
-    const leftPadding = columnWidth * 3
+    const leftPadding = this.client === 'TELEGRAM_CLIENT' ? 3 : 1
 
-    // if (wagon.speedPerSecond === 0) {
-    //   leftPadding = columnWidth * 3
-
-    //   if (wagon.state === 'IDLE' && !wagon.cargoType) {
-    //     // At Village stop
-    //     leftPadding = columnWidth
-    //     topPadding = rowHeight * 4
-    //   }
-    // }
-
-    this.cameraPerfectX = -x + leftPadding
+    this.cameraPerfectX = -x + columnWidth * leftPadding
 
     // If first load
     if (Math.abs(-x - this.cameraX) > 300) {
@@ -290,25 +286,6 @@ export class BaseGameAddon extends Container implements GameAddon {
       this.cameraX += addToX * moduleX
     }
 
-    // const bufferY = Math.abs(this.cameraPerfectY - this.cameraY)
-    // const moduleY = this.cameraPerfectY - this.cameraY > 0 ? 1 : -1
-    // const addToY = bufferY > cameraMaxSpeed ? cameraMaxSpeed : bufferY
-
-    // if (this.cameraY !== this.cameraPerfectY) {
-    //   this.cameraY += addToY * moduleY
-    // }
-
-    // if (Math.abs(this.cameraOffsetX) >= 20) {
-    //   this.cameraMovementSpeedX *= -1
-    // }
-    // this.cameraOffsetX += this.cameraMovementSpeedX
-    //
-    // if (Math.abs(this.cameraOffsetY) >= 30) {
-    //   this.cameraMovementSpeedY *= -1
-    // }
-    // this.cameraOffsetY += this.cameraMovementSpeedY
-
     this.parent.x = this.cameraX
-    // this.parent.y = this.cameraY
   }
 }

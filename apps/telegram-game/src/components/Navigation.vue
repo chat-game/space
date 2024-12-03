@@ -3,8 +3,10 @@
     <div class="max-w-[28rem] mx-auto">
       <div class="mt-3 grid grid-cols-5">
         <button v-for="route in routes" :key="route.path" class="flex flex-col items-center justify-center gap-1 px-4 cursor-pointer" :class="{ 'button-active': router.currentRoute.value.path === route.path }" @click="handleClick(route.path)">
-          <div class="icon-block py-1 w-full rounded-2xl flex flex-row items-center justify-center">
+          <div class="icon-block relative py-1 w-full rounded-2xl flex flex-row items-center justify-center">
             <Component :is="route.icon" class="w-6 h-6" />
+
+            <div v-if="route.meta.title === 'Задания'" class="absolute top-0 right-1 w-4 h-4 rounded-full tg-button animate-pulse" />
           </div>
           <p class="text text-xs">
             {{ route.meta.title }}

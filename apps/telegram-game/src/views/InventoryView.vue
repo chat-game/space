@@ -14,7 +14,7 @@
 
     <div class="grid grid-cols-4 gap-2">
       <div v-for="item in items" :key="item.id" class="tg-section-bg aspect-square p-2 rounded-md">
-        <div>Топор</div>
+        <div>Вещь</div>
       </div>
     </div>
   </PageContainer>

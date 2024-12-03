@@ -1,5 +1,4 @@
 import type { GameAddon, GameObjectTree } from '../types'
-import { Assets, Sprite } from 'pixi.js'
 import { getRandomInRange } from '../utils/random'
 import { BaseObject } from './baseObject'
 
@@ -12,11 +11,12 @@ interface TreeObjectOptions {
 
 export class TreeObject extends BaseObject implements GameObjectTree {
   variant: GameObjectTree['variant']
+  treeType: GameObjectTree['treeType']
   isReadyToChop!: boolean
 
   #minSizeToChop = 75
-  #maxSize = 125
-  #growSpeedPerSecond = 3
+  #maxSize = 155
+  #growSpeedPerSecond = getRandomInRange(2, 4)
   #animationAngle = getRandomInRange(-1, 1)
   #animationSlowSpeed = 0.04
   #animationHighSpeed = 0.5
@@ -29,15 +29,16 @@ export class TreeObject extends BaseObject implements GameObjectTree {
 
     this.health = 100
     this.variant = 'GREEN'
+    this.treeType = this.#getNewType()
 
-    this.zIndex = getRandomInRange(-1, 1)
+    this.zIndex = getRandomInRange(-10, 1)
 
-    this.initVisual()
+    this.#initVisual()
   }
 
-  async initVisual(): Promise<void> {
-    const texture = await Assets.load(`/objects/tree/green.png`)
-    const sprite = Sprite.from(texture)
+  #initVisual() {
+    const alias = this.#getSpriteByType()
+    const sprite = this.addon.assetService.sprite(alias)
     sprite.anchor.set(0.5, 1)
     sprite.eventMode = 'static'
     sprite.cursor = 'pointer'
@@ -146,24 +147,31 @@ export class TreeObject extends BaseObject implements GameObjectTree {
     }
   }
 
-  // #getSpriteByType() {
-  //   if (this.variant === 'GREEN') {
-  //     return Sprite.from(`tree${this.type}Green`)
-  //   }
-  //   if (this.variant === 'BLUE') {
-  //     return Sprite.from(`tree${this.type}Blue`)
-  //   }
-  //   if (this.variant === 'STONE') {
-  //     return Sprite.from(`tree${this.type}Stone`)
-  //   }
-  //   if (this.variant === 'TEAL') {
-  //     return Sprite.from(`tree${this.type}Teal`)
-  //   }
-  //   if (this.variant === 'TOXIC') {
-  //     return Sprite.from(`tree${this.type}Toxic`)
-  //   }
-  //   if (this.variant === 'VIOLET') {
-  //     return Sprite.from(`tree${this.type}Violet`)
-  //   }
-  // }
+  #getNewType(): GameObjectTree['treeType'] {
+    const items = ['1', '2', '3', '4', '5'] as const
+    return items[Math.floor(Math.random() * items.length)] as GameObjectTree['treeType']
+  }
+
+  #getSpriteByType() {
+    if (this.variant === 'GREEN') {
+      return `TREE_${this.treeType}_GREEN`
+    }
+    if (this.variant === 'BLUE') {
+      return `TREE_${this.treeType}_BLUE`
+    }
+    if (this.variant === 'STONE') {
+      return `TREE_${this.treeType}_STONE`
+    }
+    if (this.variant === 'TEAL') {
+      return `TREE_${this.treeType}_TEAL`
+    }
+    if (this.variant === 'TOXIC') {
+      return `TREE_${this.treeType}_TOXIC`
+    }
+    if (this.variant === 'VIOLET') {
+      return `TREE_${this.treeType}_VIOLET`
+    }
+
+    return `TREE_${this.treeType}_GREEN`
+  }
 }
