@@ -14,6 +14,7 @@ export interface GameAddon extends Container {
   children: GameObject[]
   tick: number
   bottomY: number
+  wagon: GameObjectWagon
   app: Application
   assetService: AssetService
   playerService: PlayerService

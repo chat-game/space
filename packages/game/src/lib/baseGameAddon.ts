@@ -34,6 +34,8 @@ export class BaseGameAddon extends Container implements GameAddon {
   app: Application
   tick: GameAddon['tick'] = 0
 
+  wagon: GameObjectWagon
+
   assetService: BaseAssetService
   playerService: PlayerService
   treeService: TreeService
@@ -67,6 +69,10 @@ export class BaseGameAddon extends Container implements GameAddon {
     this.treeService = new BaseTreeService(this as GameAddon)
     this.websocketService = new BaseWebSocketService(this as GameAddon, websocketUrl)
     this.serverService = new BaseServerService()
+
+    this.wagon = new BaseWagonObject({ addon: this, x: 300, y: this.bottomY })
+    this.app.stage.addChild(this.wagon)
+    this.addChild(this.wagon)
   }
 
   async init() {
@@ -98,15 +104,11 @@ export class BaseGameAddon extends Container implements GameAddon {
     const nick = new PlayerObject({ id: 'svhjz9p5467wne9ybasf1bwy', addon: this, x: 500, y: this.bottomY })
     await nick.init()
 
-    const wagon = new BaseWagonObject({ addon: this, x: 300, y: this.bottomY })
-    this.app.stage.addChild(wagon)
-    this.addChild(wagon)
-
     if (this.client === 'TELEGRAM_CLIENT') {
       this.cameraTarget = nick
     }
     if (this.client === 'WAGON_CLIENT') {
-      this.cameraTarget = wagon
+      this.cameraTarget = this.wagon
     }
 
     this.app.stage.addEventListener('pointerdown', (e) => {
