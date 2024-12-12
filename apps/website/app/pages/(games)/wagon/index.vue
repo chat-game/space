@@ -49,12 +49,13 @@ onMounted(async () => {
     height: 350px;
     overflow: hidden;
     position: relative;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans;
   }
 
   #game-canvas {
     width: 100%;
     height: 250px;
-    bottom: 80px;
+    bottom: 40px;
     position: absolute;
     overflow: hidden;
   }
@@ -64,7 +65,7 @@ onMounted(async () => {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 80px;
+    height: 40px;
     background-color: #450a0a;
     color: #450a0a;
     /* selection remove */
@@ -80,14 +81,16 @@ onMounted(async () => {
     height: auto;
     position: relative;
     margin-top: -200px;
-    padding: 16px 2px 8px;
-    background-color: #eef2ff;
-    border-radius: 6px;
+    padding: 6px 2px 8px;
+    background-color: #450a0a;
+    border-radius: 0 14px 0 0;
   }
 
   .cards {
-    padding: 4px 12px 0;
-    height: 68px;
+    padding: 0 0 6px;
+    height: 64px;
+    position: absolute;
+    bottom: 0;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
