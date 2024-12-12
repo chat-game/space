@@ -37,6 +37,7 @@ export class BaseWebSocketService implements WebSocketService {
       data: {
         client: this.addon.client,
         id: roomId,
+        telegramId: this.addon.player?.id,
       },
     }
     this.send(connectMessage)
@@ -55,13 +56,11 @@ export class BaseWebSocketService implements WebSocketService {
         this.addon.createObject(obj.type, obj.id, obj.x, obj.zIndex)
       }
 
-      if (type === 'PLAYER') {
+      if (type === 'PLAYER' && this.addon.client === 'TELEGRAM_CLIENT' && this.addon.player) {
         const player = objects.find((obj) => obj.type === 'PLAYER' && obj.id === id)
         if (player) {
-          if (this.addon.player) {
-            this.addon.player.id = player.id
-            this.addon.player.x = player.x
-          }
+          this.addon.player.id = player.id
+          this.addon.player.x = player.x
         }
       }
     }

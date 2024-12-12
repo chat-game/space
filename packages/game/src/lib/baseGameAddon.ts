@@ -14,7 +14,6 @@ import { Application, Container, Rectangle, TextureStyle } from 'pixi.js'
 import { BaseWagonObject } from './objects/baseWagonObject'
 import { FlagObject } from './objects/flagObject'
 import { TreeObject } from './objects/treeObject'
-import { PlayerObject } from './objects/unit/playerObject'
 import { MoveToFlagScript } from './scripts/moveToFlagScript'
 import { BaseAssetService } from './services/baseAssetService'
 import { BasePlayerService } from './services/basePlayerService'
@@ -71,7 +70,7 @@ export class BaseGameAddon extends Container implements GameAddon {
     this.serverService = new BaseServerService()
   }
 
-  async init() {
+  async init(id?: string) {
     await this.app.init({
       backgroundAlpha: 0,
       antialias: true,
@@ -95,8 +94,7 @@ export class BaseGameAddon extends Container implements GameAddon {
     this.app.stage.addChild(this)
 
     if (this.client === 'TELEGRAM_CLIENT') {
-      this.player = new PlayerObject({ id: 'svhjz9p5467wne9ybasf1bwy', addon: this, x: 200, y: this.bottomY })
-      await this.player.initChar()
+      this.player = await this.playerService.createPlayer({ id: id || createId(), x: 200 })
       this.cameraTarget = this.player
 
       this.app.stage.addEventListener('pointerdown', (e) => {
