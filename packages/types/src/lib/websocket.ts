@@ -33,6 +33,7 @@ export interface WebSocketConnect {
     client: 'ADDON' | 'TELEGRAM_CLIENT' | 'WAGON_CLIENT'
     id: string
     token?: string
+    telegramId?: string
   }
 }
 

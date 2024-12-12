@@ -65,7 +65,7 @@ export default defineWebSocketHandler({
           peer.subscribe(activeRoom.id)
           void sendMessage({ type: 'CONNECTED_TO_WAGON_ROOM', data: { type: 'PLAYER', id: peer.id, objects: activeRoom.objects } }, activeRoom.token)
 
-          logger.log(`Telegram client subscribed to Wagon Room ${activeRoom.id}`, peer.id)
+          logger.log(`Telegram client ${parsed.data?.telegramId} subscribed to Wagon Room ${activeRoom.id}`, peer.id)
         }
 
         if (client === 'WAGON_CLIENT') {

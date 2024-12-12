@@ -15,14 +15,16 @@
 </template>
 
 <script setup lang="ts">
+import { initData } from '@telegram-apps/sdk-vue'
 import { gameClient, roomConnected } from '../utils/gameClient'
 
+const data = initData.user()
 const router = useRouter()
 const canvas = ref<HTMLElement>()
 const isOpened = ref(false)
 
 onMounted(async () => {
-  await gameClient.init()
+  await gameClient.init(data?.id.toString())
   canvas.value?.appendChild(gameClient.app.canvas)
 
   return () => gameClient.destroy()

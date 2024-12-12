@@ -123,7 +123,7 @@ export interface WebSocketService {
 
 export interface PlayerService {
   activePlayers: GameObjectPlayer[]
-  createPlayer: (data: { id: string, x: number, character?: CharacterEditionWithCharacter }) => void
+  createPlayer: (data: { id: string, x: number, character?: CharacterEditionWithCharacter }) => Promise<GameObjectPlayer>
   removePlayer: (id: string) => void
   movePlayer: (data: { id: string, x: number }) => void
   update: () => void
