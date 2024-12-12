@@ -25,7 +25,7 @@ export interface GameAddon extends Container {
   play: () => void
   checkIfThisFlagIsTarget: (id: string) => boolean
   findObject: (id: string) => GameObject | undefined
-  createObject: (type: GameObject['type'], id: string, x: number, zIndex?: number) => void
+  createObject: (data: { type: GameObject['type'], id: string, x: number, zIndex?: number, telegramId?: string }) => void
   removeObject: (id: string) => void
   rebuildScene: () => Promise<void>
 }

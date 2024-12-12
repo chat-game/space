@@ -53,24 +53,14 @@ export class BaseWebSocketService implements WebSocketService {
       const { id, type, objects } = message.data
 
       for (const obj of objects) {
-        this.addon.createObject(obj.type, obj.id, obj.x, obj.zIndex)
+        this.addon.createObject({ type: obj.type, id: obj.id, x: obj.x, zIndex: obj?.zIndex, telegramId: obj?.telegramId })
       }
 
-      if (type === 'PLAYER') {
+      if (type === 'PLAYER' && this.addon.player) {
         const player = objects.find((obj) => obj.type === 'PLAYER' && obj.id === id)
-        if (player) {
-          // Me?
-          const telegramId = player.telegramId
-          if (telegramId) {
-            if (telegramId !== this.addon.player?.telegramId) {
-              this.addon.playerService.createPlayer({ id, telegramId, x: player.x })
-            } else {
-              if (this.addon.client === 'TELEGRAM_CLIENT') {
-                this.addon.player.id = id
-                this.addon.player.x = player.x
-              }
-            }
-          }
+        if (player && player?.telegramId === this.addon.player?.telegramId) {
+          this.addon.player.id = id
+          this.addon.player.x = player.x
         }
       }
     }
@@ -84,9 +74,15 @@ export class BaseWebSocketService implements WebSocketService {
         const { x } = message.data
         this.addon.wagon?.createFlagAndMove(x)
       }
+      if (message.type === 'NEW_PLAYER_TARGET') {
+        const { id, x } = message.data
+        if (this.addon.player?.id !== id) {
+          this.addon.playerService.movePlayer({ id, x })
+        }
+      }
       if (message.type === 'NEW_TREE') {
         const { id, x, zIndex } = message.data
-        this.addon.createObject('TREE', id, x, zIndex)
+        this.addon.createObject({ type: 'TREE', id, x, zIndex })
       }
       if (message.type === 'DESTROY_TREE') {
         const { id } = message.data

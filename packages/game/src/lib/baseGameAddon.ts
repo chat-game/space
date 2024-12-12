@@ -143,14 +143,19 @@ export class BaseGameAddon extends Container implements GameAddon {
 
   async play() {}
 
-  createObject(type: GameObject['type'], id: string, x: number, zIndex?: number) {
+  createObject(data: { type: GameObject['type'], id: string, x: number, zIndex?: number, telegramId?: string }) {
     // Check, if already exists
-    if (this.findObject(id)) {
+    if (this.findObject(data.id)) {
       return
     }
 
-    if (type === 'WAGON' && !this.wagon) {
-      this.wagon = new BaseWagonObject({ addon: this, x, y: this.bottomY })
+    if (data.type === 'PLAYER') {
+      if (data?.telegramId && this.player?.telegramId !== data.telegramId) {
+        this.playerService.createPlayer({ id: data.id, telegramId: data.telegramId, x: data.x })
+      }
+    }
+    if (data.type === 'WAGON' && !this.wagon) {
+      this.wagon = new BaseWagonObject({ addon: this, x: data.x, y: this.bottomY })
       this.app.stage.addChild(this.wagon)
       this.addChild(this.wagon)
 
@@ -158,8 +163,8 @@ export class BaseGameAddon extends Container implements GameAddon {
         this.cameraTarget = this.wagon
       }
     }
-    if (type === 'TREE') {
-      const tree = new TreeObject({ id, addon: this, x, y: this.bottomY, size: getRandomInRange(50, 100), zIndex })
+    if (data.type === 'TREE') {
+      const tree = new TreeObject({ id: data.id, addon: this, x: data.x, y: this.bottomY, size: getRandomInRange(50, 100), zIndex: data?.zIndex })
       this.app.stage.addChild(tree)
       this.addChild(tree)
     }
