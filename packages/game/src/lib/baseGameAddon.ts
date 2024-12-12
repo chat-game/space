@@ -13,6 +13,7 @@ import { createId } from '@paralleldrive/cuid2'
 import { Application, Container, Rectangle, TextureStyle } from 'pixi.js'
 import { BaseWagonObject } from './objects/baseWagonObject'
 import { FlagObject } from './objects/flagObject'
+import { TreeObject } from './objects/treeObject'
 import { PlayerObject } from './objects/unit/playerObject'
 import { MoveToFlagScript } from './scripts/moveToFlagScript'
 import { BaseAssetService } from './services/baseAssetService'
@@ -34,7 +35,8 @@ export class BaseGameAddon extends Container implements GameAddon {
   app: Application
   tick: GameAddon['tick'] = 0
 
-  wagon: GameObjectWagon
+  wagon: GameObjectWagon | null = null
+  player: GameObjectPlayer | null = null
 
   assetService: BaseAssetService
   playerService: PlayerService
@@ -42,9 +44,7 @@ export class BaseGameAddon extends Container implements GameAddon {
   websocketService: WebSocketService
   serverService: ServerService
 
-  #outFlags: FlagObject[] = []
-  #nearFlags: FlagObject[] = []
-
+  rectangle!: Rectangle
   bottomY = 0
   leftX = 0
   cameraTarget: GameObjectWagon | GameObjectPlayer | null = null
@@ -69,10 +69,6 @@ export class BaseGameAddon extends Container implements GameAddon {
     this.treeService = new BaseTreeService(this as GameAddon)
     this.websocketService = new BaseWebSocketService(this as GameAddon, websocketUrl)
     this.serverService = new BaseServerService()
-
-    this.wagon = new BaseWagonObject({ addon: this, x: 300, y: this.bottomY })
-    this.app.stage.addChild(this.wagon)
-    this.addChild(this.wagon)
   }
 
   async init() {
@@ -93,64 +89,98 @@ export class BaseGameAddon extends Container implements GameAddon {
     this.app.stage.eventMode = 'static'
     this.app.screen.width = window.innerWidth
     this.app.screen.height = window.innerHeight
-    const rectangle = new Rectangle(0, 0, this.app.screen.width, this.app.screen.height)
-    this.app.stage.hitArea = rectangle
-
-    this.#initOutFlags()
-    this.#initNearFlags()
+    this.rectangle = new Rectangle(0, 0, this.app.screen.width, this.app.screen.height)
+    this.app.stage.hitArea = this.rectangle
 
     this.app.stage.addChild(this)
 
-    const nick = new PlayerObject({ id: 'svhjz9p5467wne9ybasf1bwy', addon: this, x: 500, y: this.bottomY })
-    await nick.init()
-
     if (this.client === 'TELEGRAM_CLIENT') {
-      this.cameraTarget = nick
+      this.player = new PlayerObject({ id: 'svhjz9p5467wne9ybasf1bwy', addon: this, x: 200, y: this.bottomY })
+      await this.player.initChar()
+      this.cameraTarget = this.player
+
+      this.app.stage.addEventListener('pointerdown', (e) => {
+        if (!this.player) {
+          return
+        }
+
+        const middle = this.app.screen.width / 2
+        const offsetX = e.clientX - middle
+        const serverX = offsetX + this.leftX
+
+        const flag = new FlagObject({ addon: this, x: serverX, y: this.bottomY, variant: 'PLAYER_MOVEMENT' })
+        if (this.player.target && this.player.target.type === 'FLAG') {
+          const flag = this.player.target
+          this.player.target = undefined
+          flag.state = 'DESTROYED'
+        }
+        this.player.target = flag
+
+        this.websocketService.send({
+          type: 'NEW_PLAYER_TARGET',
+          data: {
+            x: serverX,
+            id: this.player.id,
+          },
+        })
+      })
     }
-    if (this.client === 'WAGON_CLIENT') {
-      this.cameraTarget = this.wagon
-    }
-
-    this.app.stage.addEventListener('pointerdown', (e) => {
-      const middle = this.app.screen.width / 2
-      const offsetX = e.clientX - middle
-      const serverX = offsetX + this.leftX
-
-      const flag = new FlagObject({ addon: this, x: serverX, y: this.bottomY, variant: 'PLAYER_MOVEMENT' })
-      if (nick.target && nick.target.type === 'FLAG') {
-        const flag = nick.target
-        nick.target = undefined
-        flag.state = 'DESTROYED'
-      }
-      nick.target = flag
-    })
-
-    this.treeService.init()
 
     this.app.ticker.add(() => {
-      this.leftX = nick.x
       this.tick = this.app.ticker.FPS
 
       this.playerService.update()
       this.treeService.update()
-      this.#updateObjects()
-      this.#removeDestroyedObjects()
+      this.updateObjects()
+      this.removeDestroyedObjects()
 
-      this.#changeCameraPosition(this.cameraTarget ? this.cameraTarget.x : 0)
-      this.#moveCamera()
-      rectangle.x = nick.x - this.app.screen.width / 2
+      if (this.cameraTarget) {
+        this.leftX = this.cameraTarget.x
+        this.rectangle.x = this.cameraTarget.x - this.app.screen.width / 2
+
+        this.changeCameraPosition(this.cameraTarget.x)
+        this.moveCamera()
+      }
     })
   }
 
   async play() {}
 
+  createObject(type: GameObject['type'], id: string, x: number, zIndex?: number) {
+    // Check, if already exists
+    if (this.findObject(id)) {
+      return
+    }
+
+    if (type === 'PLAYER' && !this.player) {
+      this.playerService.createPlayer({ id, x })
+    }
+    if (type === 'WAGON' && !this.wagon) {
+      this.wagon = new BaseWagonObject({ addon: this, x, y: this.bottomY })
+      this.app.stage.addChild(this.wagon)
+      this.addChild(this.wagon)
+
+      if (this.client === 'WAGON_CLIENT') {
+        this.cameraTarget = this.wagon
+      }
+    }
+    if (type === 'TREE') {
+      const tree = new TreeObject({ id, addon: this, x, y: this.bottomY, size: getRandomInRange(50, 100), zIndex })
+      this.app.stage.addChild(tree)
+      this.addChild(tree)
+    }
+  }
+
+  removeObject(id: string) {
+    const obj = this.findObject(id)
+    if (obj) {
+      this.removeChild(obj)
+    }
+  }
+
   override destroy() {
     this.app.destroy()
     super.destroy()
-  }
-
-  removeObject(obj: GameObject) {
-    this.removeChild(obj)
   }
 
   checkIfThisFlagIsTarget(id: string): boolean {
@@ -166,56 +196,9 @@ export class BaseGameAddon extends Container implements GameAddon {
     return this.children.find((obj) => obj.id === id)
   }
 
-  rebuildScene(): void {
+  async rebuildScene() {
     this.removeChild(...this.children)
-  }
-
-  get randomOutFlag() {
-    return this.#outFlags[Math.floor(Math.random() * this.#outFlags.length)] as FlagObject
-  }
-
-  get randomNearFlag() {
-    return this.#nearFlags[Math.floor(Math.random() * this.#nearFlags.length)] as FlagObject
-  }
-
-  #initOutFlags(count = 1) {
-    for (let i = 0; i < count; i++) {
-      this.#outFlags.push(this.#generateRandomOutFlag())
-    }
-  }
-
-  #initNearFlags(count = 20) {
-    for (let i = 0; i < count; i++) {
-      this.#nearFlags.push(this.#generateRandomNearFlag())
-    }
-  }
-
-  #generateRandomOutFlag() {
-    const offsetX = -240
-    const offsetY = this.bottomY
-
-    const flag = new FlagObject({
-      addon: this as GameAddon,
-      variant: 'OUT_OF_SCREEN',
-      x: offsetX,
-      y: offsetY,
-    })
-
-    return flag
-  }
-
-  #generateRandomNearFlag() {
-    const offsetX = getRandomInRange(0, this.app.screen.width)
-    const offsetY = this.bottomY
-
-    const flag = new FlagObject({
-      addon: this as GameAddon,
-      variant: 'MOVEMENT',
-      x: offsetX,
-      y: offsetY,
-    })
-
-    return flag
+    // this.app.ticker.remove()
   }
 
   async handleMessage({ playerId, text, character }: {
@@ -231,18 +214,18 @@ export class BaseGameAddon extends Container implements GameAddon {
     return { ok: true, message: null }
   }
 
-  #updateObjects() {
+  updateObjects() {
     for (const object of this.children) {
       object.animate()
       object.live()
 
       if (object.type === 'PLAYER') {
-        this.#updatePlayer(object as GameObjectPlayer)
+        this.updatePlayer(object as GameObjectPlayer)
       }
     }
   }
 
-  #updatePlayer(object: GameObjectPlayer) {
+  updatePlayer(object: GameObjectPlayer) {
     if (object.script) {
       return
     }
@@ -255,7 +238,7 @@ export class BaseGameAddon extends Container implements GameAddon {
     }
   }
 
-  #removeDestroyedObjects() {
+  removeDestroyedObjects() {
     for (const object of this.children) {
       if (object.state === 'DESTROYED') {
         const index = this.children.indexOf(object)
@@ -265,10 +248,10 @@ export class BaseGameAddon extends Container implements GameAddon {
     }
   }
 
-  #changeCameraPosition(x: number) {
-    const columnWidth = this.app.screen.width / 6
+  changeCameraPosition(x: number) {
+    const columnWidth = this.app.screen.width / 8
 
-    const leftPadding = this.client === 'TELEGRAM_CLIENT' ? 3 : 1
+    const leftPadding = this.client === 'TELEGRAM_CLIENT' ? 4 : 2
 
     this.cameraPerfectX = -x + columnWidth * leftPadding
 
@@ -278,7 +261,7 @@ export class BaseGameAddon extends Container implements GameAddon {
     }
   }
 
-  #moveCamera() {
+  moveCamera() {
     const cameraMaxSpeed = 2
     const bufferX = Math.abs(this.cameraPerfectX - this.cameraX)
     const moduleX = this.cameraPerfectX - this.cameraX > 0 ? 1 : -1

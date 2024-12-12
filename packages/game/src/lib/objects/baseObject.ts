@@ -11,7 +11,7 @@ interface GameObjectOptions {
 }
 
 export class BaseObject extends Container implements GameObject {
-  readonly #id: GameObject['id']
+  readonly id: GameObject['id']
   state: GameObject['state']
   direction: GameObject['direction']
   type: GameObject['type']
@@ -30,7 +30,7 @@ export class BaseObject extends Container implements GameObject {
 
     this.addon = addon
 
-    this.#id = id ?? createId()
+    this.id = id ?? createId()
     this.x = x ?? 0
     this.y = y ?? 0
     this.type = type
@@ -39,10 +39,10 @@ export class BaseObject extends Container implements GameObject {
     this.script = undefined
     this.isOnWagonPath = false
 
-    this.#init()
+    this.init()
   }
 
-  #init() {
+  init() {
     this.addon.addChild(this)
   }
 
@@ -53,31 +53,27 @@ export class BaseObject extends Container implements GameObject {
   }
 
   move(): boolean {
-    const isOnTarget = this.#checkIfIsOnTarget()
+    const isOnTarget = this.checkIfIsOnTarget()
     if (isOnTarget) {
-      this.#stop()
+      this.stop()
       return false
     }
 
     if (!this.target || !this.target.x || !this.target.y) {
-      this.#stop()
+      this.stop()
       return false
     }
 
-    const distanceToX = this.#getDistanceToTargetX()
-    const distanceToY = this.#getDistanceToTargetY()
+    const distanceToX = this.getDistanceToTargetX()
+    const distanceToY = this.getDistanceToTargetY()
 
     // Fix diagonal speed
     const speed = this.speedPerSecond / this.addon.tick
     const finalSpeed = distanceToX > 0 && distanceToY > 0 ? speed * 0.75 : speed
 
-    this.#moveX(finalSpeed > distanceToX ? distanceToX : finalSpeed)
-    this.#moveY(finalSpeed > distanceToY ? distanceToY : finalSpeed)
+    this.moveX(finalSpeed > distanceToX ? distanceToX : finalSpeed)
+    this.moveY(finalSpeed > distanceToY ? distanceToY : finalSpeed)
     return true
-  }
-
-  get id() {
-    return this.#id
   }
 
   setTarget(target: GameObject) {
@@ -94,9 +90,13 @@ export class BaseObject extends Container implements GameObject {
     this.size = 0
     this.health = 0
     this.state = 'DESTROYED'
+
+    if (this.type === 'TREE') {
+      this.addon.websocketService.send({ type: 'DESTROY_TREE', data: { id: this.id } })
+    }
   }
 
-  #moveX(speed: number) {
+  moveX(speed: number) {
     if (!this.target?.x || this.target.x === this.x) {
       return
     }
@@ -111,7 +111,7 @@ export class BaseObject extends Container implements GameObject {
     }
   }
 
-  #moveY(speed: number) {
+  moveY(speed: number) {
     if (!this.target?.y || this.target.y === this.y) {
       return
     }
@@ -124,25 +124,25 @@ export class BaseObject extends Container implements GameObject {
     }
   }
 
-  #stop() {
+  stop() {
     this.state = 'IDLE'
   }
 
-  #checkIfIsOnTarget() {
+  checkIfIsOnTarget() {
     return (
-      this.#getDistanceToTargetX() + this.#getDistanceToTargetY()
+      this.getDistanceToTargetX() + this.getDistanceToTargetY()
       <= this.minDistance
     )
   }
 
-  #getDistanceToTargetX() {
+  getDistanceToTargetX() {
     if (!this.target?.x) {
       return 0
     }
     return Math.abs(this.target.x - this.x)
   }
 
-  #getDistanceToTargetY() {
+  getDistanceToTargetY() {
     if (!this.target?.y) {
       return 0
     }

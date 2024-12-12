@@ -17,6 +17,7 @@
     "@chat-game/addon": "workspace:*",
     "@chat-game/game": "workspace:*",
     "@chat-game/types": "workspace:*",
+    "@number-flow/vue": "^0.3.2",
     "@paralleldrive/cuid2": "^2.2.2",
     "@prisma/client": "^6.0.0",
     "@radix-ui/colors": "^3.0.0",

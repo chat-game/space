@@ -39,51 +39,51 @@ import wagonBase1 from '../assets/images/objects/wagon/wagon-1.png'
 import wagonBase2 from '../assets/images/objects/wagon/wagon-2.png'
 import wagonWheel from '../assets/images/objects/wagon/wheel-1.png'
 
+const trees = [
+  { alias: 'TREE_1_GREEN', src: tree1Green },
+  { alias: 'TREE_2_GREEN', src: tree2Green },
+  { alias: 'TREE_3_GREEN', src: tree3Green },
+  { alias: 'TREE_4_GREEN', src: tree4Green },
+  { alias: 'TREE_5_GREEN', src: tree5Green },
+  { alias: 'TREE_1_BLUE', src: tree1Blue },
+  { alias: 'TREE_2_BLUE', src: tree2Blue },
+  { alias: 'TREE_3_BLUE', src: tree3Blue },
+  { alias: 'TREE_4_BLUE', src: tree4Blue },
+  { alias: 'TREE_5_BLUE', src: tree5Blue },
+  { alias: 'TREE_1_STONE', src: tree1Stone },
+  { alias: 'TREE_2_STONE', src: tree2Stone },
+  { alias: 'TREE_3_STONE', src: tree3Stone },
+  { alias: 'TREE_4_STONE', src: tree4Stone },
+  { alias: 'TREE_5_STONE', src: tree5Stone },
+  { alias: 'TREE_1_TEAL', src: tree1Teal },
+  { alias: 'TREE_2_TEAL', src: tree2Teal },
+  { alias: 'TREE_3_TEAL', src: tree3Teal },
+  { alias: 'TREE_4_TEAL', src: tree4Teal },
+  { alias: 'TREE_5_TEAL', src: tree5Teal },
+  { alias: 'TREE_1_TOXIC', src: tree1Toxic },
+  { alias: 'TREE_2_TOXIC', src: tree2Toxic },
+  { alias: 'TREE_3_TOXIC', src: tree3Toxic },
+  { alias: 'TREE_4_TOXIC', src: tree4Toxic },
+  { alias: 'TREE_5_TOXIC', src: tree5Toxic },
+  { alias: 'TREE_1_VIOLET', src: tree1Violet },
+  { alias: 'TREE_2_VIOLET', src: tree2Violet },
+  { alias: 'TREE_3_VIOLET', src: tree3Violet },
+  { alias: 'TREE_4_VIOLET', src: tree4Violet },
+  { alias: 'TREE_5_VIOLET', src: tree5Violet },
+]
+
+const wagon = [
+  { alias: 'WAGON_BASE_1', src: wagonBase1 },
+  { alias: 'WAGON_BASE_2', src: wagonBase2 },
+  { alias: 'WAGON_ENGINE', src: wagonEngine },
+  { alias: 'WAGON_WHEEL', src: wagonWheel },
+  { alias: 'WAGON_ENGINE_CLOUD_1', src: wagonEngineCloud1 },
+  { alias: 'WAGON_ENGINE_CLOUD_2', src: wagonEngineCloud2 },
+  { alias: 'WAGON_ENGINE_CLOUD_3', src: wagonEngineCloud3 },
+  { alias: 'WAGON_ENGINE_CLOUD_4', src: wagonEngineCloud4 },
+]
+
 export class BaseAssetService implements AssetService {
-  #trees = [
-    { alias: 'TREE_1_GREEN', src: tree1Green },
-    { alias: 'TREE_2_GREEN', src: tree2Green },
-    { alias: 'TREE_3_GREEN', src: tree3Green },
-    { alias: 'TREE_4_GREEN', src: tree4Green },
-    { alias: 'TREE_5_GREEN', src: tree5Green },
-    { alias: 'TREE_1_BLUE', src: tree1Blue },
-    { alias: 'TREE_2_BLUE', src: tree2Blue },
-    { alias: 'TREE_3_BLUE', src: tree3Blue },
-    { alias: 'TREE_4_BLUE', src: tree4Blue },
-    { alias: 'TREE_5_BLUE', src: tree5Blue },
-    { alias: 'TREE_1_STONE', src: tree1Stone },
-    { alias: 'TREE_2_STONE', src: tree2Stone },
-    { alias: 'TREE_3_STONE', src: tree3Stone },
-    { alias: 'TREE_4_STONE', src: tree4Stone },
-    { alias: 'TREE_5_STONE', src: tree5Stone },
-    { alias: 'TREE_1_TEAL', src: tree1Teal },
-    { alias: 'TREE_2_TEAL', src: tree2Teal },
-    { alias: 'TREE_3_TEAL', src: tree3Teal },
-    { alias: 'TREE_4_TEAL', src: tree4Teal },
-    { alias: 'TREE_5_TEAL', src: tree5Teal },
-    { alias: 'TREE_1_TOXIC', src: tree1Toxic },
-    { alias: 'TREE_2_TOXIC', src: tree2Toxic },
-    { alias: 'TREE_3_TOXIC', src: tree3Toxic },
-    { alias: 'TREE_4_TOXIC', src: tree4Toxic },
-    { alias: 'TREE_5_TOXIC', src: tree5Toxic },
-    { alias: 'TREE_1_VIOLET', src: tree1Violet },
-    { alias: 'TREE_2_VIOLET', src: tree2Violet },
-    { alias: 'TREE_3_VIOLET', src: tree3Violet },
-    { alias: 'TREE_4_VIOLET', src: tree4Violet },
-    { alias: 'TREE_5_VIOLET', src: tree5Violet },
-  ]
-
-  #wagon = [
-    { alias: 'WAGON_BASE_1', src: wagonBase1 },
-    { alias: 'WAGON_BASE_2', src: wagonBase2 },
-    { alias: 'WAGON_ENGINE', src: wagonEngine },
-    { alias: 'WAGON_WHEEL', src: wagonWheel },
-    { alias: 'WAGON_ENGINE_CLOUD_1', src: wagonEngineCloud1 },
-    { alias: 'WAGON_ENGINE_CLOUD_2', src: wagonEngineCloud2 },
-    { alias: 'WAGON_ENGINE_CLOUD_3', src: wagonEngineCloud3 },
-    { alias: 'WAGON_ENGINE_CLOUD_4', src: wagonEngineCloud4 },
-  ]
-
   constructor(protected addon: GameAddon) {}
 
   sprite(alias: string) {
@@ -91,7 +91,7 @@ export class BaseAssetService implements AssetService {
   }
 
   async load() {
-    await Assets.load(this.#trees)
-    await Assets.load(this.#wagon)
+    await Assets.load(trees)
+    await Assets.load(wagon)
   }
 }
