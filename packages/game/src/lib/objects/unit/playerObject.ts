@@ -25,7 +25,7 @@ export class PlayerObject extends UnitObject implements GameObjectPlayer {
     this.lastActionAt = new Date()
   }
 
-  async init(character?: CharacterEditionWithCharacter): Promise<void> {
+  async initChar(character?: CharacterEditionWithCharacter): Promise<void> {
     // await this.#readFromDB()
 
     super.initVisual(character)

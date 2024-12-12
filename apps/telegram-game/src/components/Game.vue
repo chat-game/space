@@ -4,10 +4,10 @@
 
     <div class="tg-content-safe-area-top font-serif touch-pan-x absolute top-0 left-0 right-0 w-full h-16">
       <div class="max-w-[28rem] mx-auto px-5">
-        <div>Энергия: 41</div>
+        <div>Энергия: ??</div>
 
         <div class="opacity-15">
-          {{ gameClient.websocketService.socket.status.value }} {{ roomConnected }} {{ gameClient.websocketService.socket.data }}
+          {{ gameClient.websocketService.socket.status.value }} {{ roomConnected }}
         </div>
       </div>
     </div>

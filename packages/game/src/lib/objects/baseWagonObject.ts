@@ -13,11 +13,11 @@ interface BaseWagonObjectOptions {
 }
 
 export class BaseWagonObject extends BaseObject implements GameObjectWagon {
-  #bottomOffset = 30
-  #wheel1!: Sprite
-  #wheel2!: Sprite
-  #engineClouds!: Container
-  #engineCloudsOffset = 0
+  bottomOffset = 30
+  wheel1!: Sprite
+  wheel2!: Sprite
+  engineClouds!: Container
+  engineCloudsOffset = 0
 
   constructor({ addon, x, y }: BaseWagonObjectOptions) {
     super({ addon, x, y, type: 'WAGON' })
@@ -26,7 +26,7 @@ export class BaseWagonObject extends BaseObject implements GameObjectWagon {
     this.speedPerSecond = 20
     this.minDistance = 35
 
-    this.#initVisual()
+    this.initVisual()
     this.setNearestTarget()
   }
 
@@ -37,7 +37,7 @@ export class BaseWagonObject extends BaseObject implements GameObjectWagon {
       return this.script.live()
     }
 
-    if (this.state === 'IDLE') {
+    if (this.state === 'IDLE' && !this.target) {
       this.setNearestTarget()
     }
   }
@@ -46,21 +46,47 @@ export class BaseWagonObject extends BaseObject implements GameObjectWagon {
     super.animate()
 
     this.zIndex = -5
-    this.y = this.addon.bottomY - this.#bottomOffset
+    this.y = this.addon.bottomY - this.bottomOffset
 
-    this.#drawWheels()
-    this.#drawEngineClouds(this.speedPerSecond)
+    this.drawWheels()
+    this.drawEngineClouds()
   }
 
   setNearestTarget() {
-    this.target = new FlagObject({ addon: this.addon, x: this.x + 200, y: this.y, variant: 'MOVEMENT' })
+    if (this.addon.client !== 'WAGON_CLIENT') {
+      return
+    }
+
+    const availableTree = this.addon.treeService.getNearestObstacle(this.x)
+    if (!availableTree) {
+      return
+    }
+
+    // if is close - wagon need to wait
+    if (Math.abs(this.x - availableTree.x) < 250) {
+      return
+    }
+
+    const targetX = availableTree.x - 200
+
+    this.target = new FlagObject({ addon: this.addon, x: targetX, y: this.y, variant: 'MOVEMENT' })
+    this.script = new MoveToFlagScript({
+      object: this,
+      target: this.target,
+    })
+
+    this.addon.websocketService.send({ type: 'NEW_WAGON_TARGET', data: { x: targetX } })
+  }
+
+  createFlagAndMove(x: number) {
+    this.target = new FlagObject({ addon: this.addon, x, y: this.y, variant: 'MOVEMENT' })
     this.script = new MoveToFlagScript({
       object: this,
       target: this.target,
     })
   }
 
-  #initVisual() {
+  initVisual() {
     const spriteSide = this.addon.assetService.sprite('WAGON_BASE_1')
     spriteSide.anchor.set(0.5, 1)
     spriteSide.scale = 0.75
@@ -76,61 +102,62 @@ export class BaseWagonObject extends BaseObject implements GameObjectWagon {
     engine.y = -36
     engine.visible = true
 
-    this.#engineClouds = new Container()
-    this.#engineClouds.x = -60
-    this.#engineClouds.y = -100
+    this.engineClouds = new Container()
+    this.engineClouds.x = -60
+    this.engineClouds.y = -100
 
-    this.#wheel1 = this.addon.assetService.sprite('WAGON_WHEEL')
-    this.#wheel1.anchor.set(0.5, 0.5)
+    this.wheel1 = this.addon.assetService.sprite('WAGON_WHEEL')
+    this.wheel1.anchor.set(0.5, 0.5)
 
-    this.#wheel2 = this.addon.assetService.sprite('WAGON_WHEEL')
-    this.#wheel2.anchor.set(0.5, 0.5)
+    this.wheel2 = this.addon.assetService.sprite('WAGON_WHEEL')
+    this.wheel2.anchor.set(0.5, 0.5)
 
-    this.#wheel1.scale = 0.75
-    this.#wheel2.scale = 0.75
+    this.wheel1.scale = 0.75
+    this.wheel2.scale = 0.75
 
     this.addChild(
       // spriteBase,
       engine,
       spriteSide,
-      this.#wheel1,
-      this.#wheel2,
-      this.#engineClouds,
+      this.wheel1,
+      this.wheel2,
+      this.engineClouds,
     )
   }
 
-  #drawWheels() {
+  drawWheels() {
     const speed = this.state !== 'MOVING' ? 0 : this.speedPerSecond
     const wheelRotation = this.direction === 'LEFT' ? -1 : 1
 
     // Wheel 1
-    this.#wheel1.visible = true
-    this.#wheel1.x = -123
-    this.#wheel1.y = -16
+    this.wheel1.visible = true
+    this.wheel1.x = -123
+    this.wheel1.y = -16
 
     // Wheel 2
-    this.#wheel2.visible = true
-    this.#wheel2.x = 123
-    this.#wheel2.y = -16
+    this.wheel2.visible = true
+    this.wheel2.x = 123
+    this.wheel2.y = -16
 
     if (speed > 0) {
-      this.#wheel1.angle += (wheelRotation * speed) / 55
-      this.#wheel2.angle += (wheelRotation * speed) / 55
+      this.wheel1.angle += (wheelRotation * speed) / 55
+      this.wheel2.angle += (wheelRotation * speed) / 55
     }
   }
 
-  #drawEngineClouds(speed: number) {
-    this.#engineCloudsOffset -= speed / this.addon.tick + 15
+  drawEngineClouds() {
+    const speed = this.state !== 'MOVING' ? 0 : this.speedPerSecond
+    this.engineCloudsOffset -= speed / this.addon.tick + 15
 
-    const cloudsActive = speed / this.addon.tick + 3
+    const cloudsActive = speed / (this.addon.tick - 30) + 1
     const canCreateCloud
-      = this.#engineClouds.children.length < cloudsActive && this.#engineCloudsOffset <= 0
+      = this.engineClouds.children.length < cloudsActive && this.engineCloudsOffset <= 0
     if (canCreateCloud) {
-      this.#createRandomEngineCloud()
-      this.#engineCloudsOffset = speed * getRandomInRange(30, 70) + 3
+      this.createRandomEngineCloud()
+      this.engineCloudsOffset = speed * getRandomInRange(30, 70) + 3
     }
 
-    for (const container of this.#engineClouds.children) {
+    for (const container of this.engineClouds.children) {
       container.visible = true
 
       container.x -= speed / this.addon.tick + 0.02
@@ -139,12 +166,12 @@ export class BaseWagonObject extends BaseObject implements GameObjectWagon {
       container.alpha -= 0.005
 
       if (container.alpha <= 0) {
-        this.#engineClouds.removeChild(container)
+        this.engineClouds.removeChild(container)
       }
     }
   }
 
-  #getRandomEngineCloudSpriteIndex() {
+  getRandomEngineCloudSpriteIndex() {
     const random = getRandomInRange(1, 1000)
     if (random <= 500) {
       return 'WAGON_ENGINE_CLOUD_1'
@@ -158,12 +185,12 @@ export class BaseWagonObject extends BaseObject implements GameObjectWagon {
     return 'WAGON_ENGINE_CLOUD_4'
   }
 
-  #createRandomEngineCloud() {
-    const sprite = this.addon.assetService.sprite(this.#getRandomEngineCloudSpriteIndex())
+  createRandomEngineCloud() {
+    const sprite = this.addon.assetService.sprite(this.getRandomEngineCloudSpriteIndex())
     sprite.anchor.set(0.5, 1)
     sprite.scale = 0.75
     sprite.visible = false
 
-    this.#engineClouds.addChild(sprite)
+    this.engineClouds.addChild(sprite)
   }
 }

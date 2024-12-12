@@ -24,11 +24,21 @@
 </template>
 
 <script setup lang="ts">
+import { hapticFeedback } from '@telegram-apps/sdk-vue'
 import { gameClient, roomConnected } from '../utils/gameClient'
 
+const router = useRouter()
+
 function connectToToom(roomId: string) {
+  if (hapticFeedback.impactOccurred.isAvailable()) {
+    hapticFeedback.impactOccurred('light')
+  }
+
   gameClient.websocketService.connect(roomId)
   roomConnected.value = roomId
+
+  // redirect
+  router.push({ name: 'game' })
 }
 
 const rooms = [

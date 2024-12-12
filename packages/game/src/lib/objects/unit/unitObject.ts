@@ -7,7 +7,6 @@ import type {
 import { createId } from '@paralleldrive/cuid2'
 import { AnimatedSprite, Assets } from 'pixi.js'
 import { BaseObject } from '../baseObject'
-import { getRandomInRange } from './../../utils/random'
 
 interface UnitObjectOptions {
   addon: GameAddon
@@ -23,8 +22,8 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
   coins = 0
   dialogue: GameObjectUnit['dialogue']
 
-  #animationIdle!: AnimatedSprite
-  #animationMoving!: AnimatedSprite
+  animationIdle!: AnimatedSprite
+  animationMoving!: AnimatedSprite
 
   constructor({ addon, x, y, id, type }: UnitObjectOptions) {
     super({ addon, x, y, id, type })
@@ -38,8 +37,6 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
   }
 
   override live() {
-    this.#handleMessages()
-
     if (this.script) {
       return this.script.live()
     }
@@ -52,15 +49,15 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
     const idleSprite = new AnimatedSprite(idle.animations.main)
     idleSprite.anchor.set(0.5, 1)
     idleSprite.scale.set(4)
-    this.#animationIdle = idleSprite
-    this.addChild(this.#animationIdle)
+    this.animationIdle = idleSprite
+    this.addChild(this.animationIdle)
 
     const moving = await Assets.load(`/units/${codename}/moving.json`)
     const movingSprite = new AnimatedSprite(moving.animations.main)
     movingSprite.anchor.set(0.5, 1)
     movingSprite.scale.set(4)
-    this.#animationMoving = movingSprite
-    this.addChild(this.#animationMoving)
+    this.animationMoving = movingSprite
+    this.addChild(this.animationMoving)
   }
 
   addMessage(message: string): void {
@@ -73,18 +70,11 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
     })
   }
 
-  #handleMessages() {
-    const random = getRandomInRange(1, 200)
-    if (random === 1) {
-      this.dialogue?.messages?.splice(0, 1)
-    }
-  }
-
   override animate() {
     if (
       !this.children?.length
-      || !this.#animationIdle
-      || !this.#animationMoving
+      || !this.animationIdle
+      || !this.animationMoving
     ) {
       return
     }
@@ -94,17 +84,17 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
     this.zIndex = 0
 
     if (this.state === 'MOVING') {
-      this.#animationIdle.visible = false
-      this.#animationMoving.animationSpeed = 0.1
-      this.#animationMoving.visible = true
+      this.animationIdle.visible = false
+      this.animationMoving.animationSpeed = 0.1
+      this.animationMoving.visible = true
 
       if (this.direction === 'RIGHT') {
-        this.#animationMoving.scale.x = 4
-        this.#animationMoving.play()
+        this.animationMoving.scale.x = 4
+        this.animationMoving.play()
       }
       if (this.direction === 'LEFT') {
-        this.#animationMoving.scale.x = -4
-        this.#animationMoving.play()
+        this.animationMoving.scale.x = -4
+        this.animationMoving.play()
       }
     }
 
@@ -113,22 +103,22 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
       || this.state === 'CHOPPING'
       || this.state === 'MINING'
     ) {
-      this.#animationMoving.animationSpeed = 0
-      this.#animationMoving.animationSpeed = 0
-      this.#animationMoving.currentFrame = 0
-      this.#animationMoving.currentFrame = 0
-      this.#animationMoving.visible = false
+      this.animationMoving.animationSpeed = 0
+      this.animationMoving.animationSpeed = 0
+      this.animationMoving.currentFrame = 0
+      this.animationMoving.currentFrame = 0
+      this.animationMoving.visible = false
 
-      this.#animationIdle.animationSpeed = 0.05
-      this.#animationIdle.visible = true
+      this.animationIdle.animationSpeed = 0.05
+      this.animationIdle.visible = true
 
       if (this.direction === 'LEFT') {
-        this.#animationIdle.scale.x = 4
-        this.#animationIdle.play()
+        this.animationIdle.scale.x = 4
+        this.animationIdle.play()
       }
       if (this.direction === 'RIGHT') {
-        this.#animationIdle.scale.x = -4
-        this.#animationIdle.play()
+        this.animationIdle.scale.x = -4
+        this.animationIdle.play()
       }
     }
   }

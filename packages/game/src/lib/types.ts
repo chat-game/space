@@ -14,7 +14,8 @@ export interface GameAddon extends Container {
   children: GameObject[]
   tick: number
   bottomY: number
-  wagon: GameObjectWagon
+  wagon: GameObjectWagon | null
+  player: GameObjectPlayer | null
   app: Application
   assetService: AssetService
   playerService: PlayerService
@@ -24,10 +25,9 @@ export interface GameAddon extends Container {
   play: () => void
   checkIfThisFlagIsTarget: (id: string) => boolean
   findObject: (id: string) => GameObject | undefined
-  removeObject: (obj: GameObject) => void
-  rebuildScene: () => void
-  randomOutFlag: GameObjectFlag
-  randomNearFlag: GameObjectFlag
+  createObject: (type: GameObject['type'], id: string, x: number, zIndex?: number) => void
+  removeObject: (id: string) => void
+  rebuildScene: () => Promise<void>
   handleMessage: ({
     playerId,
     text,
@@ -65,12 +65,14 @@ export interface GameObjectFlag extends GameObject {
 }
 
 export interface GameObjectTree extends GameObject {
+  isAnObstacleToWagon: boolean
   variant: 'GREEN' | 'VIOLET' | 'STONE' | 'TEAL' | 'TOXIC' | 'BLUE'
   treeType: '1' | '2' | '3' | '4' | '5'
 }
 
 export interface GameObjectWagon extends GameObject {
   setNearestTarget: () => void
+  createFlagAndMove: (x: number) => void
 }
 
 export interface GameObjectUnit extends GameObject {
@@ -99,7 +101,7 @@ export interface GameObjectPlayer extends GameObjectUnit {
   refuellerPoints: number
   raiderPoints: number
   lastActionAt: Date
-  init: (character: CharacterEditionWithCharacter) => Promise<void>
+  initChar: (character?: CharacterEditionWithCharacter) => Promise<void>
   updateLastActionAt: () => void
   addReputation: (amount: number) => void
   addVillainPoints: (amount: number) => void
@@ -121,6 +123,9 @@ export interface WebSocketService {
 
 export interface PlayerService {
   activePlayers: GameObjectPlayer[]
+  createPlayer: (data: { id: string, x: number, character?: CharacterEditionWithCharacter }) => void
+  removePlayer: (id: string) => void
+  movePlayer: (data: { id: string, x: number }) => void
   update: () => void
   init: (
     id: string,
@@ -135,6 +140,7 @@ export interface AssetService {
 export interface TreeService {
   update: () => void
   init: () => void
+  getNearestObstacle: (x: number) => GameObjectTree | undefined
 }
 
 export type GameObjectState =

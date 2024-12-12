@@ -24,8 +24,6 @@ export default defineWebSocketHandler({
   },
 
   async message(peer, message) {
-    logger.log('message', peer.id, message.text())
-
     if (message.text().includes('ping')) {
       peer.send('pong')
       return
@@ -60,7 +58,13 @@ export default defineWebSocketHandler({
             activeRoom.peers.push(peer.id)
           }
 
+          // add to objects
+          const wagon = activeRoom.objects.find((obj) => obj.type === 'WAGON')
+          activeRoom.addPlayer(peer.id, wagon?.x ? wagon.x - 200 : 100)
+
           peer.subscribe(activeRoom.id)
+          void sendMessage({ type: 'CONNECTED_TO_WAGON_ROOM', data: { type: 'PLAYER', id: peer.id, objects: activeRoom.objects } }, activeRoom.token)
+
           logger.log(`Telegram client subscribed to Wagon Room ${activeRoom.id}`, peer.id)
         }
 
@@ -75,6 +79,8 @@ export default defineWebSocketHandler({
           }
 
           peer.subscribe(activeRoom.id)
+          void sendMessage({ type: 'CONNECTED_TO_WAGON_ROOM', data: { type: 'WAGON', id: peer.id, objects: activeRoom.objects } }, activeRoom.token)
+
           logger.log(`Wagon client subscribed to Wagon Room ${activeRoom.id}`, peer.id)
         }
 
@@ -89,17 +95,34 @@ export default defineWebSocketHandler({
           logger.log(`Server subscribed to Room ${activeRoom.id}`, peer.id)
         }
       }
-      if (parsed.type === 'TEST') {
-        peer.publish(parsed.data.id, JSON.stringify({ id: createId(), type: 'TEST' }))
+      if (parsed.type === 'NEW_WAGON_TARGET' || parsed.type === 'NEW_PLAYER_TARGET' || parsed.type === 'NEW_TREE' || parsed.type === 'DESTROY_TREE') {
+        const activeRoom = activeRooms.find((room) => room.peers.find((id) => id)) as WagonRoom
+        if (!activeRoom) {
+          return
+        }
+
+        // Update object
+        if (parsed.type === 'NEW_WAGON_TARGET') {
+          const wagon = activeRoom.objects.find((obj) => obj.type === 'WAGON')
+          if (wagon) {
+            wagon.x = parsed.data.x
+          }
+        }
+        if (parsed.type === 'NEW_TREE') {
+          const tree = activeRoom.objects.find((obj) => obj.type === 'TREE' && obj.id === parsed.data.id)
+          if (!tree) {
+            activeRoom.addTree(parsed.data.id, parsed.data.x, parsed.data.zIndex)
+          }
+        }
+        if (parsed.type === 'DESTROY_TREE') {
+          const tree = activeRoom.objects.find((obj) => obj.type === 'TREE' && obj.id === parsed.data.id)
+          if (tree) {
+            activeRoom.removeObject(parsed.data.id)
+          }
+        }
+
+        peer.publish(activeRoom.id, JSON.stringify({ id: createId(), type: parsed.type, data: parsed.data }))
       }
-      // if (parsed.type === 'NEW_TREE') {
-      //   const room = activeRooms.find((room) => room.peers.find((id) => id === peer.id))
-      //   if (!room) {
-      //     return
-      //   }
-      //   peer.publish(room.id, JSON.stringify({ id: createId(), type: 'NEW_TREE', data: { id: parsed.data.id, x: parsed.data.x } }))
-      //   peer.send(JSON.stringify({ id: createId(), type: 'NEW_TREE', data: { id: parsed.data.id, x: parsed.data.x } }))
-      // }
     }
   },
 
@@ -110,6 +133,17 @@ export default defineWebSocketHandler({
     const room = activeRooms.find((room) => room.peers.find((id) => id === peer.id))
     if (room) {
       room.peers = room.peers.filter((id) => id !== peer.id)
+
+      // if player - remove from objects
+      if (room.type === 'WAGON') {
+        const wagonRoom = room as WagonRoom
+        const player = wagonRoom.objects.find((obj) => obj.type === 'PLAYER' && obj.id === peer.id)
+        if (player) {
+          wagonRoom.removeObject(player.id)
+        }
+
+        void sendMessage({ type: 'DISCONNECTED_FROM_WAGON_ROOM', data: { id: peer.id } }, room.token)
+      }
     }
   },
 
