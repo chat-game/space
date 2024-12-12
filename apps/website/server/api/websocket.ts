@@ -60,7 +60,7 @@ export default defineWebSocketHandler({
 
           // add to objects
           const wagon = activeRoom.objects.find((obj) => obj.type === 'WAGON')
-          activeRoom.addPlayer(peer.id, wagon?.x ? wagon.x - 200 : 100)
+          activeRoom.addPlayer(peer.id, parsed.data?.telegramId, wagon?.x ? wagon.x - 200 : 100)
 
           peer.subscribe(activeRoom.id)
           void sendMessage({ type: 'CONNECTED_TO_WAGON_ROOM', data: { type: 'PLAYER', id: peer.id, objects: activeRoom.objects } }, activeRoom.token)
@@ -132,8 +132,6 @@ export default defineWebSocketHandler({
     // Remove peer from peers array
     const room = activeRooms.find((room) => room.peers.find((id) => id === peer.id))
     if (room) {
-      room.peers = room.peers.filter((id) => id !== peer.id)
-
       // if player - remove from objects
       if (room.type === 'WAGON') {
         const wagonRoom = room as WagonRoom
@@ -144,6 +142,8 @@ export default defineWebSocketHandler({
 
         void sendMessage({ type: 'DISCONNECTED_FROM_WAGON_ROOM', data: { id: peer.id } }, room.token)
       }
+
+      room.peers = room.peers.filter((id) => id !== peer.id)
     }
   },
 

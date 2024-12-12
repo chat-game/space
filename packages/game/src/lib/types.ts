@@ -28,18 +28,6 @@ export interface GameAddon extends Container {
   createObject: (type: GameObject['type'], id: string, x: number, zIndex?: number) => void
   removeObject: (id: string) => void
   rebuildScene: () => Promise<void>
-  handleMessage: ({
-    playerId,
-    text,
-    character,
-  }: {
-    playerId: string
-    text: string
-    character?: CharacterEditionWithCharacter
-  }) => Promise<{
-    ok: boolean
-    message: string | null
-  }>
 }
 
 export interface GameObject extends Container {
@@ -96,6 +84,7 @@ export interface GameObjectUnit extends GameObject {
 }
 
 export interface GameObjectPlayer extends GameObjectUnit {
+  telegramId: string
   reputation: number
   villainPoints: number
   refuellerPoints: number
@@ -123,14 +112,10 @@ export interface WebSocketService {
 
 export interface PlayerService {
   activePlayers: GameObjectPlayer[]
-  createPlayer: (data: { id: string, x: number, character?: CharacterEditionWithCharacter }) => Promise<GameObjectPlayer>
+  createPlayer: (data: { id: string, telegramId: string, x: number, character?: CharacterEditionWithCharacter }) => Promise<GameObjectPlayer>
   removePlayer: (id: string) => void
   movePlayer: (data: { id: string, x: number }) => void
   update: () => void
-  init: (
-    id: string,
-    character?: CharacterEditionWithCharacter,
-  ) => Promise<GameObjectPlayer>
 }
 
 export interface AssetService {

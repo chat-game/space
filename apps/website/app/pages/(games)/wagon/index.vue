@@ -35,7 +35,7 @@ const game = ref<BaseGameAddon>()
 
 onMounted(async () => {
   game.value = new BaseGameAddon({ websocketUrl: publicEnv.websocketUrl, client: 'WAGON_CLIENT' })
-  await game.value.init()
+  await game.value.init('wagon')
   game.value.websocketService.connect(id)
   stage.value?.appendChild(game.value.app.canvas)
 

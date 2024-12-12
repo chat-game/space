@@ -2,6 +2,7 @@ import type { CharacterEditionWithCharacter, Player, Profile, WoodlandPlayer } f
 
 export interface GameObject {
   id: string
+  telegramId?: string
   x: number
   type: 'PLAYER' | 'FLAG' | 'WAGON' | 'TREE'
   state: 'IDLE' | 'MOVING'
@@ -33,7 +34,6 @@ export interface WebSocketConnect {
     client: 'ADDON' | 'TELEGRAM_CLIENT' | 'WAGON_CLIENT'
     id: string
     token?: string
-    telegramId?: string
   }
 }
 

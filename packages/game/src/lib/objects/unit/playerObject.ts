@@ -5,11 +5,13 @@ import { UnitObject } from './unitObject'
 interface PlayerObjectOptions {
   addon: GameAddon
   id: string
+  telegramId: string
   x: number
   y: number
 }
 
 export class PlayerObject extends UnitObject implements GameObjectPlayer {
+  telegramId: string
   reputation!: number
   villainPoints!: number
   refuellerPoints!: number
@@ -18,9 +20,10 @@ export class PlayerObject extends UnitObject implements GameObjectPlayer {
 
   public inventoryId?: string
 
-  constructor({ addon, id, x, y }: PlayerObjectOptions) {
+  constructor({ addon, id, telegramId, x, y }: PlayerObjectOptions) {
     super({ addon, id, x, y, type: 'PLAYER' })
 
+    this.telegramId = telegramId
     this.speedPerSecond = 70
     this.lastActionAt = new Date()
   }

@@ -10,22 +10,6 @@ export class BasePlayerService implements PlayerService {
     // this.#removeInactivePlayers()
   }
 
-  async init(id: string, character?: CharacterEditionWithCharacter) {
-    const player = await this.findOrCreatePlayer(id, character)
-
-    this.addon.addChild(player)
-    player.updateLastActionAt()
-
-    // const target = this.addon.randomNearFlag
-
-    // player.script = new MoveToTargetScript({
-    //   object: player,
-    //   target,
-    // })
-
-    return player
-  }
-
   get activePlayers() {
     return this.addon.children.filter(
       (obj) => obj.type === 'PLAYER',
@@ -34,11 +18,12 @@ export class BasePlayerService implements PlayerService {
 
   async findOrCreatePlayer(
     id: string,
+    telegramId: string,
     character?: CharacterEditionWithCharacter,
   ): Promise<GameObjectPlayer> {
     const player = this.findPlayer(id)
     if (!player) {
-      return this.createPlayer({ id, character, x: 0 })
+      return this.createPlayer({ id, telegramId, character, x: 0 })
     }
 
     return player
@@ -50,10 +35,11 @@ export class BasePlayerService implements PlayerService {
     ) as PlayerObject | undefined
   }
 
-  async createPlayer({ id, x, character }: { id: string, x: number, character?: CharacterEditionWithCharacter }) {
+  async createPlayer({ id, telegramId, x, character }: { id: string, telegramId: string, x: number, character?: CharacterEditionWithCharacter }) {
     const player = new PlayerObject({
       addon: this.addon,
       id,
+      telegramId,
       x,
       y: this.addon.bottomY,
     })
