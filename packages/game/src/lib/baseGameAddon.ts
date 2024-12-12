@@ -1,4 +1,3 @@
-import type { CharacterEditionWithCharacter } from '@chat-game/types'
 import type {
   GameAddon,
   GameObject,
@@ -70,7 +69,7 @@ export class BaseGameAddon extends Container implements GameAddon {
     this.serverService = new BaseServerService()
   }
 
-  async init(id?: string) {
+  async init(telegramId: string) {
     await this.app.init({
       backgroundAlpha: 0,
       antialias: true,
@@ -94,7 +93,7 @@ export class BaseGameAddon extends Container implements GameAddon {
     this.app.stage.addChild(this)
 
     if (this.client === 'TELEGRAM_CLIENT') {
-      this.player = await this.playerService.createPlayer({ id: id || createId(), x: 200 })
+      this.player = await this.playerService.createPlayer({ id: createId(), telegramId, x: 200 })
       this.cameraTarget = this.player
 
       this.app.stage.addEventListener('pointerdown', (e) => {
@@ -150,9 +149,6 @@ export class BaseGameAddon extends Container implements GameAddon {
       return
     }
 
-    if (type === 'PLAYER' && !this.player) {
-      this.playerService.createPlayer({ id, x })
-    }
     if (type === 'WAGON' && !this.wagon) {
       this.wagon = new BaseWagonObject({ addon: this, x, y: this.bottomY })
       this.app.stage.addChild(this.wagon)
@@ -197,19 +193,6 @@ export class BaseGameAddon extends Container implements GameAddon {
   async rebuildScene() {
     this.removeChild(...this.children)
     // this.app.ticker.remove()
-  }
-
-  async handleMessage({ playerId, text, character }: {
-    playerId: string
-    text: string
-    character?: CharacterEditionWithCharacter
-  }) {
-    const player = await this.playerService.init(playerId, character)
-
-    player.addMessage(text)
-    player.updateLastActionAt()
-
-    return { ok: true, message: null }
   }
 
   updateObjects() {

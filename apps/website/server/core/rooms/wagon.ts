@@ -52,10 +52,11 @@ export class WagonRoom extends BaseRoom {
     }
   }
 
-  addPlayer(id: string, x: number) {
+  addPlayer(id: string, telegramId: string, x: number) {
     this.objects.push({
       type: 'PLAYER',
       id,
+      telegramId,
       x,
       state: 'IDLE',
       health: 100,

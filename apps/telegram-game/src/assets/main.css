@@ -69,7 +69,7 @@
 }
 
 @utility tg-content-safe-area-top {
-  padding-top: var(--tg-content-safe-area-inset-top);
+  padding-top: 100px;
 }
 @utility tg-content-safe-area {
   padding-top: 100px;
