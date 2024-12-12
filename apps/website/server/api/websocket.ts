@@ -60,12 +60,12 @@ export default defineWebSocketHandler({
 
           // add to objects
           const wagon = activeRoom.objects.find((obj) => obj.type === 'WAGON')
-          activeRoom.addPlayer(peer.id, parsed.data?.telegramId, wagon?.x ? wagon.x - 200 : 100)
+          activeRoom.addPlayer(peer.id, parsed.data.token, wagon?.x ? wagon.x - 200 : 100)
 
           peer.subscribe(activeRoom.id)
           void sendMessage({ type: 'CONNECTED_TO_WAGON_ROOM', data: { type: 'PLAYER', id: peer.id, objects: activeRoom.objects } }, activeRoom.token)
 
-          logger.log(`Telegram client ${parsed.data?.telegramId} subscribed to Wagon Room ${activeRoom.id}`, peer.id)
+          logger.log(`Telegram client ${parsed.data.token} subscribed to Wagon Room ${activeRoom.id}`, peer.id)
         }
 
         if (client === 'WAGON_CLIENT') {
