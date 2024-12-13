@@ -60,7 +60,7 @@ export class BaseTreeService implements TreeService {
     this.addon.addChild(tree)
     this.trees.push(tree)
 
-    this.addon.websocketService.send({ type: 'NEW_TREE', data: { x: tree.x, id: tree.id, zIndex: tree.zIndex } })
+    this.addon.websocketService.send({ type: 'NEW_TREE', data: { x: tree.x, id: tree.id, zIndex: tree.zIndex, treeType: tree.treeType } })
   }
 
   treesInArea(x: number, offset: number) {
