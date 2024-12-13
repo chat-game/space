@@ -1,4 +1,4 @@
-import type { WebSocketConnect, WebSocketEvents, WebSocketMessage } from '@chat-game/types'
+import type { GameObject, GameObjectPlayer, WebSocketConnect, WebSocketEvents, WebSocketMessage } from '@chat-game/types'
 import type { GameAddon, WebSocketService } from '../types'
 import { createId } from '@paralleldrive/cuid2'
 import { useWebSocket } from '@vueuse/core'
@@ -53,11 +53,15 @@ export class BaseWebSocketService implements WebSocketService {
       const { id, type, objects } = message.data
 
       for (const obj of objects) {
-        this.addon.createObject({ type: obj.type, id: obj.id, x: obj.x, zIndex: obj?.zIndex, telegramId: obj?.telegramId })
+        if (obj.type === 'PLAYER') {
+          this.addon.createPlayerObject({ id: obj.id, telegramId: obj.telegramId, x: obj.x, zIndex: obj?.zIndex })
+        } else {
+          this.addon.createObject({ type: obj.type, id: obj.id, x: obj.x, zIndex: obj?.zIndex })
+        }
       }
 
       if (type === 'PLAYER' && this.addon.player) {
-        const player = objects.find((obj) => obj.type === 'PLAYER' && obj.id === id)
+        const player = objects.find((obj) => obj.type === 'PLAYER' && obj.id === id) as GameObject & GameObjectPlayer
         if (player && player?.telegramId === this.addon.player?.telegramId) {
           this.addon.player.id = id
           this.addon.player.x = player.x

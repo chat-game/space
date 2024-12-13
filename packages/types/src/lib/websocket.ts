@@ -1,15 +1,34 @@
 import type { CharacterEditionWithCharacter, Player, Profile, WoodlandPlayer } from './types'
 
-export interface GameObject {
+export type GameObject = {
   id: string
-  telegramId?: string
   x: number
-  type: 'PLAYER' | 'FLAG' | 'WAGON' | 'TREE'
   state: 'IDLE' | 'MOVING'
   health: number
   speedPerSecond: number
   size: number
   zIndex: number
+} & GameObjects
+
+export type GameObjects = GameObjectTree | GameObjectFlag | GameObjectWagon | GameObjectPlayer
+
+export interface GameObjectTree {
+  type: 'TREE'
+  variant: 'GREEN' | 'VIOLET' | 'STONE' | 'TEAL' | 'TOXIC' | 'BLUE'
+  treeType: '1' | '2' | '3' | '4' | '5'
+}
+
+export interface GameObjectFlag {
+  type: 'FLAG'
+}
+
+export interface GameObjectWagon {
+  type: 'WAGON'
+}
+
+export interface GameObjectPlayer {
+  type: 'PLAYER'
+  telegramId: string
 }
 
 export type WebSocketMessage = { id: string } & WebSocketEvents
@@ -126,6 +145,7 @@ export interface WebSocketNewTree {
     id: string
     x: number
     zIndex: number
+    treeType: '1' | '2' | '3' | '4' | '5'
   }
 }
 
