@@ -31,12 +31,10 @@ jobs:
           environment: ${{ env.APP_ENV }}
 
       - name: Restart service on Kosarev.Space
-        uses: fjogeleit/http-request-action@v1
+        uses: kosarev-space/deploy-action@0.0.1
         with:
-          url: "https://kosarev.space/api/service/${{ secrets.TELEGRAM_GAME_SERVICE_ID }}/restart"
-          method: 'POST'
-          bearerToken: '${{ secrets.BEARER_TOKEN }}'
-          timeout: 15000
+          auth_token: ${{ secrets.BEARER_TOKEN }}
+          service_id: ${{ secrets.TELEGRAM_GAME_SERVICE_ID }}
 
       - name: Update deployment status (success)
         if: success()

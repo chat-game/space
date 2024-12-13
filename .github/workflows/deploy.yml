@@ -31,12 +31,10 @@ jobs:
           environment: ${{ env.APP_ENV }}
 
       - name: Restart service on Kosarev.Space
-        uses: fjogeleit/http-request-action@v1
-        with:
-          url: "https://kosarev.space/api/service/${{ secrets.SERVICE_ID }}/restart"
-          method: 'POST'
-          bearerToken: '${{ secrets.BEARER_TOKEN }}'
-          timeout: 15000
+        uses: kosarev-space/deploy-action@0.0.1
+          with:
+            auth_token: ${{ secrets.BEARER_TOKEN }}
+            service_id: ${{ secrets.SERVICE_ID }}
 
       - name: Update deployment status (success)
         if: success()
