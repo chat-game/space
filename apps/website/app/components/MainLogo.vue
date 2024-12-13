@@ -23,6 +23,7 @@ const characters = [
   'twitchy',
   'wooly',
   'pup',
+  'telegramo',
 ]
 const randomChar = characters[Math.floor(Math.random() * characters.length)]
 const randomCharImage = `/units/${randomChar}/128.png`
