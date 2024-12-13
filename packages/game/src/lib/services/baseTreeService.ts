@@ -4,16 +4,14 @@ import { TreeObject } from '../objects/treeObject'
 import { getRandomInRange } from '../utils/random'
 
 export class BaseTreeService implements TreeService {
-  trees: TreeObject[] = []
   treesPerfectAmount = 200
 
   constructor(readonly addon: GameAddon) {}
 
   create(data: { id: string, x: number, zIndex: number, treeType: '1' | '2' | '3' | '4' | '5', size: number }) {
-    const tree = new TreeObject({ id: data.id, addon: this.addon, x: data.x, y: this.addon.bottomY, size: data.size, zIndex: data.zIndex })
+    const tree = new TreeObject({ id: data.id, addon: this.addon, x: data.x, y: this.addon.bottomY, size: data.size, zIndex: data.zIndex, treeType: data.treeType })
     this.addon.app.stage.addChild(tree)
     this.addon.addChild(tree)
-    this.trees.push(tree)
   }
 
   update() {
@@ -24,23 +22,6 @@ export class BaseTreeService implements TreeService {
     const treesInArea = this.treesInArea(this.addon.wagon.x, 2500)
     if (treesInArea < this.treesPerfectAmount) {
       this.plant(this.addon.wagon.x + 2500)
-    }
-
-    // remove dead trees
-    this.trees = this.trees.filter((tree) => tree.health > 0)
-  }
-
-  init() {
-    if (!this.addon.wagon) {
-      return
-    }
-
-    for (let i = 0; i < 50; i++) {
-      const x = this.addon.wagon.x + getRandomInRange(-200, 2500)
-      const tree = new TreeObject({ addon: this.addon, x, y: this.addon.bottomY, size: getRandomInRange(50, 100) })
-      this.addon.app.stage.addChild(tree)
-      this.addon.addChild(tree)
-      this.trees.push(tree)
     }
   }
 
@@ -81,7 +62,7 @@ export class BaseTreeService implements TreeService {
   }
 
   treesInArea(x: number, offset: number) {
-    return this.trees.filter((tree) => {
+    return this.addon.children.filter((obj) => obj.type === 'TREE').filter((tree) => {
       return tree.x > x - offset && tree.x < x + offset
     }).length
   }
