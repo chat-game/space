@@ -43,7 +43,7 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
   }
 
   async initVisual(character?: CharacterEditionWithCharacter): Promise<void> {
-    const codename = character?.character.codename ?? 'twitchy'
+    const codename = character?.character.codename ?? 'telegramo'
 
     const idle = await Assets.load(`/units/${codename}/idle.json`)
     const idleSprite = new AnimatedSprite(idle.animations.main)
