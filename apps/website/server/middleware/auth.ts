@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // Making request with Bearer token
-  if (event.method !== 'GET') {
+  if (event.method !== 'GET' && event.method !== 'OPTIONS') {
     const headers = getHeaders(event)
     const token = headers.authorization ?? headers.Authorization
 
