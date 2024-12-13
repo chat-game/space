@@ -4,6 +4,7 @@ import type {
   Profile,
   ProfileWithTokens,
   QuestEdition,
+  TelegramProfile,
   TwitchAccessToken,
   TwitchToken,
 } from '@chat-game/types'
@@ -102,6 +103,52 @@ export class DBRepository {
           activeEditionId: edition.id,
         },
       })
+    }
+
+    return profile
+  }
+
+  async findOrCreateTelegramProfile({ telegramId, username }: { telegramId: string, username?: string }) {
+    const profile = await prisma.telegramProfile.findFirst({
+      where: { telegramId },
+    })
+    if (!profile) {
+      const telegramProfileId = createId()
+      const profileId = createId()
+      const editionId = createId()
+
+      const createdProfile: TelegramProfile = await prisma.telegramProfile.create({
+        data: {
+          id: telegramProfileId,
+          telegramId,
+          username,
+          energy: 10,
+        },
+      })
+
+      const mainProfile = await this.findOrCreateProfile({
+        userId: profileId,
+        userName: `tg_${telegramId}`,
+      })
+
+      // Telegramo
+      const edition = await prisma.characterEdition.create({
+        data: {
+          id: editionId,
+          profileId: mainProfile.id,
+          characterId: 'c3hrpu39wodc2nlv6pmgmm2k',
+        },
+      })
+
+      await prisma.profile.update({
+        where: { id: mainProfile.id },
+        data: {
+          telegramProfileId,
+          activeEditionId: edition.id,
+        },
+      })
+
+      return createdProfile
     }
 
     return profile

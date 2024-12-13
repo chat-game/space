@@ -8,7 +8,7 @@
         <div>Энергия: ??</div>
 
         <div class="opacity-15">
-          {{ gameClient.websocketService.socket.status.value }} {{ roomConnected }}
+          {{ game.websocketService.socket.status }} {{ roomConnected }}
         </div>
       </div>
     </div>
@@ -16,12 +16,14 @@
 </template>
 
 <script setup lang="ts">
+import type { BaseGameAddon } from '@chat-game/game'
 import { initData } from '@telegram-apps/sdk-vue'
 import { gameClient, roomConnected } from '../utils/gameClient'
 
 const data = initData.user()
 const router = useRouter()
 const canvas = ref<HTMLElement>()
+const game = ref<BaseGameAddon>(gameClient)
 const isOpened = ref(false)
 
 onMounted(async () => {
@@ -29,10 +31,10 @@ onMounted(async () => {
     return
   }
 
-  await gameClient.init(data.id.toString())
-  canvas.value?.appendChild(gameClient.app.canvas)
+  await game.value.init(data.id.toString())
+  canvas.value?.appendChild(game.value.app.canvas)
 
-  return () => gameClient.destroy()
+  return () => game.value.destroy()
 })
 
 watch(router.currentRoute, (value) => {

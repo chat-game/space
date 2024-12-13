@@ -21,6 +21,9 @@ export default defineNuxtConfig({
       ssr: false,
       cors: true,
     },
+    '/api/**': {
+      cors: true,
+    },
   },
   devtools: { enabled: true },
   devServer: {
