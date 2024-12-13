@@ -9,6 +9,10 @@
           <div class="wagon-card">
             <NumberFlow class="distance" :value="game?.wagon ? Math.floor(game.wagon.x / 50) : 0" /> м
           </div>
+
+          <div class="wagon-card hidden">
+            {{ game?.children.length }}
+          </div>
         </div>
       </div>
     </div>
@@ -104,5 +108,9 @@ onMounted(async () => {
 
   .distance {
     font-size: 48px;
+  }
+
+  .hidden {
+    display: none;
   }
 </style>
