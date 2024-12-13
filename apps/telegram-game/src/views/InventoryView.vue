@@ -7,13 +7,12 @@
           {{ data?.username }}
         </div>
         <div class="tg-hint text-sm">
-          {{ data?.id }}
+          {{ data?.id }} / {{ profile?.id }}
         </div>
       </div>
     </div>
 
     <div class="grid grid-cols-4 gap-2">
-      {{ profile }}
       <div v-for="item in items" :key="item.id" class="tg-section-bg aspect-square p-2 rounded-md">
         <div>Вещь</div>
       </div>
