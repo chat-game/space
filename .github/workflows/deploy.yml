@@ -32,9 +32,9 @@ jobs:
 
       - name: Restart service on Kosarev.Space
         uses: kosarev-space/deploy-action@0.0.1
-          with:
-            auth_token: ${{ secrets.BEARER_TOKEN }}
-            service_id: ${{ secrets.SERVICE_ID }}
+        with:
+          auth_token: ${{ secrets.BEARER_TOKEN }}
+          service_id: ${{ secrets.SERVICE_ID }}
 
       - name: Update deployment status (success)
         if: success()
