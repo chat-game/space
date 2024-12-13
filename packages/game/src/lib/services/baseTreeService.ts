@@ -1,4 +1,5 @@
-import type { GameAddon, TreeService } from '../types'
+import type { GameAddon, GameObjectTree, TreeService } from '../types'
+import { createId } from '@paralleldrive/cuid2'
 import { TreeObject } from '../objects/treeObject'
 import { getRandomInRange } from '../utils/random'
 
@@ -7,6 +8,13 @@ export class BaseTreeService implements TreeService {
   treesPerfectAmount = 200
 
   constructor(readonly addon: GameAddon) {}
+
+  create(data: { id: string, x: number, zIndex: number, treeType: '1' | '2' | '3' | '4' | '5', size: number }) {
+    const tree = new TreeObject({ id: data.id, addon: this.addon, x: data.x, y: this.addon.bottomY, size: data.size, zIndex: data.zIndex })
+    this.addon.app.stage.addChild(tree)
+    this.addon.addChild(tree)
+    this.trees.push(tree)
+  }
 
   update() {
     if (!this.addon.wagon) {
@@ -55,12 +63,21 @@ export class BaseTreeService implements TreeService {
       return
     }
 
-    const tree = new TreeObject({ addon: this.addon, x, y: this.addon.bottomY, size: getRandomInRange(4, 8) })
-    this.addon.app.stage.addChild(tree)
-    this.addon.addChild(tree)
-    this.trees.push(tree)
+    const tree = {
+      id: createId(),
+      x,
+      zIndex: getRandomInRange(-10, 1),
+      treeType: this.getNewType(),
+      size: getRandomInRange(4, 8),
+    }
+    this.create(tree)
 
     this.addon.websocketService.send({ type: 'NEW_TREE', data: { x: tree.x, id: tree.id, zIndex: tree.zIndex, treeType: tree.treeType } })
+  }
+
+  getNewType(): GameObjectTree['treeType'] {
+    const items = ['1', '2', '3', '4', '5'] as const
+    return items[Math.floor(Math.random() * items.length)] as GameObjectTree['treeType']
   }
 
   treesInArea(x: number, offset: number) {

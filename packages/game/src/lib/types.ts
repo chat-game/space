@@ -124,6 +124,7 @@ export interface AssetService {
 }
 
 export interface TreeService {
+  create: (data: { id: string, x: number, zIndex: number, treeType: '1' | '2' | '3' | '4' | '5', size: number }) => void
   update: () => void
   init: () => void
   getNearestObstacle: (x: number) => GameObjectTree | undefined

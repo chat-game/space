@@ -12,14 +12,12 @@ import { createId } from '@paralleldrive/cuid2'
 import { Application, Container, Rectangle, TextureStyle } from 'pixi.js'
 import { BaseWagonObject } from './objects/baseWagonObject'
 import { FlagObject } from './objects/flagObject'
-import { TreeObject } from './objects/treeObject'
 import { MoveToFlagScript } from './scripts/moveToFlagScript'
 import { BaseAssetService } from './services/baseAssetService'
 import { BasePlayerService } from './services/basePlayerService'
 import { BaseServerService } from './services/baseServerService'
 import { BaseTreeService } from './services/baseTreeService'
 import { BaseWebSocketService } from './services/baseWebSocketService'
-import { getRandomInRange } from './utils/random'
 
 interface BaseGameAddonOptions {
   websocketUrl: string
@@ -157,11 +155,6 @@ export class BaseGameAddon extends Container implements GameAddon {
       if (this.client === 'WAGON_CLIENT') {
         this.cameraTarget = this.wagon
       }
-    }
-    if (data.type === 'TREE') {
-      const tree = new TreeObject({ id: data.id, addon: this, x: data.x, y: this.bottomY, size: getRandomInRange(50, 100), zIndex: data?.zIndex })
-      this.app.stage.addChild(tree)
-      this.addChild(tree)
     }
   }
 
