@@ -9,10 +9,6 @@
           <div class="wagon-card">
             <NumberFlow class="distance" :value="game?.wagon ? Math.floor(game.wagon.x / 50) : 0" /> м
           </div>
-
-          <div class="wagon-card">
-            {{ game?.children.length }}
-          </div>
         </div>
       </div>
     </div>
