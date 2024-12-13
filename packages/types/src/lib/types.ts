@@ -3,6 +3,7 @@ export interface Profile {
   createdAt: Date
   updatedAt: Date
   twitchId: string
+  telegramProfileId: string | null
   userName: string
   isStreamer: boolean
   coupons: number
@@ -40,6 +41,17 @@ export interface ProfileCreateRequest {
 export interface ProfileCreateResponse {
   ok: boolean
   result: Profile
+}
+
+export interface TelegramProfile {
+  id: string
+  createdAt: Date
+  updatedAt: Date
+  telegramId: string
+  username: string | null
+  level: number
+  coins: number
+  energy: number
 }
 
 export interface TokenCreateRequest {

@@ -8,4 +8,5 @@
 
 <script setup lang="ts">
 useBackButton()
+useTelegramProfile()
 </script>

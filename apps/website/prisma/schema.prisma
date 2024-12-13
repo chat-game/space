@@ -25,6 +25,8 @@ model Profile {
   storytellerPoints  Int                @default(0) @map("storyteller_points")
   collectorPoints    Int                @default(0) @map("collector_points")
   activeEditionId    String             @map("active_edition_id")
+  telegramProfileId  String?            @unique @map("telegram_profile_id")
+  telegramProfile    TelegramProfile?   @relation(fields: [telegramProfileId], references: [id])
   posts              Post[]
   quests             Quest[]
   questEditions      QuestEdition[]
@@ -36,6 +38,20 @@ model Profile {
   trophyEditions     TrophyEdition[]
 
   @@map("profile")
+}
+
+model TelegramProfile {
+  id         String   @id
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @map("updated_at")
+  telegramId String   @map("telegram_id")
+  level      Int      @default(1)
+  coins      Int      @default(0)
+  energy     Int      @default(0)
+  username   String?
+  profile    Profile?
+
+  @@map("telegram_profile")
 }
 
 model Payment {
