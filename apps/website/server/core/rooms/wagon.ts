@@ -47,7 +47,7 @@ export class WagonRoom extends BaseRoom {
         health: 100,
         speedPerSecond: 0,
         size: 75,
-        maxSize: getRandomInRange(75, 145),
+        maxSize: getRandomInRange(100, 175),
         zIndex: getRandomInRange(-10, 1),
         variant: 'GREEN',
         treeType: this.getRandomTreeType(),

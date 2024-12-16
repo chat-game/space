@@ -90,14 +90,6 @@ export class BaseWebSocketService implements WebSocketService {
           this.addon.playerService.movePlayer({ id, x })
         }
       }
-      if (message.type === 'NEW_TREE') {
-        const { id, x, zIndex, treeType, maxSize } = message.data
-        this.addon.treeService.create({ id, x, zIndex, treeType, size: 8, maxSize })
-      }
-      if (message.type === 'DESTROY_TREE') {
-        const { id } = message.data
-        this.addon.removeObject(id)
-      }
     }
 
     if (this.addon.client === 'WAGON_CLIENT') {
@@ -105,10 +97,15 @@ export class BaseWebSocketService implements WebSocketService {
         const { id, x } = message.data
         this.addon.playerService.movePlayer({ id, x })
       }
-      if (message.type === 'DESTROY_TREE') {
-        const { id } = message.data
-        this.addon.removeObject(id)
-      }
+    }
+
+    if (message.type === 'NEW_TREE') {
+      const { id, x, zIndex, treeType, maxSize } = message.data
+      this.addon.treeService.create({ id, x, zIndex, treeType, size: 8, maxSize })
+    }
+    if (message.type === 'DESTROY_TREE') {
+      const { id } = message.data
+      this.addon.removeObject(id)
     }
   }
 

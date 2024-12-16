@@ -50,9 +50,8 @@ export class BaseTreeService implements TreeService {
       zIndex: getRandomInRange(-10, 1),
       treeType: this.getNewType(),
       size: getRandomInRange(4, 8),
-      maxSize: getRandomInRange(75, 145),
+      maxSize: getRandomInRange(100, 175),
     }
-    this.create(tree)
 
     this.addon.websocketService.send({ type: 'NEW_TREE', data: { x: tree.x, id: tree.id, zIndex: tree.zIndex, treeType: tree.treeType, maxSize: tree.maxSize } })
   }
