@@ -8,8 +8,8 @@ export class BaseTreeService implements TreeService {
 
   constructor(readonly addon: GameAddon) {}
 
-  create(data: { id: string, x: number, zIndex: number, treeType: '1' | '2' | '3' | '4' | '5', size: number }) {
-    const tree = new TreeObject({ id: data.id, addon: this.addon, x: data.x, y: this.addon.bottomY, size: data.size, zIndex: data.zIndex, treeType: data.treeType })
+  create(data: { id: string, x: number, zIndex: number, treeType: '1' | '2' | '3' | '4' | '5', size: number, maxSize: number }) {
+    const tree = new TreeObject({ id: data.id, addon: this.addon, x: data.x, y: this.addon.bottomY, size: data.size, maxSize: data.maxSize, zIndex: data.zIndex, treeType: data.treeType })
     this.addon.app.stage.addChild(tree)
     this.addon.addChild(tree)
   }
@@ -50,10 +50,11 @@ export class BaseTreeService implements TreeService {
       zIndex: getRandomInRange(-10, 1),
       treeType: this.getNewType(),
       size: getRandomInRange(4, 8),
+      maxSize: getRandomInRange(75, 145),
     }
     this.create(tree)
 
-    this.addon.websocketService.send({ type: 'NEW_TREE', data: { x: tree.x, id: tree.id, zIndex: tree.zIndex, treeType: tree.treeType } })
+    this.addon.websocketService.send({ type: 'NEW_TREE', data: { x: tree.x, id: tree.id, zIndex: tree.zIndex, treeType: tree.treeType, maxSize: tree.maxSize } })
   }
 
   getNewType(): GameObjectTree['treeType'] {

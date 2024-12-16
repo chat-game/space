@@ -108,10 +108,22 @@ export default defineWebSocketHandler({
             wagon.x = parsed.data.x
           }
         }
+        if (parsed.type === 'NEW_PLAYER_TARGET') {
+          const player = activeRoom.objects.find((obj) => obj.type === 'PLAYER' && obj.id === parsed.data.id)
+          if (player) {
+            player.x = parsed.data.x
+          }
+        }
         if (parsed.type === 'NEW_TREE') {
           const tree = activeRoom.objects.find((obj) => obj.type === 'TREE' && obj.id === parsed.data.id)
           if (!tree) {
-            activeRoom.addTree(parsed.data.id, parsed.data.x, parsed.data.zIndex, parsed.data.treeType)
+            activeRoom.addTree({
+              id: parsed.data.id,
+              x: parsed.data.x,
+              zIndex: parsed.data.zIndex,
+              treeType: parsed.data.treeType,
+              maxSize: parsed.data.maxSize,
+            })
           }
         }
         if (parsed.type === 'DESTROY_TREE') {

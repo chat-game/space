@@ -14,7 +14,7 @@
             {{ room.description }}
           </div>
 
-          <button class="mt-4 p-3 tg-button w-full rounded-2xl" @click="connectToToom(room.roomId)">
+          <button class="mt-4 p-3 tg-button w-full rounded-2xl" @click="connectToRoom(room.roomId)">
             Подключиться
           </button>
         </div>
@@ -29,7 +29,7 @@ import { gameClient, roomConnected } from '../utils/gameClient'
 
 const router = useRouter()
 
-function connectToToom(roomId: string) {
+function connectToRoom(roomId: string) {
   if (hapticFeedback.impactOccurred.isAvailable()) {
     hapticFeedback.impactOccurred('light')
   }

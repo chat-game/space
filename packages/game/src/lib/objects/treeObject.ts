@@ -9,6 +9,7 @@ interface TreeObjectOptions {
   id?: string
   zIndex?: number
   size?: number
+  maxSize?: number
   treeType?: '1' | '2' | '3' | '4' | '5'
 }
 
@@ -18,17 +19,17 @@ export class TreeObject extends BaseObject implements GameObjectTree {
   isReadyToChop!: boolean
   isAnObstacleToWagon = false
   minSizeToChop = 75
-  maxSize = 145
+  maxSize: number
   growSpeedPerSecond = getRandomInRange(2, 4)
   animationAngle = getRandomInRange(-1, 1)
   animationSlowSpeed = 0.04
   animationHighSpeed = 0.5
 
-  constructor({ addon, x, y, size, id, zIndex, treeType }: TreeObjectOptions) {
+  constructor({ addon, x, y, size, maxSize, id, zIndex, treeType }: TreeObjectOptions) {
     super({ id, addon, x, y, type: 'TREE' })
 
     this.size = size ?? 100
-    this.maxSize = getRandomInRange(this.minSizeToChop, this.maxSize)
+    this.maxSize = maxSize ?? getRandomInRange(this.minSizeToChop, 145)
 
     this.health = 100
     this.variant = 'GREEN'
