@@ -5,9 +5,9 @@
     </h2>
 
     <div class="flex flex-col gap-2">
-      <div v-for="room in rooms" :key="room.id" class="tg-section-bg mb-4 px-3 py-3 flex flex-col gap-2 items-center rounded-md">
+      <div v-for="room in rooms" :key="room.id" class="tg-section-bg mb-4 px-3 py-3 flex flex-col gap-2 items-center rounded-2xl">
         <div>
-          <div class="text-xl">
+          <div class="text-xl font-medium">
             {{ room.name }}
           </div>
           <div class="tg-hint text-sm">

@@ -1,9 +1,9 @@
 <template>
   <PageContainer>
-    <div class="tg-section-bg mb-4 px-3 py-3 flex flex-row gap-2 items-center rounded-md">
+    <div class="tg-section-bg mb-4 px-3 py-3 flex flex-row gap-2 items-center rounded-2xl">
       <img :src="data?.photoUrl" alt="avatar" class="w-14 h-14 rounded-full">
       <div>
-        <div class="text-xl">
+        <div class="text-xl font-medium">
           {{ data?.username }}
         </div>
         <div class="tg-hint text-sm">
@@ -12,12 +12,28 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-4 gap-2">
-      <div v-for="item in items" :key="item.id" class="tg-section-bg aspect-square p-2 rounded-md">
-        <div>Вещь</div>
+    <div class="grid grid-cols-3 gap-2">
+      <div v-for="item in items" :key="item.id" class="tg-section-bg aspect-square p-4 rounded-2xl cursor-pointer" @click="isOpened = true">
+        <div class="relative">
+          <img src="/wood.png" alt="" class="w-full h-auto">
+          <div class="absolute -bottom-2 right-0 left-0">
+            <p class="mx-auto w-fit px-3 py-1 tg-secondary-bg rounded-full text-xl leading-none">
+              {{ item.amount }}
+            </p>
+          </div>
+        </div>
+        <p class="mt-3 text-xs text-center">
+          {{ item.name }}
+        </p>
       </div>
     </div>
   </PageContainer>
+
+  <Modal title="Название" :is-opened="isOpened" @close="isOpened = false">
+    <div>
+      123
+    </div>
+  </Modal>
 </template>
 
 <script setup lang="ts">
@@ -29,143 +45,10 @@ const { profile } = useTelegramProfile()
 const items = [
   {
     id: 1,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 2,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 3,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 4,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 5,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 6,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 7,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 8,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 9,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 10,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 11,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 12,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 13,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 14,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 15,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 16,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 17,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 18,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 19,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 20,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 21,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 22,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 23,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 24,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 25,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 26,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 27,
-    name: 'Топор',
-    price: 100,
-  },
-  {
-    id: 28,
-    name: 'Топор',
-    price: 100,
+    name: 'Древесина',
+    amount: 0,
   },
 ]
+
+const isOpened = ref(false)
 </script>

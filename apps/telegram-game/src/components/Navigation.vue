@@ -6,9 +6,9 @@
           <div class="icon-block relative py-1 w-full rounded-2xl flex flex-row items-center justify-center">
             <Component :is="route.icon" class="w-6 h-6" />
 
-            <div v-if="route.meta.title === 'Задания'" class="absolute top-0 right-1 w-4 h-4 rounded-full tg-button animate-pulse" />
+            <div v-if="route.meta.title === 'Задания'" class="hidden absolute top-0 right-1 w-4 h-4 rounded-full tg-button animate-pulse" />
           </div>
-          <p class="text text-xs">
+          <p class="text text-xs font-medium">
             {{ route.meta.title }}
           </p>
         </button>
