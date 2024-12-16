@@ -4,8 +4,8 @@
     <div class="absolute w-full h-35 bottom-0 bg-amber-950" />
 
     <div class="tg-content-safe-area-top touch-pan-x absolute top-0 left-0 right-0 w-full h-16">
-      <div class="max-w-[28rem] mx-auto px-5">
-        <div v-if="profile?.energy >= 0" class="w-fit px-4 py-1 flex flex-row items-center gap-1 bg-orange-100 text-amber-600 rounded-full">
+      <div class="max-w-[28rem] mx-auto px-4">
+        <div v-if="profile?.energy >= 0" class="w-fit px-5 py-1 flex flex-row items-center gap-1 bg-orange-100/80 text-amber-600 rounded-full">
           <img src="/energy.png" alt="avatar" class="w-auto h-8">
           <p class="text-xl font-semibold leading-none tracking-tight">
             {{ profile?.energy }}
