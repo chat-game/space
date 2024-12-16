@@ -24,6 +24,7 @@
 </template>
 
 <script setup lang="ts">
+import { hapticFeedback } from '@telegram-apps/sdk-vue'
 import { onClickOutside, usePointerSwipe } from '@vueuse/core'
 
 const { isOpened } = defineProps<{
@@ -45,10 +46,17 @@ watch(isSwiping, () => {
 })
 
 function onClose() {
+  handleFeedback()
   isClosing.value = true
   setTimeout(() => {
     emit('close')
     isClosing.value = false
   }, 600)
+}
+
+function handleFeedback() {
+  if (hapticFeedback.impactOccurred.isAvailable()) {
+    hapticFeedback.impactOccurred('light')
+  }
 }
 </script>
