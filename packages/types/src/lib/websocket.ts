@@ -16,6 +16,7 @@ export interface GameObjectTree {
   type: 'TREE'
   variant: 'GREEN' | 'VIOLET' | 'STONE' | 'TEAL' | 'TOXIC' | 'BLUE'
   treeType: '1' | '2' | '3' | '4' | '5'
+  maxSize: number
 }
 
 export interface GameObjectFlag {
@@ -146,6 +147,7 @@ export interface WebSocketNewTree {
     x: number
     zIndex: number
     treeType: '1' | '2' | '3' | '4' | '5'
+    maxSize: number
   }
 }
 

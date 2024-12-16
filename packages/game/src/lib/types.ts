@@ -57,6 +57,7 @@ export interface GameObjectTree extends GameObject {
   isAnObstacleToWagon: boolean
   variant: 'GREEN' | 'VIOLET' | 'STONE' | 'TEAL' | 'TOXIC' | 'BLUE'
   treeType: '1' | '2' | '3' | '4' | '5'
+  maxSize: number
 }
 
 export interface GameObjectWagon extends GameObject {
@@ -124,7 +125,7 @@ export interface AssetService {
 }
 
 export interface TreeService {
-  create: (data: { id: string, x: number, zIndex: number, treeType: '1' | '2' | '3' | '4' | '5', size: number }) => void
+  create: (data: { id: string, x: number, zIndex: number, treeType: '1' | '2' | '3' | '4' | '5', size: number, maxSize: number }) => void
   update: () => void
   getNearestObstacle: (x: number) => GameObjectTree | undefined
 }

@@ -1,5 +1,5 @@
 <template>
-  <nav class="bg z-50 font-serif touch-pan-x fixed bottom-0 left-0 right-0 w-full h-[100px]">
+  <nav class="bg z-50 touch-pan-x fixed bottom-0 left-0 right-0 w-full h-[100px]">
     <div class="max-w-[28rem] mx-auto">
       <div class="mt-3 grid grid-cols-5">
         <button v-for="route in routes" :key="route.path" class="flex flex-col items-center justify-center gap-1 px-4 cursor-pointer" :class="{ 'button-active': router.currentRoute.value.path === route.path }" @click="handleClick(route.path)">

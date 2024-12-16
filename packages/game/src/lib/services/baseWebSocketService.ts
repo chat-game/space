@@ -60,7 +60,7 @@ export class BaseWebSocketService implements WebSocketService {
         if (obj.type === 'PLAYER') {
           this.addon.createPlayerObject({ id: obj.id, telegramId: obj.telegramId, x: obj.x, zIndex: obj?.zIndex })
         } else if (obj.type === 'TREE') {
-          this.addon.treeService.create({ id: obj.id, x: obj.x, zIndex: obj.zIndex, treeType: obj.treeType, size: 75 })
+          this.addon.treeService.create({ id: obj.id, x: obj.x, zIndex: obj.zIndex, treeType: obj.treeType, size: 75, maxSize: obj.maxSize })
         } else {
           this.addon.createObject({ type: obj.type, id: obj.id, x: obj.x, zIndex: obj?.zIndex })
         }
@@ -91,8 +91,8 @@ export class BaseWebSocketService implements WebSocketService {
         }
       }
       if (message.type === 'NEW_TREE') {
-        const { id, x, zIndex, treeType } = message.data
-        this.addon.treeService.create({ id, x, zIndex, treeType, size: 8 })
+        const { id, x, zIndex, treeType, maxSize } = message.data
+        this.addon.treeService.create({ id, x, zIndex, treeType, size: 8, maxSize })
       }
       if (message.type === 'DESTROY_TREE') {
         const { id } = message.data

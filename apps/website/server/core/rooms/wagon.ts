@@ -47,6 +47,7 @@ export class WagonRoom extends BaseRoom {
         health: 100,
         speedPerSecond: 0,
         size: 75,
+        maxSize: getRandomInRange(75, 145),
         zIndex: getRandomInRange(-10, 1),
         variant: 'GREEN',
         treeType: this.getRandomTreeType(),
@@ -68,18 +69,19 @@ export class WagonRoom extends BaseRoom {
     })
   }
 
-  addTree(id: string, x: number, zIndex: number, treeType: '1' | '2' | '3' | '4' | '5') {
+  addTree(data: { id: string, x: number, zIndex: number, treeType: '1' | '2' | '3' | '4' | '5', maxSize: number }) {
     this.objects.push({
       type: 'TREE',
-      id,
-      x,
+      id: data.id,
+      x: data.x,
       state: 'IDLE',
       health: 100,
       speedPerSecond: 0,
       size: 75,
-      zIndex,
+      maxSize: data.maxSize,
+      zIndex: data.zIndex,
       variant: 'GREEN',
-      treeType,
+      treeType: data.treeType,
     })
   }
 

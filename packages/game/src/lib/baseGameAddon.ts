@@ -70,8 +70,8 @@ export class BaseGameAddon extends Container implements GameAddon {
   async init(telegramId: string) {
     await this.app.init({
       backgroundAlpha: 0,
-      antialias: true,
-      roundPixels: true,
+      antialias: false,
+      roundPixels: false,
       resolution: 1,
       resizeTo: window,
     })
@@ -96,6 +96,11 @@ export class BaseGameAddon extends Container implements GameAddon {
 
       this.app.stage.addEventListener('pointerdown', (e) => {
         if (!this.player) {
+          return
+        }
+
+        const isTargetAnObject = e.target.children.length === 0
+        if (isTargetAnObject) {
           return
         }
 
