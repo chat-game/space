@@ -1,7 +1,7 @@
 # 👑 Chat Game for Twitch
 
 - 📺 [Developing and playing it live](https://www.twitch.tv/hmbanan666)
-- 👾 [Player controller on Telegram](https://t.me/ChatGameSpaceBot)
+- 👾 [Telegram Mini App as Player controller](https://t.me/ChatGameSpaceBot)
 - 🏠 [Website](https://chatgame.space)
 
 ![Screen](https://raw.githubusercontent.com/chat-game/space/main/.github/static/wagon-room-screen.jpg)
