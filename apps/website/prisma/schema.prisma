@@ -34,7 +34,6 @@ model Profile {
   characters         Character[]
   characterEditions  CharacterEdition[]
   transactions       Transaction[]
-  trophies           Trophy[]
   trophyEditions     TrophyEdition[]
 
   @@map("profile")
@@ -263,9 +262,7 @@ model Trophy {
   description String
   points      Int
   rarity      Int             @default(0)
-  isReady     Boolean         @default(false) @map("is_ready")
-  profileId   String          @map("profile_id")
-  profile     Profile         @relation(fields: [profileId], references: [id])
+  isShown     Boolean         @default(false) @map("is_shown")
   editions    TrophyEdition[]
 
   @@map("trophy")

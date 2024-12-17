@@ -1,4 +1,4 @@
-import type { GameObject } from '@chat-game/types'
+import type { CharacterEditionWithCharacter, GameObject } from '@chat-game/types'
 import { createId } from '@paralleldrive/cuid2'
 import { getRandomInRange } from '~/utils/random'
 import { BaseRoom } from './base'
@@ -55,17 +55,18 @@ export class WagonRoom extends BaseRoom {
     }
   }
 
-  addPlayer(id: string, telegramId: string, x: number) {
+  addPlayer(data: { id: string, telegramId: string, x: number, character: CharacterEditionWithCharacter }) {
     this.objects.push({
       type: 'PLAYER',
-      id,
-      telegramId,
-      x,
+      id: data.id,
+      telegramId: data.telegramId,
+      x: data.x,
       state: 'IDLE',
       health: 100,
       speedPerSecond: 70,
       size: 100,
       zIndex: 0,
+      character: data.character,
     })
   }
 

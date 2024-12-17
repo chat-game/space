@@ -41,7 +41,6 @@ export default defineEventHandler(
         id: createId(),
         name,
         description,
-        profileId: profile.id,
         points: 10,
         rarity: 0,
       },

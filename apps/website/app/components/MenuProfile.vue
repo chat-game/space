@@ -20,6 +20,13 @@ function handleMenuClick() {
 }
 
 const defaultImage = '/icons/twitch/112.png'
+
+onMounted(() => {
+  if (!loggedIn.value) {
+    const redirectTo = useRoute().path
+    localStorage.setItem('redirectTo', redirectTo)
+  }
+})
 </script>
 
 <style scoped>

@@ -26,7 +26,6 @@ export interface GameAddon extends Container {
   checkIfThisFlagIsTarget: (id: string) => boolean
   findObject: (id: string) => GameObject | undefined
   createObject: (data: { type: GameObject['type'], id: string, x: number, zIndex?: number, telegramId?: string }) => void
-  createPlayerObject: (data: { id: string, x: number, zIndex?: number, telegramId: string }) => void
   removeObject: (id: string) => void
   rebuildScene: () => Promise<void>
 }
@@ -82,7 +81,7 @@ export interface GameObjectUnit extends GameObject {
     messages: { id: string, text: string }[]
   }
   addMessage: (message: string) => void
-  initVisual: (character: CharacterEditionWithCharacter) => Promise<void>
+  initVisual: (codename?: string) => Promise<void>
 }
 
 export interface GameObjectPlayer extends GameObjectUnit {
