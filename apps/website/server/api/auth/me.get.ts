@@ -8,5 +8,17 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  return session.user
+  const profile = await prisma.profile.findUnique({
+    where: { id: session.user.id },
+  })
+  if (!profile) {
+    throw createError({
+      status: 404,
+    })
+  }
+
+  return {
+    user: session.user,
+    profile,
+  }
 })

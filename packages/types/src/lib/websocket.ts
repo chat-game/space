@@ -30,6 +30,7 @@ export interface GameObjectWagon {
 export interface GameObjectPlayer {
   type: 'PLAYER'
   telegramId: string
+  character: CharacterEditionWithCharacter
 }
 
 export type WebSocketMessage = { id: string } & WebSocketEvents

@@ -163,17 +163,6 @@ export class BaseGameAddon extends Container implements GameAddon {
     }
   }
 
-  createPlayerObject(data: { id: string, x: number, zIndex?: number, telegramId: string }) {
-    // Check, if already exists
-    if (this.findObject(data.id)) {
-      return
-    }
-
-    if (data?.telegramId && this.player?.telegramId !== data.telegramId) {
-      this.playerService.createPlayer({ id: data.id, telegramId: data.telegramId, x: data.x })
-    }
-  }
-
   removeObject(id: string) {
     const obj = this.findObject(id)
     if (obj) {

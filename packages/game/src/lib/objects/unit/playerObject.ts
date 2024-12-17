@@ -29,9 +29,7 @@ export class PlayerObject extends UnitObject implements GameObjectPlayer {
   }
 
   async initChar(character?: CharacterEditionWithCharacter): Promise<void> {
-    // await this.#readFromDB()
-
-    super.initVisual(character)
+    super.initVisual(character?.character?.codename ?? 'telegramo')
   }
 
   updateCoins(amount: number): void {

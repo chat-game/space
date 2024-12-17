@@ -1,4 +1,4 @@
-import type { WebSocketEvents } from '@chat-game/types'
+import type { CharacterEditionWithCharacter, WebSocketEvents } from '@chat-game/types'
 import type { Room } from '~~/types/room'
 import { createId } from '@paralleldrive/cuid2'
 import { AddonRoom } from '../core/rooms/addon'
@@ -60,7 +60,22 @@ export default defineWebSocketHandler({
 
           // add to objects
           const wagon = activeRoom.objects.find((obj) => obj.type === 'WAGON')
-          activeRoom.addPlayer(peer.id, parsed.data.token, wagon?.x ? wagon.x - 200 : 100)
+          const telegramProfile = await prisma.telegramProfile.findFirst({
+            where: { telegramId: parsed.data.token },
+            include: {
+              profile: true,
+            },
+          })
+          const activeEditionId = telegramProfile?.profile?.activeEditionId
+          const character = await prisma.characterEdition.findFirst({
+            where: { id: activeEditionId },
+            include: { character: true },
+          }) as CharacterEditionWithCharacter | null
+          if (!character) {
+            return
+          }
+
+          activeRoom.addPlayer({ id: peer.id, telegramId: parsed.data.token, x: wagon?.x ? wagon.x - 200 : 100, character })
 
           peer.subscribe(activeRoom.id)
           void sendMessage({ type: 'CONNECTED_TO_WAGON_ROOM', data: { type: 'PLAYER', id: peer.id, objects: activeRoom.objects } }, activeRoom.token)

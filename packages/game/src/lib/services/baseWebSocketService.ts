@@ -58,7 +58,9 @@ export class BaseWebSocketService implements WebSocketService {
         }
 
         if (obj.type === 'PLAYER') {
-          this.addon.createPlayerObject({ id: obj.id, telegramId: obj.telegramId, x: obj.x, zIndex: obj?.zIndex })
+          if (obj?.telegramId !== this.addon.player?.telegramId) {
+            this.addon.playerService.createPlayer({ id: obj.id, telegramId: obj.telegramId, x: obj.x, character: obj.character })
+          }
         } else if (obj.type === 'TREE') {
           this.addon.treeService.create({ id: obj.id, x: obj.x, zIndex: obj.zIndex, treeType: obj.treeType, size: 75, maxSize: obj.maxSize })
         } else {
@@ -71,6 +73,7 @@ export class BaseWebSocketService implements WebSocketService {
         if (player && player?.telegramId === this.addon.player?.telegramId) {
           this.addon.player.id = id
           this.addon.player.x = player.x
+          this.addon.player.initChar(player.character)
         }
       }
     }

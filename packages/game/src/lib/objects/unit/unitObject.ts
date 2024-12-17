@@ -1,4 +1,3 @@
-import type { CharacterEditionWithCharacter } from '@chat-game/types'
 import type {
   GameAddon,
   GameObject,
@@ -42,8 +41,13 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
     }
   }
 
-  async initVisual(character?: CharacterEditionWithCharacter): Promise<void> {
-    const codename = character?.character.codename ?? 'telegramo'
+  async initVisual(codename = 'telegramo'): Promise<void> {
+    if (this.animationIdle) {
+      this.removeChild(this.animationIdle)
+    }
+    if (this.animationMoving) {
+      this.removeChild(this.animationMoving)
+    }
 
     const idle = await Assets.load(`/units/${codename}/idle.json`)
     const idleSprite = new AnimatedSprite(idle.animations.main)
