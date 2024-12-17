@@ -1,0 +1,38 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      issues: write
+      deployments: write
+      pull-requests: write
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: true
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
+        run: pnpm run release
