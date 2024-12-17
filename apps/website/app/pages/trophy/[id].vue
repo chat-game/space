@@ -1,11 +1,6 @@
 <template>
   <section class="hero">
     <h1>{{ trophy?.name }}</h1>
-    <h2>
-      Трофей, созданный <NuxtLink :to="localePath(`/p/${trophy?.profile.userName}`)">
-        {{ trophy?.profile.userName }}
-      </NuxtLink>
-    </h2>
   </section>
 
   <section class="trophies">

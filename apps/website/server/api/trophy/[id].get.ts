@@ -12,7 +12,6 @@ export default defineEventHandler(
           orderBy: { createdAt: 'desc' },
           take: 50,
         },
-        profile: true,
       },
     }))
     if (!trophy) {

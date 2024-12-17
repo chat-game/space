@@ -12,25 +12,7 @@
 
   <section class="trophies-block">
     <div class="trophies">
-      <div v-for="trophy in readyTrophies" :key="trophy.id" class="cell" :data-rarity="trophy.rarity">
-        <NuxtLink :to="localePath(`/trophy/${trophy.id}`)">
-          <img src="/trophies/default/64.png" alt="" width="64" height="64">
-          <div class="name">
-            {{ trophy.name }}
-          </div>
-          <div class="points">
-            {{ trophy.points }} очков
-          </div>
-        </NuxtLink>
-      </div>
-    </div>
-  </section>
-
-  <section class="trophies-block">
-    <h2>Трофеи, требующие доработки</h2>
-
-    <div class="trophies">
-      <div v-for="trophy in inWorkTrophies" :key="trophy.id" class="cell" :data-rarity="trophy.rarity">
+      <div v-for="trophy in trophies" :key="trophy.id" class="cell" :data-rarity="trophy.rarity">
         <NuxtLink :to="localePath(`/trophy/${trophy.id}`)">
           <img src="/trophies/default/64.png" alt="" width="64" height="64">
           <div class="name">
@@ -48,8 +30,6 @@
 <script setup lang="ts">
 const localePath = useLocalePath()
 const { data: trophies } = await useFetch('/api/trophy/')
-const readyTrophies = trophies.value?.filter((t) => t.isReady)
-const inWorkTrophies = trophies.value?.filter((t) => !t.isReady)
 </script>
 
 <style scoped>
