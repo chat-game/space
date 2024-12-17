@@ -1,14 +1,14 @@
 # 👑 Chat Game for Twitch
 
-- 🏠 [Game Website](https://chatgame.space)
 - 📺 [Developing and playing it live](https://www.twitch.tv/hmbanan666)
-- 👾 [Our community in Discord](https://discord.gg/B6etUajrGZ)
+- 👾 [Player controller on Telegram](https://t.me/ChatGameSpaceBot)
+- 🏠 [Website](https://chatgame.space)
 
-![Screen](https://github.com/chat-game/space/assets/25910785/a22468a4-0bf1-43e3-91fc-23a1e2a675fc)
+![Screen](https://raw.githubusercontent.com/chat-game/space/main/.github/static/wagon-room-screen.jpg)
 
-🤔 Imagine procedurally generated world where you and your viewers can:
+🤔 Imagine procedurally generated world where Twitch viewers can:
 
-- 💬 **Use commands** in chat to see actions in real time
+- 💬 **Use Telegram Mini App as input** to see own char performing actions in real time
 - 🗺️ **Travel** with the Wagon
 - 🦄 **Complete** main and side quests from game characters
 - 💎 **Gather** a variety of materials
