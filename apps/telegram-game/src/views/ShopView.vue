@@ -35,9 +35,9 @@
   </PageContainer>
 
   <Modal :title="`&laquo;${selectedCharacter?.nickname}&raquo; ${selectedCharacter?.name}`" :is-opened="isCharacterOpened" @close="isCharacterOpened = false">
-    <img :src="`/units/${selectedCharacter?.codename}/idle.gif`" alt="" class="absolute -top-24 left-0 w-28 h-28">
+    <img :src="`/units/${selectedCharacter?.codename}/idle.gif`" alt="" class="absolute -top-30 left-0 w-34 h-34">
 
-    <p class="text-sm">
+    <p class="text-sm tg-hint">
       {{ selectedCharacter?.description }}
     </p>
 

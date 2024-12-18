@@ -7,7 +7,7 @@
           {{ data?.username }}
         </div>
         <div class="tg-hint text-sm">
-          {{ data?.id }} / {{ profile?.id }}
+          {{ data?.id }}
         </div>
       </div>
     </div>
