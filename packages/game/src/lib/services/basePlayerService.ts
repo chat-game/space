@@ -7,7 +7,14 @@ export class BasePlayerService implements PlayerService {
   constructor(readonly addon: GameAddon) {}
 
   update() {
-    // this.#removeInactivePlayers()
+    // Debounce
+    if (this.addon.player?.canClick === false) {
+      this.addon.player.nextClick -= 1
+
+      if (this.addon.player.nextClick <= 0) {
+        this.addon.player.canClick = true
+      }
+    }
   }
 
   get activePlayers() {

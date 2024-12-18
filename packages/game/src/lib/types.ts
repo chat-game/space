@@ -91,13 +91,15 @@ export interface GameObjectPlayer extends GameObjectUnit {
   refuellerPoints: number
   raiderPoints: number
   lastActionAt: Date
+  canClick: boolean
+  nextClick: number
+  click: () => void
   initChar: (character?: CharacterEditionWithCharacter) => Promise<void>
   updateLastActionAt: () => void
   addReputation: (amount: number) => void
   addVillainPoints: (amount: number) => void
   addRefuellerPoints: (amount: number) => void
   addRaiderPoints: (amount: number) => void
-  updateCoins: (amount: number) => void
 }
 
 export interface ServerService {
