@@ -62,6 +62,7 @@ declare global {
   const unref: typeof import('vue')['unref']
   const useAttrs: typeof import('vue')['useAttrs']
   const useBackButton: typeof import('./src/composables/useBackButton')['useBackButton']
+  const useCharacters: typeof import('./src/composables/useCharacters')['useCharacters']
   const useCssModule: typeof import('vue')['useCssModule']
   const useCssVars: typeof import('vue')['useCssVars']
   const useId: typeof import('vue')['useId']

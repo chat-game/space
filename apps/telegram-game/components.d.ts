@@ -7,6 +7,9 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ActiveCard: typeof import('./src/components/ActiveCard.vue')['default']
+    Button: typeof import('./src/components/Button.vue')['default']
+    CharacterActivationBlock: typeof import('./src/components/CharacterActivationBlock.vue')['default']
     ComingSoon: typeof import('./src/components/ComingSoon.vue')['default']
     Game: typeof import('./src/components/Game.vue')['default']
     GameNavigator: typeof import('./src/components/GameNavigator.vue')['default']
@@ -15,5 +18,6 @@ declare module 'vue' {
     PageContainer: typeof import('./src/components/PageContainer.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SectionHeader: typeof import('./src/components/SectionHeader.vue')['default']
   }
 }

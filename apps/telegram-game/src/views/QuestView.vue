@@ -1,8 +1,6 @@
 <template>
   <PageContainer>
-    <h2 class="mb-2 tg-section-header-text text-2xl">
-      Активные комнаты
-    </h2>
+    <SectionHeader text="Активные комнаты" />
 
     <div class="flex flex-col gap-2">
       <div v-for="room in rooms" :key="room.id" class="tg-section-bg mb-4 px-3 py-3 flex flex-col gap-2 items-center rounded-2xl">
@@ -24,6 +22,7 @@
 </template>
 
 <script setup lang="ts">
+import SectionHeader from '@/components/SectionHeader.vue'
 import { hapticFeedback } from '@telegram-apps/sdk-vue'
 import { gameClient, roomConnected } from '../utils/gameClient'
 
