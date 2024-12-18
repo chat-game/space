@@ -30,16 +30,14 @@
     </div>
 
     <div class="grid grid-cols-3 gap-2">
-      <div v-for="item in items" :key="item.id" class="h-full tg-section-bg aspect-square p-4 rounded-2xl cursor-pointer" @click="isOpened = true">
-        <div class="relative">
-          <img :src="item.img" alt="" class="w-full h-auto">
-          <div class="absolute -bottom-2 -right-2">
-            <p class="mx-auto w-fit px-3 py-1 tg-secondary-bg rounded-full text-xl leading-none">
-              {{ item.amount }}
-            </p>
-          </div>
+      <ActiveCard v-for="item in items" :key="item.id" @click="isOpened = true">
+        <img :src="item.img" alt="" class="w-full h-auto">
+        <div class="absolute bottom-0 right-0">
+          <p class="mx-auto w-fit px-3 py-2 tg-secondary-bg rounded-tl-2xl rounded-br-2xl text-xl leading-none">
+            {{ item.amount }}
+          </p>
         </div>
-      </div>
+      </ActiveCard>
     </div>
   </PageContainer>
 

@@ -14,7 +14,11 @@ export default defineEventHandler(async (event) => {
     const profile = await prisma.telegramProfile.findFirst({
       where: { telegramId },
       include: {
-        profile: true,
+        profile: {
+          include: {
+            characterEditions: true,
+          },
+        },
       },
     })
     if (!profile) {
