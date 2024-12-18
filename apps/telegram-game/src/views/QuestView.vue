@@ -4,7 +4,7 @@
 
     <div class="flex flex-col gap-2">
       <div v-for="room in rooms" :key="room.id" class="tg-section-bg mb-4 px-3 py-3 flex flex-col gap-2 items-center rounded-2xl">
-        <div>
+        <div class="space-y-3">
           <div class="text-xl font-medium">
             {{ room.name }}
           </div>
@@ -12,9 +12,9 @@
             {{ room.description }}
           </div>
 
-          <button class="mt-4 p-3 tg-button w-full rounded-2xl" @click="connectToRoom(room.roomId)">
+          <Button @click="connectToRoom(room.roomId)">
             Подключиться
-          </button>
+          </Button>
         </div>
       </div>
     </div>

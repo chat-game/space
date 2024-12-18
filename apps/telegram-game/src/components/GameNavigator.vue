@@ -1,7 +1,7 @@
 <template>
   <div class="relative mb-2 h-10 bg-red-950/15 text-white rounded-full">
-    <div v-if="wagonOnNavigator > 1 && wagonOnNavigator < 99" class="absolute transform -translate-x-1/2" :style="{ left: `${wagonOnNavigator}%` }">
-      <div class="-mt-1 p-1 bg-purple-300 rounded-lg">
+    <div v-if="wagonOnNavigator > 3 && wagonOnNavigator < 97" class="absolute transform -translate-x-1/2" :style="{ left: `${wagonOnNavigator}%` }">
+      <div class="p-1 bg-purple-300 rounded-xl">
         <img src="/wheel-1.png" alt="" class="w-8 h-8">
       </div>
     </div>
