@@ -75,6 +75,12 @@ export default defineWebSocketHandler({
             return
           }
 
+          // Check, if already exists by Telegram
+          const playerExist = activeRoom.objects.find((obj) => obj.type === 'PLAYER' && obj.telegramId === parsed.data.token)
+          if (playerExist) {
+            return
+          }
+
           activeRoom.addPlayer({ id: peer.id, telegramId: parsed.data.token, x: wagon?.x ? wagon.x - 200 : 100, character })
 
           peer.subscribe(activeRoom.id)

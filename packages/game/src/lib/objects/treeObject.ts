@@ -54,6 +54,11 @@ export class TreeObject extends BaseObject implements GameObjectTree {
   }
 
   click() {
+    if (!this.addon.player || !this.addon.player?.canClick) {
+      return
+    }
+
+    this.addon.player.click()
     this.chop()
   }
 

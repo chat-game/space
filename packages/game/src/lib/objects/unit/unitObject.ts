@@ -116,11 +116,11 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
       this.animationIdle.animationSpeed = 0.05
       this.animationIdle.visible = true
 
-      if (this.direction === 'LEFT') {
+      if (this.direction === 'RIGHT') {
         this.animationIdle.scale.x = 4
         this.animationIdle.play()
       }
-      if (this.direction === 'RIGHT') {
+      if (this.direction === 'LEFT') {
         this.animationIdle.scale.x = -4
         this.animationIdle.play()
       }

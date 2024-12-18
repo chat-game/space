@@ -95,7 +95,7 @@ export class BaseGameAddon extends Container implements GameAddon {
       this.cameraTarget = this.player
 
       this.app.stage.addEventListener('pointerdown', (e) => {
-        if (!this.player) {
+        if (!this.player || !this.player.canClick) {
           return
         }
 
@@ -115,6 +115,8 @@ export class BaseGameAddon extends Container implements GameAddon {
           flag.state = 'DESTROYED'
         }
         this.player.target = flag
+
+        this.player.click()
 
         this.websocketService.send({
           type: 'NEW_PLAYER_TARGET',

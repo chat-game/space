@@ -17,6 +17,8 @@ export class PlayerObject extends UnitObject implements GameObjectPlayer {
   refuellerPoints!: number
   raiderPoints!: number
   lastActionAt: GameObjectPlayer['lastActionAt']
+  canClick: boolean
+  nextClick: number
 
   public inventoryId?: string
 
@@ -26,21 +28,17 @@ export class PlayerObject extends UnitObject implements GameObjectPlayer {
     this.telegramId = telegramId
     this.speedPerSecond = 70
     this.lastActionAt = new Date()
+    this.canClick = true
+    this.nextClick = 0
   }
 
   async initChar(character?: CharacterEditionWithCharacter): Promise<void> {
     super.initVisual(character?.character?.codename ?? 'telegramo')
   }
 
-  updateCoins(amount: number): void {
-    this.coins = this.coins + amount
-
-    // return db.player.update({
-    //   where: { id: this.id },
-    //   data: {
-    //     coins: this.coins,
-    //   },
-    // })
+  click(): void {
+    this.canClick = false
+    this.nextClick = 15
   }
 
   addReputation(amount: number) {
