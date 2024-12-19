@@ -92,6 +92,13 @@ class TwitchController {
     setInterval(() => {
       void this.#repository.updateManaOnProfiles()
     }, 1000 * 60 * 60)
+
+    // Every 5 min info message
+    setInterval(() => {
+      if (twitchProvider.isStreaming === true) {
+        this.#bot.announce(this.#channel, this.getRandomInfoMessage())
+      }
+    }, 1000 * 60 * 5)
   }
 
   async serveStreamOnline() {
@@ -109,6 +116,17 @@ class TwitchController {
     listener.onStreamOffline(this.#userId, () => {
       twitchProvider.isStreaming = false
     })
+  }
+
+  getRandomInfoMessage(): string {
+    const messages = [
+      `Присоединяйся к рубке деревьев на стриме! Запусти приложение в Telegram: https://t.me/ChatGameSpaceBot`,
+      `Поддержи стримера: прямой донат с озвучкой сообщения https://www.donationalerts.com/r/hmbanan666`,
+      `Приобретай Монеты в ChatGame: https://chatgame.space/shop. Разблокируй вручную созданных персонажей. Спасибо за поддержку!`,
+      `Еще не подписан? Стань фолловером, подпишись на канал! Чем вас больше, тем больше интерактива создадим.`,
+    ]
+
+    return messages[Math.floor(Math.random() * messages.length)] as string
   }
 }
 

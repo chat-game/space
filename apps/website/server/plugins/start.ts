@@ -12,7 +12,7 @@ export default defineNitroPlugin(() => {
   void twitchAddonController.serve()
   void twitchWoodlandController.serve()
 
-  setTimeout(checkIfStreamingNow, 5000)
+  setTimeout(checkIfStreamingNow, 8000)
 
   logger.info('Twitch server started')
 })
