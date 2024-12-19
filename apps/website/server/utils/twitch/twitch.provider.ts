@@ -3,7 +3,6 @@ import type { AuthProvider } from '@twurple/auth'
 import { createId } from '@paralleldrive/cuid2'
 import { RefreshingAuthProvider } from '@twurple/auth'
 import { DBRepository } from '../repository'
-import { twitchAddonController } from './twitch.addon.controller'
 import { twitchController } from './twitch.controller'
 
 class TwitchProvider {
@@ -45,10 +44,10 @@ class TwitchProvider {
 
     if (value) {
       twitchController.startCouponGenerator()
-      void twitchAddonController.startCharacters()
+      // void twitchAddonController.startCharacters()
     } else {
       twitchController.stopCouponGenerator()
-      twitchAddonController.stopCharacters()
+      // twitchAddonController.stopCharacters()
     }
   }
 
