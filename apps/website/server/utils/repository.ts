@@ -422,20 +422,11 @@ export class DBRepository {
     if (!player) {
       const playerId = createId()
 
-      // Create new inventory
-      const newInventory = {
-        id: createId(),
-        objectId: playerId,
-      }
-      const inventory = await prisma.inventory.create({
-        data: newInventory,
-      })
-
       // Create new one
       const newPlayer = {
         id: playerId,
         name: userName,
-        inventoryId: inventory.id,
+        inventoryId: playerId,
         profileId,
       }
       player = await prisma.player.create({

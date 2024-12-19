@@ -107,76 +107,9 @@
       Пока нет владельцев
     </p>
   </section>
-
-  <section class="posts-block">
-    <h2>Пользовательские посты</h2>
-    <p class="description">
-      Это могут быть истории или новая информация о характере и судьбе персонажа.
-    </p>
-
-    <div class="feed">
-      <div v-if="profileData" class="add-post">
-        <div class="content">
-          <div class="action">
-            Добавить новый пост
-          </div>
-
-          <div class="form-control">
-            <textarea v-model="postText" name="text" placeholder="Пиши, не стесняйся. Максимум 1500 символов" rows="4" maxlength="1500" />
-          </div>
-
-          <button class="submit-button" :disabled="!isReadyToPost" @click="addPost">
-            <div>Отправить сообщение</div>
-            <div class="price">
-              Стоимость: 5 Маны <img src="~/assets/img/icons/mana/64.png" alt="" width="22" height="22">
-            </div>
-          </button>
-
-          <div class="bonus">
-            + 5 очков "Рассказчика"
-          </div>
-          <div class="bonus">
-            + 1 очко "Рассказчика" за каждый Лайк
-          </div>
-        </div>
-      </div>
-
-      <p v-if="!posts?.length" class="empty">
-        Пока нет постов
-      </p>
-
-      <div v-for="post in posts" :key="post.id" class="post">
-        <img src="/units/twitchy/128.png" alt="" class="avatar">
-        <div class="content">
-          <div class="info">
-            <div class="desc">
-              <NuxtLink :to="localePath(`/p/${post.profile.userName}`)">
-                {{ post.profile.userName }}
-              </NuxtLink> добавил(а) новую заметку
-            </div>
-            <time>
-              {{ useLocaleTimeAgo(new Date(post.createdAt)) }}
-            </time>
-          </div>
-          <div class="message">
-            {{ post.text }}
-
-            <div class="likes-block">
-              <button :data-liked="post.likes.some(l => l.profileId === profileData?.id)" @click="addLike(post.id)">
-                <ThumbsUp :size="30" />
-                {{ post.rating }}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 </template>
 
 <script setup lang="ts">
-import { ThumbsUp } from 'lucide-vue-next'
-
 definePageMeta({
   validate: async (route) => {
     const { error } = await useFetch(`/api/character/${route.params.id}`)
@@ -188,7 +121,6 @@ const localePath = useLocalePath()
 const route = useRoute()
 const { data: character } = await useFetch(`/api/character/${route.params.id}`)
 const { data: topEditions } = await useFetch(`/api/character/${route.params.id}/top`)
-const { data: posts } = await useFetch(`/api/character/${route.params.id}/post`)
 
 const { user } = useUserSession()
 const { data: profileData } = await useFetch(`/api/profile/userName/${user.value?.userName}`)
@@ -196,12 +128,8 @@ const { data: profileData } = await useFetch(`/api/profile/userName/${user.value
 const twitchyId = 'staoqh419yy3k22cbtm9wquc'
 const alreadyHaveCharacter = profileData.value?.characterEditions.find((e) => e.characterId === character.value?.id)
 const coins = profileData.value?.coins ?? 0
-const mana = profileData.value?.mana ?? 0
 const price = character.value?.price ?? 0
 const isEnoughCoins = profileData ? coins >= price : false
-
-const postText = ref('')
-const isReadyToPost = computed(() => postText.value.length > 10 && mana >= 5)
 
 async function activateCharacter() {
   const { data } = await useFetch(`/api/character/${route.params.id}/activate`, {
@@ -216,29 +144,6 @@ async function activateCharacter() {
 async function unlockCharacter() {
   const { data } = await useFetch(`/api/character/${route.params.id}/unlock`, {
     method: 'POST',
-  })
-
-  if (data.value) {
-    location.reload()
-  }
-}
-
-async function addLike(postId: string) {
-  const { data } = await useFetch(`/api/post/${postId}/like`, {
-    method: 'POST',
-  })
-
-  if (data.value) {
-    location.reload()
-  }
-}
-
-async function addPost() {
-  const { data } = await useFetch(`/api/character/${route.params.id}/post`, {
-    method: 'POST',
-    body: {
-      text: postText.value,
-    },
   })
 
   if (data.value) {
