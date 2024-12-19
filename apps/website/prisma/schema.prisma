@@ -8,26 +8,25 @@ datasource db {
 }
 
 model Profile {
-  id                 String             @id
-  createdAt          DateTime           @default(now()) @map("created_at")
-  updatedAt          DateTime           @default(now()) @map("updated_at")
-  twitchId           String             @map("twitch_id")
-  userName           String             @map("user_name")
-  isStreamer         Boolean            @default(false)
-  coupons            Int                @default(0)
-  coins              Int                @default(0)
-  mana               Int                @default(0)
-  level              Int                @default(1)
-  points             Int                @default(0)
-  patronPoints       Int                @default(0) @map("patron_points")
-  trophyHunterPoints Int                @default(0) @map("trophy_hunter_points")
-  rangerPoints       Int                @default(0) @map("ranger_points")
-  storytellerPoints  Int                @default(0) @map("storyteller_points")
-  collectorPoints    Int                @default(0) @map("collector_points")
-  activeEditionId    String             @map("active_edition_id")
-  telegramProfileId  String?            @unique @map("telegram_profile_id")
-  telegramProfile    TelegramProfile?   @relation(fields: [telegramProfileId], references: [id])
-  posts              Post[]
+  id                 String                 @id
+  createdAt          DateTime               @default(now()) @map("created_at")
+  updatedAt          DateTime               @default(now()) @map("updated_at")
+  twitchId           String                 @map("twitch_id")
+  userName           String                 @map("user_name")
+  isStreamer         Boolean                @default(false)
+  coupons            Int                    @default(0)
+  coins              Int                    @default(0)
+  mana               Int                    @default(0)
+  level              Int                    @default(1)
+  points             Int                    @default(0)
+  patronPoints       Int                    @default(0) @map("patron_points")
+  trophyHunterPoints Int                    @default(0) @map("trophy_hunter_points")
+  rangerPoints       Int                    @default(0) @map("ranger_points")
+  storytellerPoints  Int                    @default(0) @map("storyteller_points")
+  collectorPoints    Int                    @default(0) @map("collector_points")
+  activeEditionId    String                 @map("active_edition_id")
+  telegramProfileId  String?                @unique @map("telegram_profile_id")
+  telegramProfile    TelegramProfile?       @relation(fields: [telegramProfileId], references: [id])
   quests             Quest[]
   questEditions      QuestEdition[]
   twitchTokens       TwitchToken[]
@@ -35,6 +34,7 @@ model Profile {
   characterEditions  CharacterEdition[]
   transactions       Transaction[]
   trophyEditions     TrophyEdition[]
+  itemEditions       InventoryItemEdition[]
 
   @@map("profile")
 }
@@ -150,35 +150,30 @@ model Skill {
   @@map("skill")
 }
 
-model Inventory {
-  id        String          @id
-  createdAt DateTime        @default(now()) @map("created_at")
-  updatedAt DateTime        @default(now()) @map("updated_at")
-  objectId  String          @map("object_id")
-  items     InventoryItem[]
-
-  @@map("inventory")
-}
-
 model InventoryItem {
-  id          String    @id
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @default(now()) @map("updated_at")
-  inventoryId String    @map("inventory_id")
-  inventory   Inventory @relation(fields: [inventoryId], references: [id])
+  id          String                 @id
+  createdAt   DateTime               @default(now()) @map("created_at")
+  updatedAt   DateTime               @default(now()) @map("updated_at")
   type        String
-  amount      Int       @default(1)
-  durability  Int       @default(100)
+  name        String
+  description String
+  editions    InventoryItemEdition[]
 
   @@map("inventory_item")
 }
 
-model ChatCommand {
-  id      String @id
-  action  String
-  command String
+model InventoryItemEdition {
+  id         String        @id
+  createdAt  DateTime      @default(now()) @map("created_at")
+  updatedAt  DateTime      @default(now()) @map("updated_at")
+  amount     Int           @default(0)
+  durability Int           @default(100)
+  itemId     String        @map("item_id")
+  item       InventoryItem @relation(fields: [itemId], references: [id])
+  profileId  String        @map("profile_id")
+  profile    Profile       @relation(fields: [profileId], references: [id])
 
-  @@map("chat_command")
+  @@map("inventory_item_edition")
 }
 
 model Character {
@@ -215,32 +210,6 @@ model CharacterEdition {
   character   Character @relation(fields: [characterId], references: [id])
 
   @@map("character_edition")
-}
-
-model Post {
-  id          String   @id
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @default(now()) @map("updated_at")
-  profileId   String   @map("profile_id")
-  profile     Profile  @relation(fields: [profileId], references: [id])
-  characterId String   @map("character_id")
-  type        String
-  text        String
-  rating      Int      @default(0)
-  likes       Like[]
-
-  @@map("post")
-}
-
-model Like {
-  id        String   @id
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @map("updated_at")
-  profileId String   @map("profile_id")
-  postId    String   @map("post_id")
-  post      Post     @relation(fields: [postId], references: [id])
-
-  @@map("like")
 }
 
 model Coupon {
