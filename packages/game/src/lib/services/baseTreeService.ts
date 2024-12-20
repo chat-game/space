@@ -4,7 +4,7 @@ import { TreeObject } from '../objects/treeObject'
 import { getRandomInRange } from '../utils/random'
 
 export class BaseTreeService implements TreeService {
-  treesPerfectAmount = 200
+  treesPerfectAmount = 180
 
   constructor(readonly addon: GameAddon) {}
 
@@ -35,7 +35,7 @@ export class BaseTreeService implements TreeService {
   }
 
   plant(x: number) {
-    const random = getRandomInRange(0, 120)
+    const random = getRandomInRange(0, 180)
     if (random !== 1) {
       return
     }

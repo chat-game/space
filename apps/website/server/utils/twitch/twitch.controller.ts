@@ -93,12 +93,12 @@ class TwitchController {
       void this.#repository.updateManaOnProfiles()
     }, 1000 * 60 * 60)
 
-    // Every 5 min info message
+    // Every 8 min info message
     setInterval(() => {
       if (twitchProvider.isStreaming === true) {
         this.#bot.announce(this.#channel, this.getRandomInfoMessage())
       }
-    }, 1000 * 60 * 5)
+    }, 1000 * 60 * 8)
   }
 
   async serveStreamOnline() {

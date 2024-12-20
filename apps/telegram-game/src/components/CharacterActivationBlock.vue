@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isActive" class="px-8 tg-hint text-center font-medium leading-tight">
+  <div v-if="isActive" class="px-8 tg-accent-text text-center font-medium leading-tight">
     Это твой активный персонаж
   </div>
   <Button v-else class="mt-3" @click="activateCharacter()">
@@ -8,6 +8,7 @@
 </template>
 
 <script setup lang="ts">
+import { hapticFeedback } from '@telegram-apps/sdk-vue'
 import { useFetch } from '@vueuse/core'
 
 const { characterId } = defineProps<{
@@ -21,8 +22,12 @@ const character = computed(() => characters.value?.find(({ id }) => id === chara
 const isActive = computed(() => profile.value.profile?.activeEditionId === character.value?.editions?.find(({ profileId }) => profileId === profile.value?.profile.id)?.id)
 
 async function activateCharacter() {
-  await useFetch(`https://chatgame.space/api/telegram/profile/${profile.value.id}/character/${characterId}/activate`).get().json<{ ok: boolean }>()
+  await useFetch(`https://chatgame.space/api/telegram/profile/${profile.value.id}/character/${characterId}/activate`).get().json()
   await refreshProfile()
   await refreshCharacters()
+
+  if (hapticFeedback.impactOccurred.isAvailable()) {
+    hapticFeedback.notificationOccurred('success')
+  }
 }
 </script>

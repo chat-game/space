@@ -1,5 +1,6 @@
 <template>
   <main>
+    <Confetti />
     <Game />
     <RouterView />
   </main>
