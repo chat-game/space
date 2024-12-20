@@ -320,25 +320,26 @@ export interface Player {
   profileId: string
 }
 
-export interface Inventory {
-  id: string
-  createdAt: Date
-  updatedAt: Date
-  objectId: string
-  items: InventoryItem[]
-}
-
 export interface InventoryItem {
   id: string
   createdAt: Date
   updatedAt: Date
-  inventoryId: string
   type: InventoryItemType
-  amount: number
-  durability: number
+  name: string
+  description: string
 }
 
-export type InventoryItemType = 'WOOD' | 'STONE' | 'AXE' | 'PICKAXE' | 'COIN'
+export type InventoryItemType = 'BASIC_WOOD'
+
+export interface InventoryItemEdition {
+  id: string
+  createdAt: Date
+  updatedAt: Date
+  amount: number
+  durability: number
+  itemId: string
+  profileId: string
+}
 
 export interface TwitchServiceStatus {
   service: 'PUBLIC_ADDON' | 'HMBANAN666_TWITCH' | 'COUPON_GENERATOR' | 'AI_VIEW' | 'WOODLAND'

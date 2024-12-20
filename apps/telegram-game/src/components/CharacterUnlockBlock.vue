@@ -31,7 +31,7 @@ const { pop: popConfetti } = useConfetti()
 const character = computed(() => characters.value?.find(({ id }) => id === characterId))
 
 async function unlockCharacter() {
-  const { data } = await useFetch(`https://chatgame.space/api/telegram/profile/${profile.value.id}/character/${characterId}/unlock`).get().json<{ ok: boolean }>()
+  const { data } = await useFetch(`https://chatgame.space/api/telegram/profile/${profile.value?.id}/character/${characterId}/unlock`).get().json<{ ok: boolean }>()
   await refreshProfile()
   await refreshCharacters()
 

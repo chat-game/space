@@ -1,6 +1,5 @@
 import type {
   CharacterEditionWithCharacter,
-  Inventory,
   Player,
   WebSocketEvents,
   WebSocketMessage,
@@ -104,7 +103,6 @@ export interface GameObjectPlayer extends GameObjectUnit {
 
 export interface ServerService {
   getPlayer: (id: string) => Promise<Player | null>
-  getInventory: (id: string) => Promise<Inventory | null>
 }
 
 export interface WebSocketService {
