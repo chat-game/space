@@ -176,9 +176,8 @@ export interface Trophy {
   name: string
   description: string
   points: number
-  profileId: string
   rarity: number
-  isReady: boolean
+  isShown: boolean
 }
 
 export interface TrophyEdition {

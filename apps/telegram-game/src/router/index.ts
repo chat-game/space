@@ -2,6 +2,7 @@ import GameView from '@/views/GameView.vue'
 import InventoryView from '@/views/InventoryView.vue'
 import QuestView from '@/views/QuestView.vue'
 import ShopView from '@/views/ShopView.vue'
+import TopView from '@/views/TopView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import LucideArchiveRestore from '~icons/lucide/archive-restore'
 import LucideBookCheck from '~icons/lucide/book-check'
@@ -49,7 +50,7 @@ export const routes = [
   {
     path: '/top',
     name: 'top',
-    component: ShopView,
+    component: TopView,
     icon: LucideTrophy,
     meta: {
       title: 'Топ',
