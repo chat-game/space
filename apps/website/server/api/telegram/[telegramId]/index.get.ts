@@ -11,34 +11,15 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event)
     const username = query?.username?.toString()
 
-    const profile = await prisma.telegramProfile.findFirst({
-      where: { telegramId },
-      include: {
-        profile: {
-          include: {
-            trophyEditions: {
-              include: {
-                trophy: true,
-              },
-            },
-            characterEditions: true,
-            itemEditions: {
-              include: {
-                item: true,
-              },
-            },
-          },
-        },
-      },
-    })
+    const profile = await getProfile(telegramId)
     if (!profile) {
       const repository = new DBRepository()
-      const profile = await repository.findOrCreateTelegramProfile({
+      await repository.findOrCreateTelegramProfile({
         telegramId,
         username,
       })
 
-      return profile
+      return getProfile(telegramId)
     }
 
     return profile
@@ -46,3 +27,26 @@ export default defineEventHandler(async (event) => {
     throw errorResolver(error)
   }
 })
+
+async function getProfile(telegramId: string) {
+  return prisma.telegramProfile.findFirst({
+    where: { telegramId },
+    include: {
+      profile: {
+        include: {
+          trophyEditions: {
+            include: {
+              trophy: true,
+            },
+          },
+          characterEditions: true,
+          itemEditions: {
+            include: {
+              item: true,
+            },
+          },
+        },
+      },
+    },
+  })
+}
