@@ -13,6 +13,7 @@ declare module 'vue' {
     CharacterUnlockBlock: typeof import('./src/components/CharacterUnlockBlock.vue')['default']
     ComingSoon: typeof import('./src/components/ComingSoon.vue')['default']
     Confetti: typeof import('./src/components/Confetti.vue')['default']
+    CouponActivationBlock: typeof import('./src/components/CouponActivationBlock.vue')['default']
     Game: typeof import('./src/components/Game.vue')['default']
     GameNavigator: typeof import('./src/components/GameNavigator.vue')['default']
     Modal: typeof import('./src/components/Modal.vue')['default']

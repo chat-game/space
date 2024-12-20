@@ -1,6 +1,6 @@
 <template>
   <PageContainer>
-    <div class="tg-section-bg mb-4 px-3 py-3 flex flex-row gap-2 items-center rounded-2xl">
+    <div class="tg-section-bg mb-4 p-3 flex flex-row gap-2 items-center rounded-2xl">
       <img src="/coin.png" alt="" class="w-14 h-14">
       <div>
         <div class="text-2xl font-medium">
@@ -11,6 +11,18 @@
         </div>
       </div>
     </div>
+
+    <ActiveCard class="mb-4 !p-3 flex flex-row gap-2 items-center" @click="isCouponOpened = true">
+      <img src="/coupon-small.png" alt="" class="w-14 h-14">
+      <div>
+        <div class="text-2xl font-medium">
+          {{ profile?.profile?.coupons }}
+        </div>
+        <div class="tg-hint text-sm">
+          Купоны
+        </div>
+      </div>
+    </ActiveCard>
 
     <SectionHeader text="Коллекция персонажей 2024" />
 
@@ -48,11 +60,26 @@
     <CharacterActivationBlock v-if="selectedCharacter?.editions?.find(({ profileId }) => profileId === profile?.profile.id)" :character-id="selectedCharacterId ?? ''" />
     <CharacterUnlockBlock v-else :character-id="selectedCharacterId ?? ''" />
   </Modal>
+
+  <Modal title="Купон со стрима" :is-opened="isCouponOpened" @close="isCouponOpened = false">
+    <img src="/coupon.png" alt="" class="absolute -top-18 left-8 w-24 h-24">
+
+    <p class="text-sm tg-hint leading-tight">
+      На стриме периодически появляются сообщения с инструкцией, как его получить. Можешь обменять на любую награду ниже.
+    </p>
+
+    <CouponActivationBlock v-if="profile?.profile && profile.profile.coupons > 0" />
+    <div v-else class="px-8 tg-hint text-center font-medium leading-tight">
+      У вас нет купонов
+    </div>
+  </Modal>
 </template>
 
 <script setup lang="ts">
+import ActiveCard from '@/components/ActiveCard.vue'
 import CharacterActivationBlock from '@/components/CharacterActivationBlock.vue'
 import CharacterUnlockBlock from '@/components/CharacterUnlockBlock.vue'
+import CouponActivationBlock from '@/components/CouponActivationBlock.vue'
 
 const { profile } = useTelegramProfile()
 const { characters } = useCharacters()
@@ -65,4 +92,6 @@ function selectCharacter(id: string) {
   isCharacterOpened.value = true
   selectedCharacterId.value = id
 }
+
+const isCouponOpened = ref(false)
 </script>

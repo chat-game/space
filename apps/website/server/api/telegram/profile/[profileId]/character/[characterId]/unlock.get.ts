@@ -1,7 +1,7 @@
 import { createId } from '@paralleldrive/cuid2'
 
 export default defineEventHandler(async (event) => {
-  const telegramId = getRouterParam(event, 'telegramId')
+  const telegramId = getRouterParam(event, 'profileId')
   const characterId = getRouterParam(event, 'characterId')
 
   const telegramProfile = await prisma.telegramProfile.findFirst({
