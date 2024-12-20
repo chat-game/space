@@ -16,6 +16,11 @@ export default defineEventHandler(async (event) => {
       include: {
         profile: {
           include: {
+            trophyEditions: {
+              include: {
+                trophy: true,
+              },
+            },
             characterEditions: true,
             itemEditions: {
               include: {

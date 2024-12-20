@@ -1,9 +1,10 @@
-import type { CharacterEdition, InventoryItem, InventoryItemEdition, Profile, TelegramProfile } from '@chat-game/types'
+import type { CharacterEdition, InventoryItem, InventoryItemEdition, Profile, TelegramProfile, Trophy, TrophyEdition } from '@chat-game/types'
 import { initData } from '@telegram-apps/sdk-vue'
 import { useFetch } from '@vueuse/core'
 
 type TelegramProfileWithProfile = TelegramProfile & {
   profile: Profile & {
+    trophyEditions: (TrophyEdition & { trophy: Trophy })[]
     characterEditions: CharacterEdition[]
     itemEditions: (InventoryItemEdition & { item: InventoryItem })[]
   }
