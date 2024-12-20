@@ -12,14 +12,14 @@
       </div>
     </div>
 
+    <SectionHeader text="Мои трофеи" />
+
     <div v-if="trophies" class="grid grid-cols-3 gap-2">
-      <ActiveCard v-for="edition in trophies" :key="edition.id" @click="selectTrophy(edition.id)">
-        <img src="/wheel-1.png" alt="" class="w-full h-auto">
-        <div class="absolute bottom-0 right-0">
-          <p class="mx-auto w-fit px-3 py-2 tg-secondary-bg rounded-tl-2xl rounded-br-2xl leading-none">
-            тест
-          </p>
-        </div>
+      <ActiveCard v-for="edition in trophies" :key="edition.id" class="flex flex-col gap-2 items-center" @click="selectTrophy(edition.id)">
+        <img :src="getTrophyImage(edition.trophy)" alt="" class="w-full h-auto">
+        <p class="my-auto text-center text-sm leading-tight">
+          {{ edition.trophy.name }}
+        </p>
       </ActiveCard>
     </div>
     <div v-else class="tg-section-bg mb-4 p-3 flex flex-col gap-2 items-center rounded-2xl">
@@ -32,6 +32,9 @@
   <Modal :title="selectedTrophy?.trophy.name ?? ''" :is-opened="isTrophyOpened" @close="isTrophyOpened = false">
     <p class="tg-hint text-sm leading-tight">
       {{ selectedTrophy?.trophy.description ?? '' }}
+    </p>
+    <p v-if="selectedTrophy?.createdAt">
+      Получен {{ new Date(selectedTrophy.createdAt).toLocaleString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }) }}
     </p>
   </Modal>
 </template>
@@ -51,5 +54,26 @@ const selectedTrophy = computed(() => trophies.value?.find(({ id }) => id === se
 function selectTrophy(id: string) {
   isTrophyOpened.value = true
   selectedTrophyId.value = id
+}
+
+function getTrophyImage(data: { rarity: number, id: string, hasImage: boolean }): string {
+  if (!data.hasImage) {
+    switch (data.rarity) {
+      case 0:
+        return '/trophies/common/128.png'
+      case 1:
+        return '/trophies/uncommon/128.png'
+      case 2:
+        return '/trophies/rare/128.png'
+      case 3:
+        return '/trophies/epic/128.png'
+      case 4:
+        return '/trophies/legendary/128.png'
+      default:
+        return '/trophies/common/128.png'
+    }
+  }
+
+  return `/trophies/${data.id}/128.png`
 }
 </script>

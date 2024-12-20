@@ -232,6 +232,7 @@ model Trophy {
   points      Int
   rarity      Int             @default(0)
   isShown     Boolean         @default(false) @map("is_shown")
+  hasImage    Boolean         @default(false) @map("has_image")
   editions    TrophyEdition[]
 
   @@map("trophy")
