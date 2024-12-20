@@ -32,11 +32,11 @@
     </div>
 
     <div v-if="inventoryItems" class="grid grid-cols-3 gap-2">
-      <ActiveCard v-for="item in inventoryItems" :key="item.id" @click="selectItem(item.id)">
-        <img :src="`/items/${item.id}/128.png`" alt="" class="w-full h-auto">
+      <ActiveCard v-for="edition in inventoryItems" :key="edition.id" @click="selectItem(edition.id)">
+        <img :src="`/items/${edition.item.id}/128.png`" alt="" class="w-full h-auto">
         <div class="absolute bottom-0 right-0">
-          <p class="mx-auto w-fit px-3 py-2 tg-secondary-bg rounded-tl-2xl rounded-br-2xl text-xl leading-none">
-            {{ item.amount }}
+          <p class="mx-auto w-fit px-3 py-2 tg-secondary-bg rounded-tl-2xl rounded-br-2xl text-lg leading-none">
+            {{ edition.amount }}
           </p>
         </div>
       </ActiveCard>
@@ -49,9 +49,11 @@
   </PageContainer>
 
   <Modal :title="selectedItem?.item.name ?? ''" :is-opened="isItemOpened" @close="isItemOpened = false">
-    <p class="tg-hint">
+    <p class="tg-hint text-sm leading-tight">
       {{ selectedItem?.item.description ?? '' }}
     </p>
+
+    <p>В наличии: {{ selectedItem?.amount ?? 0 }} шт.</p>
   </Modal>
 </template>
 
