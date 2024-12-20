@@ -178,6 +178,7 @@ export interface Trophy {
   points: number
   rarity: number
   isShown: boolean
+  hasImage: boolean
 }
 
 export interface TrophyEdition {
