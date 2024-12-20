@@ -1,5 +1,13 @@
+import type { CharacterEdition, InventoryItem, InventoryItemEdition, Profile, TelegramProfile } from '@chat-game/types'
 import { initData } from '@telegram-apps/sdk-vue'
 import { useFetch } from '@vueuse/core'
+
+type TelegramProfileWithProfile = TelegramProfile & {
+  profile: Profile & {
+    characterEditions: CharacterEdition[]
+    itemEditions: (InventoryItemEdition & { item: InventoryItem })[]
+  }
+}
 
 const { data, execute: refreshProfile } = useFetch(`https://chatgame.space/api/telegram/`, {
   async beforeFetch() {
@@ -10,7 +18,7 @@ const { data, execute: refreshProfile } = useFetch(`https://chatgame.space/api/t
       }
     }
   },
-}).get().json()
+}).get().json<TelegramProfileWithProfile>()
 
 export function useTelegramProfile() {
   return { profile: data, refreshProfile }
