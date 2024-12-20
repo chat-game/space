@@ -8,6 +8,17 @@
 </template>
 
 <script setup lang="ts">
+import { initData } from '@telegram-apps/sdk-vue'
+
 useBackButton()
-useTelegramProfile()
+const { refreshProfile, updateUserData } = useTelegramProfile()
+
+onMounted(() => {
+  const user = initData.user()
+
+  if (user) {
+    updateUserData({ userId: user.id, username: user?.username })
+    refreshProfile()
+  }
+})
 </script>
