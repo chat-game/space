@@ -1,15 +1,13 @@
 export default defineEventHandler(async (event) => {
   const telegramId = getRouterParam(event, 'profileId')
-  const characterId = getRouterParam(event, 'characterId')
+
+  const query = getQuery(event)
+  const type = query?.type?.toString()
 
   const telegramProfile = await prisma.telegramProfile.findFirst({
     where: { id: telegramId },
     include: {
-      profile: {
-        include: {
-          characterEditions: true,
-        },
-      },
+      profile: true,
     },
   })
   if (!telegramProfile || !telegramProfile?.profile) {
@@ -18,18 +16,30 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const edition = telegramProfile.profile.characterEditions.find((e) => e.characterId === characterId)
-  if (!edition) {
+  if (telegramProfile.profile.coupons <= 0) {
     throw createError({
       status: 400,
-      message: 'You do not have this character',
+      message: 'You do not have enough coupons',
+    })
+  }
+
+  if (type === 'coins') {
+    await prisma.profile.update({
+      where: { id: telegramProfile.profile.id },
+      data: {
+        coins: {
+          increment: 2,
+        },
+      },
     })
   }
 
   await prisma.profile.update({
     where: { id: telegramProfile.profile.id },
     data: {
-      activeEditionId: edition.id,
+      coupons: {
+        decrement: 1,
+      },
     },
   })
 
