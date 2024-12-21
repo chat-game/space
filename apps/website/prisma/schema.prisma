@@ -73,6 +73,7 @@ model Product {
   updatedAt    DateTime  @default(now()) @map("updated_at")
   finishAt     DateTime? @map("finish_at")
   title        String
+  description  String
   coins        Int       @default(0)
   bonusCoins   Int       @default(0) @map("bonus_coins")
   price        Int       @default(0)
