@@ -1,28 +1,38 @@
 <template>
   <PageContainer>
-    <div class="tg-section-bg mb-4 p-3 flex flex-row gap-2 items-center rounded-2xl">
-      <img src="/coin.png" alt="" class="w-14 h-14">
-      <div>
-        <div class="text-2xl font-medium">
-          {{ profile?.profile?.coins }}
+    <div class="mb-4 grid grid-cols-2 gap-2">
+      <ActiveCard class="!p-3 flex flex-row gap-3 items-center" @click="isCoinOpened = true">
+        <img src="/coin.png" alt="" class="w-12 h-12">
+        <div>
+          <div class="text-2xl font-medium">
+            {{ profile?.profile?.coins }}
+          </div>
+          <div class="tg-hint text-sm">
+            Монеты
+          </div>
         </div>
-        <div class="tg-hint text-sm">
-          Монеты
+      </ActiveCard>
+
+      <ActiveCard class="!p-3 flex flex-row gap-3 items-center" @click="isCouponOpened = true">
+        <img src="/coupon-small.png" alt="" class="w-12 h-12">
+        <div>
+          <div class="text-2xl font-medium">
+            {{ profile?.profile?.coupons }}
+          </div>
+          <div class="tg-hint text-sm">
+            Купоны
+          </div>
         </div>
-      </div>
+      </ActiveCard>
     </div>
 
-    <ActiveCard class="mb-4 !p-3 flex flex-row gap-2 items-center" @click="isCouponOpened = true">
-      <img src="/coupon-small.png" alt="" class="w-14 h-14">
-      <div>
-        <div class="text-2xl font-medium">
-          {{ profile?.profile?.coupons }}
-        </div>
-        <div class="tg-hint text-sm">
-          Купоны
-        </div>
-      </div>
-    </ActiveCard>
+    <SectionHeader text="Специальные предложения" />
+
+    <div class="mb-4 grid grid-cols-2 gap-2">
+      <ActiveCard v-for="product in products" :key="product.id" class="aspect-square">
+        123
+      </ActiveCard>
+    </div>
 
     <SectionHeader text="Коллекция персонажей 2024" />
 
@@ -61,6 +71,14 @@
     <CharacterUnlockBlock v-else :character-id="selectedCharacterId ?? ''" />
   </Modal>
 
+  <Modal title="Монета" :is-opened="isCoinOpened" @close="isCoinOpened = false">
+    <img src="/coin.png" alt="" class="absolute -top-20 left-8 w-24 h-24">
+
+    <p class="text-sm tg-hint leading-tight">
+      Являются основной валютой для разблокировки персонажей.
+    </p>
+  </Modal>
+
   <Modal title="Купон со стрима" :is-opened="isCouponOpened" @close="isCouponOpened = false">
     <img src="/coupon.png" alt="" class="absolute -top-18 left-8 w-24 h-24">
 
@@ -83,6 +101,7 @@ import CouponActivationBlock from '@/components/CouponActivationBlock.vue'
 
 const { profile } = useTelegramProfile()
 const { characters } = useCharacters()
+const { products } = useShop()
 
 const isCharacterOpened = ref(false)
 const selectedCharacterId = ref<string>()
@@ -93,5 +112,6 @@ function selectCharacter(id: string) {
   selectedCharacterId.value = id
 }
 
+const isCoinOpened = ref(false)
 const isCouponOpened = ref(false)
 </script>

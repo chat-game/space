@@ -409,6 +409,20 @@ export interface WoodlandUpdatePlayerRequest {
   }
 }
 
+export interface Product {
+  id: string
+  createdAt: Date
+  updatedAt: Date
+  finishAt: Date | null
+  title: string
+  coins: number
+  bonusCoins: number
+  price: number
+  regularPrice: number
+  isActive: boolean
+  priority: number
+}
+
 export interface Payment {
   id: string
   createdAt: Date

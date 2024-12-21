@@ -15,9 +15,9 @@
     <SectionHeader text="Мои трофеи" />
 
     <div v-if="trophies.length" class="grid grid-cols-3 gap-2">
-      <ActiveCard v-for="edition in trophies" :key="edition.id" class="!h-44 flex flex-col gap-2 items-center" @click="selectTrophy(edition.id)">
+      <ActiveCard v-for="edition in trophies" :key="edition.id" class="flex flex-col gap-2 items-center" @click="selectTrophy(edition.id)">
         <img :src="getTrophyImage(edition.trophy)" alt="" class="w-full h-auto">
-        <p class="max-h-14 my-auto text-center text-sm font-medium leading-tight line-clamp-3">
+        <p class="text-center text-sm font-medium leading-3 line-clamp-2">
           {{ edition.trophy.name }}
         </p>
       </ActiveCard>
@@ -33,7 +33,7 @@
     <p class="tg-hint text-sm leading-tight">
       {{ selectedTrophy?.trophy.description ?? '' }}
     </p>
-    <p v-if="selectedTrophy?.createdAt">
+    <p v-if="selectedTrophy?.createdAt" class="px-8 tg-hint text-center font-medium leading-tight">
       Получен {{ new Date(selectedTrophy.createdAt).toLocaleString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }) }}
     </p>
   </Modal>
