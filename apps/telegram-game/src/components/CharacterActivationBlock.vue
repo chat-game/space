@@ -2,7 +2,7 @@
   <div v-if="isActive" class="px-8 tg-accent-text text-center font-medium leading-tight">
     Это твой активный персонаж
   </div>
-  <Button v-else class="mt-3" @click="activateCharacter()">
+  <Button v-else @click="activateCharacter()">
     Активировать
   </Button>
 </template>

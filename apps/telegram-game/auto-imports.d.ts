@@ -72,6 +72,7 @@ declare global {
   const useRoom: typeof import('./src/composables/useRoom')['useRoom']
   const useRoute: typeof import('vue-router')['useRoute']
   const useRouter: typeof import('vue-router')['useRouter']
+  const useShop: typeof import('./src/composables/useShop')['useShop']
   const useSlots: typeof import('vue')['useSlots']
   const useTelegramProfile: typeof import('./src/composables/useTelegramProfile')['useTelegramProfile']
   const useTemplateRef: typeof import('vue')['useTemplateRef']

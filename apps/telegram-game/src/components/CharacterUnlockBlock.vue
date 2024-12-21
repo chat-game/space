@@ -1,7 +1,7 @@
 <template>
   <Button v-if="character?.price" class="min-h-14">
     <div v-if="isClickedFirstTime" @click="unlockCharacter()">
-      <p>Нажми еще раз чтобы подтвердить</p>
+      <p>Нажми еще раз для подтверждения</p>
     </div>
     <div v-else class="flex flex-row gap-2 items-center justify-center" @click="setWaitingApproval()">
       <p>Разблокировать за</p>

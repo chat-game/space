@@ -53,7 +53,9 @@
       {{ selectedItem?.item.description ?? '' }}
     </p>
 
-    <p>В наличии: {{ selectedItem?.amount ?? 0 }} шт.</p>
+    <p class="px-8 tg-hint text-center font-medium leading-tight">
+      В наличии: {{ selectedItem?.amount ?? 0 }} шт.
+    </p>
   </Modal>
 </template>
 
