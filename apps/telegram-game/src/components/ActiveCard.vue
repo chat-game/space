@@ -1,5 +1,5 @@
 <template>
-  <div class="relative h-full tg-section-bg p-4 rounded-2xl cursor-pointer active:scale-90 duration-200" @click="handleClick()">
+  <div class="relative tg-section-bg p-4 rounded-2xl cursor-pointer active:scale-90 duration-200" @click="handleClick()">
     <slot />
   </div>
 </template>

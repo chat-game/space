@@ -415,6 +415,7 @@ export interface Product {
   updatedAt: Date
   finishAt: Date | null
   title: string
+  description: string
   coins: number
   bonusCoins: number
   price: number

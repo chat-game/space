@@ -29,8 +29,12 @@
     <SectionHeader text="Специальные предложения" />
 
     <div class="mb-4 grid grid-cols-2 gap-2">
-      <ActiveCard v-for="product in products" :key="product.id" class="aspect-square">
-        123
+      <ActiveCard v-for="product in products" :key="product.id" class="aspect-square" @click="selectProduct(product.id)">
+        <p class="font-medium text-lg leading-tight">
+          {{ product.title }}
+        </p>
+
+        <div :style="{ 'background-image': `url('/shop/${product.id}/512.png')` }" class="absolute top-0 left-0 right-0 bottom-0 bg-bottom bg-no-repeat bg-cover" />
       </ActiveCard>
     </div>
 
@@ -43,7 +47,7 @@
         <div v-if="profile?.profile?.activeEditionId === char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)?.id" class="tg-accent-text text-base font-medium leading-tight">
           Активный
         </div>
-        <p class="font-medium text-lg">
+        <p class="font-medium text-lg leading-tight">
           {{ char?.nickname }}
         </p>
         <p v-if="char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)" class="text-sm tg-hint">
@@ -71,11 +75,17 @@
     <CharacterUnlockBlock v-else :character-id="selectedCharacterId ?? ''" />
   </Modal>
 
+  <Modal :title="selectedProduct?.title ?? ''" :is-opened="isProductOpened" @close="isProductOpened = false">
+    <p class="text-sm tg-hint leading-tight">
+      {{ selectedProduct?.description }}
+    </p>
+  </Modal>
+
   <Modal title="Монета" :is-opened="isCoinOpened" @close="isCoinOpened = false">
     <img src="/coin.png" alt="" class="absolute -top-20 left-8 w-24 h-24">
 
     <p class="text-sm tg-hint leading-tight">
-      Являются основной валютой для разблокировки персонажей.
+      Является основной валютой для разблокировки персонажей.
     </p>
   </Modal>
 
@@ -110,6 +120,15 @@ const selectedCharacter = computed(() => characters.value?.find(({ id }) => id =
 function selectCharacter(id: string) {
   isCharacterOpened.value = true
   selectedCharacterId.value = id
+}
+
+const isProductOpened = ref(false)
+const selectedProductId = ref<string>()
+const selectedProduct = computed(() => products.value?.find(({ id }) => id === selectedProductId.value))
+
+function selectProduct(id: string) {
+  isProductOpened.value = true
+  selectedProductId.value = id
 }
 
 const isCoinOpened = ref(false)
