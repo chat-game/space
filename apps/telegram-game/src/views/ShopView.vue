@@ -33,6 +33,9 @@
         <p class="font-medium text-lg leading-tight">
           {{ product.title }}
         </p>
+        <p v-if="product.bonusCoins" class="text-sm tg-hint">
+          + бонусы
+        </p>
 
         <div :style="{ 'background-image': `url('/shop/${product.id}/512.png')` }" class="absolute top-0 left-0 right-0 bottom-0 bg-bottom bg-no-repeat bg-cover" />
       </ActiveCard>
@@ -65,6 +68,10 @@
   </PageContainer>
 
   <Modal :title="`&laquo;${selectedCharacter?.nickname}&raquo; ${selectedCharacter?.name}`" :is-opened="isCharacterOpened" @close="isCharacterOpened = false">
+    <template #bg>
+      <ConfettiBackground />
+    </template>
+
     <img :src="`/units/${selectedCharacter?.codename}/idle.gif`" alt="" class="absolute -top-30 left-0 w-34 h-34">
 
     <p class="text-sm tg-hint leading-tight">
@@ -76,6 +83,10 @@
   </Modal>
 
   <Modal :title="selectedProduct?.title ?? ''" :is-opened="isProductOpened" @close="isProductOpened = false">
+    <template #bg>
+      <CoinBackground :coins-amount="selectedProduct?.coins" />
+    </template>
+
     <p class="text-sm tg-hint leading-tight">
       {{ selectedProduct?.description }}
     </p>
