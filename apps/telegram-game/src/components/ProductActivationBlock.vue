@@ -16,6 +16,7 @@ const { productId } = defineProps<{
 const { products, refreshShop } = useShop()
 const { refreshCharacters } = useCharacters()
 const { profile, refreshProfile } = useTelegramProfile()
+const { pop: popConfetti } = useConfetti()
 
 const product = computed(() => products.value?.find(({ id }) => id === productId))
 
@@ -28,7 +29,16 @@ async function activateProduct() {
     }
 
     if (openInvoice.isAvailable()) {
-      await openInvoice(data.value.result, 'url')
+      const status = await openInvoice(data.value.result, 'url')
+
+      // 'paid' | 'failed' | 'pending' | 'cancelled'
+      if (status === 'paid') {
+        await refreshProfile()
+        await refreshCharacters()
+        await refreshShop()
+
+        popConfetti()
+      }
     }
 
     await refreshProfile()

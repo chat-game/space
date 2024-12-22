@@ -37,20 +37,13 @@ export default defineEventHandler(async (event) => {
   const link = await bot.api.createInvoiceLink(
     product.title,
     product.description,
-    paymentId,
+    `{payment_id:${paymentId}}`,
     '',
     'XTR',
     [
       { label: product.title, amount: product.starsPrice },
     ],
   )
-
-  bot.preCheckoutQuery(paymentId, async (ctx) => {
-    // Answer the pre-checkout query, confer https://core.telegram.org/bots/api#answerprecheckoutquery
-    await ctx.answerPreCheckoutQuery(true)
-
-    logger.log('preCheckoutQuery', ctx, ctx?.message, ctx?.msg, ctx?.chat, ctx?.preCheckoutQuery)
-  })
 
   // Create payment
   await prisma.payment.create({
