@@ -16,7 +16,7 @@
     "@chat-game/game": "workspace:*",
     "@chat-game/types": "workspace:*",
     "@neoconfetti/vue": "^2.2.1",
-    "@telegram-apps/sdk-vue": "^1.0.10",
+    "@telegram-apps/sdk-vue": "^1.0.12",
     "@tsparticles/slim": "^3.7.1",
     "@tsparticles/vue3": "^3.0.1",
     "vue": "^3.5.13",

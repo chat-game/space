@@ -27,6 +27,7 @@
     "@twurple/easy-bot": "^7.2.0",
     "@twurple/eventsub-ws": "^7.2.0",
     "@twurple/pubsub": "^7.2.0",
+    "grammy": "^1.33.0",
     "howler": "^2.2.4",
     "lucide-vue-next": "^0.462.0",
     "zod": "^3.23.8"

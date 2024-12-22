@@ -419,6 +419,7 @@ export interface Product {
   coins: number
   bonusCoins: number
   price: number
+  starsPrice: number
   regularPrice: number
   isActive: boolean
   priority: number

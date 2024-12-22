@@ -78,6 +78,7 @@ model Product {
   bonusCoins   Int       @default(0) @map("bonus_coins")
   price        Int       @default(0)
   regularPrice Int       @default(0) @map("regular_price")
+  starsPrice   Int       @default(0) @map("stars_price")
   isActive     Boolean   @default(true) @map("is_active")
   priority     Int       @default(0)
 
