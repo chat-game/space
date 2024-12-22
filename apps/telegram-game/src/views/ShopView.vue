@@ -85,6 +85,7 @@
   <Modal :title="selectedProduct?.title ?? ''" :is-opened="isProductOpened" @close="isProductOpened = false">
     <template #bg>
       <CoinBackground :coins-amount="selectedProduct?.coins" />
+      <ConfettiBackground />
     </template>
 
     <p class="text-sm tg-hint leading-tight">
@@ -106,7 +107,7 @@
     <img src="/coupon.png" alt="" class="absolute -top-18 left-8 w-24 h-24">
 
     <p class="text-sm tg-hint leading-tight">
-      На стриме периодически появляются сообщения с инструкцией, как его получить. Можешь обменять на любую награду ниже.
+      На стриме twitch.tv/hmbanan666 периодически появляются сообщения с инструкцией, как его получить. Меняй на любую награду ниже.
     </p>
 
     <CouponActivationBlock v-if="profile?.profile && profile.profile.coupons > 0" />
