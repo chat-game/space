@@ -54,15 +54,16 @@ model TelegramProfile {
 }
 
 model Payment {
-  id         String   @id
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @default(now()) @map("updated_at")
-  externalId String   @map("external_id")
-  provider   String
-  status     String
-  amount     Int      @default(0)
-  profileId  String   @map("profile_id")
-  productId  String   @map("product_id")
+  id               String   @id
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @default(now()) @map("updated_at")
+  externalId       String   @map("external_id")
+  provider         String
+  status           String
+  amount           Int      @default(0)
+  profileId        String   @map("profile_id")
+  productId        String   @map("product_id")
+  telegramChargeId String?  @map("telegram_charge_id")
 
   @@map("payment")
 }
