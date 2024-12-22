@@ -90,6 +90,8 @@
     <p class="text-sm tg-hint leading-tight">
       {{ selectedProduct?.description }}
     </p>
+
+    <ProductActivationBlock :product-id="selectedProductId ?? ''" />
   </Modal>
 
   <Modal title="Монета" :is-opened="isCoinOpened" @close="isCoinOpened = false">

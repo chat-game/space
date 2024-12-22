@@ -49,6 +49,7 @@ export default defineNuxtConfig({
     yookassaApiKey: '', // NUXT_YOOKASSA_API_KEY
     oauthTwitchClientId: '', // NUXT_OAUTH_TWITCH_CLIENT_ID
     oauthTwitchClientSecret: '', // NUXT_OAUTH_TWITCH_CLIENT_SECRET
+    telegramBotToken: '', // NUXT_TELEGRAM_BOT_TOKEN
     public: {
       signInRedirectUrl: '', // NUXT_PUBLIC_SIGN_IN_REDIRECT_URL
       websocketUrl: '', // NUXT_PUBLIC_WEBSOCKET_URL

@@ -1,5 +1,5 @@
 export default defineNitroPlugin(() => {
-  const logger = useLogger('plugin-start')
+  const logger = useLogger('plugin-start-twitch')
   const { twitchChannelId } = useRuntimeConfig()
 
   if (!twitchChannelId) {
@@ -14,7 +14,7 @@ export default defineNitroPlugin(() => {
 
   setTimeout(checkIfStreamingNow, 8000)
 
-  logger.info('Twitch server started')
+  logger.log('Twitch server started')
 })
 
 async function checkIfStreamingNow() {

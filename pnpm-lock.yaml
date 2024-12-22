@@ -69,8 +69,8 @@ importers:
         specifier: ^2.2.1
         version: 2.2.1
       '@telegram-apps/sdk-vue':
-        specifier: ^1.0.10
-        version: 1.0.10(vue@3.5.13(typescript@5.6.2))
+        specifier: ^1.0.12
+        version: 1.0.12(vue@3.5.13(typescript@5.6.2))
       '@tsparticles/slim':
         specifier: ^3.7.1
         version: 3.7.1
@@ -180,6 +180,9 @@ importers:
       '@twurple/pubsub':
         specifier: ^7.2.0
         version: 7.2.0(@twurple/auth@7.2.0)
+      grammy:
+        specifier: ^1.33.0
+        version: 1.33.0
       howler:
         specifier: ^2.2.4
         version: 2.2.4
@@ -976,6 +979,9 @@ packages:
   '@eslint/plugin-kit@0.2.3':
     resolution: {integrity: sha512-2b/g5hRmpbb1o4GnTZax9N9m0FXzz9OV42ZzI4rDDMDuHUqigAiQCEWChBWCY4ztAGVRjoWT19v0yMmc5/L5kA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@grammyjs/types@3.17.0':
+    resolution: {integrity: sha512-e8AR3xQwRAFX248E7Qw/7mIu1OzvoXloJzOBJVtuPKzzL7tGkn5trZAdZUBgGViVQg5ZwVS/x9N2nRrcyH/DfA==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -1784,28 +1790,28 @@ packages:
     peerDependencies:
       vite: ^5.2.0 || ^6
 
-  '@telegram-apps/bridge@1.7.1':
-    resolution: {integrity: sha512-oRbznpIC4UibMVygQ+tcS0ZSKx7DaI07MXQF42VETQ/VOCKeaWZeQFUifo4A+CzT6XMGo2hyse/CQP9ziX0H7g==}
+  '@telegram-apps/bridge@1.9.0':
+    resolution: {integrity: sha512-sdQLwcBxBKYSe8ydoahVbVzyUM5tYWnjOcmr5VsSXuem6z8MnPd1uu6/MrDCRFsMKm/fZQoayu4IImD1OEWnCw==}
 
-  '@telegram-apps/navigation@1.0.9':
-    resolution: {integrity: sha512-Ur24luu+fizrKCDQAoJWQzMj+IwNiqtQlrITz42DORKSohj5yvf9kD5AJO2r9sHC+iC2pLXHCn1dV34o6tbeaQ==}
+  '@telegram-apps/navigation@1.0.11':
+    resolution: {integrity: sha512-KJx7/RPJ0RGVCs/F7ayn7VCawFuoNEBWse7rugRjAdhohAJiPz3Q3XPY8Up4iqVEuSCaO6T+7S6+a3M+FhJpqQ==}
 
-  '@telegram-apps/sdk-vue@1.0.10':
-    resolution: {integrity: sha512-N2OJLUkfEB2Gz0hsy45c8qHR6xHoJgieoj3O/gwYQ5Px4WKqWnG6If5VZJvvtC+vqtn73AArT/Rgie/Vrhm4jQ==}
+  '@telegram-apps/sdk-vue@1.0.12':
+    resolution: {integrity: sha512-QUdXPLdmK0i/zQoCMyDqbyNaTdTqRpwD7q4oBE80pDtDRsAjDXWYEVhj397hxCudDG98XspSSFQksX/MkeDYaQ==}
     peerDependencies:
       vue: ^3.0.0
 
-  '@telegram-apps/sdk@2.9.1':
-    resolution: {integrity: sha512-fW5e0B7yt4jIlEJfXzZwrY2cYufyXQw6xIu2eRfKl1l6N/ETIwZZRr6jOOsRCzzpWUfqePvwItqKIuRf8mGcog==}
+  '@telegram-apps/sdk@2.11.0':
+    resolution: {integrity: sha512-Tm6qgSh+RMTWlRr9cSNqHkG/2g0xtLGzafMYsqsHspd7l+/3Ztb6+Of5I5JAxRxV2/P4eeq2jurl4WG0e0ntTg==}
 
   '@telegram-apps/signals@1.1.0':
     resolution: {integrity: sha512-5qN7cU8t3l7n0cKcnzc/1TYKJTwAggUinfwbLHL1SYmB47pBHjCvfsRiYliFohk6lb635SBmNuVZL6LHFmGZaw==}
 
-  '@telegram-apps/toolkit@1.0.0':
-    resolution: {integrity: sha512-fSVoveLuMzwRKWeXEufMSXxH+HvjsFKb1DeT3pG5qLpnb2rdtejnNcwAt6WEPtiZ3a4YntYaFuR3KYgVv0ZxeQ==}
+  '@telegram-apps/toolkit@1.1.0':
+    resolution: {integrity: sha512-fJAxbvfTjp8MWKEb4oR8Fr8NppxSE4FZ8utNLClBMbC8or3vNZfvNzwHLMhltD4YWHdxLuMH6mnmo+BZLSUSzg==}
 
-  '@telegram-apps/transformers@1.2.0':
-    resolution: {integrity: sha512-RufLdD044RPaAJdh+Mp/98JI+Wkp5mhX3WYCg6IZYFMRwu3QTu2FBwYmU9FdRmBF9utbcymSFrY1cqxh+Vtkfg==}
+  '@telegram-apps/transformers@1.2.1':
+    resolution: {integrity: sha512-BDMBZhsyLgt06bAB7gXX3Y46JSiXHivtMsV45WaB3xqfkhf3FcwSMQj6b7fkqHXjpGXPVun+snjSArHMPIVmJQ==}
 
   '@telegram-apps/types@1.2.0':
     resolution: {integrity: sha512-HhvnSCsqlJpes5ZGsZP/qbDNq8eLLnjgZKaF5NRsDqAKUPvaIIFT1HdyDII/8EioUgoI4FHsP8MylK2Gzm2efg==}
@@ -3605,6 +3611,10 @@ packages:
 
   graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
+
+  grammy@1.33.0:
+    resolution: {integrity: sha512-kvQuIBtiPcqNGntsVevjXYBMByIJ3PtOP7swr1zbCg6xY+dNX76f4VX5auKuJNI/sflexPr3L4wNwbTJHu9ocA==}
+    engines: {node: ^12.20.0 || >=14.13.1}
 
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
@@ -7051,6 +7061,8 @@ snapshots:
     dependencies:
       levn: 0.4.1
 
+  '@grammyjs/types@3.17.0': {}
+
   '@humanfs/core@0.19.1': {}
 
   '@humanfs/node@0.16.6':
@@ -8143,39 +8155,39 @@ snapshots:
       tailwindcss: 4.0.0-beta.8
       vite: 6.0.2(@types/node@22.10.1)(jiti@2.4.0)(lightningcss@1.28.2)(terser@5.36.0)(yaml@2.6.1)
 
-  '@telegram-apps/bridge@1.7.1':
+  '@telegram-apps/bridge@1.9.0':
     dependencies:
       '@telegram-apps/signals': 1.1.0
-      '@telegram-apps/toolkit': 1.0.0
-      '@telegram-apps/transformers': 1.2.0
+      '@telegram-apps/toolkit': 1.1.0
+      '@telegram-apps/transformers': 1.2.1
       '@telegram-apps/types': 1.2.0
 
-  '@telegram-apps/navigation@1.0.9':
+  '@telegram-apps/navigation@1.0.11':
     dependencies:
-      '@telegram-apps/bridge': 1.7.1
+      '@telegram-apps/bridge': 1.9.0
       '@telegram-apps/signals': 1.1.0
-      '@telegram-apps/toolkit': 1.0.0
+      '@telegram-apps/toolkit': 1.1.0
 
-  '@telegram-apps/sdk-vue@1.0.10(vue@3.5.13(typescript@5.6.2))':
+  '@telegram-apps/sdk-vue@1.0.12(vue@3.5.13(typescript@5.6.2))':
     dependencies:
-      '@telegram-apps/sdk': 2.9.1
+      '@telegram-apps/sdk': 2.11.0
       vue: 3.5.13(typescript@5.6.2)
 
-  '@telegram-apps/sdk@2.9.1':
+  '@telegram-apps/sdk@2.11.0':
     dependencies:
-      '@telegram-apps/bridge': 1.7.1
-      '@telegram-apps/navigation': 1.0.9
+      '@telegram-apps/bridge': 1.9.0
+      '@telegram-apps/navigation': 1.0.11
       '@telegram-apps/signals': 1.1.0
-      '@telegram-apps/toolkit': 1.0.0
-      '@telegram-apps/transformers': 1.2.0
+      '@telegram-apps/toolkit': 1.1.0
+      '@telegram-apps/transformers': 1.2.1
 
   '@telegram-apps/signals@1.1.0': {}
 
-  '@telegram-apps/toolkit@1.0.0': {}
+  '@telegram-apps/toolkit@1.1.0': {}
 
-  '@telegram-apps/transformers@1.2.0':
+  '@telegram-apps/transformers@1.2.1':
     dependencies:
-      '@telegram-apps/toolkit': 1.0.0
+      '@telegram-apps/toolkit': 1.1.0
       '@telegram-apps/types': 1.2.0
 
   '@telegram-apps/types@1.2.0': {}
@@ -10414,6 +10426,16 @@ snapshots:
   graceful-fs@4.2.10: {}
 
   graceful-fs@4.2.11: {}
+
+  grammy@1.33.0:
+    dependencies:
+      '@grammyjs/types': 3.17.0
+      abort-controller: 3.0.0
+      debug: 4.3.7(supports-color@9.4.0)
+      node-fetch: 2.7.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
 
   graphemer@1.4.0: {}
 
