@@ -5,7 +5,6 @@
 </template>
 
 <script setup lang="ts">
-import { openInvoice } from '@telegram-apps/sdk'
 import { hapticFeedback } from '@telegram-apps/sdk-vue'
 import { useFetch } from '@vueuse/core'
 
@@ -13,6 +12,7 @@ const { productId } = defineProps<{
   productId: string
 }>()
 
+const { open: openInvoice } = useInvoice()
 const { products, refreshShop } = useShop()
 const { refreshCharacters } = useCharacters()
 const { profile, refreshProfile } = useTelegramProfile()
@@ -28,22 +28,19 @@ async function activateProduct() {
       hapticFeedback.notificationOccurred('success')
     }
 
-    if (openInvoice.isAvailable()) {
-      const status = await openInvoice(data.value.result, 'url')
+    const status = await openInvoice(data.value.result)
 
-      // 'paid' | 'failed' | 'pending' | 'cancelled'
-      if (status === 'paid') {
-        await refreshProfile()
-        await refreshCharacters()
-        await refreshShop()
+    if (status === 'paid') {
+      await refreshProfile()
+      await refreshCharacters()
+      await refreshShop()
 
-        popConfetti()
-      }
+      popConfetti()
     }
 
-    await refreshProfile()
-    await refreshCharacters()
-    await refreshShop()
+    if (status === 'failed' || status === 'cancelled') {
+      // problem
+    }
   }
 }
 </script>

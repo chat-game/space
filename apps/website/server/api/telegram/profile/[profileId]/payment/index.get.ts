@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
   const link = await bot.api.createInvoiceLink(
     product.title,
     product.description,
-    `{payment_id:${paymentId}}`,
+    `{"payment_id":"${paymentId}"}`,
     '',
     'XTR',
     [
