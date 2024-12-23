@@ -45,6 +45,7 @@ async function getProfile(telegramId: string) {
               item: true,
             },
           },
+          payments: true,
         },
       },
     },

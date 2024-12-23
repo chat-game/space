@@ -36,6 +36,9 @@
         <p v-if="product.bonusCoins" class="text-sm tg-hint">
           + бонусы
         </p>
+        <div v-if="product.singlePurchase === true" class="mt-2 w-fit tg-button px-3 py-1 rounded-2xl border-0 font-medium text-sm">
+          Лимитированный
+        </div>
 
         <div :style="{ 'background-image': `url('/shop/${product.id}/512.png')` }" class="absolute top-0 left-0 right-0 bottom-0 bg-bottom bg-no-repeat bg-cover" />
       </ActiveCard>
@@ -85,9 +88,13 @@
   <Modal :title="selectedProduct?.title ?? ''" :is-opened="isProductOpened" @close="isProductOpened = false">
     <template #bg>
       <CoinBackground :coins-amount="selectedProduct?.coins" />
+      <ChristmasBackground v-if="selectedProduct?.finishAt" />
       <ConfettiBackground />
     </template>
 
+    <p v-if="selectedProduct?.finishAt">
+      Доступен до {{ new Date(selectedProduct.finishAt).toLocaleString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }) }}
+    </p>
     <p class="text-sm tg-hint leading-tight">
       {{ selectedProduct?.description }}
     </p>
@@ -121,6 +128,7 @@
 import ActiveCard from '@/components/ActiveCard.vue'
 import CharacterActivationBlock from '@/components/CharacterActivationBlock.vue'
 import CharacterUnlockBlock from '@/components/CharacterUnlockBlock.vue'
+import ChristmasBackground from '@/components/ChristmasBackground.vue'
 import CouponActivationBlock from '@/components/CouponActivationBlock.vue'
 
 const { profile } = useTelegramProfile()

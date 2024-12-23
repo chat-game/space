@@ -434,8 +434,9 @@ export interface Payment {
   productId: string
   status: 'PENDING' | 'PAID'
   externalId: string
-  provider: 'YOOKASSA'
+  provider: 'YOOKASSA' | 'TELEGRAM'
   amount: number
+  telegramChargeId: string | null
 }
 
 export interface PaymentCreateRequest {
