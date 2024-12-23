@@ -14,38 +14,46 @@ bot.on('message:text', (ctx) => {
 
 // regexp: id in object like { payment_id: 123 }
 bot.preCheckoutQuery(/.+/, async (ctx) => {
-  const invoicePayload = JSON.parse(ctx.preCheckoutQuery.invoice_payload)
+  try {
+    const invoicePayload = JSON.parse(ctx.preCheckoutQuery.invoice_payload)
 
-  // Telegram payment in stars
-  if (invoicePayload?.payment_id) {
-    await ctx.answerPreCheckoutQuery(true)
+    // Telegram payment in stars
+    if (invoicePayload?.payment_id) {
+      await ctx.answerPreCheckoutQuery(true)
+    }
+
+    logger.log('preCheckoutQuery', ctx?.preCheckoutQuery)
+  } catch (error) {
+    logger.error(error)
   }
-
-  logger.log('preCheckoutQuery', ctx?.preCheckoutQuery)
 })
 
 // successful_payment
 bot.on('message:successful_payment', async (ctx) => {
-  if (ctx?.message?.successful_payment?.invoice_payload && ctx?.message?.successful_payment?.telegram_payment_charge_id) {
+  try {
+    if (ctx?.message?.successful_payment?.invoice_payload && ctx?.message?.successful_payment?.telegram_payment_charge_id) {
     // invoice_payload
-    const invoicePayload = JSON.parse(ctx.message.successful_payment.invoice_payload)
+      const invoicePayload = JSON.parse(ctx.message.successful_payment.invoice_payload)
 
-    // Telegram payment in stars
-    if (invoicePayload?.payment_id) {
+      // Telegram payment in stars
+      if (invoicePayload?.payment_id) {
       // telegram_payment_charge_id
-      const id = invoicePayload?.payment_id as string
-      const telegramChargeId = ctx.message.successful_payment.telegram_payment_charge_id
+        const id = invoicePayload?.payment_id as string
+        const telegramChargeId = ctx.message.successful_payment.telegram_payment_charge_id
 
-      await prisma.payment.update({
-        where: { id },
-        data: {
-          telegramChargeId,
-        },
-      })
+        await prisma.payment.update({
+          where: { id },
+          data: {
+            telegramChargeId,
+          },
+        })
+      }
     }
-  }
 
-  logger.log('message:successful_payment', ctx?.message?.successful_payment)
+    logger.log('message:successful_payment', ctx?.message?.successful_payment)
+  } catch (error) {
+    logger.error(error)
+  }
 })
 
 export { bot }
