@@ -69,19 +69,20 @@ model Payment {
 }
 
 model Product {
-  id           String    @id
-  createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime  @default(now()) @map("updated_at")
-  finishAt     DateTime? @map("finish_at")
-  title        String
-  description  String
-  coins        Int       @default(0)
-  bonusCoins   Int       @default(0) @map("bonus_coins")
-  price        Int       @default(0)
-  regularPrice Int       @default(0) @map("regular_price")
-  starsPrice   Int       @default(0) @map("stars_price")
-  isActive     Boolean   @default(true) @map("is_active")
-  priority     Int       @default(0)
+  id             String    @id
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @default(now()) @map("updated_at")
+  finishAt       DateTime? @map("finish_at")
+  title          String
+  description    String
+  coins          Int       @default(0)
+  bonusCoins     Int       @default(0) @map("bonus_coins")
+  price          Int       @default(0)
+  regularPrice   Int       @default(0) @map("regular_price")
+  starsPrice     Int       @default(0) @map("stars_price")
+  isActive       Boolean   @default(true) @map("is_active")
+  priority       Int       @default(0)
+  singlePurchase Boolean   @default(false) @map("single_purchase")
 
   @@map("product")
 }
