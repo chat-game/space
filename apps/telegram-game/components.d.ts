@@ -11,6 +11,7 @@ declare module 'vue' {
     Button: typeof import('./src/components/Button.vue')['default']
     CharacterActivationBlock: typeof import('./src/components/CharacterActivationBlock.vue')['default']
     CharacterUnlockBlock: typeof import('./src/components/CharacterUnlockBlock.vue')['default']
+    ChristmasBackground: typeof import('./src/components/ChristmasBackground.vue')['default']
     CoinBackground: typeof import('./src/components/CoinBackground.vue')['default']
     ComingSoon: typeof import('./src/components/ComingSoon.vue')['default']
     Confetti: typeof import('./src/components/Confetti.vue')['default']

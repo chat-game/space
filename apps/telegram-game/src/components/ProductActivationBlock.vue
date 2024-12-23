@@ -1,6 +1,7 @@
 <template>
-  <Button v-if="product?.starsPrice" @click="activateProduct()">
-    Приобрести за {{ product.starsPrice }} Telegram Stars
+  <Button v-if="product?.starsPrice && !wasPurchased" class="flex flex-row gap-1 items-center justify-center" @click="activateProduct()">
+    <p>Приобрести за {{ product.starsPrice }}</p>
+    <img src="/telegram-star.png" alt="" class="w-5 h-5">
   </Button>
 </template>
 
@@ -19,6 +20,7 @@ const { profile, refreshProfile } = useTelegramProfile()
 const { pop: popConfetti } = useConfetti()
 
 const product = computed(() => products.value?.find(({ id }) => id === productId))
+const wasPurchased = computed(() => profile.value?.profile?.payments?.find(({ productId: id, status }) => id === productId && status === 'PAID'))
 
 async function activateProduct() {
   const { data } = await useFetch(`https://chatgame.space/api/telegram/profile/${profile.value?.id}/payment?id=${productId}`).get().json<{ ok: boolean, result: string }>()
