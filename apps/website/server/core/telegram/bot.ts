@@ -1,4 +1,5 @@
 import { Bot } from 'grammy'
+import { activateProduct } from '../product/activate'
 
 const logger = useLogger('telegram')
 const { telegramBotToken } = useRuntimeConfig()
@@ -32,21 +33,29 @@ bot.preCheckoutQuery(/.+/, async (ctx) => {
 bot.on('message:successful_payment', async (ctx) => {
   try {
     if (ctx?.message?.successful_payment?.invoice_payload && ctx?.message?.successful_payment?.telegram_payment_charge_id) {
-    // invoice_payload
       const invoicePayload = JSON.parse(ctx.message.successful_payment.invoice_payload)
 
       // Telegram payment in stars
       if (invoicePayload?.payment_id) {
-      // telegram_payment_charge_id
         const id = invoicePayload?.payment_id as string
         const telegramChargeId = ctx.message.successful_payment.telegram_payment_charge_id
+
+        const payment = await prisma.payment.findFirst({
+          where: { id },
+        })
+        if (!payment) {
+          return
+        }
 
         await prisma.payment.update({
           where: { id },
           data: {
+            status: 'PAID',
             telegramChargeId,
           },
         })
+
+        await activateProduct(payment.productId, payment.profileId)
       }
     }
 
