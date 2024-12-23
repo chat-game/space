@@ -423,6 +423,7 @@ export interface Product {
   regularPrice: number
   isActive: boolean
   priority: number
+  singlePurchase: boolean
 }
 
 export interface Payment {

@@ -21,6 +21,10 @@ export async function activateProduct(id: string, profileId: string) {
     // 500+150 coins
     return activateProduct5(profileId)
   }
+  if (id === 'xo7wmjsmawgb2rfxfzr7sexb') {
+    // Christmas pack 2024
+    return activateProduct6(profileId)
+  }
 }
 
 function activateProduct1(profileId: string) {
@@ -107,6 +111,49 @@ async function activateProduct5(profileId: string) {
         id: createId(),
         profileId,
         characterId: 'w22vo3qzgfmvgt85ncfg398i',
+      },
+    })
+  }
+}
+
+async function activateProduct6(profileId: string) {
+  // 50 coins
+  await prisma.profile.update({
+    where: { id: profileId },
+    data: {
+      coins: {
+        increment: 50,
+      },
+      patronPoints: {
+        increment: 990,
+      },
+    },
+  })
+
+  // Trophy
+  const trophy = await prisma.trophyEdition.findFirst({
+    where: { profileId, trophyId: 'iadp4l86kc84hwz0culhig91' },
+  })
+  if (!trophy) {
+    await prisma.trophyEdition.create({
+      data: {
+        id: createId(),
+        profileId,
+        trophyId: 'iadp4l86kc84hwz0culhig91',
+      },
+    })
+  }
+
+  // Santa: check if already have char
+  const char = await prisma.characterEdition.findFirst({
+    where: { profileId, characterId: 'ytyz0rtl2s84x2gmbvzl3r5h' },
+  })
+  if (!char) {
+    await prisma.characterEdition.create({
+      data: {
+        id: createId(),
+        profileId,
+        characterId: 'ytyz0rtl2s84x2gmbvzl3r5h',
       },
     })
   }
