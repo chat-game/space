@@ -36,6 +36,7 @@ model Profile {
   trophyEditions     TrophyEdition[]
   itemEditions       InventoryItemEdition[]
   payments           Payment[]
+  leaderboardMembers LeaderboardMember[]
 
   @@map("profile")
 }
@@ -275,6 +276,31 @@ model TrophyEdition {
   trophy    Trophy   @relation(fields: [trophyId], references: [id])
 
   @@map("trophy_edition")
+}
+
+model Leaderboard {
+  id         String              @id
+  createdAt  DateTime            @default(now()) @map("created_at")
+  updatedAt  DateTime            @default(now()) @map("updated_at")
+  finishedAt DateTime?           @map("finished_at")
+  title      String
+  members    LeaderboardMember[]
+
+  @@map("leaderboard")
+}
+
+model LeaderboardMember {
+  id            String      @id
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @default(now()) @map("updated_at")
+  position      Int         @default(0)
+  points        Int         @default(0)
+  profileId     String      @map("profile_id")
+  profile       Profile     @relation(fields: [profileId], references: [id])
+  leaderboardId String      @map("leaderboard_id")
+  leaderboard   Leaderboard @relation(fields: [leaderboardId], references: [id])
+
+  @@map("leaderboard_member")
 }
 
 model Quest {
