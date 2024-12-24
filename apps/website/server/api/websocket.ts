@@ -1,6 +1,7 @@
 import type { CharacterEditionWithCharacter, GameObject, GameObjectPlayer, WebSocketEvents } from '@chat-game/types'
 import type { Room } from '~~/types/room'
 import { createId } from '@paralleldrive/cuid2'
+import { dropChristmasCupcake } from '../core/inventory/drop'
 import { AddonRoom } from '../core/rooms/addon'
 import { WagonRoom } from '../core/rooms/wagon'
 
@@ -154,55 +155,7 @@ export default defineWebSocketHandler({
 
             const player = activeRoom.objects.find((obj) => obj.type === 'PLAYER' && obj.id === peer.id) as GameObject & GameObjectPlayer
             if (player) {
-              const telegramProfile = await prisma.telegramProfile.findFirst({
-                where: { telegramId: player.telegramId },
-                include: {
-                  profile: {
-                    include: {
-                      itemEditions: true,
-                      leaderboardMembers: true,
-                    },
-                  },
-                },
-              })
-              if (telegramProfile && telegramProfile?.profile) {
-                // Drop: 20% to get k3bitdush5wqbwphhdfnxqtl
-                if (Math.random() < 0.2) {
-                  // add item or +1 to amount
-                  const item = telegramProfile.profile.itemEditions.find((item) => item.id === 'k3bitdush5wqbwphhdfnxqtl')
-                  await prisma.inventoryItemEdition.upsert({
-                    where: { id: item?.id },
-                    create: {
-                      id: createId(),
-                      itemId: 'k3bitdush5wqbwphhdfnxqtl',
-                      profileId: telegramProfile.profile.id,
-                      amount: 1,
-                    },
-                    update: {
-                      amount: {
-                        increment: 1,
-                      },
-                    },
-                  })
-
-                  // add +1 to leaderboard 'iq9f2634d3q3ans243dhxmj7' member
-                  const member = telegramProfile.profile.leaderboardMembers.find((member) => member.leaderboardId === 'iq9f2634d3q3ans243dhxmj7')
-                  await prisma.leaderboardMember.upsert({
-                    where: { id: member?.id },
-                    create: {
-                      id: createId(),
-                      leaderboardId: 'iq9f2634d3q3ans243dhxmj7',
-                      profileId: telegramProfile.profile.id,
-                      points: 1,
-                    },
-                    update: {
-                      points: {
-                        increment: 1,
-                      },
-                    },
-                  })
-                }
-              }
+              await dropChristmasCupcake(player.telegramId, 'TREE')
             }
           }
         }
