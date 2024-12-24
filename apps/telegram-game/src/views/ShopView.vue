@@ -40,7 +40,7 @@
           Лимитированный
         </div>
 
-        <div :style="{ 'background-image': `url('/shop/${product.id}/512.png')` }" class="absolute top-0 left-0 right-0 bottom-0 bg-bottom bg-no-repeat bg-cover" />
+        <div :style="{ 'background-image': `url('/shop-assets/${product.id}/512.png')` }" class="absolute top-0 left-0 right-0 bottom-0 bg-bottom bg-no-repeat bg-cover" />
       </ActiveCard>
     </div>
 
