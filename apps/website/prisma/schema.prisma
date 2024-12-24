@@ -71,22 +71,36 @@ model Payment {
 }
 
 model Product {
-  id             String    @id
-  createdAt      DateTime  @default(now()) @map("created_at")
-  updatedAt      DateTime  @default(now()) @map("updated_at")
-  finishAt       DateTime? @map("finish_at")
+  id             String        @id
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @default(now()) @map("updated_at")
+  finishAt       DateTime?     @map("finish_at")
   title          String
   description    String
-  coins          Int       @default(0)
-  bonusCoins     Int       @default(0) @map("bonus_coins")
-  price          Int       @default(0)
-  regularPrice   Int       @default(0) @map("regular_price")
-  starsPrice     Int       @default(0) @map("stars_price")
-  isActive       Boolean   @default(true) @map("is_active")
-  priority       Int       @default(0)
-  singlePurchase Boolean   @default(false) @map("single_purchase")
+  coins          Int           @default(0)
+  bonusCoins     Int           @default(0) @map("bonus_coins")
+  price          Int           @default(0)
+  regularPrice   Int           @default(0) @map("regular_price")
+  starsPrice     Int           @default(0) @map("stars_price")
+  isActive       Boolean       @default(true) @map("is_active")
+  priority       Int           @default(0)
+  singlePurchase Boolean       @default(false) @map("single_purchase")
+  items          ProductItem[]
 
   @@map("product")
+}
+
+model ProductItem {
+  id        String   @id
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+  type      String
+  amount    Int      @default(0)
+  entityId  String?  @map("entity_id")
+  productId String   @map("product_id")
+  product   Product  @relation(fields: [productId], references: [id])
+
+  @@map("product_item")
 }
 
 model TwitchToken {

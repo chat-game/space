@@ -1,9 +1,9 @@
 <template>
-  <Button class="mt-3 min-h-14 flex flex-row gap-2 items-center justify-center" @click="activateCouponToCoins()">
+  <Button class="mt-3 min-h-12 flex flex-row gap-2 items-center justify-center" @click="activateCouponToCoins()">
     <p>Обменять на</p>
-    <div class="flex flex-row gap-2 items-center text-lg">
+    <div class="flex flex-row gap-1.5 items-center text-lg">
       <p>2</p>
-      <img src="/coin-small.png" alt="" class="w-6 h-6">
+      <img src="/coin-small.png" alt="" class="w-5 h-5">
     </div>
   </Button>
 </template>

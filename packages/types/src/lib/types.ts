@@ -426,6 +426,16 @@ export interface Product {
   singlePurchase: boolean
 }
 
+export interface ProductItem {
+  id: string
+  createdAt: Date
+  updatedAt: Date
+  productId: string
+  type: 'COIN' | 'TROPHY' | 'CHARACTER' | 'PATRON_POINT'
+  amount: number
+  entityId: string | null
+}
+
 export interface Payment {
   id: string
   createdAt: Date

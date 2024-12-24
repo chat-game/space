@@ -4,6 +4,9 @@ export default defineEventHandler(
       orderBy: {
         priority: 'asc',
       },
+      include: {
+        items: true,
+      },
     })
     if (!products.length) {
       return []

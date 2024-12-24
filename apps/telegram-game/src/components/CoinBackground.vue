@@ -74,7 +74,7 @@ const options = {
       options: {
         image: [
           {
-            src: '/coin-small.png',
+            src: '/coin.png',
             width: 32,
             height: 32,
             particles: {
