@@ -3,7 +3,7 @@
     <div v-for="item in product.items" :key="item.id" class="px-2 py-3 tg-secondary-bg rounded-2xl flex flex-col justify-center items-center gap-1">
       <img :src="getItemIconByType(item.type, item.entityId)" alt="" class="w-10 h-10">
       <p class="font-medium text-sm leading-tight">
-        {{ item.amount ?? getItemLabelByType(item.type) }}
+        {{ item.amount > 0 ? item.amount : getItemLabelByType(item.type) }}
       </p>
     </div>
   </div>

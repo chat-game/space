@@ -5,7 +5,11 @@ export default defineEventHandler(
         priority: 'asc',
       },
       include: {
-        items: true,
+        items: {
+          orderBy: {
+            priority: 'asc',
+          },
+        },
       },
     })
     if (!products.length) {
