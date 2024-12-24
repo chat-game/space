@@ -4,8 +4,8 @@ export async function dropChristmasCupcake(telegramId: string, type: 'TREE') {
   const itemId = 'k3bitdush5wqbwphhdfnxqtl'
   const leaderboardId = 'iq9f2634d3q3ans243dhxmj7'
 
-  // tree: 20% chance
-  if (type === 'TREE' && Math.random() < 0.2) {
+  // tree: 10% chance
+  if (type === 'TREE' && Math.random() < 0.1) {
     const telegramProfile = await prisma.telegramProfile.findFirst({
       where: { telegramId },
       include: {
@@ -17,9 +17,9 @@ export async function dropChristmasCupcake(telegramId: string, type: 'TREE') {
         },
       },
     })
-    if (telegramProfile && telegramProfile?.profile) {
+    if (telegramProfile?.profile) {
       // add item or +1 to amount
-      const item = telegramProfile.profile.itemEditions.find((item) => item.id === itemId)
+      const item = telegramProfile.profile.itemEditions.find((item) => item.itemId === itemId)
       if (item) {
         await prisma.inventoryItemEdition.update({
           where: { id: item?.id },
