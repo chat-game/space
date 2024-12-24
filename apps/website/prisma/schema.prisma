@@ -97,6 +97,7 @@ model ProductItem {
   type      String
   amount    Int      @default(0)
   entityId  String?  @map("entity_id")
+  priority  Int      @default(0)
   productId String   @map("product_id")
   product   Product  @relation(fields: [productId], references: [id])
 

@@ -433,6 +433,7 @@ export interface ProductItem {
   productId: string
   type: 'COIN' | 'TROPHY' | 'CHARACTER' | 'PATRON_POINT'
   amount: number
+  priority: number
   entityId: string | null
 }
 
