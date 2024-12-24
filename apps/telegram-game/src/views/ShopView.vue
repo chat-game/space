@@ -1,7 +1,7 @@
 <template>
   <PageContainer>
     <div class="mb-4 grid grid-cols-2 gap-2">
-      <ActiveCard class="!p-3 flex flex-row gap-3 items-center" @click="isCoinOpened = true">
+      <ActiveCard class="!px-3 !py-2 flex flex-row gap-3 items-center" @click="isCoinOpened = true">
         <img src="/coin.png" alt="" class="w-12 h-12">
         <div>
           <div class="text-2xl font-medium">
@@ -13,7 +13,7 @@
         </div>
       </ActiveCard>
 
-      <ActiveCard class="!p-3 flex flex-row gap-3 items-center" @click="isCouponOpened = true">
+      <ActiveCard class="!px-3 !py-2 flex flex-row gap-3 items-center" @click="isCouponOpened = true">
         <img src="/coupon-small.png" alt="" class="w-12 h-12">
         <div>
           <div class="text-2xl font-medium">
@@ -103,7 +103,7 @@
   </Modal>
 
   <Modal title="Монета" :is-opened="isCoinOpened" @close="isCoinOpened = false">
-    <img src="/coin.png" alt="" class="absolute -top-20 left-8 w-24 h-24">
+    <img src="/coin.png" alt="" class="absolute -top-18 left-8 w-22 h-22">
 
     <p class="text-sm tg-hint leading-tight">
       Является основной валютой для разблокировки персонажей.
@@ -111,7 +111,7 @@
   </Modal>
 
   <Modal title="Купон со стрима" :is-opened="isCouponOpened" @close="isCouponOpened = false">
-    <img src="/coupon.png" alt="" class="absolute -top-18 left-8 w-24 h-24">
+    <img src="/coupon.png" alt="" class="absolute -top-18 left-8 w-22 h-22">
 
     <p class="text-sm tg-hint leading-tight">
       На стриме twitch.tv/hmbanan666 периодически появляются сообщения с инструкцией, как его получить. Меняй на любую награду ниже.

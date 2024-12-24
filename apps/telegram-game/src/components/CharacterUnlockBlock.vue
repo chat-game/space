@@ -5,9 +5,9 @@
     </div>
     <div v-else class="flex flex-row gap-2 items-center justify-center" @click="setWaitingApproval()">
       <p>Разблокировать за</p>
-      <div class="flex flex-row gap-2 items-center text-lg">
+      <div class="flex flex-row gap-1.5 items-center text-lg">
         <p>{{ character?.price }}</p>
-        <img src="/coin-small.png" alt="" class="w-6 h-6">
+        <img src="/coin-small.png" alt="" class="w-5 h-5">
       </div>
     </div>
   </Button>
