@@ -329,7 +329,7 @@ export interface InventoryItem {
   description: string
 }
 
-export type InventoryItemType = 'BASIC_WOOD'
+export type InventoryItemType = 'BASIC_WOOD' | 'BASIC_CURRENCY' | 'SEASONAL'
 
 export interface InventoryItemEdition {
   id: string
@@ -463,6 +463,24 @@ export interface PaymentCreateResponse {
     payment: Payment
     redirectUrl: string
   }
+}
+
+export interface Leaderboard {
+  id: string
+  createdAt: Date
+  updatedAt: Date
+  finishedAt: Date | null
+  title: string
+}
+
+export interface LeaderboardMember {
+  id: string
+  createdAt: Date
+  updatedAt: Date
+  position: number
+  points: number
+  leaderboardId: string
+  profileId: string
 }
 
 export interface TwitchAccessTokenResponse {
