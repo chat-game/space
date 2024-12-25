@@ -1,9 +1,11 @@
-import type { Leaderboard, LeaderboardMember, Profile } from '@chat-game/types'
+import type { Leaderboard, LeaderboardMember, Profile, TelegramProfile } from '@chat-game/types'
 import { useFetch } from '@vueuse/core'
 
 type LeaderboardData = Leaderboard & {
   members: (LeaderboardMember & {
-    profile: Profile
+    profile: Profile & {
+      telegramProfile: TelegramProfile
+    }
   })[]
 }
 

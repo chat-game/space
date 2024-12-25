@@ -10,6 +10,8 @@ export default defineEventHandler(async (event) => {
 
     const query = getQuery(event)
     const username = query?.username?.toString()
+    const firstName = query?.firstName?.toString()
+    const lastName = query?.lastName?.toString()
 
     const profile = await getProfile(telegramId)
     if (!profile) {
@@ -17,6 +19,8 @@ export default defineEventHandler(async (event) => {
       await repository.findOrCreateTelegramProfile({
         telegramId,
         username,
+        firstName,
+        lastName,
       })
 
       return getProfile(telegramId)

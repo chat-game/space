@@ -10,7 +10,11 @@ export default defineEventHandler(async (event) => {
         },
         take: 500,
         include: {
-          profile: true,
+          profile: {
+            include: {
+              telegramProfile: true,
+            },
+          },
         },
       },
     },

@@ -50,6 +50,8 @@ model TelegramProfile {
   coins      Int      @default(0)
   energy     Int      @default(0)
   username   String?
+  firstName  String   @map("first_name")
+  lastName   String?  @map("last_name")
   profile    Profile?
 
   @@map("telegram_profile")
