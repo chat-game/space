@@ -13,45 +13,16 @@ export default defineEventHandler(async (event) => {
     const firstName = query?.firstName?.toString()
     const lastName = query?.lastName?.toString()
 
-    const profile = await getProfile(telegramId)
-    if (!profile) {
-      const repository = new DBRepository()
-      await repository.findOrCreateTelegramProfile({
-        telegramId,
-        username,
-        firstName,
-        lastName,
-      })
-
-      return getProfile(telegramId)
-    }
+    const repository = new DBRepository()
+    const profile = await repository.findOrCreateTelegramProfile({
+      telegramId,
+      username,
+      firstName,
+      lastName,
+    })
 
     return profile
   } catch (error) {
     throw errorResolver(error)
   }
 })
-
-async function getProfile(telegramId: string) {
-  return prisma.telegramProfile.findFirst({
-    where: { telegramId },
-    include: {
-      profile: {
-        include: {
-          trophyEditions: {
-            include: {
-              trophy: true,
-            },
-          },
-          characterEditions: true,
-          itemEditions: {
-            include: {
-              item: true,
-            },
-          },
-          payments: true,
-        },
-      },
-    },
-  })
-}
