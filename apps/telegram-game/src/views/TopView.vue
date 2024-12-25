@@ -18,8 +18,16 @@
     </div>
 
     <div class="mt-4 mb-4 flex flex-col gap-1">
-      <div v-for="member in leaderboard?.members" :key="member.id" class="px-3 py-1 tg-bg rounded-lg">
-        {{ member.profile.telegramProfile?.firstName }} {{ member.profile.telegramProfile?.lastName }} - {{ member.points }} очков
+      <div v-for="member in leaderboard?.members" :key="member.id" class="px-3 py-2 tg-bg rounded-lg flex flex-row gap-2 justify-between">
+        <div class="flex flex-row gap-2">
+          <p>*</p>
+          <p class="font-medium">
+            {{ member.profile.telegramProfile?.firstName }}
+          </p>
+        </div>
+        <div class="flex flex-row gap-1 items-center">
+          {{ member.points }} <Image src="items/k3bitdush5wqbwphhdfnxqtl/128.png" class="w-5 h-5" />
+        </div>
       </div>
     </div>
 
