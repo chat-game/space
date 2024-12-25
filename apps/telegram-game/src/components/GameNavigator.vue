@@ -6,7 +6,7 @@
       </div>
     </div>
 
-    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+    <div class="hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
       <div class="mt-6 mx-auto w-2 h-12 bg-red-900 rounded-lg" />
       <div class="min-w-12 h-6 flex flex-col justify-center items-center gap-0 text-red-950">
         <p class="text-sm font-medium">

@@ -63,7 +63,11 @@
 import { initData } from '@telegram-apps/sdk-vue'
 
 const data = initData.user()
-const { profile } = useTelegramProfile()
+const { profile, refreshProfile } = useTelegramProfile()
+
+onMounted(() => {
+  refreshProfile()
+})
 
 const isEmptyProfile = computed(() => profile.value?.profile?.twitchId ? profile.value?.profile?.twitchId?.length >= 24 : false)
 const inventoryItems = computed(() => profile.value?.profile?.itemEditions ?? [])
