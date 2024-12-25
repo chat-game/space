@@ -473,6 +473,7 @@ export interface Leaderboard {
   updatedAt: Date
   finishedAt: Date | null
   title: string
+  description: string | null
 }
 
 export interface LeaderboardMember {

@@ -70,6 +70,10 @@ export default defineNuxtConfig({
   nitro: {
     experimental: {
       websocket: true,
+      tasks: true,
+    },
+    scheduledTasks: {
+      '*/10 * * * *': ['game:leaderboard'],
     },
   },
   modules: [

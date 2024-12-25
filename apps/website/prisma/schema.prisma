@@ -281,12 +281,13 @@ model TrophyEdition {
 }
 
 model Leaderboard {
-  id         String              @id
-  createdAt  DateTime            @default(now()) @map("created_at")
-  updatedAt  DateTime            @default(now()) @map("updated_at")
-  finishedAt DateTime?           @map("finished_at")
-  title      String
-  members    LeaderboardMember[]
+  id          String              @id
+  createdAt   DateTime            @default(now()) @map("created_at")
+  updatedAt   DateTime            @default(now()) @map("updated_at")
+  finishedAt  DateTime?           @map("finished_at")
+  title       String
+  description String?
+  members     LeaderboardMember[]
 
   @@map("leaderboard")
 }
