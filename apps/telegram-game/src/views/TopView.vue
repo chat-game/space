@@ -12,6 +12,8 @@
       </div>
     </div>
 
+    <SectionHeader text="Активное событие" />
+
     <div class="tg-section-bg mb-1 px-3 py-3 rounded-2xl">
       <div class="flex flex-row gap-2 items-center">
         <Image src="units/santa/head.png" class="w-12 h-12" />
@@ -92,7 +94,11 @@ import { initData } from '@telegram-apps/sdk-vue'
 
 const data = initData.user()
 const { profile } = useTelegramProfile()
-const { leaderboard } = useLeaderboard()
+const { leaderboard, refreshLeaderboard } = useLeaderboard()
+
+onMounted(() => {
+  refreshLeaderboard()
+})
 
 const profileInLeaderboard = computed(() => leaderboard.value?.members.find((m) => m.profileId === profile.value?.profile.id))
 
