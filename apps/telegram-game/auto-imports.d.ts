@@ -17,6 +17,7 @@ declare global {
   const effectScope: typeof import('vue')['effectScope']
   const eslintConfig: typeof import('./eslint.config.mjs')['default']
   const gameClient: typeof import('./src/utils/gameClient')['gameClient']
+  const getAssetUrl: typeof import('./src/utils/asset')['getAssetUrl']
   const getCurrentInstance: typeof import('vue')['getCurrentInstance']
   const getCurrentScope: typeof import('vue')['getCurrentScope']
   const getEnv: typeof import('./src/utils/env')['getEnv']

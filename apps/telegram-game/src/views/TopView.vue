@@ -16,7 +16,7 @@
 
     <div v-if="trophies.length" class="grid grid-cols-3 gap-2">
       <ActiveCard v-for="edition in trophies" :key="edition.id" class="flex flex-col gap-2 items-center" @click="selectTrophy(edition.id)">
-        <img :src="getTrophyImage(edition.trophy)" alt="" class="w-full h-auto">
+        <Image :src="getTrophyImage(edition.trophy)" class="w-full h-auto" />
         <p class="text-center text-sm font-medium leading-3 line-clamp-2">
           {{ edition.trophy.name }}
         </p>
@@ -60,20 +60,20 @@ function getTrophyImage(data: { rarity: number, id: string, hasImage: boolean })
   if (!data.hasImage) {
     switch (data.rarity) {
       case 0:
-        return '/trophies/common/128.png'
+        return 'trophies/common/128.png'
       case 1:
-        return '/trophies/uncommon/128.png'
+        return 'trophies/uncommon/128.png'
       case 2:
-        return '/trophies/rare/128.png'
+        return 'trophies/rare/128.png'
       case 3:
-        return '/trophies/epic/128.png'
+        return 'trophies/epic/128.png'
       case 4:
-        return '/trophies/legendary/128.png'
+        return 'trophies/legendary/128.png'
       default:
-        return '/trophies/common/128.png'
+        return 'trophies/common/128.png'
     }
   }
 
-  return `/trophies/${data.id}/128.png`
+  return `trophies/${data.id}/128.png`
 }
 </script>

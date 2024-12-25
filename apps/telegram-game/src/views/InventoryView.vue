@@ -33,7 +33,7 @@
 
     <div v-if="inventoryItems.length" class="grid grid-cols-3 gap-2">
       <ActiveCard v-for="edition in inventoryItems" :key="edition.id" class="aspect-square" @click="selectItem(edition.id)">
-        <img :src="`/items/${edition.itemId}/128.png`" alt="" class="w-full h-auto">
+        <Image :src="`items/${edition.itemId}/128.png`" class="w-full h-auto" />
         <div class="absolute bottom-0 right-0">
           <p class="mx-auto w-fit px-3 py-2 tg-secondary-bg rounded-tl-2xl rounded-br-2xl leading-none">
             {{ edition.amount }}

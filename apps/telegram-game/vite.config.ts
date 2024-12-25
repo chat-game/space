@@ -10,7 +10,6 @@ import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 import Terminal from 'vite-plugin-terminal'
 import vueDevTools from 'vite-plugin-vue-devtools'
-import { createConfig } from './plugins/createConfig'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -42,7 +41,6 @@ export default defineConfig({
     }),
     Icons(),
     tailwindcss(),
-    createConfig(),
     Terminal({
       output: 'terminal',
       console: process.env.NODE_ENV === 'development' ? 'terminal' : undefined,
