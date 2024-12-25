@@ -12,6 +12,17 @@
       </div>
     </div>
 
+    <SectionHeader text="Рождественский переполох" />
+    <div v-if="leaderboard?.finishedAt">
+      Окончание {{ new Date(leaderboard.finishedAt).toLocaleString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }) }}
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <div v-for="member in leaderboard?.members" :key="member.id">
+        {{ member.points }}
+      </div>
+    </div>
+
     <SectionHeader text="Мои трофеи" />
 
     <div v-if="trophies.length" class="grid grid-cols-3 gap-2">
@@ -44,6 +55,7 @@ import { initData } from '@telegram-apps/sdk-vue'
 
 const data = initData.user()
 const { profile } = useTelegramProfile()
+const { leaderboard } = useLeaderboard()
 
 const trophies = computed(() => profile.value?.profile.trophyEditions || [])
 

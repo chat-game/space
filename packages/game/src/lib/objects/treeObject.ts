@@ -64,7 +64,7 @@ export class TreeObject extends BaseObject implements GameObjectTree {
 
   chop() {
     this.state = 'CHOPPING'
-    this.health -= getRandomInRange(3, 8)
+    this.health -= getRandomInRange(7, 12)
     this.alpha = 0.9
   }
 
