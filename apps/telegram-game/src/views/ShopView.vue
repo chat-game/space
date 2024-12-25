@@ -2,7 +2,7 @@
   <PageContainer>
     <div class="mb-4 grid grid-cols-2 gap-2">
       <ActiveCard class="!px-3 !py-2 flex flex-row gap-3 items-center" @click="isCoinOpened = true">
-        <img src="/coin.png" alt="" class="w-12 h-12">
+        <Image src="coin.png" class="w-12 h-12" />
         <div>
           <div class="text-2xl font-medium">
             {{ profile?.profile?.coins }}
@@ -14,7 +14,7 @@
       </ActiveCard>
 
       <ActiveCard class="!px-3 !py-2 flex flex-row gap-3 items-center" @click="isCouponOpened = true">
-        <img src="/coupon-small.png" alt="" class="w-12 h-12">
+        <Image src="coupon-small.png" class="w-12 h-12" />
         <div>
           <div class="text-2xl font-medium">
             {{ profile?.profile?.coupons }}
@@ -61,11 +61,11 @@
         </p>
 
         <div v-if="char?.price && !char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)" class="flex flex-row gap-1 items-center">
-          <img src="/coin-small.png" alt="" class="w-5 h-5 grayscale-100">
+          <Image src="coin-small.png" class="w-5 h-5 grayscale-100" />
           <p>{{ char?.price }}</p>
         </div>
 
-        <img :src="`/units/${char?.codename}/128.png`" alt="" class="absolute bottom-0 right-0 w-32 h-auto" :class="{ 'grayscale-100 opacity-70': !char?.editions?.find(({ profileId }) => profileId === profile?.profile.id) }">
+        <Image :src="`units/${char?.codename}/128.png`" class="absolute bottom-0 right-0 w-32 h-auto" :class="{ 'grayscale-100 opacity-70': !char?.editions?.find(({ profileId }) => profileId === profile?.profile.id) }" />
       </ActiveCard>
     </div>
   </PageContainer>
@@ -75,7 +75,7 @@
       <ConfettiBackground />
     </template>
 
-    <img :src="`/units/${selectedCharacter?.codename}/idle.gif`" alt="" class="absolute -top-30 left-0 w-34 h-34">
+    <Image :src="`units/${selectedCharacter?.codename}/idle.gif`" class="absolute -top-30 left-0 w-34 h-34" />
 
     <p class="text-sm tg-hint leading-tight">
       {{ selectedCharacter?.description }}
@@ -103,7 +103,7 @@
   </Modal>
 
   <Modal title="Монета" :is-opened="isCoinOpened" @close="isCoinOpened = false">
-    <img src="/coin.png" alt="" class="absolute -top-18 left-8 w-22 h-22">
+    <Image src="coin.png" class="absolute -top-18 left-8 w-22 h-22" />
 
     <p class="text-sm tg-hint leading-tight">
       Является основной валютой для разблокировки персонажей.
@@ -111,10 +111,10 @@
   </Modal>
 
   <Modal title="Купон со стрима" :is-opened="isCouponOpened" @close="isCouponOpened = false">
-    <img src="/coupon.png" alt="" class="absolute -top-18 left-8 w-22 h-22">
+    <Image src="coupon.png" class="absolute -top-18 left-8 w-22 h-22" />
 
     <p class="text-sm tg-hint leading-tight">
-      На стриме twitch.tv/hmbanan666 периодически появляются сообщения с инструкцией, как его получить. Меняй на любую награду ниже.
+      На стриме <span class="font-medium">twitch.tv/hmbanan666</span> периодически появляются сообщения с инструкцией, как его получить. Меняй на любую награду ниже.
     </p>
 
     <CouponActivationBlock v-if="profile?.profile && profile.profile.coupons > 0" />
@@ -125,12 +125,6 @@
 </template>
 
 <script setup lang="ts">
-import ActiveCard from '@/components/ActiveCard.vue'
-import CharacterActivationBlock from '@/components/CharacterActivationBlock.vue'
-import CharacterUnlockBlock from '@/components/CharacterUnlockBlock.vue'
-import ChristmasBackground from '@/components/ChristmasBackground.vue'
-import CouponActivationBlock from '@/components/CouponActivationBlock.vue'
-
 const { profile } = useTelegramProfile()
 const { characters } = useCharacters()
 const { products } = useShop()

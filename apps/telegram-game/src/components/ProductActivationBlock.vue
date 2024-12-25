@@ -1,7 +1,7 @@
 <template>
   <div v-if="product?.items?.length" class="grid grid-cols-4 gap-2">
     <div v-for="item in product.items" :key="item.id" class="px-2 py-3 tg-secondary-bg rounded-2xl flex flex-col justify-center items-center gap-1">
-      <img :src="getItemIconByType(item.type, item.entityId)" alt="" class="w-10 h-10">
+      <Image :src="getItemIconByType(item.type, item.entityId)" class="w-10 h-10" />
       <p class="font-medium text-sm leading-tight">
         {{ item.amount > 0 ? item.amount : getItemLabelByType(item.type) }}
       </p>
@@ -10,7 +10,7 @@
 
   <Button v-if="product?.starsPrice && !wasPurchased" class="flex flex-row gap-1 items-center justify-center" @click="activateProduct()">
     <p>Приобрести за {{ product.starsPrice }}</p>
-    <img src="/telegram-star.png" alt="" class="w-5 h-5">
+    <Image src="telegram-star.png" class="w-5 h-5" />
   </Button>
 </template>
 
@@ -76,18 +76,18 @@ function getItemIconByType(type: ProductItem['type'], entityId: string | null) {
     if (type === 'CHARACTER') {
       const character = characters.value?.find(({ id }) => id === entityId)
       if (character) {
-        return `/units/${character.codename}/head.png`
+        return `units/${character.codename}/head.png`
       }
     }
   }
 
   switch (type) {
     case 'COIN':
-      return '/coin.png'
+      return 'coin.png'
     case 'TROPHY':
-      return '/trophy.png'
+      return 'trophy.png'
     case 'PATRON_POINT':
-      return '/patron.png'
+      return 'patron.png'
     default:
       return ''
   }

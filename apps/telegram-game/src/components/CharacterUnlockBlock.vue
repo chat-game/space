@@ -7,7 +7,7 @@
       <p>Разблокировать за</p>
       <div class="flex flex-row gap-1.5 items-center text-lg">
         <p>{{ character?.price }}</p>
-        <img src="/coin-small.png" alt="" class="w-5 h-5">
+        <Image src="coin-small.png" class="w-5 h-5" />
       </div>
     </div>
   </Button>

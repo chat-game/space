@@ -8,7 +8,7 @@
         <GameNavigator :player-x="game.player?.x" :wagon-x="game.wagon?.x" />
 
         <div v-if="profile && profile.energy >= 0" class="w-fit h-10 px-5 py-0 flex flex-row items-center gap-2 bg-orange-100/80 text-amber-600 rounded-full">
-          <img src="/energy.png" alt="avatar" class="w-auto h-8">
+          <Image src="energy.png" class="w-auto h-8" />
           <p class="text-xl font-semibold leading-none tracking-tight">
             {{ profile?.energy }}
           </p>
