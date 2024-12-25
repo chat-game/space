@@ -17,9 +17,9 @@
       Окончание {{ new Date(leaderboard.finishedAt).toLocaleString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }) }}
     </div>
 
-    <div class="flex flex-col gap-1">
-      <div v-for="member in leaderboard?.members" :key="member.id">
-        {{ member.points }}
+    <div class="mt-4 mb-4 flex flex-col gap-1">
+      <div v-for="member in leaderboard?.members" :key="member.id" class="px-3 py-1 tg-bg rounded-lg">
+        {{ member.profile.telegramProfile?.firstName }} {{ member.profile.telegramProfile?.lastName }} - {{ member.points }} очков
       </div>
     </div>
 

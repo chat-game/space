@@ -49,6 +49,8 @@ export interface TelegramProfile {
   updatedAt: Date
   telegramId: string
   username: string | null
+  firstName: string
+  lastName: string | null
   level: number
   coins: number
   energy: number

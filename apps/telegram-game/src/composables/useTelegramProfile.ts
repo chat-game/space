@@ -12,16 +12,18 @@ type TelegramProfileWithProfile = TelegramProfile & {
 
 const userId = ref<number>()
 const username = ref<string | undefined>()
-const url = computed(() => `https://chatgame.space/api/telegram/${userId.value}?username=${username.value}`)
+const firstName = ref<string | undefined>()
+const lastName = ref<string | undefined>()
+const url = computed(() => `https://chatgame.space/api/telegram/${userId.value}?username=${username.value}&firstName=${firstName.value}&lastName=${lastName.value}`)
 
-const { data, execute: refreshProfile } = useFetch(url, {
-  immediate: false,
-}).get().json<TelegramProfileWithProfile>()
+const { data, execute: refreshProfile } = useFetch(url, { immediate: false }).get().json<TelegramProfileWithProfile>()
 
 export function useTelegramProfile() {
-  function updateUserData(data: { userId: number, username?: string }) {
+  function updateUserData(data: { userId: number, username?: string, firstName?: string, lastName?: string }) {
     userId.value = data.userId
     username.value = data?.username
+    firstName.value = data?.firstName
+    lastName.value = data?.lastName
   }
 
   return { profile: data, refreshProfile, updateUserData }
