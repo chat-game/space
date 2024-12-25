@@ -16,7 +16,7 @@ onMounted(() => {
   const user = initData.user()
 
   if (user) {
-    updateUserData({ userId: user.id, username: user?.username })
+    updateUserData({ userId: user.id, username: user?.username, firstName: user?.firstName, lastName: user?.lastName })
     refreshProfile()
   }
 })
