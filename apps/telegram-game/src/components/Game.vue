@@ -54,8 +54,7 @@ watch(router.currentRoute, (value) => {
 watch(
   () => hmbanan666.value && game.value.player,
   () => {
-    const isActiveStream = hmbanan666.value?.find((s: any) => s.service === 'HMBANAN666_TWITCH' && s.status === 'RUNNING')
-    if (isActiveStream && !roomConnected.value) {
+    if (!roomConnected.value) {
       game.value.websocketService.connect('12345')
       roomConnected.value = '12345'
     }
