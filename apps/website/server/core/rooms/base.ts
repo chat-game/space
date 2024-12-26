@@ -27,17 +27,43 @@ export class BaseRoom implements Room {
       peer: null,
     }
 
-    this.server.ws.onopen = () => {
-      const prepearedMessage = JSON.stringify({
-        id: createId(),
-        type: 'CONNECT',
-        data: {
-          client: 'SERVER',
-          id: this.id,
-          token: this.token,
-        },
-      })
-      this.server.ws.send(prepearedMessage)
+    this.connectServer()
+  }
+
+  initServerSocket() {
+    const { public: publicEnv } = useRuntimeConfig()
+
+    this.server = {
+      ws: new WebSocket(publicEnv.websocketUrl),
+      peer: null,
     }
+  }
+
+  connectServer() {
+    if (this.server.ws) {
+      this.server.ws.removeEventListener('open', this.onopen.bind(this))
+      this.server.ws.removeEventListener('close', this.onclose.bind(this))
+    }
+
+    this.server.ws.addEventListener('open', this.onopen.bind(this))
+    this.server.ws.addEventListener('close', this.onclose.bind(this))
+  }
+
+  onopen() {
+    const prepearedMessage = JSON.stringify({
+      id: createId(),
+      type: 'CONNECT',
+      data: {
+        client: 'SERVER',
+        id: this.id,
+        token: this.token,
+      },
+    })
+    this.server.ws.send(prepearedMessage)
+  }
+
+  onclose() {
+    this.initServerSocket()
+    this.connectServer()
   }
 }
