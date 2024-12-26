@@ -11,6 +11,8 @@ interface WagonRoomOptions {
 
 export class WagonRoom extends BaseRoom {
   objects: GameObject[] = []
+  wagon!: GameObject & GameObjectWagon
+  wagonObstacle: GameObject | null = null
 
   constructor({ id, token }: WagonRoomOptions) {
     super({ id, token, type: 'WAGON' })
@@ -29,12 +31,8 @@ export class WagonRoom extends BaseRoom {
     this.plantTreesNearWagon()
   }
 
-  get wagon() {
-    return this.objects.find((obj) => obj.type === 'WAGON') as GameObject & GameObjectWagon
-  }
-
   initWagon() {
-    this.objects.push({
+    this.wagon = {
       type: 'WAGON',
       id: createId(),
       x: 300,
@@ -43,17 +41,13 @@ export class WagonRoom extends BaseRoom {
       speedPerSecond: 20,
       size: 100,
       zIndex: -5,
-    })
+    }
+    this.objects.push(this.wagon)
   }
 
   initTrees() {
-    const wagon = this.objects.find((obj) => obj.type === 'WAGON')
-    if (!wagon) {
-      return
-    }
-
     for (let i = 0; i < 50; i++) {
-      const x = wagon?.x + getRandomInRange(-200, 2500)
+      const x = this.wagon.x + getRandomInRange(-200, 2500)
       this.objects.push({
         type: 'TREE',
         id: createId(),
@@ -102,6 +96,11 @@ export class WagonRoom extends BaseRoom {
   }
 
   removeObject(id: string) {
+    // if wagon obstacle - remove it
+    if (this.wagonObstacle?.id === id) {
+      this.wagonObstacle = null
+    }
+
     this.objects = this.objects.filter((o) => o.id !== id)
   }
 
@@ -111,33 +110,23 @@ export class WagonRoom extends BaseRoom {
   }
 
   checkIfObstacleIsClose() {
-    const wagon = this.objects.find((obj) => obj.type === 'WAGON')
-    if (!wagon) {
-      return
-    }
-
-    const availableTree = this.getNearestObstacle(wagon.x)
+    const availableTree = this.getNearestObstacle(this.wagon.x)
     if (!availableTree) {
       return
     }
 
     // if is close - wagon need to wait
-    if (Math.abs(wagon.x - availableTree.x) < 250) {
-      wagon.state = 'IDLE'
+    if (Math.abs(this.wagon.x - availableTree.x) < 250) {
+      this.wagon.state = 'IDLE'
     }
   }
 
   setNearestTarget() {
-    const wagon = this.objects.find((obj) => obj.type === 'WAGON')
-    if (!wagon) {
+    if (this.wagon.state === 'MOVING' || this.wagonObstacle) {
       return
     }
 
-    if (wagon.state !== 'IDLE') {
-      return
-    }
-
-    const availableTree = this.getNearestObstacle(wagon.x)
+    const availableTree = this.getNearestObstacle(this.wagon.x)
     if (!availableTree) {
       return
     }
@@ -146,7 +135,9 @@ export class WagonRoom extends BaseRoom {
 
     sendMessage({ type: 'NEW_WAGON_TARGET', data: { x: targetX } }, this.token)
 
-    wagon.state = 'MOVING'
+    this.wagon.x = targetX
+    this.wagonObstacle = availableTree
+    this.wagon.state = 'MOVING'
   }
 
   getNearestObstacle(x: number): GameObject | undefined {
@@ -159,7 +150,7 @@ export class WagonRoom extends BaseRoom {
   plantTreesNearWagon() {
     const treesInArea = this.treesInArea(this.wagon.x, 4500)
     if (treesInArea < 80) {
-      this.plant(this.wagon.x + getRandomInRange(1800, 4500))
+      this.plant(this.wagon.x + getRandomInRange(this.wagon.x, 4500))
     }
   }
 
@@ -173,6 +164,7 @@ export class WagonRoom extends BaseRoom {
       maxSize: getRandomInRange(100, 175),
     }
 
+    this.addTree(tree)
     sendMessage({ type: 'NEW_TREE', data: { ...tree } }, this.token)
   }
 
