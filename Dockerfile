@@ -5,7 +5,10 @@ FROM base AS builder
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-COPY . .
+COPY package.json pnpm-lock.yaml .npmrc turbo.json ./
+COPY ./packages ./packages
+COPY ./apps/website ./apps/website
+
 RUN corepack enable pnpm \
   && pnpm i --frozen-lockfile --ignore-scripts \
   && pnpm build --filter @chat-game/website
