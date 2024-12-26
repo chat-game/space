@@ -10,7 +10,7 @@ COPY ./packages ./packages
 COPY ./apps/website ./apps/website
 
 RUN corepack enable pnpm \
-  && pnpm i --frozen-lockfile --ignore-scripts \
+  && pnpm i --frozen-lockfile \
   && pnpm build --filter @chat-game/website
 
 # Production image, copy all the files and run
