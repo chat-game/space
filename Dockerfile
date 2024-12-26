@@ -6,11 +6,12 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc turbo.json ./
+COPY ./prisma ./prisma
 COPY ./packages ./packages
 COPY ./apps/website ./apps/website
 
 RUN corepack enable pnpm \
-  && pnpm i --frozen-lockfile \
+  && pnpm i --frozen-lockfile --ignore-scripts \
   && pnpm build --filter @chat-game/website
 
 # Production image, copy all the files and run
