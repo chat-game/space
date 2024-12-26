@@ -1,19 +1,14 @@
 FROM node:22.12.0-alpine AS base
 
-# Install dependencies only when needed
-FROM base AS deps
+# Install dependencies and build
+FROM base AS builder
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml .npmrc ./
-RUN corepack enable pnpm && pnpm i --frozen-lockfile --ignore-scripts
-
-# Rebuild the source code only when needed
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN corepack enable pnpm && pnpm build --filter @chat-game/website
+RUN corepack enable pnpm \
+  && pnpm i --frozen-lockfile --ignore-scripts \
+  && pnpm build --filter @chat-game/website
 
 # Production image, copy all the files and run
 FROM base
