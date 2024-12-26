@@ -14,7 +14,7 @@
   "dependencies": {
     "@chat-game/types": "workspace:*",
     "@paralleldrive/cuid2": "^2.2.2",
-    "pixi.js": "~8.2.6"
+    "pixi.js": "^8.6.6"
   },
   "devDependencies": {
     "@chat-game/eslint": "workspace:*"
