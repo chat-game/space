@@ -3,14 +3,14 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "prisma generate && nuxt build",
-    "dev": "prisma generate && nuxt dev",
+    "build": "npx prisma generate && nuxt build",
+    "dev": "npx prisma generate && nuxt dev",
     "preview": "nuxt preview",
     "clean": "rm -rf dist",
     "clean:modules": "rm -rf .turbo .nuxt node_modules",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "typecheck": "prisma generate && nuxt typecheck",
+    "typecheck": "npx prisma generate && nuxt typecheck",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
