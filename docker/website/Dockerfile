@@ -25,7 +25,7 @@ ENV VERSION=${VERSION}
 
 RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 appuser
 
-COPY --from=builder --chown=appuser:nodejs /app/apps/website/.output ./
+COPY --from=builder /app/apps/website/.output ./
 
 USER appuser
 
