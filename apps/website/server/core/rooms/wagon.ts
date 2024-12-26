@@ -29,6 +29,7 @@ export class WagonRoom extends BaseRoom {
     this.checkIfObstacleIsClose()
     this.setNearestTarget()
     this.plantTreesNearWagon()
+    this.removeTreesBeforeWagon()
   }
 
   initWagon() {
@@ -149,9 +150,15 @@ export class WagonRoom extends BaseRoom {
 
   plantTreesNearWagon() {
     const treesInArea = this.treesInArea(this.wagon.x, 4500)
-    if (treesInArea < 80) {
-      this.plant(this.wagon.x + getRandomInRange(this.wagon.x, 4500))
+    if (treesInArea < 50) {
+      const newTreeX = this.wagon.x + getRandomInRange(1500, 4400)
+      this.plant(newTreeX)
     }
+  }
+
+  removeTreesBeforeWagon() {
+    const treesToRemove = this.objects.filter((obj) => obj.type === 'TREE' && obj.x < this.wagon.x - 1000)
+    treesToRemove.forEach((tree) => this.removeObject(tree.id))
   }
 
   plant(x: number) {
