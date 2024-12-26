@@ -157,9 +157,9 @@ export class WagonRoom extends BaseRoom {
   }
 
   plantTreesNearWagon() {
-    const treesInArea = this.treesInArea(this.wagon.x, 2500)
-    if (treesInArea < 200) {
-      this.plant(this.wagon.x + getRandomInRange(-2500, 2500))
+    const treesInArea = this.treesInArea(this.wagon.x, 4500)
+    if (treesInArea < 80) {
+      this.plant(this.wagon.x + getRandomInRange(1800, 4500))
     }
   }
 
@@ -178,7 +178,7 @@ export class WagonRoom extends BaseRoom {
 
   treesInArea(x: number, offset: number) {
     return this.objects.filter((obj) => obj.type === 'TREE').filter((tree) => {
-      return tree.x > x - offset && tree.x < x + offset
+      return tree.x > x && tree.x < x + offset
     }).length
   }
 }
