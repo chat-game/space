@@ -34,7 +34,7 @@ export function init(debug: boolean): void {
   swipeBehavior.mount()
   closingBehavior.mount()
   initData.restore()
-  void viewport
+  viewport
     .mount()
     .catch((e) => {
       console.error('Something went wrong mounting the viewport', e)
@@ -43,7 +43,7 @@ export function init(debug: boolean): void {
       viewport.bindCssVars()
 
       if (viewport.requestFullscreen.isAvailable()) {
-        void viewport.requestFullscreen().finally(() => {
+        viewport.requestFullscreen().finally(() => {
           // Wait
           setTimeout(() => {
             // The app is now in fullscreen

@@ -59,7 +59,6 @@ export interface GameObjectTree extends GameObject {
 }
 
 export interface GameObjectWagon extends GameObject {
-  setNearestTarget: () => void
   createFlagAndMove: (x: number) => void
 }
 
