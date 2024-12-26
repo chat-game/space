@@ -1,12 +1,11 @@
 import type { CharacterEditionWithCharacter, GameObject, GameObjectPlayer, WebSocketEvents } from '@chat-game/types'
-import type { Room } from '~~/types/room'
+import type { WagonRoom } from '../core/rooms/wagon'
 import { createId } from '@paralleldrive/cuid2'
 import { dropChristmasCupcake } from '../core/inventory/drop'
+import { activeRooms } from '../core/rooms'
 import { AddonRoom } from '../core/rooms/addon'
-import { WagonRoom } from '../core/rooms/wagon'
 
 const logger = useLogger('ws')
-export const activeRooms: Room[] = []
 
 export function sendMessage(message: WebSocketEvents, token: string): void {
   const rooms = activeRooms.filter((room) => room.token === token)
@@ -91,10 +90,6 @@ export default defineWebSocketHandler({
         }
 
         if (client === 'WAGON_CLIENT') {
-          if (!activeRooms.find((room) => room.id === id)) {
-            activeRooms.push(new WagonRoom({ id, token: id }))
-          }
-
           const activeRoom = activeRooms.find((room) => room.id === id) as WagonRoom
           if (!activeRoom.peers.includes(peer.id)) {
             activeRoom.peers.push(peer.id)

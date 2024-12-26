@@ -83,10 +83,6 @@ export class BaseWebSocketService implements WebSocketService {
     }
 
     if (this.addon.client === 'TELEGRAM_CLIENT') {
-      if (message.type === 'NEW_WAGON_TARGET') {
-        const { x } = message.data
-        this.addon.wagon?.createFlagAndMove(x)
-      }
       if (message.type === 'NEW_PLAYER_TARGET') {
         const { id, x } = message.data
         if (this.addon.player?.id !== id) {
@@ -100,6 +96,11 @@ export class BaseWebSocketService implements WebSocketService {
         const { id, x } = message.data
         this.addon.playerService.movePlayer({ id, x })
       }
+    }
+
+    if (message.type === 'NEW_WAGON_TARGET') {
+      const { x } = message.data
+      this.addon.wagon?.createFlagAndMove(x)
     }
 
     if (message.type === 'NEW_TREE') {

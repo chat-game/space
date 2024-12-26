@@ -27,7 +27,6 @@ export class BaseWagonObject extends BaseObject implements GameObjectWagon {
     this.minDistance = 35
 
     this.initVisual()
-    this.setNearestTarget()
   }
 
   override live() {
@@ -38,7 +37,7 @@ export class BaseWagonObject extends BaseObject implements GameObjectWagon {
     }
 
     if (this.state === 'IDLE' && !this.target) {
-      this.setNearestTarget()
+      // this.setNearestTarget()
     }
   }
 
@@ -50,32 +49,6 @@ export class BaseWagonObject extends BaseObject implements GameObjectWagon {
 
     this.drawWheels()
     this.drawEngineClouds()
-  }
-
-  setNearestTarget() {
-    if (this.addon.client !== 'WAGON_CLIENT') {
-      return
-    }
-
-    const availableTree = this.addon.treeService.getNearestObstacle(this.x)
-    if (!availableTree) {
-      return
-    }
-
-    // if is close - wagon need to wait
-    if (Math.abs(this.x - availableTree.x) < 250) {
-      return
-    }
-
-    const targetX = availableTree.x - 200
-
-    this.target = new FlagObject({ addon: this.addon, x: targetX, y: this.y, variant: 'MOVEMENT' })
-    this.script = new MoveToFlagScript({
-      object: this,
-      target: this.target,
-    })
-
-    this.addon.websocketService.send({ type: 'NEW_WAGON_TARGET', data: { x: targetX } })
   }
 
   createFlagAndMove(x: number) {

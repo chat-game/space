@@ -1,5 +1,6 @@
-import type { CharacterEditionWithCharacter, GameObject } from '@chat-game/types'
+import type { CharacterEditionWithCharacter, GameObject, GameObjectTree, GameObjectWagon } from '@chat-game/types'
 import { createId } from '@paralleldrive/cuid2'
+import { sendMessage } from '~~/server/api/websocket'
 import { getRandomInRange } from '~/utils/random'
 import { BaseRoom } from './base'
 
@@ -16,6 +17,20 @@ export class WagonRoom extends BaseRoom {
 
     this.initWagon()
     this.initTrees()
+
+    setInterval(() => {
+      this.update()
+    }, 250)
+  }
+
+  update() {
+    this.checkIfObstacleIsClose()
+    this.setNearestTarget()
+    this.plantTreesNearWagon()
+  }
+
+  get wagon() {
+    return this.objects.find((obj) => obj.type === 'WAGON') as GameObject & GameObjectWagon
   }
 
   initWagon() {
@@ -93,5 +108,77 @@ export class WagonRoom extends BaseRoom {
   getRandomTreeType(): '1' | '2' | '3' | '4' | '5' {
     const items = ['1', '2', '3', '4', '5'] as const
     return items[Math.floor(Math.random() * items.length)] as '1' | '2' | '3' | '4' | '5'
+  }
+
+  checkIfObstacleIsClose() {
+    const wagon = this.objects.find((obj) => obj.type === 'WAGON')
+    if (!wagon) {
+      return
+    }
+
+    const availableTree = this.getNearestObstacle(wagon.x)
+    if (!availableTree) {
+      return
+    }
+
+    // if is close - wagon need to wait
+    if (Math.abs(wagon.x - availableTree.x) < 250) {
+      wagon.state = 'IDLE'
+    }
+  }
+
+  setNearestTarget() {
+    const wagon = this.objects.find((obj) => obj.type === 'WAGON')
+    if (!wagon) {
+      return
+    }
+
+    if (wagon.state !== 'IDLE') {
+      return
+    }
+
+    const availableTree = this.getNearestObstacle(wagon.x)
+    if (!availableTree) {
+      return
+    }
+
+    const targetX = availableTree.x - 200
+
+    sendMessage({ type: 'NEW_WAGON_TARGET', data: { x: targetX } }, this.token)
+
+    wagon.state = 'MOVING'
+  }
+
+  getNearestObstacle(x: number): GameObject | undefined {
+    // Only on right side
+    const trees = this.objects.filter((obj) => obj.type === 'TREE' && obj.x > x) as (GameObject & GameObjectTree)[]
+    // isObstacle
+    return trees.filter((obj) => obj.zIndex >= -5).sort((a, b) => a.x - b.x)[0]
+  }
+
+  plantTreesNearWagon() {
+    const treesInArea = this.treesInArea(this.wagon.x, 2500)
+    if (treesInArea < 200) {
+      this.plant(this.wagon.x + getRandomInRange(-2500, 2500))
+    }
+  }
+
+  plant(x: number) {
+    const tree = {
+      id: createId(),
+      x,
+      zIndex: getRandomInRange(-10, 1),
+      treeType: this.getRandomTreeType(),
+      size: getRandomInRange(4, 8),
+      maxSize: getRandomInRange(100, 175),
+    }
+
+    sendMessage({ type: 'NEW_TREE', data: { ...tree } }, this.token)
+  }
+
+  treesInArea(x: number, offset: number) {
+    return this.objects.filter((obj) => obj.type === 'TREE').filter((tree) => {
+      return tree.x > x - offset && tree.x < x + offset
+    }).length
   }
 }
