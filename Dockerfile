@@ -5,7 +5,7 @@ FROM base AS builder
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml .npmrc turbo.json ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc turbo.json ./
 COPY ./packages ./packages
 COPY ./apps/website ./apps/website
 
