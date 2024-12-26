@@ -1,3 +1,7 @@
+import { twitchAddonController } from '../utils/twitch/twitch.addon.controller'
+import { twitchController } from '../utils/twitch/twitch.controller'
+import { twitchProvider } from '../utils/twitch/twitch.provider'
+
 export default defineNitroPlugin(() => {
   const logger = useLogger('plugin-start-twitch')
   const { twitchChannelId } = useRuntimeConfig()
@@ -10,7 +14,6 @@ export default defineNitroPlugin(() => {
   void twitchController.serve()
   void twitchController.serveStreamOnline()
   void twitchAddonController.serve()
-  void twitchWoodlandController.serve()
 
   setTimeout(checkIfStreamingNow, 8000)
 
