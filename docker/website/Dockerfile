@@ -1,28 +1,35 @@
-ARG NODE=node:22.11.0-alpine
+FROM node:22.12.0-alpine AS base
 
-################# Base builder ##############
-
-FROM $NODE AS builder
+# Install dependencies only when needed
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
+COPY package.json pnpm-lock.yaml* .npmrc* ./
+RUN corepack enable pnpm && pnpm i --frozen-lockfile
 
+# Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm build --filter @chat-game/website
+RUN corepack enable pnpm && pnpm build --filter @chat-game/website
 
-################# Website ##############
-
-FROM $NODE
+# Production image, copy all the files and run
+FROM base
 WORKDIR /app
-COPY --from=builder /app/apps/website/.output .
 
+ENV NODE_ENV=production
 ARG VERSION=nightly
 ENV VERSION=${VERSION}
-ENV NODE_ENV=production
+
+RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 appuser
+
+COPY --from=builder --chown=appuser:nodejs /app/apps/website/.output ./
+
+USER appuser
 
 EXPOSE 3000
+ENV PORT=3000
 
 CMD ["/app/server/index.mjs"]
