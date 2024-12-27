@@ -6,10 +6,27 @@
       <div class="interface">
         <div class="cards">
           <img src="/qr.png" alt="qr" width="150" class="qr">
-          <div class="wagon-card">
-            <NumberFlow class="distance" :value="game?.wagon ? Math.floor(game.wagon.x / 50) : 0" /> м
+
+          <div class="wagon-card event">
+            <img src="/units/santa/head.png" alt="" width="56">
+            <p class="title">
+              Рождественский переполох
+            </p>
           </div>
 
+          <div class="top-players">
+            <div v-for="member in leaderboard?.members.splice(0, 8)" :key="member.id" class="card">
+              <p>{{ member.profile.telegramProfile.firstName }}</p>
+              <div class="points">
+                <p>{{ member.points }}</p>
+                <img src="/icons/christmas-cupcake.png" alt="" width="32" height="32">
+              </div>
+            </div>
+          </div>
+
+          <div class="wagon-card hidden">
+            <NumberFlow class="distance" :value="game?.wagon ? Math.floor(game.wagon.x / 50) : 0" /> м
+          </div>
           <div class="wagon-card hidden">
             {{ game?.children.length }}
           </div>
@@ -20,6 +37,7 @@
 </template>
 
 <script setup lang="ts">
+import type { LeaderboardData } from '@chat-game/types'
 import { BaseGameAddon } from '@chat-game/game'
 import NumberFlow from '@number-flow/vue'
 
@@ -40,6 +58,15 @@ onMounted(async () => {
   stage.value?.appendChild(game.value.app.canvas)
 
   return () => game.value?.destroy()
+})
+
+const christmasId = 'iq9f2634d3q3ans243dhxmj7'
+const { data: leaderboard, execute: refreshLeaderboard } = useFetch<LeaderboardData>(`https://chatgame.space/api/leaderboard/${christmasId}/list`)
+
+onMounted(() => {
+  setInterval(() => {
+    refreshLeaderboard()
+  }, 60 * 1000)
 })
 </script>
 
@@ -112,5 +139,60 @@ onMounted(async () => {
 
   .hidden {
     display: none;
+  }
+
+  .event {
+    padding: 8px 12px;
+    display: flex;
+    gap: 12px;
+
+    .title {
+      font-size: 24px;
+      font-weight: 600;
+      max-width: 200px;
+      line-height: 1.1;
+    }
+  }
+
+  .top-players {
+    display: flex;
+    gap: 8px;
+
+    .card {
+      padding: 8px 12px;
+      min-width: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-items: start;
+      align-items: start;
+      gap: 2px;
+      border-radius: 6px;
+      background-color: #fed7aa;
+
+      p {
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 1.2;
+      }
+    }
+
+    .points {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+
+      img {
+        width: 24px;
+        height: 24px;
+      }
+
+      p {
+        font-weight: 600;
+        font-size: 20px;
+      }
+    }
   }
 </style>
