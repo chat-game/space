@@ -1,5 +1,7 @@
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
+  const query = getQuery(event)
+  const limit = query.limit ? Number.parseInt(query.limit.toString()) : 500
 
   const leaderboard = await prisma.leaderboard.findUnique({
     where: { id },
@@ -8,7 +10,7 @@ export default defineEventHandler(async (event) => {
         orderBy: {
           points: 'desc',
         },
-        take: 500,
+        take: limit,
         include: {
           profile: {
             include: {

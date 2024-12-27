@@ -15,7 +15,7 @@
           </div>
 
           <div class="top-players">
-            <div v-for="member in leaderboard?.members.splice(0, 10)" :key="member.id" class="card">
+            <div v-for="member in leaderboard?.members" :key="member.id" class="card">
               <p>{{ member.profile.telegramProfile.firstName }}</p>
               <div class="points">
                 <p>{{ member.points }}</p>
@@ -51,22 +51,20 @@ const id = route.query.id?.toString() ?? ''
 const stage = ref<HTMLElement>()
 const game = ref<BaseGameAddon>()
 
+const christmasId = 'iq9f2634d3q3ans243dhxmj7'
+const { data: leaderboard, execute: refreshLeaderboard } = useFetch<LeaderboardData>(`https://chatgame.space/api/leaderboard/${christmasId}/list?limit=9`)
+
 onMounted(async () => {
   game.value = new BaseGameAddon({ websocketUrl: publicEnv.websocketUrl, client: 'WAGON_CLIENT' })
   await game.value.init('wagon')
   game.value.websocketService.connect(id)
   stage.value?.appendChild(game.value.app.canvas)
 
-  return () => game.value?.destroy()
-})
-
-const christmasId = 'iq9f2634d3q3ans243dhxmj7'
-const { data: leaderboard, execute: refreshLeaderboard } = useFetch<LeaderboardData>(`https://chatgame.space/api/leaderboard/${christmasId}/list`)
-
-onMounted(() => {
   setInterval(() => {
     refreshLeaderboard()
   }, 60 * 1000)
+
+  return () => game.value?.destroy()
 })
 </script>
 
