@@ -15,6 +15,8 @@ export default defineEventHandler(async (event) => {
 
   // All Telegram API requests
   if (event.path.startsWith('/api/telegram')) {
+    logger.log('/api/telegram', 'token', token)
+
     if (!token) {
       return createError({
         statusCode: 403,
