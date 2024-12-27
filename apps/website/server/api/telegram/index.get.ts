@@ -1,8 +1,8 @@
-import type { InitData } from '@telegram-apps/init-data-node'
+import { validateTelegramData } from '~~/server/core/telegram/validate'
 
 export default defineEventHandler(async (event) => {
   try {
-    const telegram = event.context.telegram as InitData
+    const telegram = validateTelegramData(event)
     if (!telegram?.user) {
       throw createError({
         statusCode: 400,

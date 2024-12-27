@@ -1,65 +1,17 @@
-import { parse, validate } from '@telegram-apps/init-data-node'
-
 export default defineEventHandler(async (event) => {
-  const logger = useLogger('middleware-01-auth')
-
-  const { websiteBearer, telegramBotToken } = useRuntimeConfig()
-
-  const headers = getHeaders(event)
-  const token = headers.authorization ?? headers.Authorization
-
   // Payment webhook dont need auth
-  if (getRequestURL(event).pathname.startsWith('/api/payment/webhook')) {
+  if (event.path.startsWith('/api/payment/webhook')) {
     return
   }
 
-  // All Telegram API requests
-  if (getRequestURL(event).pathname.startsWith('/api/telegram')) {
-    if (event.method !== 'GET' && event.method !== 'POST') {
-      return
-    }
-
-    const token = event.headers.get('Authorization')
-    logger.log(event.path, 'token', token)
-
-    if (!token) {
-      return createError({
-        statusCode: 403,
-      })
-    }
-
-    const [_, authData] = token.split(' ')
-    if (!authData) {
-      return createError({
-        statusCode: 403,
-      })
-    }
-
-    try {
-      validate(authData, telegramBotToken, { expiresIn: 3600 })
-      event.context.telegram = parse(authData)
-    } catch (e) {
-      logger.error(e)
-      return createError({
-        statusCode: 403,
-      })
-    }
-
-    return
+  if (event.method === 'OPTIONS') {
+    event.headers.set('Access-Control-Allow-Origin', '*')
+    event.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
+    return event
   }
 
   const session = await getUserSession(event)
   if (session?.user) {
     // Already authenticated
-    return
-  }
-
-  // Making request with Bearer token
-  if (event.method !== 'GET' && event.method !== 'OPTIONS') {
-    if (!token || token !== `Bearer ${websiteBearer}`) {
-      return createError({
-        statusCode: 403,
-      })
-    }
   }
 })

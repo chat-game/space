@@ -19,7 +19,8 @@ const useApiFetch = createFetch({
 
       options.headers = {
         ...options.headers,
-        Authorization: `tma ${initDataRaw}`,
+        'Authorization': `tma ${initDataRaw}`,
+        'Content-Type': 'application/json',
       }
 
       return { options }
@@ -27,7 +28,7 @@ const useApiFetch = createFetch({
   },
 })
 
-const { data, execute: refreshProfile } = useApiFetch('/me', { immediate: false }).get().json<TelegramProfileWithProfile>()
+const { data, execute: refreshProfile } = useApiFetch('/', { immediate: false }).get().json<TelegramProfileWithProfile>()
 
 export function useTelegramProfile() {
   return { profile: data, refreshProfile, useApiFetch }
