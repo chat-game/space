@@ -98,7 +98,14 @@ export class WagonRoom extends BaseRoom {
     })
   }
 
-  addTree(data: { id: string, x: number, zIndex: number, treeType: '1' | '2' | '3' | '4' | '5', maxSize: number }) {
+  addTree(data: {
+    id: string
+    x: number
+    zIndex: number
+    treeType: GameObjectTree['treeType']
+    variant: GameObjectTree['variant']
+    maxSize: number
+  }) {
     this.objects.push({
       type: 'TREE',
       id: data.id,
@@ -109,7 +116,7 @@ export class WagonRoom extends BaseRoom {
       size: 75,
       maxSize: data.maxSize,
       zIndex: data.zIndex,
-      variant: 'GREEN',
+      variant: data.variant,
       treeType: data.treeType,
     })
   }
@@ -191,25 +198,6 @@ export class WagonRoom extends BaseRoom {
 
       this.chunks = this.chunks.filter((c) => c !== chunk)
     }
-  }
-
-  plant(x: number) {
-    const tree = {
-      id: createId(),
-      x,
-      zIndex: getRandomInRange(-10, 1),
-      treeType: this.getRandomTreeType(),
-      size: getRandomInRange(4, 8),
-      maxSize: getRandomInRange(100, 175),
-    }
-
-    this.addTree(tree)
-    sendMessage({ type: 'NEW_TREE', data: { ...tree } }, this.token)
-  }
-
-  getRandomTreeType(): '1' | '2' | '3' | '4' | '5' {
-    const items = ['1', '2', '3', '4', '5'] as const
-    return items[Math.floor(Math.random() * items.length)] as '1' | '2' | '3' | '4' | '5'
   }
 
   treesInArea(x: number, offset: number) {

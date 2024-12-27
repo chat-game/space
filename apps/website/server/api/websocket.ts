@@ -134,13 +134,7 @@ export default defineWebSocketHandler({
         if (parsed.type === 'NEW_TREE') {
           const tree = activeRoom.objects.find((obj) => obj.type === 'TREE' && obj.id === parsed.data.id)
           if (!tree) {
-            activeRoom.addTree({
-              id: parsed.data.id,
-              x: parsed.data.x,
-              zIndex: parsed.data.zIndex,
-              treeType: parsed.data.treeType,
-              maxSize: parsed.data.maxSize,
-            })
+            activeRoom.addTree({ ...parsed.data })
           }
         }
         if (parsed.type === 'DESTROY_TREE') {

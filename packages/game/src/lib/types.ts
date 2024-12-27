@@ -123,7 +123,7 @@ export interface AssetService {
 }
 
 export interface TreeService {
-  create: (data: { id: string, x: number, zIndex: number, treeType: '1' | '2' | '3' | '4' | '5', size: number, maxSize: number }) => void
+  create: (data: { id: string, x: number, zIndex: number, treeType: GameObjectTree['treeType'], variant: GameObjectTree['variant'], size: number, maxSize: number }) => void
   update: () => void
   getNearestObstacle: (x: number) => GameObjectTree | undefined
 }

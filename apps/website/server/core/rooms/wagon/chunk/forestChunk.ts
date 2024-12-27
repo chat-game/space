@@ -1,3 +1,4 @@
+import type { GameObjectTree } from '@chat-game/types'
 import { createId } from '@paralleldrive/cuid2'
 import { getRandomInRange } from '~/utils/random'
 import { BaseChunk } from './baseChunk'
@@ -8,6 +9,8 @@ interface ForestChunkOptions {
 }
 
 export class ForestChunk extends BaseChunk {
+  variant: GameObjectTree['variant'] = 'GREEN'
+
   constructor({ startX, endX }: ForestChunkOptions) {
     super({ startX, endX })
 
@@ -15,8 +18,9 @@ export class ForestChunk extends BaseChunk {
   }
 
   init() {
-    const treesAmount = this.width / 50
+    this.variant = this.getRandomVariant()
 
+    const treesAmount = this.width / 50
     for (let i = 0; i < treesAmount; i++) {
       const x = getRandomInRange(this.startX, this.endX)
       this.objects.push({
@@ -29,7 +33,7 @@ export class ForestChunk extends BaseChunk {
         size: 75,
         maxSize: getRandomInRange(100, 175),
         zIndex: getRandomInRange(-10, 1),
-        variant: 'GREEN',
+        variant: this.variant,
         treeType: this.getRandomTreeType(),
       })
     }
@@ -38,5 +42,10 @@ export class ForestChunk extends BaseChunk {
   getRandomTreeType(): '1' | '2' | '3' | '4' | '5' {
     const items = ['1', '2', '3', '4', '5'] as const
     return items[Math.floor(Math.random() * items.length)] as '1' | '2' | '3' | '4' | '5'
+  }
+
+  getRandomVariant(): GameObjectTree['variant'] {
+    const items = ['GREEN', 'TOXIC', 'TEAL', 'VIOLET', 'STONE', 'BLUE'] as const
+    return items[Math.floor(Math.random() * items.length)] as GameObjectTree['variant']
   }
 }

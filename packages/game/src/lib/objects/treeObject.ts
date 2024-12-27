@@ -10,7 +10,8 @@ interface TreeObjectOptions {
   zIndex?: number
   size?: number
   maxSize?: number
-  treeType?: '1' | '2' | '3' | '4' | '5'
+  treeType?: GameObjectTree['treeType']
+  variant?: GameObjectTree['variant']
 }
 
 export class TreeObject extends BaseObject implements GameObjectTree {
@@ -25,16 +26,14 @@ export class TreeObject extends BaseObject implements GameObjectTree {
   animationSlowSpeed = 0.04
   animationHighSpeed = 0.5
 
-  constructor({ addon, x, y, size, maxSize, id, zIndex, treeType }: TreeObjectOptions) {
+  constructor({ addon, x, y, size, maxSize, id, zIndex, treeType, variant }: TreeObjectOptions) {
     super({ id, addon, x, y, type: 'TREE' })
 
+    this.health = 100
     this.size = size ?? 100
     this.maxSize = maxSize ?? getRandomInRange(this.minSizeToChop, 145)
-
-    this.health = 100
-    this.variant = 'GREEN'
+    this.variant = variant ?? 'GREEN'
     this.treeType = treeType ?? this.getNewType()
-
     this.zIndex = zIndex ?? getRandomInRange(-10, 1)
     this.isAnObstacleToWagon = this.zIndex >= -5
 
