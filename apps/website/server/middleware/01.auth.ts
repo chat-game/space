@@ -9,13 +9,18 @@ export default defineEventHandler(async (event) => {
   const token = headers.authorization ?? headers.Authorization
 
   // Payment webhook dont need auth
-  if (event.path.startsWith('/api/payment/webhook')) {
+  if (getRequestURL(event).pathname.startsWith('/api/payment/webhook')) {
     return
   }
 
   // All Telegram API requests
-  if (event.path.startsWith('/api/telegram')) {
-    logger.log('/api/telegram', 'token', token)
+  if (getRequestURL(event).pathname.startsWith('/api/telegram')) {
+    if (event.method !== 'GET' && event.method !== 'POST') {
+      return
+    }
+
+    const token = event.headers.get('Authorization')
+    logger.log(event.path, 'token', token)
 
     if (!token) {
       return createError({
