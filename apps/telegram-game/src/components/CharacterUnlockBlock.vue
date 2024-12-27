@@ -18,20 +18,19 @@
 
 <script setup lang="ts">
 import { hapticFeedback } from '@telegram-apps/sdk-vue'
-import { useFetch } from '@vueuse/core'
 
 const { characterId } = defineProps<{
   characterId: string
 }>()
 
 const { characters, refreshCharacters } = useCharacters()
-const { profile, refreshProfile } = useTelegramProfile()
+const { profile, refreshProfile, useApiFetch } = useTelegramProfile()
 const { pop: popConfetti } = useConfetti()
 
 const character = computed(() => characters.value?.find(({ id }) => id === characterId))
 
 async function unlockCharacter() {
-  const { data } = await useFetch(`https://chatgame.space/api/telegram/profile/${profile.value?.id}/character/${characterId}/unlock`).get().json<{ ok: boolean }>()
+  const { data } = await useApiFetch(`/profile/${profile.value?.id}/character/${characterId}/unlock`).get().json<{ ok: boolean }>()
   await refreshProfile()
   await refreshCharacters()
 
