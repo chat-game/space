@@ -1,8 +1,12 @@
 import type { CharacterEditionWithCharacter, GameObject, GameObjectTree, GameObjectWagon } from '@chat-game/types'
+import type { BaseChunk } from './wagon/chunk/baseChunk'
 import { createId } from '@paralleldrive/cuid2'
 import { sendMessage } from '~~/server/api/websocket'
 import { getRandomInRange } from '~/utils/random'
 import { BaseRoom } from './base'
+import { ForestChunk } from './wagon/chunk/forestChunk'
+
+const logger = useLogger('wagon:room')
 
 interface WagonRoomOptions {
   id: string
@@ -11,25 +15,33 @@ interface WagonRoomOptions {
 
 export class WagonRoom extends BaseRoom {
   objects: GameObject[] = []
+  chunks: BaseChunk[] = []
+
   wagon!: GameObject & GameObjectWagon
   wagonObstacle: GameObject | null = null
+  wagonViewDistance = 4500
+  wagonViewNearDistance = 200
 
   constructor({ id, token }: WagonRoomOptions) {
     super({ id, token, type: 'WAGON' })
 
     this.initWagon()
-    this.initTrees()
+    this.initFirstChunk()
 
     setInterval(() => {
       this.update()
     }, 250)
+
+    setInterval(() => {
+      logger.log(`Chunks on Wagon Room: ${this.chunks.length}`, `Objects on Wagon Room: ${this.objects.length}`)
+    }, 60 * 60 * 1000)
   }
 
   update() {
     this.checkIfObstacleIsClose()
     this.setNearestTarget()
-    this.plantTreesNearWagon()
-    this.removeTreesBeforeWagon()
+    this.createNewChunks()
+    this.removeChunksBeforeWagon()
   }
 
   initWagon() {
@@ -46,22 +58,28 @@ export class WagonRoom extends BaseRoom {
     this.objects.push(this.wagon)
   }
 
-  initTrees() {
-    for (let i = 0; i < 50; i++) {
-      const x = this.wagon.x + getRandomInRange(-200, 2500)
-      this.objects.push({
-        type: 'TREE',
-        id: createId(),
-        x,
-        state: 'IDLE',
-        health: 100,
-        speedPerSecond: 0,
-        size: 75,
-        maxSize: getRandomInRange(100, 175),
-        zIndex: getRandomInRange(-10, 1),
-        variant: 'GREEN',
-        treeType: this.getRandomTreeType(),
-      })
+  initFirstChunk() {
+    const newForest = new ForestChunk({ startX: 0, endX: getRandomInRange(2000, 3000) })
+    this.chunks.push(newForest)
+
+    this.objects.push(...newForest.objects)
+  }
+
+  initNextChunk() {
+    const previousChunk = this.chunks[this.chunks.length - 1]
+    if (!previousChunk) {
+      return
+    }
+
+    const newForest = new ForestChunk({ startX: previousChunk.endX, endX: previousChunk.endX + getRandomInRange(2000, 3000) })
+    this.chunks.push(newForest)
+
+    this.objects.push(...newForest.objects)
+
+    for (const obj of newForest.objects) {
+      if (obj.type === 'TREE') {
+        sendMessage({ type: 'NEW_TREE', data: { ...obj } }, this.token)
+      }
     }
   }
 
@@ -105,9 +123,17 @@ export class WagonRoom extends BaseRoom {
     this.objects = this.objects.filter((o) => o.id !== id)
   }
 
-  getRandomTreeType(): '1' | '2' | '3' | '4' | '5' {
-    const items = ['1', '2', '3', '4', '5'] as const
-    return items[Math.floor(Math.random() * items.length)] as '1' | '2' | '3' | '4' | '5'
+  createNewChunks() {
+    // when wagon reach middle of this chunk - create new chunk
+    const lastChunk = this.chunks[this.chunks.length - 1]
+    if (!lastChunk) {
+      return
+    }
+
+    const middleX = (lastChunk.startX + lastChunk.endX) / 2
+    if (this.wagon.x > middleX) {
+      this.initNextChunk()
+    }
   }
 
   checkIfObstacleIsClose() {
@@ -117,7 +143,7 @@ export class WagonRoom extends BaseRoom {
     }
 
     // if is close - wagon need to wait
-    if (Math.abs(this.wagon.x - availableTree.x) < 250) {
+    if (Math.abs(this.wagon.x - availableTree.x) < this.wagonViewNearDistance + 50) {
       this.wagon.state = 'IDLE'
     }
   }
@@ -132,7 +158,7 @@ export class WagonRoom extends BaseRoom {
       return
     }
 
-    const targetX = availableTree.x - 200
+    const targetX = availableTree.x - this.wagonViewNearDistance
 
     sendMessage({ type: 'NEW_WAGON_TARGET', data: { x: targetX } }, this.token)
 
@@ -144,21 +170,27 @@ export class WagonRoom extends BaseRoom {
   getNearestObstacle(x: number): GameObject | undefined {
     // Only on right side
     const trees = this.objects.filter((obj) => obj.type === 'TREE' && obj.x > x) as (GameObject & GameObjectTree)[]
+    if (!trees.length) {
+      return
+    }
+
     // isObstacle
     return trees.filter((obj) => obj.zIndex >= -5).sort((a, b) => a.x - b.x)[0]
   }
 
-  plantTreesNearWagon() {
-    const treesInArea = this.treesInArea(this.wagon.x, 4500)
-    if (treesInArea < 50) {
-      const newTreeX = this.wagon.x + getRandomInRange(1500, 4400)
-      this.plant(newTreeX)
+  removeChunksBeforeWagon() {
+    const chunksToRemove = this.chunks.filter((c) => c.endX < this.wagon.x - this.wagonViewDistance)
+    if (!chunksToRemove.length) {
+      return
     }
-  }
 
-  removeTreesBeforeWagon() {
-    const treesToRemove = this.objects.filter((obj) => obj.type === 'TREE' && obj.x < this.wagon.x - 1000)
-    treesToRemove.forEach((tree) => this.removeObject(tree.id))
+    for (const chunk of chunksToRemove) {
+      for (const obj of chunk.objects) {
+        this.removeObject(obj.id)
+      }
+
+      this.chunks = this.chunks.filter((c) => c !== chunk)
+    }
   }
 
   plant(x: number) {
@@ -175,9 +207,12 @@ export class WagonRoom extends BaseRoom {
     sendMessage({ type: 'NEW_TREE', data: { ...tree } }, this.token)
   }
 
+  getRandomTreeType(): '1' | '2' | '3' | '4' | '5' {
+    const items = ['1', '2', '3', '4', '5'] as const
+    return items[Math.floor(Math.random() * items.length)] as '1' | '2' | '3' | '4' | '5'
+  }
+
   treesInArea(x: number, offset: number) {
-    return this.objects.filter((obj) => obj.type === 'TREE').filter((tree) => {
-      return tree.x > x && tree.x < x + offset
-    }).length
+    return this.objects.filter((obj) => obj.type === 'TREE' && obj.x > x && obj.x < x + offset).length
   }
 }
