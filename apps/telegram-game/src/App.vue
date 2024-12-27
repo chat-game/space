@@ -7,16 +7,15 @@
 </template>
 
 <script setup lang="ts">
-import { initData } from '@telegram-apps/sdk-vue'
+import { retrieveLaunchParams } from '@telegram-apps/sdk-vue'
 
 useBackButton()
-const { refreshProfile, updateUserData } = useTelegramProfile()
+const { refreshProfile } = useTelegramProfile()
 
 onMounted(() => {
-  const user = initData.user()
+  const { initDataRaw } = retrieveLaunchParams()
 
-  if (user) {
-    updateUserData({ userId: user.id, username: user?.username, firstName: user?.firstName, lastName: user?.lastName })
+  if (initDataRaw) {
     refreshProfile()
   }
 })

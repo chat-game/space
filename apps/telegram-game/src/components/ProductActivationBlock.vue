@@ -17,7 +17,6 @@
 <script setup lang="ts">
 import type { ProductItem } from '@chat-game/types'
 import { hapticFeedback } from '@telegram-apps/sdk-vue'
-import { useFetch } from '@vueuse/core'
 
 const { productId } = defineProps<{
   productId: string
@@ -26,14 +25,14 @@ const { productId } = defineProps<{
 const { open: openInvoice } = useInvoice()
 const { products, refreshShop } = useShop()
 const { characters, refreshCharacters } = useCharacters()
-const { profile, refreshProfile } = useTelegramProfile()
+const { profile, refreshProfile, useApiFetch } = useTelegramProfile()
 const { pop: popConfetti } = useConfetti()
 
 const product = computed(() => products.value?.find(({ id }) => id === productId))
 const wasPurchased = computed(() => profile.value?.profile?.payments?.find(({ productId: id, status }) => product.value?.singlePurchase && id === productId && status === 'PAID'))
 
 async function activateProduct() {
-  const { data } = await useFetch(`https://chatgame.space/api/telegram/profile/${profile.value?.id}/payment?id=${productId}`).get().json<{ ok: boolean, result: string }>()
+  const { data } = await useApiFetch(`/profile/${profile.value?.id}/payment?id=${productId}`).get().json<{ ok: boolean, result: string }>()
 
   if (data.value?.ok && data.value?.result) {
     if (hapticFeedback.impactOccurred.isAvailable()) {
