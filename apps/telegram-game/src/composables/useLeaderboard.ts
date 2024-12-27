@@ -1,13 +1,5 @@
-import type { Leaderboard, LeaderboardMember, Profile, TelegramProfile } from '@chat-game/types'
+import type { LeaderboardData } from '@chat-game/types'
 import { useFetch } from '@vueuse/core'
-
-type LeaderboardData = Leaderboard & {
-  members: (LeaderboardMember & {
-    profile: Profile & {
-      telegramProfile: TelegramProfile
-    }
-  })[]
-}
 
 const christmasId = 'iq9f2634d3q3ans243dhxmj7'
 

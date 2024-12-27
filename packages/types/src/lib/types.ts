@@ -486,6 +486,14 @@ export interface LeaderboardMember {
   profileId: string
 }
 
+export type LeaderboardData = Leaderboard & {
+  members: (LeaderboardMember & {
+    profile: Profile & {
+      telegramProfile: TelegramProfile
+    }
+  })[]
+}
+
 export interface TwitchAccessTokenResponse {
   access_token: string
   refresh_token: string
