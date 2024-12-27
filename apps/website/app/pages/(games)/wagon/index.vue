@@ -8,14 +8,14 @@
           <img src="/qr.png" alt="qr" width="150" class="qr">
 
           <div class="wagon-card event">
-            <img src="/units/santa/head.png" alt="" width="56">
+            <img src="/units/santa/head.png" alt="" width="44">
             <p class="title">
               Рождественский переполох
             </p>
           </div>
 
           <div class="top-players">
-            <div v-for="member in leaderboard?.members.splice(0, 8)" :key="member.id" class="card">
+            <div v-for="member in leaderboard?.members.splice(0, 10)" :key="member.id" class="card">
               <p>{{ member.profile.telegramProfile.firstName }}</p>
               <div class="points">
                 <p>{{ member.points }}</p>
@@ -147,10 +147,10 @@ onMounted(() => {
     gap: 12px;
 
     .title {
-      font-size: 24px;
+      font-size: 20px;
       font-weight: 600;
-      max-width: 200px;
-      line-height: 1.1;
+      max-width: 160px;
+      line-height: 1.05;
     }
   }
 
@@ -159,18 +159,18 @@ onMounted(() => {
     gap: 8px;
 
     .card {
-      padding: 8px 12px;
-      min-width: 120px;
+      padding: 6px 10px;
+      min-width: 130px;
       display: flex;
       flex-direction: column;
       justify-items: start;
       align-items: start;
-      gap: 2px;
+      gap: 0;
       border-radius: 6px;
       background-color: #fed7aa;
 
       p {
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 600;
         line-height: 1.2;
       }
@@ -185,13 +185,13 @@ onMounted(() => {
       gap: 4px;
 
       img {
-        width: 24px;
-        height: 24px;
+        width: 20px;
+        height: 20px;
       }
 
       p {
         font-weight: 600;
-        font-size: 20px;
+        font-size: 15px;
       }
     }
   }
