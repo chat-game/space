@@ -13,7 +13,7 @@ model Profile {
   updatedAt          DateTime               @default(now()) @map("updated_at")
   twitchId           String                 @map("twitch_id")
   userName           String                 @map("user_name")
-  isStreamer         Boolean                @default(false)
+  isStreamer         Boolean                @default(false) @map("is_streamer")
   coupons            Int                    @default(0)
   coins              Int                    @default(0)
   mana               Int                    @default(0)
