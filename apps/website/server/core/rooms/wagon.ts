@@ -194,6 +194,10 @@ export class WagonRoom extends BaseRoom {
 
     this.objects = this.objects.filter((o) => o.id !== id)
 
+    // Find and delete object from chunks
+    for (const chunk of this.chunks) {
+      chunk.objects = chunk.objects.filter((o) => o.id !== id)
+    }
     this.updateChunksInStorage()
   }
 
