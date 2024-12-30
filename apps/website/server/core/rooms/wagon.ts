@@ -25,7 +25,18 @@ export class WagonRoom extends BaseRoom {
   constructor({ id, token }: WagonRoomOptions) {
     super({ id, token, type: 'WAGON' })
 
-    this.initWagon()
+    this.init()
+  }
+
+  update() {
+    this.checkIfObstacleIsClose()
+    this.setNearestTarget()
+    this.createNewChunks()
+    this.removeChunksBeforeWagon()
+  }
+
+  async init() {
+    await this.initWagon()
     this.initFirstChunk()
 
     setInterval(() => {
@@ -35,13 +46,6 @@ export class WagonRoom extends BaseRoom {
     setInterval(() => {
       logger.log(`Chunks on Wagon Room: ${this.chunks.length}`, `Objects on Wagon Room: ${this.objects.length}`)
     }, 60 * 60 * 1000)
-  }
-
-  update() {
-    this.checkIfObstacleIsClose()
-    this.setNearestTarget()
-    this.createNewChunks()
-    this.removeChunksBeforeWagon()
   }
 
   async initWagon() {
@@ -79,6 +83,10 @@ export class WagonRoom extends BaseRoom {
   }
 
   initFirstChunk() {
+    if (!this.wagon) {
+      return
+    }
+
     const newForest = new ForestChunk({ startX: this.wagon.x - this.wagonViewDistance / 3, endX: this.wagon.x + getRandomInRange(2000, 3000) })
     this.chunks.push(newForest)
 
