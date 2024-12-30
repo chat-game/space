@@ -11,10 +11,10 @@
 <script setup lang="ts">
 import { hapticFeedback } from '@telegram-apps/sdk-vue'
 
-const { profile, refreshProfile, useApiFetch } = useTelegramProfile()
+const { refreshProfile, useApiFetch } = useTelegramProfile()
 
 async function activateCouponToCoins() {
-  const { data } = await useApiFetch(`/profile/${profile.value?.id}/coupon/activate?type=coins`).get().json<{ ok: boolean }>()
+  const { data } = await useApiFetch(`/coupon/activate?type=coins`).get().json<{ ok: boolean }>()
   await refreshProfile()
 
   if (data.value?.ok) {

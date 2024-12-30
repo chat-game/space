@@ -32,11 +32,11 @@ const product = computed(() => products.value?.find(({ id }) => id === productId
 const wasPurchased = computed(() => profile.value?.profile?.payments?.find(({ productId: id, status }) => product.value?.singlePurchase && id === productId && status === 'PAID'))
 
 async function activateProduct() {
-  const { data } = await useApiFetch(`/profile/${profile.value?.id}/payment?id=${productId}`).get().json<{ ok: boolean, result: string }>()
+  const { data } = await useApiFetch(`/payment?id=${productId}`).get().json<{ ok: boolean, result: string }>()
 
   if (data.value?.ok && data.value?.result) {
     if (hapticFeedback.impactOccurred.isAvailable()) {
-      hapticFeedback.notificationOccurred('success')
+      hapticFeedback.impactOccurred('light')
     }
 
     const status = await openInvoice(data.value.result)
@@ -45,6 +45,10 @@ async function activateProduct() {
       await refreshProfile()
       await refreshCharacters()
       await refreshShop()
+
+      if (hapticFeedback.impactOccurred.isAvailable()) {
+        hapticFeedback.notificationOccurred('success')
+      }
 
       popConfetti()
     }

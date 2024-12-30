@@ -22,8 +22,6 @@ bot.preCheckoutQuery(/.+/, async (ctx) => {
     if (invoicePayload?.payment_id) {
       await ctx.answerPreCheckoutQuery(true)
     }
-
-    logger.log('preCheckoutQuery', ctx?.preCheckoutQuery)
   } catch (error) {
     logger.error(error)
   }

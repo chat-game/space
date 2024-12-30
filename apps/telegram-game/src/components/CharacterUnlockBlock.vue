@@ -24,13 +24,13 @@ const { characterId } = defineProps<{
 }>()
 
 const { characters, refreshCharacters } = useCharacters()
-const { profile, refreshProfile, useApiFetch } = useTelegramProfile()
+const { refreshProfile, useApiFetch } = useTelegramProfile()
 const { pop: popConfetti } = useConfetti()
 
 const character = computed(() => characters.value?.find(({ id }) => id === characterId))
 
 async function unlockCharacter() {
-  const { data } = await useApiFetch(`/profile/${profile.value?.id}/character/${characterId}/unlock`).get().json<{ ok: boolean }>()
+  const { data } = await useApiFetch(`/character/${characterId}/unlock`).get().json<{ ok: boolean }>()
   await refreshProfile()
   await refreshCharacters()
 

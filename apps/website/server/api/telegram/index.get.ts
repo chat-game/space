@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
     if (!telegram?.user) {
       throw createError({
         statusCode: 400,
-        message: 'You must provide user',
+        message: 'User is not valid',
       })
     }
 

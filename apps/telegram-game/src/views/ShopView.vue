@@ -50,7 +50,7 @@
       <ActiveCard v-for="char in characters" :key="char.id" class="aspect-square" @click="selectCharacter(char.id)">
         <div v-if="!char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)" class="z-10 absolute top-0 left-0 right-0 bottom-0 tg-secondary-bg opacity-40" />
 
-        <div v-if="profile?.profile?.activeEditionId === char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)?.id" class="tg-accent-text text-base font-medium leading-tight">
+        <div v-if="profile?.profile?.activeEditionId && profile?.profile?.activeEditionId === char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)?.id" class="tg-accent-text text-base font-medium leading-tight">
           Активный
         </div>
         <p class="font-medium text-lg leading-tight">
