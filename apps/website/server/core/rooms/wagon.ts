@@ -193,6 +193,8 @@ export class WagonRoom extends BaseRoom {
     }
 
     this.objects = this.objects.filter((o) => o.id !== id)
+
+    this.updateChunksInStorage()
   }
 
   createNewChunks() {
@@ -278,6 +280,8 @@ export class WagonRoom extends BaseRoom {
       }
 
       this.chunks = this.chunks.filter((c) => c !== chunk)
+
+      this.updateChunksInStorage()
     }
   }
 

@@ -80,7 +80,7 @@ export class TreeObject extends BaseObject implements GameObjectTree {
 
     switch (this.state) {
       case 'IDLE':
-        this.grow()
+        // this.grow()
         break
       case 'CHOPPING':
         this.handleChoppingState()
@@ -108,7 +108,9 @@ export class TreeObject extends BaseObject implements GameObjectTree {
       return
     }
 
-    this.visible = true
+    if (!this.visible) {
+      this.visible = true
+    }
   }
 
   shakeAnimation() {

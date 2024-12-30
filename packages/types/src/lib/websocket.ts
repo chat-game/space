@@ -149,6 +149,7 @@ export interface WebSocketNewTree {
     zIndex: number
     treeType: GameObjectTree['treeType']
     variant: GameObjectTree['variant']
+    size: number
     maxSize: number
   }
 }

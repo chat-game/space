@@ -33,6 +33,8 @@ export class ForestChunk extends BaseChunk {
     const treesAmount = this.width / 50
     for (let i = 0; i < treesAmount; i++) {
       const x = getRandomInRange(this.startX, this.endX)
+      const size = getRandomInRange(100, 175)
+
       this.objects.push({
         type: 'TREE',
         id: createId(),
@@ -40,8 +42,8 @@ export class ForestChunk extends BaseChunk {
         state: 'IDLE',
         health: 100,
         speedPerSecond: 0,
-        size: 75,
-        maxSize: getRandomInRange(100, 175),
+        size,
+        maxSize: size,
         zIndex: getRandomInRange(-10, 1),
         variant: this.variant,
         treeType: this.getRandomTreeType(),
