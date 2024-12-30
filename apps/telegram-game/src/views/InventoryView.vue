@@ -4,7 +4,7 @@
       <img :src="data?.photoUrl" alt="avatar" class="w-14 h-14 rounded-full">
       <div>
         <div class="text-xl font-medium">
-          {{ data?.username }}
+          {{ data?.firstName }} {{ data?.lastName }}
         </div>
         <div class="tg-hint text-sm">
           {{ data?.id }}

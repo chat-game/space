@@ -21,7 +21,7 @@ const character = computed(() => characters.value?.find(({ id }) => id === chara
 const isActive = computed(() => profile.value?.profile?.activeEditionId === character.value?.editions?.find(({ profileId }) => profileId === profile.value?.profile.id)?.id)
 
 async function activateCharacter() {
-  await useApiFetch(`/profile/${profile.value?.id}/character/${characterId}/activate`).get().json()
+  await useApiFetch(`/character/${characterId}/activate`).get().json()
   await refreshProfile()
   await refreshCharacters()
 

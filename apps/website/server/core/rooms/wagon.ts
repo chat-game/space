@@ -162,6 +162,18 @@ export class WagonRoom extends BaseRoom {
 
     const availableTree = this.getNearestObstacle(this.wagon.x)
     if (!availableTree) {
+      logger.warn('No available tree', `Wagon x: ${this.wagon.x}`, `Objects: ${this.objects.length}`, `Chunks: ${this.chunks.length}`)
+
+      // Create helper tree
+      this.addTree({
+        id: createId(),
+        x: this.wagon.x + this.wagonViewNearDistance * 3,
+        zIndex: 0,
+        treeType: '1',
+        variant: 'GREEN',
+        maxSize: 100,
+      })
+
       return
     }
 

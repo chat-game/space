@@ -1,17 +1,5 @@
 <template>
   <PageContainer>
-    <div class="tg-section-bg mb-4 px-3 py-3 flex flex-row gap-2 items-center rounded-2xl">
-      <img :src="data?.photoUrl" alt="avatar" class="w-14 h-14 rounded-full">
-      <div>
-        <div class="text-xl font-medium">
-          {{ data?.username }}
-        </div>
-        <div class="tg-hint text-sm">
-          {{ data?.id }}
-        </div>
-      </div>
-    </div>
-
     <SectionHeader text="Активное событие" />
 
     <div class="tg-section-bg mb-1 px-3 py-3 rounded-2xl">
@@ -90,9 +78,6 @@
 </template>
 
 <script setup lang="ts">
-import { initData } from '@telegram-apps/sdk-vue'
-
-const data = initData.user()
 const { profile } = useTelegramProfile()
 const { leaderboard, refreshLeaderboard } = useLeaderboard()
 
