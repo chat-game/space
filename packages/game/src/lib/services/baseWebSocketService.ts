@@ -62,7 +62,7 @@ export class BaseWebSocketService implements WebSocketService {
             this.addon.playerService.createPlayer({ id: obj.id, telegramId: obj.telegramId, x: obj.x, character: obj.character })
           }
         } else if (obj.type === 'TREE') {
-          this.addon.treeService.create({ id: obj.id, x: obj.x, zIndex: obj.zIndex, treeType: obj.treeType, variant: obj.variant, size: 75, maxSize: obj.maxSize })
+          this.addon.treeService.create({ id: obj.id, x: obj.x, zIndex: obj.zIndex, treeType: obj.treeType, variant: obj.variant, size: obj.size, maxSize: obj.maxSize })
         } else {
           this.addon.createObject({ type: obj.type, id: obj.id, x: obj.x, zIndex: obj?.zIndex })
         }
@@ -78,8 +78,7 @@ export class BaseWebSocketService implements WebSocketService {
       }
     }
     if (message.type === 'DISCONNECTED_FROM_WAGON_ROOM') {
-      const { id } = message.data
-      this.addon.playerService.removePlayer(id)
+      this.addon.playerService.removePlayer(message.data.id)
     }
 
     if (this.addon.client === 'TELEGRAM_CLIENT') {
@@ -99,17 +98,14 @@ export class BaseWebSocketService implements WebSocketService {
     }
 
     if (message.type === 'NEW_WAGON_TARGET') {
-      const { x } = message.data
-      this.addon.wagon?.createFlagAndMove(x)
+      this.addon.wagon?.createFlagAndMove(message.data.x)
     }
 
     if (message.type === 'NEW_TREE') {
-      const { id, x, zIndex, treeType, variant, maxSize } = message.data
-      this.addon.treeService.create({ id, x, zIndex, treeType, variant, size: 8, maxSize })
+      this.addon.treeService.create({ ...message.data })
     }
     if (message.type === 'DESTROY_TREE') {
-      const { id } = message.data
-      this.addon.removeObject(id)
+      this.addon.removeObject(message.data.id)
     }
   }
 
