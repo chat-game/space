@@ -1,5 +1,5 @@
 import type { CharacterEditionWithCharacter, GameObject, GameObjectTree, GameObjectWagon } from '@chat-game/types'
-import type { BaseChunk } from './wagon/chunk/baseChunk'
+import type { Chunk } from './wagon/types'
 import { createId } from '@paralleldrive/cuid2'
 import { sendMessage } from '~~/server/api/websocket'
 import { getRandomInRange } from '~/utils/random'
@@ -15,7 +15,7 @@ interface WagonRoomOptions {
 
 export class WagonRoom extends BaseRoom {
   objects: GameObject[] = []
-  chunks: BaseChunk[] = []
+  chunks: Chunk[] = []
 
   wagon!: GameObject & GameObjectWagon
   wagonObstacle: GameObject | null = null
@@ -37,7 +37,7 @@ export class WagonRoom extends BaseRoom {
 
   async init() {
     await this.initWagon()
-    this.initFirstChunk()
+    await this.initChunks()
 
     setInterval(() => {
       this.update()
@@ -82,15 +82,51 @@ export class WagonRoom extends BaseRoom {
     return wagon
   }
 
+  async initChunks() {
+    const chunksInStorage = await this.getChunksFromStorage()
+    if (chunksInStorage.length) {
+      for (const chunk of chunksInStorage) {
+        const newChunk = new ForestChunk(chunk)
+        this.chunks.push(newChunk)
+        this.objects.push(...newChunk.objects)
+      }
+
+      this.updateChunksInStorage()
+      return
+    }
+
+    this.initFirstChunk()
+  }
+
+  async updateChunksInStorage() {
+    const chunksKey = `room:${this.id}:chunks`
+    useStorage('redis').setItem(chunksKey, this.chunks)
+  }
+
+  async getChunksFromStorage() {
+    const chunksKey = `room:${this.id}:chunks`
+    const chunks = await useStorage<Chunk[]>('redis').getItem(chunksKey)
+    if (!chunks) {
+      return []
+    }
+
+    return chunks
+  }
+
   initFirstChunk() {
     if (!this.wagon) {
       return
     }
 
-    const newForest = new ForestChunk({ startX: this.wagon.x - this.wagonViewDistance / 3, endX: this.wagon.x + getRandomInRange(2000, 3000) })
-    this.chunks.push(newForest)
+    const width = getRandomInRange(3000, 4000)
+    const startX = Math.floor(this.wagon.x - width / 2)
+    const endX = Math.floor(this.wagon.x + width / 2)
 
+    const newForest = new ForestChunk({ startX, endX })
+    this.chunks.push(newForest)
     this.objects.push(...newForest.objects)
+
+    this.updateChunksInStorage()
   }
 
   initNextChunk() {
@@ -101,7 +137,6 @@ export class WagonRoom extends BaseRoom {
 
     const newForest = new ForestChunk({ startX: previousChunk.endX, endX: previousChunk.endX + getRandomInRange(2000, 3000) })
     this.chunks.push(newForest)
-
     this.objects.push(...newForest.objects)
 
     for (const obj of newForest.objects) {
@@ -109,6 +144,8 @@ export class WagonRoom extends BaseRoom {
         sendMessage({ type: 'NEW_TREE', data: { ...obj } }, this.token)
       }
     }
+
+    this.updateChunksInStorage()
   }
 
   addPlayer(data: { id: string, telegramId: string, x: number, character: CharacterEditionWithCharacter }) {
@@ -180,6 +217,8 @@ export class WagonRoom extends BaseRoom {
     // if is close - wagon need to wait
     if (Math.abs(this.wagon.x - availableTree.x) < this.wagonViewNearDistance + 50) {
       this.wagon.state = 'IDLE'
+
+      this.updateWagonInStorage()
     }
   }
 
