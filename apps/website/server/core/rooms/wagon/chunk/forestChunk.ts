@@ -1,4 +1,4 @@
-import type { GameObjectTree } from '@chat-game/types'
+import type { GameObject, GameObjectTree } from '@chat-game/types'
 import { createId } from '@paralleldrive/cuid2'
 import { getRandomInRange } from '~/utils/random'
 import { BaseChunk } from './baseChunk'
@@ -6,20 +6,30 @@ import { BaseChunk } from './baseChunk'
 interface ForestChunkOptions {
   startX: number
   endX: number
+  id?: string
+  objects?: GameObject[]
+  variant?: GameObjectTree['variant']
 }
 
 export class ForestChunk extends BaseChunk {
   variant: GameObjectTree['variant'] = 'GREEN'
 
-  constructor({ startX, endX }: ForestChunkOptions) {
-    super({ startX, endX })
+  constructor({ startX, endX, id, objects, variant }: ForestChunkOptions) {
+    super({ startX, endX, id })
+
+    this.variant = variant ?? this.getRandomVariant()
+    this.objects = objects ?? []
 
     this.init()
   }
 
   init() {
-    this.variant = this.getRandomVariant()
+    if (!this.objects.length) {
+      this.initTrees()
+    }
+  }
 
+  initTrees() {
     const treesAmount = this.width / 50
     for (let i = 0; i < treesAmount; i++) {
       const x = getRandomInRange(this.startX, this.endX)
