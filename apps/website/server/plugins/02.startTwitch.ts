@@ -22,7 +22,7 @@ export default defineNitroPlugin(() => {
 
   setTimeout(checkIfStreamingNow, 8000)
 
-  logger.log('Twitch server started')
+  logger.success('Twitch server started')
 })
 
 async function checkIfStreamingNow() {

@@ -17,5 +17,5 @@ export default defineNitroPlugin(() => {
   // Start the bot (using long polling)
   bot.start()
 
-  logger.log('Telegram server started')
+  logger.success('Telegram server started')
 })

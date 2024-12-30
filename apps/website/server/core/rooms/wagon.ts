@@ -44,8 +44,14 @@ export class WagonRoom extends BaseRoom {
     this.removeChunksBeforeWagon()
   }
 
-  initWagon() {
-    this.wagon = {
+  async initWagon() {
+    const wagonInStorage = await this.getWagonFromStorage()
+    this.wagon = wagonInStorage ?? this.createNewWagon()
+    this.objects.push(this.wagon)
+  }
+
+  createNewWagon() {
+    return {
       type: 'WAGON',
       id: createId(),
       x: 300,
@@ -54,12 +60,26 @@ export class WagonRoom extends BaseRoom {
       speedPerSecond: 20,
       size: 100,
       zIndex: -5,
+    } as GameObject & GameObjectWagon
+  }
+
+  async updateWagonInStorage() {
+    const wagonKey = `room:${this.id}:wagon`
+    useStorage('redis').setItem(wagonKey, this.wagon)
+  }
+
+  async getWagonFromStorage() {
+    const wagonKey = `room:${this.id}:wagon`
+    const wagon = await useStorage<GameObject & GameObjectWagon>('redis').getItem(wagonKey)
+    if (!wagon) {
+      return null
     }
-    this.objects.push(this.wagon)
+
+    return wagon
   }
 
   initFirstChunk() {
-    const newForest = new ForestChunk({ startX: 0, endX: getRandomInRange(2000, 3000) })
+    const newForest = new ForestChunk({ startX: this.wagon.x - this.wagonViewDistance / 3, endX: this.wagon.x + getRandomInRange(2000, 3000) })
     this.chunks.push(newForest)
 
     this.objects.push(...newForest.objects)
@@ -181,9 +201,11 @@ export class WagonRoom extends BaseRoom {
 
     sendMessage({ type: 'NEW_WAGON_TARGET', data: { x: targetX } }, this.token)
 
-    this.wagon.x = targetX
     this.wagonObstacle = availableTree
+    this.wagon.x = targetX
     this.wagon.state = 'MOVING'
+
+    this.updateWagonInStorage()
   }
 
   getNearestObstacle(x: number): GameObject | undefined {

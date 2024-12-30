@@ -41,6 +41,7 @@ export default defineNuxtConfig({
   },
   css: ['~/assets/css/styles.css'],
   runtimeConfig: {
+    redisUrl: '', // NUXT_REDIS_URL
     websiteBearer: '', // NUXT_WEBSITE_BEARER
     twitchChannelName: '', // NUXT_TWITCH_CHANNEL_NAME
     twitchChannelId: '', // NUXT_TWITCH_CHANNEL_ID

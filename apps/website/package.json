@@ -30,6 +30,7 @@
     "@twurple/pubsub": "^7.2.1",
     "grammy": "^1.33.0",
     "howler": "^2.2.4",
+    "ioredis": "^5.4.2",
     "lucide-vue-next": "^0.469.0",
     "zod": "^3.24.1"
   },
