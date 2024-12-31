@@ -12,25 +12,6 @@
       </div>
     </div>
 
-    <div v-if="isEmptyProfile" class="tg-section-bg mb-4 p-3 flex flex-col gap-2 items-center rounded-2xl">
-      <div class="w-full space-y-3">
-        <div class="text-xl font-medium">
-          Есть профиль на ChatGame?
-        </div>
-        <div class="tg-hint text-sm">
-          Привяжи свою основную учетную запись на сайте. Потребуется Twitch.
-        </div>
-
-        <div class="flex flex-col items-center">
-          <a :href="`https://chatgame.space/connect?id=${data?.id}`" target="_blank" class="w-full">
-            <Button>
-              Подключить
-            </Button>
-          </a>
-        </div>
-      </div>
-    </div>
-
     <div v-if="inventoryItems.length" class="grid grid-cols-3 gap-2">
       <ActiveCard v-for="edition in inventoryItems" :key="edition.id" class="aspect-square" @click="selectItem(edition.id)">
         <Image :src="`items/${edition.itemId}/128.png`" class="w-full h-auto" />
@@ -46,6 +27,23 @@
         Нет предметов в инвентаре
       </p>
     </div>
+
+    <div v-if="isEmptyProfile" class="tg-section-bg mb-4 p-3 flex flex-col gap-2 items-center rounded-2xl">
+      <div class="w-full space-y-3">
+        <div class="text-xl font-medium">
+          Есть профиль на ChatGame?
+        </div>
+        <div class="tg-hint text-sm">
+          Привяжи свою основную учетную запись на сайте. Потребуется Twitch.
+        </div>
+
+        <div class="flex flex-col items-center">
+          <Button class="w-full" @click="openChatGameLink()">
+            Подключить
+          </Button>
+        </div>
+      </div>
+    </div>
   </PageContainer>
 
   <Modal :title="selectedItem?.item.name ?? ''" :is-opened="isItemOpened" @close="isItemOpened = false">
@@ -60,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { initData } from '@telegram-apps/sdk-vue'
+import { initData, openLink } from '@telegram-apps/sdk-vue'
 
 const data = initData.user()
 const { profile, refreshProfile } = useTelegramProfile()
@@ -79,5 +77,13 @@ const selectedItem = computed(() => inventoryItems.value?.find(({ id }) => id ==
 function selectItem(id: string) {
   isItemOpened.value = true
   selectedItemId.value = id
+}
+
+function openChatGameLink() {
+  if (openLink.isAvailable()) {
+    openLink(`https://chatgame.space/connect?id=${data?.id}`, {
+      tryInstantView: true,
+    })
+  }
 }
 </script>

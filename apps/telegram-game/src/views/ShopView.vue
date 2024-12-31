@@ -111,15 +111,19 @@
   </Modal>
 
   <Modal title="Купон со стрима" :is-opened="isCouponOpened" @close="isCouponOpened = false">
+    <template #bg>
+      <ConfettiBackground />
+    </template>
+
     <Image src="coupon.png" class="absolute -top-18 left-8 w-22 h-22" />
 
     <p class="text-sm tg-hint leading-tight">
-      На стриме <span class="font-medium">twitch.tv/hmbanan666</span> периодически появляются сообщения с инструкцией, как его получить. Меняй на любую награду ниже.
+      На стриме <span class="font-medium">twitch.tv/hmbanan666</span> периодически появляются сообщения с инструкцией, как его получить. Обменивай на награду.
     </p>
 
     <CouponActivationBlock v-if="profile?.profile && profile.profile.coupons > 0" />
     <div v-else class="px-8 tg-hint text-center font-medium leading-tight">
-      У вас нет купонов
+      Больше нет купонов
     </div>
   </Modal>
 </template>
