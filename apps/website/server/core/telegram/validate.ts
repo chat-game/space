@@ -19,7 +19,7 @@ export function validateTelegramData(event: H3Event): InitData | undefined {
   }
 
   try {
-    validate(authData, telegramBotToken, { expiresIn: 3600 })
+    validate(authData, telegramBotToken, { expiresIn: 0 })
     return parse(authData)
   } catch (e) {
     logger.error(e)

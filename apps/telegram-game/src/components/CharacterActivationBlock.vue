@@ -21,12 +21,15 @@ const character = computed(() => characters.value?.find(({ id }) => id === chara
 const isActive = computed(() => profile.value?.profile?.activeEditionId === character.value?.editions?.find(({ profileId }) => profileId === profile.value?.profile.id)?.id)
 
 async function activateCharacter() {
-  await useApiFetch(`/character/${characterId}/activate`).get().json()
-  await refreshProfile()
-  await refreshCharacters()
+  const { data } = await useApiFetch(`/character/${characterId}/activate`).get().json<{ ok: true }>()
 
-  if (hapticFeedback.impactOccurred.isAvailable()) {
-    hapticFeedback.notificationOccurred('success')
+  if (data.value?.ok) {
+    await refreshProfile()
+    await refreshCharacters()
+
+    if (hapticFeedback.impactOccurred.isAvailable()) {
+      hapticFeedback.notificationOccurred('success')
+    }
   }
 }
 </script>
