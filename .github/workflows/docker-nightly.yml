@@ -48,6 +48,9 @@ jobs:
     needs: determine-changes
     if: ${{ needs.determine-changes.outputs.matrix != '[]' }}
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
     strategy:
       matrix:
         app: ${{ fromJson(needs.determine-changes.outputs.matrix) }}
@@ -60,7 +63,7 @@ jobs:
           echo "APP_NAME=${{ matrix.app }}" >> $GITHUB_ENV
           echo "APP_VERSION=nightly" >> $GITHUB_ENV
 
-      - name: Login to Github Registry
+      - name: Login to Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
