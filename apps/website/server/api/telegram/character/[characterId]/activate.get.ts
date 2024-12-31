@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     const characterId = getRouterParam(event, 'characterId')
 
     const telegramProfile = await prisma.telegramProfile.findFirst({
-      where: { id: telegramId },
+      where: { telegramId },
       include: {
         profile: {
           include: {

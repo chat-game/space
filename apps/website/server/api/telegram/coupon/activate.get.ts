@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
     const type = query?.type?.toString()
 
     const telegramProfile = await prisma.telegramProfile.findFirst({
-      where: { id: telegramId },
+      where: { telegramId },
       include: {
         profile: true,
       },
