@@ -2,7 +2,7 @@ import { Bot } from 'grammy'
 import { activateProduct } from '../product/activate'
 
 const logger = useLogger('telegram')
-const { telegramBotToken } = useRuntimeConfig()
+const { telegramBotToken, telegramAdminId } = useRuntimeConfig()
 
 // Create a bot object
 const bot = new Bot(telegramBotToken)
@@ -54,6 +54,8 @@ bot.on('message:successful_payment', async (ctx) => {
         })
 
         await activateProduct(payment.productId, payment.profileId)
+
+        await notifyAdmin(`Пользователь ${payment.profileId} совершил покупку. +${payment.amount} XTR`)
       }
     }
 
@@ -63,4 +65,8 @@ bot.on('message:successful_payment', async (ctx) => {
   }
 })
 
-export { bot }
+async function notifyAdmin(message: string) {
+  return bot.api.sendMessage(telegramAdminId, message)
+}
+
+export { bot, notifyAdmin }

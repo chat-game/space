@@ -9,7 +9,7 @@ import type {
   TwitchToken,
 } from '@chat-game/types'
 import { createId } from '@paralleldrive/cuid2'
-
+import { notifyAdmin } from '../core/telegram/bot'
 import { getDateMinusMinutes } from './date'
 
 export class DBRepository {
@@ -173,6 +173,8 @@ export class DBRepository {
           activeEditionId: edition.id,
         },
       })
+
+      await notifyAdmin(`Новый игровой профиль: ${telegramId}, ${finalFirstName} ${lastName}`)
 
       return this.getTelegramProfile(createdProfile.telegramId)
     }

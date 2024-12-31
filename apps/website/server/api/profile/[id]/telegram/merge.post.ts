@@ -1,3 +1,5 @@
+import { notifyAdmin } from '~~/server/core/telegram/bot'
+
 export default defineEventHandler(
   async (event) => {
     const profileId = getRouterParam(event, 'id')
@@ -84,6 +86,8 @@ export default defineEventHandler(
         telegramProfileId: telegramProfile.id,
       },
     })
+
+    await notifyAdmin(`Профиль ChatGame ${profileId} был объединен с Telegram профилем ${telegramProfile.id}!`)
 
     return {
       ok: true,

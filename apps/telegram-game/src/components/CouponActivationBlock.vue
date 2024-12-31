@@ -12,12 +12,16 @@
 import { hapticFeedback } from '@telegram-apps/sdk-vue'
 
 const { refreshProfile, useApiFetch } = useTelegramProfile()
+const { pop: popConfetti } = useConfetti()
 
 async function activateCouponToCoins() {
   const { data } = await useApiFetch(`/coupon/activate?type=coins`).get().json<{ ok: boolean }>()
-  await refreshProfile()
 
   if (data.value?.ok) {
+    await refreshProfile()
+
+    popConfetti()
+
     if (hapticFeedback.impactOccurred.isAvailable()) {
       hapticFeedback.notificationOccurred('success')
     }
