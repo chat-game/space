@@ -4,11 +4,38 @@ import { activateProduct } from '../product/activate'
 const logger = useLogger('telegram')
 const { telegramBotToken, telegramAdminId } = useRuntimeConfig()
 
+const gameUrl = 'https://tma.chatgame.space'
+const gameChannelUrl = 'https://t.me/chatgamespace'
+
 // Create a bot object
 const bot = new Bot(telegramBotToken)
 
-// Register listeners to handle messages
 bot.on('message:text', (ctx) => {
+  if (ctx.hasCommand('start')) {
+    // Banana with candy sticker
+    ctx.replyWithSticker('CAACAgIAAxkBAAENa2pndQPLCpTicLfzY7zONwQLTPBwhgACXgMAArrAlQVceSrBWv5H7DYE')
+
+    // Welcome message with 2 buttons
+    ctx.reply(
+      `Добро пожаловать в ChatGame!
+
+      Одна из задач - сопровождать Машину из точки А в точку Б. По пути могут встречаться препятствия. Тапай их!
+
+      Участвуй в событиях, приглашай друзей, добывай монеты и разблокируй вручную созданных персонажей.
+      `,
+      {
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: '🎮 Играть', url: gameUrl }],
+            [{ text: '📢 Подпишись на канал', url: gameChannelUrl }],
+          ],
+        },
+      },
+    )
+
+    return
+  }
+
   logger.log(ctx.message.from.id, ctx.message.text)
   ctx.reply('Привет! Я пока не умею отвечать на сообщения.')
 })
