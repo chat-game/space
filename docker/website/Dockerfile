@@ -1,4 +1,4 @@
-FROM node:22.12.0 AS base
+FROM node:22.12.0-alpine AS base
 
 # Install dependencies and build
 FROM base AS builder
