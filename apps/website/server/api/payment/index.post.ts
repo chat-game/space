@@ -46,7 +46,7 @@ export default defineEventHandler(
       },
       confirmation: {
         type: 'redirect',
-        return_url: 'https://chatgame.space/shop',
+        return_url: 'https://chatgame.space/#shop',
       },
     }
 
