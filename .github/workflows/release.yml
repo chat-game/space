@@ -103,7 +103,7 @@ jobs:
       - name: Set APP ID in env
         id: set-app-id
         run: |
-          app_id=$(echo '${{ secrets.DOKPLOY_APPS }}' | jq -r '."${{ needs.determine-changes.outputs.package }}"'
+          app_id=$(echo '${{ secrets.DOKPLOY_APPS }}' | jq -r '."${{ needs.determine-changes.outputs.package }}"')
           echo "::add-mask::$app_id"
           echo "APP_ID=$app_id" >> $GITHUB_OUTPUT
 
