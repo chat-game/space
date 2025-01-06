@@ -36,7 +36,7 @@
     "twitch"
   ],
   "scripts": {
-    "release": "pnpm run check && pnpm run test && pnpm run lint && pnpm run build && changelogen --release --push",
+    "release": "pnpm -r --filter \"./apps/**\" --workspace-concurrency=1 exec -- npx --no-install semantic-release -e semantic-release-monorepo",
     "build": "turbo build",
     "dev": "dotenv -- turbo dev --parallel",
     "dev:website": "dotenv -- pnpm --filter @chat-game/website dev",
@@ -56,13 +56,12 @@
     "@semantic-release/commit-analyzer": "^13.0.0",
     "@semantic-release/exec": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^11.0.1",
-    "@semantic-release/release-notes-generator": "^14.0.2",
     "@types/node": "^22.10.1",
-    "changelogen": "^0.5.7",
     "dotenv-cli": "^7.4.4",
     "husky": "^9.1.7",
     "lint-staged": "^15.2.10",
+    "semantic-release": "^24.2.1",
+    "semantic-release-monorepo": "^8.0.2",
     "turbo": "^2.3.3",
     "typescript": "^5.7.2"
   },
