@@ -113,7 +113,7 @@ jobs:
         id: deployment
         with:
           token: ${{ secrets.BOT_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
-          environment: production
+          environment: production ${{ needs.determine-changes.outputs.package }}
 
       - name: Dokploy Deployment
         if: ${{ steps.set-app-id.outputs.APP_ID != '' }}
