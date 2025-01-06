@@ -1,8 +1,8 @@
 <template>
-  <nav>
-    <ul>
+  <nav class="hidden md:flex">
+    <ul class="text-lg">
       <li v-for="link in links" :key="link.path" :class="{ active: $route.path === localePath(link.path) }">
-        <NuxtLink :to="localePath(link.path)">
+        <NuxtLink :to="link.path">
           {{ link.name }}
         </NuxtLink>
       </li>
@@ -14,12 +14,6 @@
       </li>
     </ul>
   </nav>
-
-  <div class="right">
-    <div class="items">
-      <MenuProfile />
-    </div>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -28,47 +22,22 @@ const localePath = useLocalePath()
 
 const links = [
   {
-    name: 'Главная',
+    name: 'Игра',
     path: '/',
   },
   {
     name: 'Персонажи',
-    path: '/character',
+    path: '/#characters',
   },
   {
-    name: 'Задания',
-    path: '/quest',
-  },
-  {
-    name: 'Трофеи',
-    path: '/trophy',
-  },
-  {
-    name: 'Купон',
-    path: '/coupon',
+    name: 'Монеты',
+    path: '/#shop',
   },
 ]
 </script>
 
 <style scoped>
-.right {
-  flex-grow: 1;
-  flex-basis: 0;
-  margin-left: auto;
-
-  .items {
-    margin-left: auto;
-    width: fit-content;
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-  }
-}
-
 nav {
-  display: flex;
-  justify-content: center;
-
   a {
     display: flex;
     height: 100%;
@@ -80,12 +49,12 @@ nav {
     transition: color 0.2s;
 
     &:hover {
-      color: var(--green-9);
+      color: var(--color-emerald-600);
     }
   }
 
   .active a {
-    color: var(--green-9);
+    color: var(--color-emerald-600);
   }
 }
 

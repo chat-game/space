@@ -55,7 +55,6 @@ function formatType(type: TransactionWithProfile['type'], amount: number) {
         transition: 0.2s all;
 
         &:hover {
-          color: var(--green-9);
           text-decoration: none;
         }
       }

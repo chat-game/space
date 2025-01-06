@@ -3,13 +3,12 @@
     <div class="content">
       <ActiveStreamBanner />
       <MainHeader />
-      <main>
+
+      <main class="pt-18">
         <slot />
       </main>
       <MainFooter />
     </div>
-
-    <MainFeed v-if="loggedIn" />
   </div>
 </template>
 
@@ -17,7 +16,6 @@
 import '~/assets/css/website.css'
 
 const { isFeedOpened } = useApp()
-const { loggedIn } = useUserSession()
 </script>
 
 <style scoped>

@@ -1,6 +1,6 @@
 <template>
   <button
-    class="burger"
+    class="burger grow basis-0 ml-auto"
     :class="{ open: isMobileMenuOpened }"
     @click="closeMenu"
   >

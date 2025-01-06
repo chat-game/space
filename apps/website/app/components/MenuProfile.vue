@@ -1,8 +1,8 @@
 <template>
-  <div class="wrapper">
+  <div class="min-w-32 flex flex-row justify-end">
     <button
       v-if="loggedIn"
-      class="profile-avatar"
+      class="profile-avatar cursor-pointer"
       @click="handleMenuClick"
     >
       <img :src="user?.imageUrl ?? defaultImage" alt="">
@@ -30,12 +30,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.wrapper {
-  position: relative;
-  width: fit-content;
-  display: inline-block;
-}
-
 .twitch {
   color: white;
   text-decoration: none;

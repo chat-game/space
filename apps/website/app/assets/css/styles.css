@@ -1,3 +1,4 @@
+@import "tailwindcss";
 @import '@radix-ui/colors/blue.css';
 @import '@radix-ui/colors/bronze.css';
 @import '@radix-ui/colors/brown.css';
@@ -29,19 +30,6 @@
   --color-bg-loader: #7d66d9;
 }
 
-html {
-  -webkit-text-size-adjust: 100%;
-  font-size: 16px;
-  line-height: 1.5;
-  tab-size: 4;
-  scroll-behavior: smooth;
-}
-body {
-  min-height: 100dvh;
-  font-family: inherit;
-  line-height: inherit;
-  margin: 0;
-}
 html,
 body {
   font-family: 'Roboto Serif', 'Times New Roman', 'Georgia', serif;
@@ -49,107 +37,10 @@ body {
   font-weight: 500;
   font-style: normal;
   font-variation-settings: 'wdth' 100;
-}
-
-h1,
-h2,
-h3,
-p,
-pre {
-  margin: 0;
-  font-weight: 400;
-}
-h3 {
-  font-weight: 600;
-}
-*,
-::before,
-::after {
-  box-sizing: border-box;
-  border-width: 0;
-  border-style: solid;
-  border-color: currentColor;
-}
-h1,
-h2 {
-  font-size: inherit;
-  font-weight: inherit;
-}
-a {
-  color: inherit;
-  text-decoration: inherit;
-}
-pre {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
-    'Courier New', monospace;
-}
-
-p {
-  font-size: 1rem;
-  line-height: 1.5;
-}
-
-a {
-  color: var(--green-9);
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-h1 {
-  font-size: 2rem;
-  text-align: center;
-}
-
-h2 {
-  font-size: 1.2rem;
-}
-
-pre {
-  font-size: 16px;
-  background-color: rgba(255, 255, 255, 0.45);
-  border-radius: 3px;
-  box-shadow: 2px 2px 6px rgb(255 255 255 / 25%);
-  padding: 0.5em;
-  overflow-x: auto;
-}
-
-input,
-button {
-  font-size: inherit;
-  font-family: inherit;
-}
-
-button,
-input[type='submit'],
-input[type='reset'] {
-  background: none;
-  color: inherit;
-  border: none;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
-  outline: inherit;
-}
-
-button:focus:not(:focus-visible) {
-  outline: none;
-}
-
-@media (min-width: 720px) {
-  html {
-    font-size: 18px;
-  }
-
-  h1 {
-    font-size: 2.4rem;
-  }
-
-  h2 {
-    font-size: 1.5rem;
-  }
+  color: var(--color-orange-950);
+  background: var(--color-orange-100);
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
 }
 
 .bg-paper {

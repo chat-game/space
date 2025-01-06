@@ -1,6 +1,6 @@
+import tailwindcss from '@tailwindcss/vite'
 import { defineNuxtConfig } from 'nuxt/config'
 
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   future: {
     compatibilityVersion: 4,
@@ -17,6 +17,9 @@ export default defineNuxtConfig({
     },
   },
   routeRules: {
+    '/': {
+      static: true,
+    },
     '/addon': {
       ssr: false,
       cors: true,
@@ -38,6 +41,14 @@ export default defineNuxtConfig({
         provider: 'google',
       },
     ],
+  },
+  icon: {
+    clientBundle: {
+      scan: {
+        globInclude: ['app/**/*.{vue,ts}'],
+        globExclude: ['node_modules', 'dist', 'build', 'coverage', 'test', 'tests', '.*'],
+      },
+    },
   },
   css: ['~/assets/css/styles.css'],
   runtimeConfig: {
@@ -68,6 +79,11 @@ export default defineNuxtConfig({
       useCookie: true,
       alwaysRedirect: true,
     },
+  },
+  vite: {
+    plugins: [
+      tailwindcss(),
+    ],
   },
   nitro: {
     experimental: {
