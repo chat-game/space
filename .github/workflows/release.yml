@@ -1,38 +1,140 @@
 name: Release
 
 on:
+  release:
+    types:
+      - created
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - main
+    inputs:
+      release:
+        description: 'ex: @chat-game/website-v1.0.0'
+        type: string
+        required: true
+      ref:
+        description: 'branch, tag or SHA'
+        type: string
 
 jobs:
-  release:
+  determine-changes:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    permissions:
-      issues: write
-      deployments: write
-      pull-requests: write
-      contents: write
-      id-token: write
+    outputs:
+      package: ${{ steps.set-package.outputs.package }}
+      version: ${{ steps.set-package.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Regex matching
+        uses: actions-ecosystem/action-regex-match@v2
+        id: regex-match
         with:
-          lfs: true
+          text: ${{ github.event.inputs.release || github.ref_name }}
+          regex: '@chat-game\/([a-z-]+)-(v[0-9]+.[0-9]+.[0-9]+)'
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
+      - name: Set package in env
+        id: set-package
+        run: |
+          APPS=("website" "telegram-game")
+          MATCH="${{ steps.regex-match.outputs.match }}"
+
+          if [ -z "$MATCH" ]; then
+            echo "package=" >> $GITHUB_OUTPUT
+            echo "version=" >> $GITHUB_OUTPUT
+          else
+            found=false
+            for app in "${APPS[@]}"; do
+              if [ "$app" == "${{ steps.regex-match.outputs.group1 }}" ]; then
+                found=true
+                break
+              fi
+            done
+
+            if $found; then
+              echo "package=${{ steps.regex-match.outputs.group1 }}" >> $GITHUB_OUTPUT
+              echo "version=${{ steps.regex-match.outputs.group2 }}" >> $GITHUB_OUTPUT
+            else
+              echo "package=" >> $GITHUB_OUTPUT
+              echo "version=" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+      - name: Result
+        run: |
+          echo "${{ steps.set-package.outputs.package }}"
+          echo "${{ steps.set-package.outputs.version }}"
+
+  build:
+    needs: determine-changes
+    if: ${{ needs.determine-changes.outputs.package != '' }}
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          run_install: true
+          ref: ${{ github.event.inputs.ref || github.ref_name }}
 
-      - name: Node
-        uses: actions/setup-node@v4
+      - name: Set APP in env
+        run: |
+          echo "APP_NAME=${{ needs.determine-changes.outputs.package }}" >> $GITHUB_ENV
+          echo "APP_VERSION=${{ needs.determine-changes.outputs.version }}" >> $GITHUB_ENV
+
+      - name: Login to Registry
+        uses: docker/login-action@v3
         with:
-          node-version: 20
-          cache: 'pnpm'
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
-        run: pnpm run release
+      - name: Build ${{ matrix.package }}
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/${{ env.APP_NAME }}/Dockerfile
+          push: true
+          tags: ${{ secrets.NAMESPACE }}/${{ env.APP_NAME }}:latest,${{ secrets.NAMESPACE }}/${{ env.APP_NAME }}:${{ env.APP_VERSION }}
+
+  deploy:
+    needs: [determine-changes, build]
+    if: ${{ needs.determine-changes.outputs.package != '' }}
+    runs-on: ubuntu-latest
+    permissions:
+      deployments: write
+    steps:
+      - name: Set APP ID in env
+        id: set-app-id
+        run: |
+          app_id=$(echo '${{ secrets.DOKPLOY_APPS }}' | jq -r '.${{ needs.determine-changes.outputs.package }}')
+          echo "::add-mask::$app_id"
+          echo "APP_ID=$app_id" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub deployment
+        if: ${{ steps.set-app-id.outputs.APP_ID != '' }}
+        uses: chrnorm/deployment-action@v2
+        id: deployment
+        with:
+          token: ${{ secrets.BOT_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
+          environment: production
+
+      - name: Dokploy Deployment
+        if: ${{ steps.set-app-id.outputs.APP_ID != '' }}
+        uses: benbristow/dokploy-deploy-action@0.0.1
+        with:
+          auth_token: ${{ secrets.DOKPLOY_AUTH_TOKEN }}
+          application_id: ${{ steps.set-app-id.outputs.APP_ID }}
+          dokploy_url: ${{ secrets.DOKPLOY_URL }}
+
+      - name: Update deployment status (success)
+        if: ${{ steps.set-app-id.outputs.APP_ID != '' && success() }}
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: ${{ secrets.BOT_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
+          state: 'success'
+
+      - name: Update deployment status (failure)
+        if: ${{ steps.set-app-id.outputs.APP_ID != '' && failure() }}
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: ${{ secrets.BOT_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
+          state: 'failure'
