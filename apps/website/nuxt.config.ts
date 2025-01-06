@@ -20,6 +20,9 @@ export default defineNuxtConfig({
     '/': {
       static: true,
     },
+    '/donate': {
+      static: true,
+    },
     '/addon': {
       ssr: false,
       cors: true,
