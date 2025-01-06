@@ -59,11 +59,9 @@ export class TwitchService {
       }
     }
 
-    const positionInTop = await this.#repository.getPlaceInTopByCoupons(profile.id)
-
     return {
       ok: true,
-      message: `У тебя есть ${profile.coupons} купон(а/ов). Место в рейтинге: ${positionInTop}`,
+      message: `У тебя есть ${profile.coupons} купон(а/ов). Обменивай их на награды в игре.`,
     }
   }
 
