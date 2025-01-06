@@ -128,17 +128,12 @@ const { data: transactions } = await useFetch('/api/transaction')
 
             &:hover {
               text-decoration: none;
-              color: var(--green-9);
             }
           }
 
           .sign-out {
             font-weight: 600;
             transition: 0.2s all;
-
-            &:hover {
-              color: var(--green-9);
-            }
           }
 
           .currency-block {

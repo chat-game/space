@@ -8,12 +8,14 @@
       </li>
     </ul>
 
-    <p class="copyright">
-      Создается с ❤️ и с 🔥 в глазах
-    </p>
-    <p class="copyright">
-      &copy; 2024, ИП Косарев Н.Н.
-    </p>
+    <div class="mt-4 space-y-2 text-amber-900 text-center">
+      <p class="text-base">
+        Создается с ❤️ и с 🔥 в глазах
+      </p>
+      <p class="text-sm">
+        &copy; 2024 - 2025, ИП Косарев Н.Н.
+      </p>
+    </div>
   </footer>
 </template>
 
@@ -22,27 +24,19 @@ const localePath = useLocalePath()
 
 const links = [
   {
-    title: 'Boosty',
-    url: 'https://boosty.to/hmbanan666',
-    isOnNewTab: true,
-  },
-  {
-    title: 'Discord',
-    url: 'https://discord.gg/B6etUajrGZ',
+    title: 'GitHub',
+    url: 'https://github.com/chat-game/space',
     isOnNewTab: true,
   },
   {
     title: 'Twitch',
-    url: 'https://www.twitch.tv/hmbanan666',
+    url: 'https://twitch.tv/hmbanan666',
     isOnNewTab: true,
   },
   {
-    title: 'Об игре',
-    url: '/about',
-  },
-  {
-    title: 'Купить Монеты',
-    url: '/shop',
+    title: 'Bluesky',
+    url: 'https://bsky.app/profile/nick.kosarev.space',
+    isOnNewTab: true,
   },
   {
     title: 'Оферта',
@@ -74,7 +68,7 @@ const links = [
     transition: 0.2s all;
 
     &:hover {
-      color: var(--green-9);
+      color: var(--color-emerald-600);
       text-decoration: none;
     }
   }
@@ -98,11 +92,5 @@ const links = [
 
   li {
     position: relative;
-  }
-
-  .copyright {
-    color: var(--bronze-9);
-    text-align: center;
-    margin-top: 0.5em;
   }
 </style>

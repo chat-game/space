@@ -1,27 +1,25 @@
 <template>
-  <aside :class="{ open: isMobileMenuOpened }">
-    <nav>
-      <ul>
-        <li v-for="link in links" :key="link.path" :class="{ active: $route.path === localePath(link.path) }">
-          <NuxtLink :to="localePath(link.path)">
-            {{ link.name }}
-          </NuxtLink>
-        </li>
+  <div class="hidden md:hidden">
+    <aside :class="{ open: isMobileMenuOpened }">
+      <nav>
+        <ul>
+          <li v-for="link in links" :key="link.path" :class="{ active: $route.path === localePath(link.path) }">
+            <NuxtLink :to="localePath(link.path)">
+              {{ link.name }}
+            </NuxtLink>
+          </li>
 
-        <li v-if="loggedIn" :class="{ active: $route.path === `/p/${user?.userName}` }">
-          <NuxtLink :to="localePath(`/p/${user?.userName}`)">
-            Мой профиль
-          </NuxtLink>
-        </li>
-      </ul>
-    </nav>
-  </aside>
+          <li v-if="loggedIn" :class="{ active: $route.path === `/p/${user?.userName}` }">
+            <NuxtLink :to="localePath(`/p/${user?.userName}`)">
+              Мой профиль
+            </NuxtLink>
+          </li>
+        </ul>
+      </nav>
+    </aside>
 
-  <div class="profile-block">
-    <MenuProfile />
+    <MenuHamburger />
   </div>
-
-  <MenuHamburger />
 </template>
 
 <script setup lang="ts">
@@ -31,24 +29,8 @@ const localePath = useLocalePath()
 
 const links = [
   {
-    name: 'Главная',
+    name: 'Игра',
     path: '/',
-  },
-  {
-    name: 'Персонажи',
-    path: '/character',
-  },
-  {
-    name: 'Задания',
-    path: '/quest',
-  },
-  {
-    name: 'Трофеи',
-    path: '/trophy',
-  },
-  {
-    name: 'Купон',
-    path: '/coupon',
   },
 ]
 </script>
@@ -90,9 +72,5 @@ li[aria-current='page'] a {
 
 .open {
   left: 0;
-}
-
-.profile-block {
-  margin-right: 0.5em;
 }
 </style>

@@ -1,7 +1,9 @@
 <template>
-  <section class="hero">
+  <section class="hero max-w-4xl">
     <div class="header-block">
-      <h1>{{ pageProfile?.userName }}</h1>
+      <h1 class="text-lg md:text-2xl lg:text-3xl">
+        {{ pageProfile?.userName }}
+      </h1>
 
       <div class="currency-block">
         <div v-if="pageProfile?.mana && pageProfile.mana > 0" class="currency">
@@ -34,9 +36,7 @@
 
     <div class="active-character">
       <div>
-        Активный Персонаж: <NuxtLink :to="localePath(`/character/${activeCharacter?.character.id}`)">
-          {{ activeCharacter?.character.nickname }}
-        </NuxtLink>
+        Активный Персонаж: {{ activeCharacter?.character.nickname }}
       </div>
       <div class="level">
         {{ activeCharacter?.level }} уровень <span class="xp">{{ activeCharacter?.xp }} опыта</span>
@@ -44,9 +44,9 @@
     </div>
   </section>
 
-  <section class="titles-block">
+  <section class="titles-block max-w-4xl mx-auto text-center">
     <div class="element">
-      <div class="icon">
+      <div class="flex flex-row justify-center text-orange-900/35">
         <BookOpenCheck :size="48" />
       </div>
       <p class="title">
@@ -58,7 +58,7 @@
     </div>
 
     <div class="element">
-      <div class="icon">
+      <div class="flex flex-row justify-center text-orange-900/35">
         <BookCopy :size="48" />
       </div>
       <p class="title">
@@ -70,7 +70,7 @@
     </div>
 
     <div class="element">
-      <div class="icon">
+      <div class="flex flex-row justify-center text-orange-900/35">
         <ShieldQuestion :size="48" />
       </div>
       <p class="title">
@@ -82,7 +82,7 @@
     </div>
 
     <div class="element">
-      <div class="icon">
+      <div class="flex flex-row justify-center text-orange-900/35">
         <Trophy :size="48" />
       </div>
       <p class="title">
@@ -94,7 +94,7 @@
     </div>
 
     <div class="element">
-      <div class="icon">
+      <div class="flex flex-row justify-center text-orange-900/35">
         <Handshake :size="48" />
       </div>
       <p class="title">
@@ -106,27 +106,33 @@
     </div>
   </section>
 
-  <section class="characters">
-    <h2>Разблокированные персонажи</h2>
+  <section class="characters max-w-4xl mx-auto text-center">
+    <h2 class="text-lg md:text-xl lg:text-2xl">
+      Разблокированные персонажи
+    </h2>
 
     <div class="collection-block">
       <div v-for="char in pageProfile?.characterEditions" :key="char.id" class="cell" :class="{ active: char.id === activeCharacter?.id }">
-        <NuxtLink :to="localePath(`/character/${char.character.id}`)">
+        <div class="flex flex-col justify-center items-center gap-2">
           <img :src="`/units/${char.character.codename}/128.png`" alt="" class="avatar static">
           <img :src="`/units/${char.character.codename}/idle.gif`" alt="" class="avatar animated">
-          <p class="nickname">
-            {{ char.character.nickname }}
-          </p>
-          <div class="level">
-            {{ char.level }} уровень
+          <div>
+            <p class="nickname">
+              {{ char.character.nickname }}
+            </p>
+            <div class="level">
+              {{ char.level }} уровень
+            </div>
           </div>
-        </NuxtLink>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="trophies">
-    <h2>Полученные трофеи</h2>
+  <section class="trophies bg-orange-800/5">
+    <h2 class="text-lg md:text-xl lg:text-2xl">
+      Полученные трофеи
+    </h2>
 
     <p v-if="!trophies?.length" class="empty">
       Пока нет
@@ -134,7 +140,7 @@
 
     <div class="collection-block">
       <div v-for="trophyEdition in trophies" :key="trophyEdition.id" class="cell" :data-rarity="trophyEdition.trophy.rarity">
-        <NuxtLink :to="localePath(`/trophy/${trophyEdition.trophy.id}`)">
+        <div class="py-1 flex flex-col justify-center items-center gap-0.5">
           <img src="/trophies/default/64.png" alt="" width="64" height="64">
           <div class="name">
             {{ trophyEdition.trophy.name }}
@@ -142,24 +148,20 @@
           <div class="points">
             {{ trophyEdition.trophy.points }} очков
           </div>
-        </NuxtLink>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="levels">
-    <h2>Прокачка уровня профиля</h2>
+  <section class="levels max-w-4xl py-8 mx-auto text-center">
+    <h2 class="text-lg md:text-xl lg:text-2xl">
+      Прокачка уровня профиля
+    </h2>
     <p>Развивая титулы "Коллекционер", "Рассказчик", "Странник", "Охотник за трофеями", "Меценат" ты получаешь очки. При накоплении очков профиль получает новый уровень.</p>
 
     <div class="progress">
       Текущий прогресс: {{ pageProfile?.points }} очков
     </div>
-
-    <ul>
-      <li v-for="level in levelProgress" :key="level.level">
-        {{ level.level }} уровень: {{ level.points }} очков
-      </li>
-    </ul>
   </section>
 
   <div class="profile-id">
@@ -177,65 +179,11 @@ definePageMeta({
   },
 })
 
-const localePath = useLocalePath()
 const route = useRoute()
 const { data: pageProfile } = await useFetch(`/api/profile/userName/${route.params.username}`)
 const { data: trophies } = await useFetch(`/api/trophy/profileId/${pageProfile.value?.id}`)
 
 const activeCharacter = pageProfile.value?.characterEditions?.find((c) => c.id === pageProfile.value?.activeEditionId)
-
-const levelProgress = [
-  { level: 1, points: 0 }, // x2
-  { level: 2, points: 25 },
-  { level: 3, points: 50 },
-  { level: 4, points: 100 },
-  { level: 5, points: 200 },
-  { level: 6, points: 400 },
-  { level: 7, points: 800 },
-  { level: 8, points: 1600 },
-  { level: 9, points: 3200 },
-  { level: 10, points: 6400 },
-  { level: 11, points: 9600 }, // x1.5
-  { level: 12, points: 14400 },
-  { level: 13, points: 21600 },
-  { level: 14, points: 32400 },
-  { level: 15, points: 48600 },
-  { level: 16, points: 72900 },
-  { level: 17, points: 110000 },
-  { level: 18, points: 165000 },
-  { level: 19, points: 247000 },
-  { level: 20, points: 370000 },
-  { level: 21, points: 444000 }, // x1.2
-  { level: 22, points: 532000 },
-  { level: 23, points: 638000 },
-  { level: 24, points: 765000 },
-  { level: 25, points: 918000 },
-  { level: 26, points: 1100000 },
-  { level: 27, points: 1320000 },
-  { level: 28, points: 1580000 },
-  { level: 29, points: 1890000 },
-  { level: 30, points: 2260000 },
-  { level: 31, points: 2480000 }, // x1.1
-  { level: 32, points: 2720000 },
-  { level: 33, points: 2990000 },
-  { level: 34, points: 3200000 },
-  { level: 35, points: 3500000 },
-  { level: 36, points: 3800000 },
-  { level: 37, points: 4100000 },
-  { level: 38, points: 4500000 },
-  { level: 39, points: 4900000 },
-  { level: 40, points: 5300000 },
-  { level: 41, points: 5800000 },
-  { level: 42, points: 6300000 },
-  { level: 43, points: 6900000 },
-  { level: 44, points: 7500000 },
-  { level: 45, points: 8200000 },
-  { level: 46, points: 9000000 },
-  { level: 47, points: 9900000 },
-  { level: 48, points: 11000000 },
-  { level: 49, points: 13000000 },
-  { level: 50, points: 15000000 },
-]
 </script>
 
 <style scoped>
@@ -293,6 +241,7 @@ const levelProgress = [
     margin: 2em auto 0;
     background-image: url(~/assets/img/background-green.webp);
     border: 4px solid var(--color-border);
+    border-radius: 8px;
 
     .game-canvas {
       position: relative;
@@ -339,10 +288,6 @@ const levelProgress = [
       line-height: 1.2;
     }
 
-    .icon {
-      color: var(--color-border)
-    }
-
     .points {
       color: var(--color-common);
       margin-top: 0.5em;
@@ -363,8 +308,6 @@ const levelProgress = [
     padding-top: 3em;
     padding-bottom: 3em;
     max-width: none;
-    background-color: var(--brown-4);
-    background: linear-gradient(130deg, var(--brown-5) 0%, var(--brown-4) 100%);
 
     h2 {
       margin-bottom: 0.5em;
@@ -410,6 +353,7 @@ const levelProgress = [
         position: relative;
         aspect-ratio: 1 / 1;
         transition: all 0.2s ease-out;
+        border-radius: 8px;
 
         &[data-rarity='0'] {
           background: var(--gray-4);
@@ -504,6 +448,7 @@ const levelProgress = [
       font-size: 1.1rem;
       background-color: var(--orange-3);
       border: 2px solid var(--color-border);
+      border-radius: 8px;
     }
   }
 
@@ -554,6 +499,7 @@ const levelProgress = [
         transition: all 0.2s ease-out;
         background: var(--orange-3);
         border: 3px solid var(--color-border);
+        border-radius: 8px;
 
         .avatar {
           width: 64px;
