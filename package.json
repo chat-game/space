@@ -1,7 +1,7 @@
 {
   "name": "@chat-game/space",
   "private": true,
-  "packageManager": "pnpm@9.14.2",
+  "packageManager": "pnpm@9.15.3",
   "pnpm": {
     "supportedArchitectures": {
       "os": [
@@ -16,8 +16,8 @@
     }
   },
   "engines": {
-    "node": ">=20.14.0",
-    "pnpm": ">=9.14.2"
+    "node": ">=20.18.1",
+    "pnpm": ">=9.15.3"
   },
   "description": "Chat Game for Twitch",
   "author": "Nick Kosarev <hmbanan666@hotmail.com>",
@@ -51,16 +51,16 @@
     "generate:cert": "mkdir -p .cert && mkcert -key-file ./.cert/localhost-key.pem -cert-file ./.cert/localhost.pem 'app.local'"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.6.0",
+    "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
     "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/commit-analyzer": "^13.0.0",
+    "@semantic-release/commit-analyzer": "^13.0.1",
     "@semantic-release/exec": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
-    "@types/node": "^22.10.1",
+    "@types/node": "^22.10.5",
     "dotenv-cli": "^7.4.4",
     "husky": "^9.1.7",
-    "lint-staged": "^15.2.10",
+    "lint-staged": "^15.3.0",
     "semantic-release": "^24.2.1",
     "semantic-release-monorepo": "^8.0.2",
     "turbo": "^2.3.3",
