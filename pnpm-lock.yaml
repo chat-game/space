@@ -153,9 +153,6 @@ importers:
       '@prisma/client':
         specifier: ^6.1.0
         version: 6.1.0(prisma@6.1.0)
-      '@radix-ui/colors':
-        specifier: ^3.0.0
-        version: 3.0.0
       '@telegram-apps/init-data-node':
         specifier: ^1.2.2
         version: 1.2.2
@@ -186,9 +183,6 @@ importers:
       ioredis:
         specifier: ^5.4.2
         version: 5.4.2
-      lucide-vue-next:
-        specifier: ^0.469.0
-        version: 0.469.0(vue@3.5.13(typescript@5.7.2))
       zod:
         specifier: ^3.24.1
         version: 3.24.1
@@ -217,9 +211,6 @@ importers:
       '@nuxt/kit':
         specifier: ^3.15.1
         version: 3.15.1(magicast@0.3.5)(rollup@4.29.1)
-      '@nuxtjs/device':
-        specifier: ^3.2.4
-        version: 3.2.4
       '@nuxtjs/i18n':
         specifier: ^9.1.1
         version: 9.1.1(@vue/compiler-dom@3.5.13)(eslint@9.17.0(jiti@2.4.2))(magicast@0.3.5)(rollup@4.29.1)(typescript@5.7.2)(vue@3.5.13(typescript@5.7.2))
@@ -232,6 +223,9 @@ importers:
       '@types/node':
         specifier: '*'
         version: 22.10.2
+      '@vueuse/components':
+        specifier: ^12.3.0
+        version: 12.3.0(typescript@5.7.2)
       '@vueuse/core':
         specifier: ^12.3.0
         version: 12.3.0(typescript@5.7.2)
@@ -1245,9 +1239,6 @@ packages:
     peerDependencies:
       vue: ^3.3.4
 
-  '@nuxtjs/device@3.2.4':
-    resolution: {integrity: sha512-jIvN6QeodBNrUrL/1FCHk4bebsiLsGHlJd8c/m2ksLrGY4IZ0npA8IYhDTdYV92epGxoe8+3iZOzCjav+6TshQ==}
-
   '@nuxtjs/i18n@9.1.1':
     resolution: {integrity: sha512-S8l5ri1GFo5OUsl9qSgicE9Sm0BZjVHU7p6ml1qhQUTewngnTPTlcytWX5etwJeAjHEu2w9VAV4qXTn9Q5EgmQ==}
     engines: {node: ^14.16.0 || >=16.11.0}
@@ -1448,9 +1439,6 @@ packages:
 
   '@prisma/get-platform@6.1.0':
     resolution: {integrity: sha512-ia8bNjboBoHkmKGGaWtqtlgQOhCi7+f85aOkPJKgNwWvYrT6l78KgojLekE8zMhVk0R9lWcifV0Pf8l3/15V0Q==}
-
-  '@radix-ui/colors@3.0.0':
-    resolution: {integrity: sha512-FUOsGBkHrYJwCSEtWRCIfQbZG7q1e6DgxCIOe1SUQzDe/7rXXeA47s8yCn6fuTNQAj1Zq4oTFi9Yjp3wzElcxg==}
 
   '@redocly/ajv@8.11.2':
     resolution: {integrity: sha512-io1JpnwtIcvojV7QKDUSIuMN/ikdOUd1ReEnUnMKGfDVridQZ31J0MmIuqwuRjWDZfmvr+Q0MqCcfHM2gTivOg==}
@@ -2241,6 +2229,9 @@ packages:
         optional: true
       vue:
         optional: true
+
+  '@vueuse/components@12.3.0':
+    resolution: {integrity: sha512-Y9/gNLKBrHxS7S4xll70mee/1QiY5GTohZQ4/rjXK050tKalNHttvd9CBuA49v0jn8i348k72znd03Bnz9xq7g==}
 
   '@vueuse/core@12.3.0':
     resolution: {integrity: sha512-cnV8QDKZrsyKC7tWjPbeEUz2cD9sa9faxF2YkR8QqNwfofgbOhmfIgvSYmkp+ttSvfOw4E6hLcQx15mRPr0yBA==}
@@ -4179,11 +4170,6 @@ packages:
 
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
-
-  lucide-vue-next@0.469.0:
-    resolution: {integrity: sha512-EjOap+vY3xEzCMrnaccDHO4BH3k3Lr+sOyvzRQCaayYxkxKla0w6Jr4h3cHAzA4vMSp63Dcy7vDiGeCPcCY+Gg==}
-    peerDependencies:
-      vue: '>=3.0.1'
 
   magic-regexp@0.8.0:
     resolution: {integrity: sha512-lOSLWdE156csDYwCTIGiAymOLN7Epu/TU5e/oAnISZfU6qP+pgjkE+xbVjVn3yLPKN8n1G2yIAYTAM5KRk6/ow==}
@@ -7676,10 +7662,6 @@ snapshots:
       - vue-tsc
       - yaml
 
-  '@nuxtjs/device@3.2.4':
-    dependencies:
-      defu: 6.1.4
-
   '@nuxtjs/i18n@9.1.1(@vue/compiler-dom@3.5.13)(eslint@9.17.0(jiti@2.4.2))(magicast@0.3.5)(rollup@4.29.1)(typescript@5.7.2)(vue@3.5.13(typescript@5.7.2))':
     dependencies:
       '@intlify/h3': 0.6.1
@@ -7904,8 +7886,6 @@ snapshots:
   '@prisma/get-platform@6.1.0':
     dependencies:
       '@prisma/debug': 6.1.0
-
-  '@radix-ui/colors@3.0.0': {}
 
   '@redocly/ajv@8.11.2':
     dependencies:
@@ -8969,6 +8949,14 @@ snapshots:
     optionalDependencies:
       typescript: 5.7.2
       vue: 3.5.13(typescript@5.7.2)
+
+  '@vueuse/components@12.3.0(typescript@5.7.2)':
+    dependencies:
+      '@vueuse/core': 12.3.0(typescript@5.7.2)
+      '@vueuse/shared': 12.3.0(typescript@5.7.2)
+      vue: 3.5.13(typescript@5.7.2)
+    transitivePeerDependencies:
+      - typescript
 
   '@vueuse/core@12.3.0(typescript@5.7.2)':
     dependencies:
@@ -11024,10 +11012,6 @@ snapshots:
   lru-cache@5.1.1:
     dependencies:
       yallist: 3.1.1
-
-  lucide-vue-next@0.469.0(vue@3.5.13(typescript@5.7.2)):
-    dependencies:
-      vue: 3.5.13(typescript@5.7.2)
 
   magic-regexp@0.8.0:
     dependencies:

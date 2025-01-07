@@ -1,34 +1,4 @@
 @import "tailwindcss";
-@import '@radix-ui/colors/blue.css';
-@import '@radix-ui/colors/bronze.css';
-@import '@radix-ui/colors/brown.css';
-@import '@radix-ui/colors/crimson.css';
-@import '@radix-ui/colors/gold.css';
-@import '@radix-ui/colors/gray.css';
-@import '@radix-ui/colors/green.css';
-@import '@radix-ui/colors/orange.css';
-@import '@radix-ui/colors/pink.css';
-@import '@radix-ui/colors/purple.css';
-@import '@radix-ui/colors/ruby.css';
-@import '@radix-ui/colors/slate.css';
-@import '@radix-ui/colors/teal.css';
-@import '@radix-ui/colors/violet.css';
-
-:root {
-  --color-twitch: #8e4ec6;
-  --color-background: #fff7ed;
-  --color-background-2: #f6eee7;
-  --color-border: var(--brown-7);
-  --color-border-2: #e1dccf;
-  --color-bg-accent-1: var(--violet-9);
-  --color-bg-accent-2: #6f5f58;
-  --color-common: var(--gray-9);
-  --color-uncommon: #33b074;
-  --color-rare: #0090ff;
-  --color-epic: #7d66d9;
-  --color-legendary: #f76b15;
-  --color-bg-loader: #7d66d9;
-}
 
 html,
 body {
@@ -60,8 +30,9 @@ body {
   position: absolute;
   bottom: -0.25em;
   transform: translateY(100%);
-  padding: 0.5em;
-  background-color: var(--bronze-4);
+  padding: 0.75em;
+  border-radius: 8px;
+  background-color: var(--color-orange-50);
   z-index: 5;
 }
 
@@ -76,5 +47,5 @@ body {
 
 .dropdown-menu button:hover,
 .dropdown-menu a:hover {
-  color: var(--green-9);
+  color: var(--color-emerald-600);
 }

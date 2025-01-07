@@ -100,7 +100,6 @@ export default defineNuxtConfig({
   modules: [
     '@vueuse/nuxt',
     'nuxt-auth-utils',
-    '@nuxtjs/device',
     '@nuxtjs/i18n',
     '@nuxt/fonts',
     '@nuxt/icon',

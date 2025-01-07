@@ -2,7 +2,7 @@
   <div class="block">
     <button class="select-lang" @click="handleListClick">
       <div class="icon">
-        <Globe />
+        <Icon name="lucide:globe" class="!w-6 !h-6" />
       </div>
       <span>{{ $t('shortName') }}</span>
     </button>
@@ -16,8 +16,6 @@
 </template>
 
 <script setup lang="ts">
-import { Globe } from 'lucide-vue-next'
-
 const { locales, setLocale } = useI18n()
 const isOpened = ref(false)
 function handleListClick() {

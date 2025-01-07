@@ -1,25 +1,21 @@
 <template>
   <div class="min-w-32 flex flex-row justify-end">
-    <button
+    <a
       v-if="loggedIn"
+      href="/#profile"
       class="profile-avatar cursor-pointer"
-      @click="handleMenuClick"
     >
-      <img :src="user?.imageUrl ?? defaultImage" alt="">
-    </button>
-    <a v-else class="twitch" href="/api/auth/twitch">Войти</a>
+      <img :src="user?.imageUrl ?? '/icons/twitch/112.png'" alt="">
+    </a>
+    <a v-else class="px-5 py-3 text-white bg-violet-600 border-b-4 border-violet-700 rounded-lg duration-200 hover:opacity-85 flex flex-row gap-x-2 items-center" href="/api/auth/twitch">
+      <Icon name="simple-icons:twitch" class="!w-6 !h-6" />
+      <p class="leading-tight">Войти</p>
+    </a>
   </div>
 </template>
 
 <script setup lang="ts">
-const { isFeedOpened } = useApp()
 const { loggedIn, user } = useUserSession()
-
-function handleMenuClick() {
-  isFeedOpened.value = !isFeedOpened.value
-}
-
-const defaultImage = '/icons/twitch/112.png'
 
 onMounted(() => {
   if (!loggedIn.value) {
@@ -30,20 +26,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.twitch {
-  color: white;
-  text-decoration: none;
-  padding: 0.5em 1.2em;
-  background-color: var(--violet-9);
-  transition: all 0.2s;
-
-  &:hover {
-    text-decoration: none;
-    transform: scale(1.04);
-    opacity: 0.8;
-  }
-}
-
 .profile-avatar {
   width: 58px;
   height: 58px;
