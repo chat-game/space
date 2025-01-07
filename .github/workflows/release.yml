@@ -2,8 +2,7 @@ name: Release
 
 on:
   release:
-    types:
-      - created
+    types: [published]
   workflow_dispatch:
     inputs:
       release:
@@ -112,7 +111,7 @@ jobs:
         uses: chrnorm/deployment-action@v2
         id: deployment
         with:
-          token: ${{ secrets.BOT_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           environment: production ${{ needs.determine-changes.outputs.package }}
 
       - name: Dokploy Deployment
@@ -127,7 +126,7 @@ jobs:
         if: ${{ steps.set-app-id.outputs.APP_ID != '' && success() }}
         uses: chrnorm/deployment-status@v2
         with:
-          token: ${{ secrets.BOT_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           deployment-id: ${{ steps.deployment.outputs.deployment_id }}
           state: 'success'
 
@@ -135,6 +134,6 @@ jobs:
         if: ${{ steps.set-app-id.outputs.APP_ID != '' && failure() }}
         uses: chrnorm/deployment-status@v2
         with:
-          token: ${{ secrets.BOT_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           deployment-id: ${{ steps.deployment.outputs.deployment_id }}
           state: 'failure'
