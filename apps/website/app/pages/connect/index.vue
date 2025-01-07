@@ -10,7 +10,7 @@
       <div class="images-block">
         <img :src="user?.imageUrl ?? '/icons/twitch/112.png'" alt="" class="image">
         <div>
-          <Send class="tg-icon" />
+          <Icon name="simple-icons:telegram" class="tg-icon" />
         </div>
       </div>
 
@@ -27,8 +27,6 @@
 </template>
 
 <script setup lang="ts">
-import { Send } from 'lucide-vue-next'
-
 const { loggedIn, user } = useUserSession()
 const { data } = await useFetch('/api/auth/me')
 const isMerged = computed(() => data.value?.profile.telegramProfileId)

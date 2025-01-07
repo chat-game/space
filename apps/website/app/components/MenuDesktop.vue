@@ -1,14 +1,14 @@
 <template>
   <nav class="hidden md:flex">
     <ul class="text-lg">
-      <li v-for="link in links" :key="link.path" :class="{ active: $route.path === localePath(link.path) }">
+      <li v-for="link in links" :key="link.path" :class="{ active: visibleBlock === link.block }">
         <NuxtLink :to="link.path">
           {{ link.name }}
         </NuxtLink>
       </li>
 
-      <li v-if="loggedIn" :class="{ active: $route.path === `/p/${user?.userName}` }">
-        <NuxtLink :to="localePath(`/p/${user?.userName}`)">
+      <li v-if="loggedIn" :class="{ active: visibleBlock === 'profile' }">
+        <NuxtLink to="/#profile">
           Мой профиль
         </NuxtLink>
       </li>
@@ -17,21 +17,24 @@
 </template>
 
 <script setup lang="ts">
-const { loggedIn, user } = useUserSession()
-const localePath = useLocalePath()
+const { visibleBlock } = useNavigation()
+const { loggedIn } = useUserSession()
 
 const links = [
   {
     name: 'Игра',
     path: '/',
+    block: 'game',
   },
   {
     name: 'Персонажи',
     path: '/#characters',
+    block: 'characters',
   },
   {
     name: 'Монеты',
     path: '/#shop',
+    block: 'shop',
   },
 ]
 </script>

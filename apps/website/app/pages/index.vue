@@ -1,5 +1,5 @@
 <template>
-  <div class="my-16 px-4 max-w-4xl mx-auto text-center">
+  <div v-element-visibility="[onVisibilityChangeGame, observerOptions]" class="my-24 md:my-30 px-4 max-w-4xl mx-auto text-center">
     <div class="mb-8 space-y-4">
       <h1 class="text-2xl md:text-3xl lg:text-4xl">
         Интерактивная онлайн-игра в Telegram
@@ -31,7 +31,7 @@
     </div>
   </div>
 
-  <div id="characters" class="max-w-4xl mt-16 px-4 mx-auto text-center space-y-6">
+  <div id="characters" v-element-visibility="[onVisibilityChangeCharacters, observerOptions]" class="max-w-4xl my-24 md:my-30 px-4 mx-auto text-center space-y-6">
     <div class="space-y-2">
       <h2 class="text-2xl md:text-2xl lg:text-3xl">
         Персонажи из игры
@@ -40,23 +40,17 @@
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-      <div
-        v-for="char in characters"
-        :key="char.id"
-        class="relative aspect-square bg-orange-800/5 rounded-lg border border-b-4 border-orange-800/5 duration-200 group hover:border-orange-800/50 hover:-translate-y-1"
-      >
-        <div class="absolute inset-0 flex flex-col items-center justify-center">
-          <img :src="`/units/${char.codename}/128.png`" alt="" class="w-20 h-20 block group-hover:hidden">
-          <img :src="`/units/${char.codename}/idle.gif`" alt="" class="w-20 h-20 hidden group-hover:block">
-          <p class="mt-2 text-orange-900/85 font-semibold">
-            {{ char.nickname }}
-          </p>
-        </div>
-      </div>
+      <ActiveCard v-for="char in characters" :key="char.id" class="px-2 py-2 md:aspect-square flex flex-col items-center justify-center">
+        <img :src="`/units/${char.codename}/128.png`" alt="" class="w-20 h-20 block group-hover:hidden">
+        <img :src="`/units/${char.codename}/idle.gif`" alt="" class="w-20 h-20 hidden group-hover:block">
+        <p class="mt-2 text-orange-900/85 font-semibold">
+          {{ char.nickname }}
+        </p>
+      </ActiveCard>
     </div>
   </div>
 
-  <div id="shop" class="max-w-4xl mt-24 px-4 mx-auto text-center space-y-6">
+  <div id="shop" v-element-visibility="[onVisibilityChangeShop, observerOptions]" class="max-w-4xl my-24 md:my-30 px-4 mx-auto text-center space-y-6">
     <div class="space-y-2">
       <h2 class="text-2xl md:text-2xl lg:text-3xl">
         Магазин
@@ -65,7 +59,7 @@
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-      <div v-for="product in shopProducts" :key="product.id" class="relative bg-orange-800/5 rounded-lg border border-b-4 border-orange-800/5 duration-200 group hover:border-orange-800/50 hover:-translate-y-1">
+      <ActiveCard v-for="product in shopProducts" :key="product.id">
         <div class="bg-orange-500/5 bg-contain bg-no-repeat bg-bottom h-16 rounded-t-lg" :class="product.style" />
         <div class="p-4 flex flex-col justify-between">
           <div class="mb-4 text-xl font-semibold">
@@ -81,31 +75,82 @@
             </form>
           </div>
         </div>
-      </div>
+      </ActiveCard>
     </div>
 
     <p>
-      Можешь <NuxtLink to="/donate" class="text-emerald-600">
+      Можешь <NuxtLink to="/donate" class="text-emerald-600 hover:opacity-85 duration-200">
         поддержать стримера
       </NuxtLink> другими способами.
     </p>
   </div>
 
-  <div class="max-w-4xl mt-24 px-4 mx-auto text-center space-y-6">
+  <ClientOnly>
+    <div v-if="loggedIn" id="profile" v-element-visibility="[onVisibilityChangeProfile, observerOptions]" class="max-w-4xl my-24 md:my-30 px-4 mx-auto text-center space-y-6">
+      <div class="space-y-2">
+        <h2 class="text-2xl md:text-2xl lg:text-3xl">
+          {{ profile?.userName }}
+        </h2>
+        <p>Игровой профиль <span class="text-orange-900/85">{{ profile?.level }} уровня</span></p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+        <ActiveCard class="px-4 py-0 flex flex-row gap-0 items-center justify-center">
+          <img :src="`/units/${profile?.activeCharacter?.character.codename}/idle.gif`" alt="" class="h-24 w-24">
+          <div>
+            <p>Активный персонаж</p>
+            <p class="font-semibold text-lg text-orange-900/85">
+              {{ profile?.activeCharacter?.character.nickname }}
+            </p>
+          </div>
+        </ActiveCard>
+
+        <ActiveCard class="px-4 py-6 flex flex-row gap-8 items-center justify-center">
+          <div class="flex flex-row gap-2 items-center justify-center">
+            <img src="~/assets/img/icons/coin/64.png" alt="" class="h-12 w-12">
+            <div>
+              <p class="font-semibold text-2xl leading-tight text-orange-900/85">
+                {{ profile?.coins }}
+              </p>
+              <p class="text-sm leading-tight">
+                {{ pluralizationRu(profile?.coins ?? 0, ['Монета', 'Монет', 'Монет']) }}
+              </p>
+            </div>
+          </div>
+
+          <div class="flex flex-row gap-2 items-center justify-center">
+            <img src="~/assets/img/icons/coupon/64.png" alt="" class="h-12 w-12">
+            <div>
+              <p class="font-semibold text-2xl leading-tight text-orange-900/85">
+                {{ profile?.coupons }}
+              </p>
+              <p class="text-sm leading-tight">
+                {{ pluralizationRu(profile?.coupons ?? 0, ['Купон', 'Купона', 'Купонов']) }}
+              </p>
+            </div>
+          </div>
+        </ActiveCard>
+      </div>
+    </div>
+  </ClientOnly>
+
+  <div class="max-w-4xl my-24 px-4 mx-auto text-center space-y-6">
     <h2 class="text-2xl md:text-2xl lg:text-3xl">
       Благодарности от hmbanan666
     </h2>
-    <p class="text-lg thanks-block">
-      Спасибо моим зрителям: <a :href="localePath('/p/kungfux010')">kungfux010</a> за активные тесты игры, <a :href="localePath('/p/sava5621')">sava5621</a> за вкусные шавухи, <a :href="localePath('/p/bezsovesty')">BezSovesty</a> за помощь на
-      старте, <a :href="localePath('/p/flack_zombi')">flack_zombi</a> за упорство в рубке деревьев, <a :href="localePath('/p/player_mmcm')">player_mmcm</a> за первые тесты Дополнения, <a :href="localePath('/p/a_hywax')">a_hywax</a> за помощь с open source, <a :href="localePath('/p/peregonstream')">PeregonStream</a> и <a :href="localePath('/p/siberiacancode')">siberiacancode</a> за крутые рейды.
-      Спасибо <a :href="localePath('/p/tozikab_')">tozikab_</a>, <a :href="localePath('/p/6alt1ca')">6alt1ca</a>, <a :href="localePath('/p/derailon')">derailon</a>, <a :href="localePath('/p/sloghniy')">sloghniy</a>, <a :href="localePath('/p/man0ol')">MaN0ol</a>, <a :href="localePath('/p/do_oy')">dO_Oy</a>, <a :href="localePath('/p/vombatdrago')">VombatDrago</a>,
-      <a :href="localePath('/p/sleeplessness8')">sleeplessness8</a>.
+    <p class="thanks-block">
+      Спасибо моим зрителям: <em>kungfux010</em> за активные тесты игры, <em>sava5621</em> за вкусные шавухи, <em>BezSovesty</em> за помощь на
+      старте, <em>flack_zombi</em> за упорство в рубке деревьев, <em>player_mmcm</em> за первые тесты Дополнения, <em>a_hywax</em> за помощь с open source, <em>PeregonStream</em> и <em>siberiacancode</em> за крутые рейды.
+      Спасибо <em>tozikab_</em>, <em>6alt1ca</em>, <em>derailon</em>, <em>sloghniy</em>, <em>MaN0ol</em>, <em>dO_Oy</em>, <em>VombatDrago</em>,
+      <em>sleeplessness8</em>.
       <br>Вы все крутые!
     </p>
   </div>
 </template>
 
 <script setup lang="ts">
+import { vElementVisibility } from '@vueuse/components'
+
 useHead({
   title: 'Интерактивная онлайн-игра в Telegram',
   meta: [
@@ -116,8 +161,29 @@ useHead({
   ],
 })
 
-const localePath = useLocalePath()
+const { loggedIn, user } = useUserSession()
+const { onElementVisibility } = useNavigation()
+
+function onVisibilityChangeGame(isVisible: boolean) {
+  isVisible && onElementVisibility('game')
+}
+
+function onVisibilityChangeCharacters(isVisible: boolean) {
+  isVisible && onElementVisibility('characters')
+}
+
+function onVisibilityChangeShop(isVisible: boolean) {
+  isVisible && onElementVisibility('shop')
+}
+
+function onVisibilityChangeProfile(isVisible: boolean) {
+  isVisible && onElementVisibility('profile')
+}
+
+const observerOptions = { rootMargin: '0px 0px -400px 0px' }
+
 const { data: characters } = await useFetch('/api/character')
+const { data: profile } = await useFetch(`/api/profile/${user.value?.id}`)
 
 const shopProducts = [
   {
@@ -173,13 +239,11 @@ const shopProducts = [
 }
 
 .thanks-block {
-  a {
-    color: var(--color-emerald-600);
+  em {
+    font-style: normal;
     font-weight: 600;
-
-    &:hover {
-      opacity: 0.8;
-    }
+    color: var(--color-orange-800);
+    opacity: 0.75;
   }
 }
 

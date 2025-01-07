@@ -9,7 +9,7 @@
       </p>
     </div>
 
-    <div class="py-4 px-6 grid grid-cols-1 md:grid-cols-3 gap-y-4 md:gap-x-4 items-center justify-center bg-orange-800/5 rounded-lg">
+    <ActiveCard class="py-4 px-6 grid grid-cols-1 md:grid-cols-3 gap-y-4 md:gap-x-4 items-center justify-center">
       <p class="col-span-2">
         Укажи любую сумму и напиши сообщение, которое появится на активном стриме. И даже будет озвучка.
       </p>
@@ -17,15 +17,15 @@
         <Icon name="simple-icons:twitch" class="!w-8 !h-8" />
         <p class="uppercase">Donationalerts</p>
       </a>
-    </div>
+    </ActiveCard>
 
-    <div class="py-4 px-6 grid grid-cols-1 md:grid-cols-3 gap-y-4 md:gap-x-4 items-center justify-center bg-orange-800/5 rounded-lg">
+    <ActiveCard class="py-4 px-6 grid grid-cols-1 md:grid-cols-3 gap-y-4 md:gap-x-4 items-center justify-center">
       <p class="col-span-2">
         Приобрети любой набор Монет для игры. Оплата через "ЮKassa": РФ карта, ЮMoney, SberPay.
       </p>
       <a href="/#shop" class="px-6 py-5 w-full bg-teal-500 border-b-6 border-teal-600 text-white text-lg font-semibold tracking-wide rounded-lg cursor-pointer hover:opacity-85 active:scale-95 duration-200 flex flex-row justify-center items-center gap-3 flex-wrap">
         <p>Купить Монеты</p>
       </a>
-    </div>
+    </ActiveCard>
   </div>
 </template>
