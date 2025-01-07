@@ -11,7 +11,7 @@ type TelegramProfileWithProfile = TelegramProfile & {
   }
 }
 
-const useApiFetch = createFetch({
+export const useApiFetch = createFetch({
   baseUrl: 'https://chatgame.space/api/telegram',
   options: {
     beforeFetch({ options }) {

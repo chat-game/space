@@ -1,6 +1,6 @@
 <template>
   <PageContainer>
-    <div class="mb-4 grid grid-cols-2 gap-2">
+    <div class="grid grid-cols-2 gap-2">
       <ActiveCard class="!px-3 !py-2 flex flex-row gap-3 items-center" @click="isCoinOpened = true">
         <Image src="coin.png" class="w-12 h-12" />
         <div>
@@ -26,47 +26,51 @@
       </ActiveCard>
     </div>
 
-    <SectionHeader text="Специальные предложения" />
+    <div>
+      <SectionHeader text="Специальные предложения" />
 
-    <div class="mb-4 grid grid-cols-2 gap-2">
-      <ActiveCard v-for="product in products" :key="product.id" class="aspect-square" @click="selectProduct(product.id)">
-        <p class="font-medium text-lg leading-tight">
-          {{ product.title }}
-        </p>
-        <p v-if="product.bonusCoins" class="text-sm tg-hint">
-          + бонусы
-        </p>
-        <div v-if="product.singlePurchase === true" class="mt-2 w-fit tg-button px-3 py-1 rounded-2xl border-0 font-medium text-sm">
-          Лимитированный
-        </div>
+      <div class="grid grid-cols-2 gap-2">
+        <ActiveCard v-for="product in products" :key="product.id" class="aspect-square" @click="selectProduct(product.id)">
+          <p class="font-medium text-lg leading-tight">
+            {{ product.title }}
+          </p>
+          <p v-if="product.bonusCoins" class="text-sm tg-hint">
+            + бонусы
+          </p>
+          <div v-if="product.singlePurchase === true" class="mt-2 w-fit tg-button px-3 py-1 rounded-2xl border-0 font-medium text-sm">
+            Лимитированный
+          </div>
 
-        <div :style="{ 'background-image': `url('/shop-assets/${product.id}/512.png')` }" class="absolute top-0 left-0 right-0 bottom-0 bg-bottom bg-no-repeat bg-cover" />
-      </ActiveCard>
+          <div :style="{ 'background-image': `url('/shop-assets/${product.id}/512.png')` }" class="absolute top-0 left-0 right-0 bottom-0 bg-bottom bg-no-repeat bg-cover" />
+        </ActiveCard>
+      </div>
     </div>
 
-    <SectionHeader text="Коллекция персонажей 2024" />
+    <div>
+      <SectionHeader text="Коллекция персонажей 2024" />
 
-    <div class="grid grid-cols-2 gap-2">
-      <ActiveCard v-for="char in characters" :key="char.id" class="aspect-square" @click="selectCharacter(char.id)">
-        <div v-if="!char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)" class="z-10 absolute top-0 left-0 right-0 bottom-0 tg-secondary-bg opacity-40" />
+      <div class="grid grid-cols-2 gap-2">
+        <ActiveCard v-for="char in characters" :key="char.id" class="aspect-square" @click="selectCharacter(char.id)">
+          <div v-if="!char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)" class="z-10 absolute top-0 left-0 right-0 bottom-0 tg-secondary-bg opacity-40" />
 
-        <div v-if="profile?.profile?.activeEditionId && profile?.profile?.activeEditionId === char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)?.id" class="tg-accent-text text-base font-medium leading-tight">
-          Активный
-        </div>
-        <p class="font-medium text-lg leading-tight">
-          {{ char?.nickname }}
-        </p>
-        <p v-if="char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)" class="text-sm tg-hint">
-          {{ char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)?.level }} уровень
-        </p>
+          <div v-if="profile?.profile?.activeEditionId && profile?.profile?.activeEditionId === char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)?.id" class="tg-accent-text text-base font-medium leading-tight">
+            Активный
+          </div>
+          <p class="font-medium text-lg leading-tight">
+            {{ char?.nickname }}
+          </p>
+          <p v-if="char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)" class="text-sm tg-hint">
+            {{ char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)?.level }} уровень
+          </p>
 
-        <div v-if="char?.price && !char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)" class="flex flex-row gap-1 items-center">
-          <Image src="coin-small.png" class="w-5 h-5 grayscale-100" />
-          <p>{{ char?.price }}</p>
-        </div>
+          <div v-if="char?.price && !char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)" class="flex flex-row gap-1 items-center">
+            <Image src="coin-small.png" class="w-5 h-5 grayscale-100" />
+            <p>{{ char?.price }}</p>
+          </div>
 
-        <Image :src="`units/${char?.codename}/128.png`" class="absolute bottom-0 right-0 w-32 h-auto" :class="{ 'grayscale-100 opacity-70': !char?.editions?.find(({ profileId }) => profileId === profile?.profile.id) }" />
-      </ActiveCard>
+          <Image :src="`units/${char?.codename}/128.png`" class="absolute bottom-0 right-0 w-32 h-auto" :class="{ 'grayscale-100 opacity-70': !char?.editions?.find(({ profileId }) => profileId === profile?.profile.id) }" />
+        </ActiveCard>
+      </div>
     </div>
   </PageContainer>
 

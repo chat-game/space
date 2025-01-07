@@ -8,6 +8,7 @@ export {}
 declare global {
   const EffectScope: typeof import('vue')['EffectScope']
   const Icon: typeof import('@iconify/vue')['Icon']
+  const _useCharacter: typeof import('./src/composables/useCharacter')['_useCharacter']
   const addon: typeof import('./src/utils/gameClient')['addon']
   const computed: typeof import('vue')['computed']
   const createApp: typeof import('vue')['createApp']
@@ -61,8 +62,10 @@ declare global {
   const toValue: typeof import('vue')['toValue']
   const triggerRef: typeof import('vue')['triggerRef']
   const unref: typeof import('vue')['unref']
+  const useApiFetch: typeof import('./src/composables/useTelegramProfile')['useApiFetch']
   const useAttrs: typeof import('vue')['useAttrs']
   const useBackButton: typeof import('./src/composables/useBackButton')['useBackButton']
+  const useCharacter: typeof import('./src/composables/useCharacter')['useCharacter']
   const useCharacters: typeof import('./src/composables/useCharacters')['useCharacters']
   const useConfetti: typeof import('./src/composables/useConfetti')['useConfetti']
   const useCssModule: typeof import('vue')['useCssModule']

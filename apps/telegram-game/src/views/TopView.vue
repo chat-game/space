@@ -1,69 +1,73 @@
 <template>
   <PageContainer>
-    <SectionHeader text="Активное событие" />
+    <div>
+      <SectionHeader text="Активное событие" />
 
-    <div class="tg-section-bg mb-1 px-3 py-3 rounded-2xl">
-      <div class="flex flex-row gap-2 items-center">
-        <Image src="units/santa/head.png" class="w-12 h-12" />
-        <div>
-          <h3 class="text-xl font-medium">
-            {{ leaderboard?.title }}
-          </h3>
-          <div v-if="leaderboard?.finishedAt">
-            Окончание {{ new Date(leaderboard.finishedAt).toLocaleString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }) }}
+      <div class="tg-section-bg mb-1 px-3 py-3 rounded-2xl">
+        <div class="flex flex-row gap-2 items-center">
+          <Image src="units/santa/head.png" class="w-12 h-12" />
+          <div>
+            <h3 class="text-xl font-medium">
+              {{ leaderboard?.title }}
+            </h3>
+            <div v-if="leaderboard?.finishedAt">
+              Окончание {{ new Date(leaderboard.finishedAt).toLocaleString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }) }}
+            </div>
+          </div>
+        </div>
+
+        <p class="mt-1 tg-hint text-sm leading-tight">
+          {{ leaderboard?.description }}
+        </p>
+
+        <div v-if="profileInLeaderboard" class="mt-3 flex flex-row gap-2 justify-between">
+          <div class="flex flex-row gap-3 items-center">
+            <p class="font-medium text-lg">
+              {{ profileInLeaderboard.position }}
+            </p>
+            <p class="font-medium text-lg">
+              Мой результат
+            </p>
+          </div>
+          <div class="flex flex-row gap-1 items-center text-lg">
+            {{ profileInLeaderboard.points }} <Image src="items/k3bitdush5wqbwphhdfnxqtl/128.png" class="w-6 h-6" />
           </div>
         </div>
       </div>
 
-      <p class="mt-1 tg-hint text-sm leading-tight">
-        {{ leaderboard?.description }}
-      </p>
-
-      <div v-if="profileInLeaderboard" class="mt-3 flex flex-row gap-2 justify-between">
-        <div class="flex flex-row gap-3 items-center">
-          <p class="font-medium text-lg">
-            {{ profileInLeaderboard.position }}
-          </p>
-          <p class="font-medium text-lg">
-            Мой результат
-          </p>
-        </div>
-        <div class="flex flex-row gap-1 items-center text-lg">
-          {{ profileInLeaderboard.points }} <Image src="items/k3bitdush5wqbwphhdfnxqtl/128.png" class="w-6 h-6" />
+      <div class="flex flex-col gap-1">
+        <div v-for="member in leaderboard?.members" :key="member.id" class="px-3 py-2 tg-section-bg rounded-2xl flex flex-row gap-2 justify-between">
+          <div class="flex flex-row gap-3 items-center">
+            <p class="font-medium text-lg">
+              {{ member.position }}
+            </p>
+            <p class="font-medium text-lg">
+              {{ member.profile.telegramProfile?.firstName }}
+            </p>
+          </div>
+          <div class="flex flex-row gap-1 items-center text-lg">
+            {{ member.points }} <Image src="items/k3bitdush5wqbwphhdfnxqtl/128.png" class="w-6 h-6" />
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="mb-4 flex flex-col gap-1">
-      <div v-for="member in leaderboard?.members" :key="member.id" class="px-3 py-2 tg-section-bg rounded-2xl flex flex-row gap-2 justify-between">
-        <div class="flex flex-row gap-3 items-center">
-          <p class="font-medium text-lg">
-            {{ member.position }}
+    <div>
+      <SectionHeader text="Мои трофеи" />
+
+      <div v-if="trophies.length" class="grid grid-cols-3 gap-2">
+        <ActiveCard v-for="edition in trophies" :key="edition.id" class="flex flex-col gap-2 items-center" @click="selectTrophy(edition.id)">
+          <Image :src="getTrophyImage(edition.trophy)" class="w-full h-auto" />
+          <p class="text-center text-sm font-medium leading-3 line-clamp-2">
+            {{ edition.trophy.name }}
           </p>
-          <p class="font-medium text-lg">
-            {{ member.profile.telegramProfile?.firstName }}
-          </p>
-        </div>
-        <div class="flex flex-row gap-1 items-center text-lg">
-          {{ member.points }} <Image src="items/k3bitdush5wqbwphhdfnxqtl/128.png" class="w-6 h-6" />
-        </div>
+        </ActiveCard>
       </div>
-    </div>
-
-    <SectionHeader text="Мои трофеи" />
-
-    <div v-if="trophies.length" class="grid grid-cols-3 gap-2">
-      <ActiveCard v-for="edition in trophies" :key="edition.id" class="flex flex-col gap-2 items-center" @click="selectTrophy(edition.id)">
-        <Image :src="getTrophyImage(edition.trophy)" class="w-full h-auto" />
-        <p class="text-center text-sm font-medium leading-3 line-clamp-2">
-          {{ edition.trophy.name }}
+      <div v-else class="tg-section-bg p-3 flex flex-col gap-2 items-center rounded-2xl">
+        <p class="font-medium tg-hint">
+          Нет полученных трофеев
         </p>
-      </ActiveCard>
-    </div>
-    <div v-else class="tg-section-bg mb-4 p-3 flex flex-col gap-2 items-center rounded-2xl">
-      <p class="font-medium tg-hint">
-        Нет полученных трофеев
-      </p>
+      </div>
     </div>
   </PageContainer>
 

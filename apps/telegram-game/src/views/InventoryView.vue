@@ -1,6 +1,6 @@
 <template>
   <PageContainer>
-    <div class="tg-section-bg mb-4 px-3 py-3 flex flex-row gap-2 items-center rounded-2xl">
+    <div class="tg-section-bg px-3 py-3 flex flex-row gap-2 items-center rounded-2xl">
       <img :src="data?.photoUrl" alt="avatar" class="w-14 h-14 rounded-full">
       <div>
         <div class="text-xl font-medium">
@@ -22,13 +22,13 @@
         </div>
       </ActiveCard>
     </div>
-    <div v-else class="tg-section-bg mb-4 p-3 flex flex-col gap-2 items-center rounded-2xl">
+    <div v-else class="tg-section-bg p-3 flex flex-col gap-2 items-center rounded-2xl">
       <p class="font-medium tg-hint">
         Нет предметов в инвентаре
       </p>
     </div>
 
-    <div v-if="isEmptyProfile" class="tg-section-bg mb-4 p-3 flex flex-col gap-2 items-center rounded-2xl">
+    <div v-if="isEmptyProfile" class="tg-section-bg p-3 flex flex-col gap-2 items-center rounded-2xl">
       <div class="w-full space-y-3">
         <div class="text-xl font-medium">
           Есть профиль на ChatGame?

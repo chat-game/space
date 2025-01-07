@@ -1,20 +1,22 @@
 <template>
   <PageContainer>
-    <SectionHeader text="Активные комнаты" />
+    <div>
+      <SectionHeader text="Активные комнаты" />
 
-    <div class="flex flex-col gap-2">
-      <div v-for="room in rooms" :key="room.id" class="tg-section-bg mb-4 px-3 py-3 flex flex-col gap-2 items-center rounded-2xl">
-        <div class="space-y-3">
-          <div class="text-xl font-medium">
-            {{ room.name }}
-          </div>
-          <div class="tg-hint text-sm">
-            {{ room.description }}
-          </div>
+      <div class="flex flex-col gap-2">
+        <div v-for="room in rooms" :key="room.id" class="tg-section-bg mb-4 px-3 py-3 flex flex-col gap-2 items-center rounded-2xl">
+          <div class="space-y-3">
+            <div class="text-xl font-medium">
+              {{ room.name }}
+            </div>
+            <div class="tg-hint text-sm">
+              {{ room.description }}
+            </div>
 
-          <Button @click="connectToRoom(room.roomId)">
-            Подключиться
-          </Button>
+            <Button @click="connectToRoom(room.roomId)">
+              Подключиться
+            </Button>
+          </div>
         </div>
       </div>
     </div>
