@@ -138,6 +138,16 @@ export interface CharacterEditionWithProfile extends CharacterEdition {
   character: Character
 }
 
+export interface CharacterLevel {
+  id: string
+  createdAt: Date
+  updatedAt: Date
+  level: number
+  requiredXp: number
+  inventoryItemId: string | null
+  characterId: string
+}
+
 export interface ActiveCharacter extends CharacterEditionWithCharacter {
   lastActionAt: Date
   token: string

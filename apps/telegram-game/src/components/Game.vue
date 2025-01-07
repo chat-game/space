@@ -5,6 +5,7 @@
 
     <div class="tg-content-safe-area-top touch-pan-x absolute top-0 left-0 right-0 w-full h-16">
       <div class="max-w-[28rem] mx-auto px-4">
+        <GameCharacterProgression />
         <GameNavigator :player-x="game.player?.x" :wagon-x="game.wagon?.x" />
 
         <div v-if="profile && profile.energy >= 0" class="hidden w-fit h-10 px-5 py-0 flex-row items-center gap-2 bg-orange-100/80 text-amber-600 rounded-full">

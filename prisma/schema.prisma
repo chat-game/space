@@ -224,6 +224,7 @@ model Character {
   gameId          String             @map("game_id")
   game            Game               @relation(fields: [gameId], references: [id])
   editions        CharacterEdition[]
+  levels          CharacterLevel[]
 
   @@map("character")
 }
@@ -240,6 +241,19 @@ model CharacterEdition {
   character   Character @relation(fields: [characterId], references: [id])
 
   @@map("character_edition")
+}
+
+model CharacterLevel {
+  id              String    @id
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @default(now()) @map("updated_at")
+  level           Int
+  requiredXp      Int       @map("required_xp")
+  inventoryItemId String?   @map("inventory_item_id")
+  characterId     String    @map("character_id")
+  character       Character @relation(fields: [characterId], references: [id])
+
+  @@map("character_level")
 }
 
 model Coupon {

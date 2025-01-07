@@ -16,6 +16,7 @@ declare module 'vue' {
     ConfettiBackground: typeof import('./src/components/ConfettiBackground.vue')['default']
     CouponActivationBlock: typeof import('./src/components/CouponActivationBlock.vue')['default']
     Game: typeof import('./src/components/Game.vue')['default']
+    GameCharacterProgression: typeof import('./src/components/GameCharacterProgression.vue')['default']
     GameNavigator: typeof import('./src/components/GameNavigator.vue')['default']
     Image: typeof import('./src/components/Image.vue')['default']
     Modal: typeof import('./src/components/Modal.vue')['default']
