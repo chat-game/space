@@ -29,8 +29,6 @@ onMounted(() => {
 .profile-avatar {
   width: 58px;
   height: 58px;
-  background-color: var(--bronze-4);
-  border: 2px solid var(--bronze-6);
   border-radius: 50%;
   transition: all 0.2s;
 
