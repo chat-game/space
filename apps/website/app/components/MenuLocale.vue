@@ -1,5 +1,5 @@
 <template>
-  <div class="block">
+  <div class="hidden relative">
     <button class="select-lang" @click="handleListClick">
       <div class="icon">
         <Icon name="lucide:globe" class="!w-6 !h-6" />
@@ -29,10 +29,6 @@ function handleLocaleSwitch(code: 'ru' | 'en') {
 </script>
 
 <style scoped>
-  .block {
-    position: relative;
-  }
-
   .select-lang {
     padding: 0.25em 0 0.25em;
     display: flex;

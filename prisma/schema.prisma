@@ -188,6 +188,7 @@ model InventoryItem {
   name        String
   description String
   editions    InventoryItemEdition[]
+  rewards     CharacterLevel[]
 
   @@map("inventory_item")
 }
@@ -216,6 +217,7 @@ model Character {
   description     String
   isReady         Boolean            @default(false) @map("is_ready")
   unlockedBy      String             @default("COINS") @map("unlocked_by")
+  coefficient     Int                @default(1)
   price           Int                @default(0)
   animationIdle   String?            @map("animation_idle")
   animationMoving String?            @map("animation_moving")
@@ -244,14 +246,16 @@ model CharacterEdition {
 }
 
 model CharacterLevel {
-  id              String    @id
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @default(now()) @map("updated_at")
+  id              String         @id
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @default(now()) @map("updated_at")
   level           Int
-  requiredXp      Int       @map("required_xp")
-  inventoryItemId String?   @map("inventory_item_id")
-  characterId     String    @map("character_id")
-  character       Character @relation(fields: [characterId], references: [id])
+  requiredXp      Int            @map("required_xp")
+  awardAmount     Int            @default(0) @map("award_amount")
+  inventoryItemId String?        @map("inventory_item_id")
+  inventoryItem   InventoryItem? @relation(fields: [inventoryItemId], references: [id])
+  characterId     String         @map("character_id")
+  character       Character      @relation(fields: [characterId], references: [id])
 
   @@map("character_level")
 }

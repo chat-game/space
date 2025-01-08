@@ -107,6 +107,7 @@ export interface Character {
   isReady: boolean
   unlockedBy: 'COINS' | 'SHOP' | 'TROPHY'
   price: number
+  coefficient: number
   codename: string | null
 }
 
@@ -144,6 +145,7 @@ export interface CharacterLevel {
   updatedAt: Date
   level: number
   requiredXp: number
+  awardAmount: number
   inventoryItemId: string | null
   characterId: string
 }

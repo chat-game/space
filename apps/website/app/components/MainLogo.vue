@@ -1,7 +1,7 @@
 <template>
-  <div class="logo -mt-5 -mb-3 -ml-3 -mr-2 w-20 h-20 overflow-hidden">
-    <img :src="`/units/${randomChar}/128.png`" alt="" class="static w-20 h-20">
-    <img :src="`/units/${randomChar}/idle.gif`" alt="" class="animated w-20 h-20">
+  <div class="-mt-5 -mb-1 -ml-3 -mr-2 w-22 h-22 overflow-hidden duration-200 group">
+    <Image :src="`/units/${randomChar}/128.png`" class="w-22 h-22 block group-hover:hidden" />
+    <Image :src="`/units/${randomChar}/idle.gif`" class="w-22 h-22 hidden group-hover:block" />
   </div>
 </template>
 
@@ -21,31 +21,3 @@ const characters = [
 ]
 const randomChar = computed(() => characters[Math.floor(Math.random() * characters.length)])
 </script>
-
-<style scoped>
-.logo {
-  transition: all 0.2s;
-
-  .static-index {
-    display: block;
-  }
-
-  .static {
-    display: block;
-  }
-
-  .animated {
-    display: none;
-  }
-
-  &:hover {
-    .static {
-      display: none;
-    }
-
-    .animated {
-      display: block;
-    }
-  }
-}
-</style>

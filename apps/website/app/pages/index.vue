@@ -1,7 +1,7 @@
 <template>
   <div v-element-visibility="[onVisibilityChangeGame, observerOptions]" class="my-24 md:my-30 px-4 max-w-4xl mx-auto text-center">
     <div class="mb-8 space-y-4">
-      <h1 class="text-2xl md:text-3xl lg:text-4xl">
+      <h1 class="text-3xl md:text-3xl lg:text-4xl">
         Интерактивная онлайн-игра в Telegram
       </h1>
       <p class="text-base md:text-lg lg:text-xl">
@@ -10,12 +10,12 @@
     </div>
 
     <div class="max-w-160 mx-auto flex flex-col md:flex-row gap-4 items-center justify-center">
-      <a href="https://t.me/ChatGameSpaceBot" target="_blank" class="px-12 py-5 w-full bg-emerald-500 border-b-6 border-emerald-600 text-white text-xl font-semibold tracking-wide rounded-lg cursor-pointer hover:opacity-85 active:scale-95 duration-200 flex flex-row justify-center items-center gap-3">
-        <Icon name="simple-icons:telegram" class="!w-8 !h-8" />
+      <a href="https://t.me/ChatGameSpaceBot" target="_blank" class="px-6 py-4 md:py-5 w-full bg-emerald-500 border-b-6 border-emerald-600 text-white text-lg md:text-xl font-semibold tracking-wide rounded-lg cursor-pointer hover:opacity-85 active:scale-95 duration-200 flex flex-row justify-center items-center gap-3">
+        <Icon name="simple-icons:telegram" size="32" />
         <p>Открыть игру</p>
       </a>
-      <a href="https://github.com/chat-game/space" target="_blank" class="px-12 py-5 w-full bg-orange-900/75 border-b-6 border-orange-900/75 text-white text-xl font-semibold tracking-wide rounded-lg cursor-pointer hover:opacity-85 active:scale-95 duration-200 flex flex-row justify-center items-center gap-3">
-        <Icon name="simple-icons:github" class="!w-8 !h-8" />
+      <a href="https://github.com/chat-game/space" target="_blank" class="px-6 py-4 md:py-5 w-full bg-orange-900/75 border-b-6 border-orange-900/75 text-white text-lg md:text-xl font-semibold tracking-wide rounded-lg cursor-pointer hover:opacity-85 active:scale-95 duration-200 flex flex-row justify-center items-center gap-3">
+        <Icon name="simple-icons:github" size="32" />
         <p>GitHub</p>
         <div class="flex flex-row items-center gap-1">
           <Icon name="lucide:star" class="!w-5 !h-5" />
@@ -40,9 +40,9 @@
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-      <ActiveCard v-for="char in characters" :key="char.id" class="px-2 py-2 md:aspect-square flex flex-col items-center justify-center">
-        <img :src="`/units/${char.codename}/128.png`" alt="" class="w-20 h-20 block group-hover:hidden">
-        <img :src="`/units/${char.codename}/idle.gif`" alt="" class="w-20 h-20 hidden group-hover:block">
+      <ActiveCard v-for="char in characters" :key="char.id" class="px-2 py-2 md:aspect-square flex flex-col items-center justify-center cursor-pointer" @click="() => { isCharacterOpened = true; selectedCharacterId = char.id; }">
+        <Image :src="`/units/${char.codename}/128.png`" class="w-20 h-20 block group-hover:hidden" />
+        <Image :src="`/units/${char.codename}/idle.gif`" class="w-20 h-20 hidden group-hover:block" />
         <p class="mt-2 text-orange-900/85 font-semibold">
           {{ char.nickname }}
         </p>
@@ -60,7 +60,10 @@
 
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
       <ActiveCard v-for="product in shopProducts" :key="product.id">
-        <div class="bg-orange-500/5 bg-contain bg-no-repeat bg-bottom h-16 rounded-t-lg" :class="product.style" />
+        <div class="w-full h-24 bg-orange-500/5">
+          <Image :src="`/shop-assets/${product.id}/512.png`" class="w-40 h-auto absolute -top-14 right-0" />
+        </div>
+
         <div class="p-4 flex flex-col justify-between">
           <div class="mb-4 text-xl font-semibold">
             {{ product.coins }} Монет
@@ -96,7 +99,7 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
         <ActiveCard class="px-4 py-0 flex flex-row gap-0 items-center justify-center">
-          <img :src="`/units/${profile?.activeCharacter?.character.codename}/idle.gif`" alt="" class="h-24 w-24">
+          <Image :src="`/units/${profile?.activeCharacter?.character.codename}/idle.gif`" class="h-24 w-24" />
           <div>
             <p>Активный персонаж</p>
             <p class="font-semibold text-lg text-orange-900/85">
@@ -107,9 +110,9 @@
 
         <ActiveCard class="px-4 py-6 flex flex-row gap-8 items-center justify-center">
           <div class="flex flex-row gap-2 items-center justify-center">
-            <img src="~/assets/img/icons/coin/64.png" alt="" class="h-12 w-12">
+            <Image src="/coin.png" class="h-12 w-12" />
             <div>
-              <p class="font-semibold text-2xl leading-tight text-orange-900/85">
+              <p class="font-semibold text-2xl leading-tight">
                 {{ profile?.coins }}
               </p>
               <p class="text-sm leading-tight">
@@ -119,9 +122,9 @@
           </div>
 
           <div class="flex flex-row gap-2 items-center justify-center">
-            <img src="~/assets/img/icons/coupon/64.png" alt="" class="h-12 w-12">
+            <Image src="/coupon-small.png" class="h-12 w-12" />
             <div>
-              <p class="font-semibold text-2xl leading-tight text-orange-900/85">
+              <p class="font-semibold text-2xl leading-tight">
                 {{ profile?.coupons }}
               </p>
               <p class="text-sm leading-tight">
@@ -146,6 +149,32 @@
       <br>Вы все крутые!
     </p>
   </div>
+
+  <Modal :title="`&laquo;${selectedCharacter?.nickname}&raquo; ${selectedCharacter?.name}`" :is-opened="isCharacterOpened" @close="isCharacterOpened = false">
+    <p class="tg-hint text-sm leading-tight">
+      {{ selectedCharacter?.description ?? '' }}
+    </p>
+
+    <div v-if="selectedCharacter?.levels.length">
+      <h3 class="mb-1 text-lg md:text-xl font-medium leading-tight">
+        Награды за прокачку
+      </h3>
+      <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2">
+        <ActiveCard v-for="reward in selectedCharacter?.levels" :key="reward.id" class="px-4 py-4 flex flex-col gap-2 items-center justify-center">
+          <p class="font-semibold">
+            {{ reward.level }} уровень
+          </p>
+
+          <div v-if="reward.inventoryItemId" class="mb-1 relative text-center">
+            <Image :src="`/items/${reward.inventoryItemId}/128.png`" class="p-2 h-16 w-16 bg-orange-800/10 rounded-lg" />
+            <p class="absolute -bottom-2 -right-1 px-3 py-1 bg-orange-100 rounded-2xl text-sm leading-tight">
+              <span class="text-xs">x</span>{{ reward.awardAmount }}
+            </p>
+          </div>
+        </ActiveCard>
+      </div>
+    </div>
+  </Modal>
 </template>
 
 <script setup lang="ts">
@@ -183,6 +212,11 @@ function onVisibilityChangeProfile(isVisible: boolean) {
 const observerOptions = { rootMargin: '0px 0px -400px 0px' }
 
 const { data: characters } = await useFetch('/api/character')
+
+const isCharacterOpened = ref(false)
+const selectedCharacterId = ref<string>()
+const selectedCharacter = computed(() => characters.value?.find(({ id }) => id === selectedCharacterId.value))
+
 const { data: profile } = await useFetch(`/api/profile/${user.value?.id}`)
 
 const shopProducts = [
@@ -190,31 +224,26 @@ const shopProducts = [
     id: 'jehj4mxo0g6fp1eopf3jg641',
     price: 110,
     coins: 10,
-    style: 'shop-block-1',
   },
   {
     id: 'w0895g3t9q75ys2maod0zd1a',
     price: 450,
     coins: 60,
-    style: 'shop-block-2',
   },
   {
     id: 'nar1acws8c3s4w3cxs6i8qdn',
     price: 1250,
     coins: 180,
-    style: 'shop-block-3',
   },
   {
     id: 'tp5w874gchf6hjfca9vory2r',
     price: 2150,
     coins: 330,
-    style: 'shop-block-4',
   },
   {
     id: 'izh5v4vxztqi55gquts9ukn2',
     price: 3900,
     coins: 650,
-    style: 'shop-block-5',
   },
 ]
 </script>
@@ -245,25 +274,5 @@ const shopProducts = [
     color: var(--color-orange-800);
     opacity: 0.75;
   }
-}
-
-.shop-block-1 {
-  background-image: url(~/assets/img/shop/block-1.png);
-}
-
-.shop-block-2 {
-  background-image: url(~/assets/img/shop/block-2.png);
-}
-
-.shop-block-3 {
-  background-image: url(~/assets/img/shop/block-3.png);
-}
-
-.shop-block-4 {
-  background-image: url(~/assets/img/shop/block-4.png);
-}
-
-.shop-block-5 {
-  background-image: url(~/assets/img/shop/block-5.png);
 }
 </style>

@@ -1,18 +1,20 @@
-export default defineEventHandler(
-  async () => {
-    const characters = await prisma.character.findMany({
-      orderBy: {
-        price: 'asc',
+export default defineEventHandler(async () => {
+  const characters = await prisma.character.findMany({
+    orderBy: {
+      coefficient: 'asc',
+    },
+    include: {
+      editions: true,
+      levels: {
+        orderBy: {
+          level: 'asc',
+        },
       },
-      include: {
-        editions: true,
-      },
-    })
+    },
+  })
+  if (!characters?.length) {
+    return []
+  }
 
-    if (!characters.length) {
-      return []
-    }
-
-    return characters
-  },
-)
+  return characters
+})

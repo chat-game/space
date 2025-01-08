@@ -8,7 +8,7 @@
           <img src="/qr.png" alt="qr" width="150" class="qr">
 
           <div class="wagon-card event">
-            <img src="/units/santa/head.png" alt="" width="44">
+            <Image src="/units/santa/head.png" width="44" />
             <p class="title">
               Рождественский переполох
             </p>
@@ -19,7 +19,7 @@
               <p>{{ member.profile.telegramProfile.firstName }}</p>
               <div class="points">
                 <p>{{ member.points }}</p>
-                <img src="/icons/christmas-cupcake.png" alt="" width="32" height="32">
+                <Image src="/items/k3bitdush5wqbwphhdfnxqtl/128.png" width="32" height="32" />
               </div>
             </div>
           </div>
