@@ -76,8 +76,11 @@ export class BaseWebSocketService implements WebSocketService {
           this.addon.player.initChar(player.character)
         }
       }
+
+      this.addon.updateUI()
     }
     if (message.type === 'DISCONNECTED_FROM_WAGON_ROOM') {
+      this.addon.updateUI()
       this.addon.playerService.removePlayer(message.data.id)
     }
 
@@ -105,6 +108,7 @@ export class BaseWebSocketService implements WebSocketService {
       this.addon.treeService.create({ ...message.data })
     }
     if (message.type === 'DESTROY_TREE') {
+      this.addon.updateUI()
       this.addon.removeObject(message.data.id)
     }
   }

@@ -55,7 +55,7 @@ const christmasId = 'iq9f2634d3q3ans243dhxmj7'
 const { data: leaderboard, execute: refreshLeaderboard } = useFetch<LeaderboardData>(`https://chatgame.space/api/leaderboard/${christmasId}/list?limit=9`)
 
 onMounted(async () => {
-  game.value = new BaseGameAddon({ websocketUrl: publicEnv.websocketUrl, client: 'WAGON_CLIENT' })
+  game.value = new BaseGameAddon({ websocketUrl: publicEnv.websocketUrl, client: 'WAGON_CLIENT', updateUI: () => {} })
   await game.value.init('wagon')
   game.value.websocketService.connect(id)
   stage.value?.appendChild(game.value.app.canvas)

@@ -1,5 +1,5 @@
 <template>
-  <div class="relative mb-2 h-10 bg-red-950/15 text-white rounded-full">
+  <div class="relative h-10 bg-red-950/15 text-white rounded-full">
     <div v-if="wagonOnNavigator > 3 && wagonOnNavigator < 97" class="absolute transform -translate-x-1/2" :style="{ left: `${wagonOnNavigator}%` }">
       <div class="p-1 bg-purple-300 rounded-xl">
         <Image src="wheel-1.png" class="w-8 h-8" />

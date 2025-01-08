@@ -17,7 +17,11 @@ export default defineEventHandler(async (event) => {
       include: {
         profile: {
           include: {
-            characterEditions: true,
+            characterEditions: {
+              include: {
+                character: true,
+              },
+            },
           },
         },
       },
