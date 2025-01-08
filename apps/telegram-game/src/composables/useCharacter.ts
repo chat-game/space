@@ -1,8 +1,9 @@
-import type { CharacterEdition, CharacterLevel } from '@chat-game/types'
+import type { Character, CharacterEdition, CharacterLevel } from '@chat-game/types'
 import { createSharedComposable } from '@vueuse/core'
 import { useApiFetch } from './useTelegramProfile'
 
 type CharacterEditionData = CharacterEdition & {
+  character: Character
   levels: CharacterLevel[]
   nextLevel: CharacterLevel | null
   xpToNextLevel: number | null

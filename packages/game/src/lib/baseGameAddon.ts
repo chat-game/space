@@ -22,6 +22,7 @@ import { BaseWebSocketService } from './services/baseWebSocketService'
 interface BaseGameAddonOptions {
   websocketUrl: string
   client: GameAddon['client']
+  updateUI: () => void
 }
 
 export class BaseGameAddon extends Container implements GameAddon {
@@ -30,6 +31,7 @@ export class BaseGameAddon extends Container implements GameAddon {
   override children: GameAddon['children'] = []
   app: Application
   tick: GameAddon['tick'] = 0
+  updateUI: () => void
 
   wagon: GameObjectWagon | null = null
   player: GameObjectPlayer | null = null
@@ -53,12 +55,13 @@ export class BaseGameAddon extends Container implements GameAddon {
   cameraPerfectX = 0
   cameraPerfectY = 0
 
-  constructor({ websocketUrl, client }: BaseGameAddonOptions) {
+  constructor({ websocketUrl, client, updateUI }: BaseGameAddonOptions) {
     super()
 
     this.id = createId()
     this.client = client
     this.app = new Application()
+    this.updateUI = updateUI
 
     this.assetService = new BaseAssetService(this as GameAddon)
     this.playerService = new BasePlayerService(this as GameAddon)

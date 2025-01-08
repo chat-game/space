@@ -21,6 +21,7 @@ export interface GameAddon extends Container {
   treeService: TreeService
   serverService: ServerService
   websocketService: WebSocketService
+  updateUI: () => void
   play: () => void
   checkIfThisFlagIsTarget: (id: string) => boolean
   findObject: (id: string) => GameObject | undefined
