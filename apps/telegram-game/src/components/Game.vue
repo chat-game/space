@@ -28,6 +28,7 @@ import type { BaseGameAddon } from '@chat-game/game'
 import { initData } from '@telegram-apps/sdk-vue'
 import { gameClient, roomConnected } from '../utils/gameClient'
 
+const { refreshCharacter } = useCharacter()
 const { hmbanan666 } = useRoom()
 const { profile } = useTelegramProfile()
 
@@ -44,6 +45,10 @@ onMounted(async () => {
 
   await game.value.init(data.id.toString())
   canvas.value?.appendChild(game.value.app.canvas)
+
+  game.value.updateUI = () => {
+    refreshCharacter()
+  }
 
   return () => game.value.destroy()
 })

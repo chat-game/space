@@ -1,5 +1,4 @@
 import type { Character, CharacterEdition, CharacterLevel } from '@chat-game/types'
-import { createSharedComposable } from '@vueuse/core'
 import { useApiFetch } from './useTelegramProfile'
 
 type CharacterEditionData = CharacterEdition & {
@@ -9,10 +8,8 @@ type CharacterEditionData = CharacterEdition & {
   xpToNextLevel: number | null
 }
 
-export function _useCharacter() {
-  const { data, execute: refreshCharacter } = useApiFetch('/character/active').get().json<CharacterEditionData>()
+const { data, execute: refreshCharacter } = useApiFetch('/character/active').get().json<CharacterEditionData>()
 
+export function useCharacter() {
   return { character: data, refreshCharacter }
 }
-
-export const useCharacter = createSharedComposable(_useCharacter)

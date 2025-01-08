@@ -101,6 +101,7 @@ export class BaseWebSocketService implements WebSocketService {
     }
 
     if (message.type === 'NEW_WAGON_TARGET') {
+      this.addon.updateUI()
       this.addon.wagon?.createFlagAndMove(message.data.x)
     }
 

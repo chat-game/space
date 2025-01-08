@@ -2,18 +2,7 @@ export default {
   branches: ['main'],
   extends: 'semantic-release-monorepo',
   plugins: [
-    [
-      '@semantic-release/commit-analyzer',
-      {
-        releaseRules: [
-          { breaking: true, release: 'major' },
-          { type: 'feat', release: 'minor' },
-          { type: 'fix', release: 'patch' },
-          { type: 'chore', release: 'patch' },
-          { type: 'refactor', release: 'patch' },
-        ],
-      },
-    ],
+    '@semantic-release/commit-analyzer',
     '@semantic-release/release-notes-generator',
     [
       '@semantic-release/exec',
