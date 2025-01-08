@@ -46,8 +46,8 @@ onMounted(async () => {
   await game.value.init(data.id.toString())
   canvas.value?.appendChild(game.value.app.canvas)
 
-  game.value.updateUI = () => {
-    refreshCharacter()
+  game.value.updateUI = async () => {
+    await refreshCharacter()
   }
 
   return () => game.value.destroy()
