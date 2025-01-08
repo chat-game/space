@@ -22,7 +22,7 @@ import { BaseWebSocketService } from './services/baseWebSocketService'
 interface BaseGameAddonOptions {
   websocketUrl: string
   client: GameAddon['client']
-  updateUI: () => void
+  updateUI?: () => void
 }
 
 export class BaseGameAddon extends Container implements GameAddon {
@@ -61,7 +61,7 @@ export class BaseGameAddon extends Container implements GameAddon {
     this.id = createId()
     this.client = client
     this.app = new Application()
-    this.updateUI = updateUI
+    this.updateUI = updateUI || (() => {})
 
     this.assetService = new BaseAssetService(this as GameAddon)
     this.playerService = new BasePlayerService(this as GameAddon)
