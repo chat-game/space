@@ -137,7 +137,6 @@ export class BaseGameAddon extends Container implements GameAddon {
       this.playerService.update()
       this.treeService.update()
       this.updateObjects()
-      this.removeDestroyedObjects()
 
       if (this.cameraTarget) {
         this.leftX = this.cameraTarget.x
@@ -171,6 +170,13 @@ export class BaseGameAddon extends Container implements GameAddon {
   removeObject(id: string) {
     const obj = this.findObject(id)
     if (obj) {
+      if (obj.type === 'TREE') {
+        this.updateUI()
+      }
+
+      const index = this.children.indexOf(obj)
+      this.children.splice(index, 1)
+
       this.removeChild(obj)
     }
   }
@@ -200,6 +206,10 @@ export class BaseGameAddon extends Container implements GameAddon {
 
   updateObjects() {
     for (const object of this.children) {
+      if (object.state === 'DESTROYED') {
+        this.removeObject(object.id)
+      }
+
       object.animate()
       object.live()
 
@@ -219,16 +229,6 @@ export class BaseGameAddon extends Container implements GameAddon {
         object,
         target: object.target,
       })
-    }
-  }
-
-  removeDestroyedObjects() {
-    for (const object of this.children) {
-      if (object.state === 'DESTROYED') {
-        const index = this.children.indexOf(object)
-        this.children.splice(index, 1)
-        return
-      }
     }
   }
 
