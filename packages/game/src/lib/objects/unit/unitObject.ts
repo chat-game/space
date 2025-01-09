@@ -21,8 +21,8 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
   coins = 0
   dialogue: GameObjectUnit['dialogue']
 
-  animationIdle!: AnimatedSprite
-  animationMoving!: AnimatedSprite
+  animationIdle!: AnimatedSprite | undefined
+  animationMoving!: AnimatedSprite | undefined
 
   constructor({ addon, x, y, id, type }: UnitObjectOptions) {
     super({ addon, x, y, id, type })
@@ -41,12 +41,14 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
     }
   }
 
-  async initVisual(codename = 'telegramo'): Promise<void> {
+  async initVisual(codename: string | undefined | null = 'telegramo'): Promise<void> {
     if (this.animationIdle) {
       this.removeChild(this.animationIdle)
+      this.animationIdle = undefined
     }
     if (this.animationMoving) {
       this.removeChild(this.animationMoving)
+      this.animationMoving = undefined
     }
 
     const idle = await Assets.load(`/units/${codename}/idle.json`)

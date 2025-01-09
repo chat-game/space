@@ -9,11 +9,13 @@
 
 <script setup lang="ts">
 import { hapticFeedback } from '@telegram-apps/sdk-vue'
+import { gameClient } from '../utils/gameClient'
 
 const { characterId } = defineProps<{
   characterId: string
 }>()
 
+const { refreshCharacter } = useCharacter()
 const { characters, refreshCharacters } = useCharacters()
 const { profile, refreshProfile, useApiFetch } = useTelegramProfile()
 
@@ -26,6 +28,9 @@ async function activateCharacter() {
   if (data.value?.ok) {
     await refreshProfile()
     await refreshCharacters()
+    await refreshCharacter()
+
+    gameClient.websocketService.connect('12345')
 
     if (hapticFeedback.impactOccurred.isAvailable()) {
       hapticFeedback.notificationOccurred('success')

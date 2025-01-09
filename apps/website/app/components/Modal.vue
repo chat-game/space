@@ -21,7 +21,7 @@
         <slot />
       </div>
 
-      <div class="absolute bottom-0 right-0 left-0 bg-orange-100 rounded-xl px-4 md:px-6 pt-2 pb-4">
+      <div class="z-50 absolute bottom-0 right-0 left-0 bg-orange-100 rounded-xl px-4 md:px-6 pt-2 pb-4">
         <Button @click="onClose()">
           Закрыть
         </Button>

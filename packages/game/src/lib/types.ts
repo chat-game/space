@@ -80,7 +80,7 @@ export interface GameObjectUnit extends GameObject {
     messages: { id: string, text: string }[]
   }
   addMessage: (message: string) => void
-  initVisual: (codename?: string) => Promise<void>
+  initVisual: (codename?: string | null) => Promise<void>
 }
 
 export interface GameObjectPlayer extends GameObjectUnit {
