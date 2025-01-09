@@ -86,7 +86,6 @@ export class BaseObject extends Container implements GameObject {
   }
 
   override destroy() {
-    super.destroy()
     this.size = 0
     this.health = 0
     this.state = 'DESTROYED'
