@@ -33,7 +33,7 @@ export class PlayerObject extends UnitObject implements GameObjectPlayer {
   }
 
   async initChar(character?: CharacterEditionWithCharacter): Promise<void> {
-    super.initVisual(character?.character?.codename ?? 'telegramo')
+    super.initVisual(character?.character?.codename)
   }
 
   click(): void {

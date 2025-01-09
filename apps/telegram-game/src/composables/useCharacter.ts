@@ -4,6 +4,7 @@ import { useApiFetch } from './useTelegramProfile'
 type CharacterEditionData = CharacterEdition & {
   character: Character
   levels: CharacterLevel[]
+  currentLevel: CharacterLevel | null
   nextLevel: CharacterLevel | null
   xpToNextLevel: number | null
 }

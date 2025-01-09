@@ -3,8 +3,8 @@ import { getXpForLevel } from '~~/server/utils/level'
 
 export default defineEventHandler(async () => {
   // Generate levels for character
-  const characterId = 'c3hrpu39wodc2nlv6pmgmm2k'
-  const levels = 10
+  const characterId = 'ytyz0rtl2s84x2gmbvzl3r5h'
+  const levels = 20
 
   const character = await prisma.character.findFirst({
     where: { id: characterId },

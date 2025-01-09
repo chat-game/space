@@ -43,12 +43,14 @@ export default defineEventHandler(async (event) => {
       where: { characterId: character.characterId },
     })
 
+    const currentLevel = levels.find((l) => l.level === character.level) ?? null
     const nextLevel = levels.find((l) => l.level === character.level + 1) ?? null
     const xpToNextLevel = nextLevel ? nextLevel.requiredXp - character.xp : null
 
     return {
       ...character,
       levels,
+      currentLevel,
       nextLevel,
       xpToNextLevel,
     }
