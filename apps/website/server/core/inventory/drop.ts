@@ -19,14 +19,14 @@ export async function dropFromTree(telegramId: string) {
 
   const randomChance = getRandomInRange(0, 100)
 
-  // Simple wood: 10% chance
-  if (randomChance <= 10) {
+  // Simple wood: 5% chance
+  if (randomChance <= 5) {
     const simpleWoodId = 'rrrsnr31bmzus12abhupq06n'
     await addItemToInventory(profile.profile.id, simpleWoodId, 1)
     return
   }
-  // Branch: 15% chance
-  if (randomChance <= 10 + 15) {
+  // Branch: 8% chance
+  if (randomChance <= 5 + 8) {
     const branchId = 'rq8hovyeqg4bh2siw9flcerf'
     await addItemToInventory(profile.profile.id, branchId, 1)
   }
