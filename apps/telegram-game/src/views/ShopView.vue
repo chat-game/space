@@ -47,7 +47,7 @@
     </div>
 
     <div>
-      <SectionHeader text="Коллекция персонажей 2024" />
+      <SectionHeader text="Коллекция персонажей" />
 
       <div class="grid grid-cols-2 gap-2">
         <ActiveCard v-for="char in characters" :key="char.id" class="aspect-square" @click="selectCharacter(char.id)">

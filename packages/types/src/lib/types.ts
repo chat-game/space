@@ -343,7 +343,7 @@ export interface InventoryItem {
   description: string
 }
 
-export type InventoryItemType = 'BASIC_WOOD' | 'BASIC_CURRENCY' | 'SEASONAL'
+export type InventoryItemType = 'BASIC_WOOD' | 'BASIC_CURRENCY' | 'BASIC_FOOD' | 'BASIC_MANUFACTURE' | 'SEASONAL'
 
 export interface InventoryItemEdition {
   id: string

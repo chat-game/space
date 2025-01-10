@@ -1,9 +1,9 @@
 import type { LeaderboardData } from '@chat-game/types'
 import { useFetch } from '@vueuse/core'
 
-const christmasId = 'iq9f2634d3q3ans243dhxmj7'
+const currentEventId = '1'
 
-const { data, execute: refreshLeaderboard } = useFetch(`https://chatgame.space/api/leaderboard/${christmasId}/list`, {
+const { data, execute: refreshLeaderboard } = useFetch(`https://chatgame.space/api/leaderboard/${currentEventId}/list`, {
   async onFetchError(ctx) {
     return ctx
   },
