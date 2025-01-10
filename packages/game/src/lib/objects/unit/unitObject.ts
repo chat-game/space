@@ -51,14 +51,14 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
       this.animationMoving = undefined
     }
 
-    const idle = await Assets.load(`/units/${codename}/idle.json`)
+    const idle = await Assets.load(`https://storage.yandexcloud.net/chatgame-assets/units/${codename}/idle.json`)
     const idleSprite = new AnimatedSprite(idle.animations.main)
     idleSprite.anchor.set(0.5, 1)
     idleSprite.scale.set(4)
     this.animationIdle = idleSprite
     this.addChild(this.animationIdle)
 
-    const moving = await Assets.load(`/units/${codename}/moving.json`)
+    const moving = await Assets.load(`https://storage.yandexcloud.net/chatgame-assets/units/${codename}/moving.json`)
     const movingSprite = new AnimatedSprite(moving.animations.main)
     movingSprite.anchor.set(0.5, 1)
     movingSprite.scale.set(4)
