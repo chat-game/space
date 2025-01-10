@@ -14,7 +14,7 @@ export async function dropFromTree(telegramId: string) {
 
   // +xp to char
   if (profile.profile.activeEditionId) {
-    await addXpToCharacterEdition(profile.profile.activeEditionId, getRandomInRange(1, 2))
+    await addXpToCharacterEdition(profile.profile.activeEditionId, getRandomInRange(2, 5))
   }
 
   const randomChance = getRandomInRange(0, 100)

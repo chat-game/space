@@ -1,7 +1,7 @@
 import type { CharacterEditionWithCharacter, GameObject, GameObjectPlayer, WebSocketEvents } from '@chat-game/types'
 import type { WagonRoom } from '../core/rooms/wagon'
 import { createId } from '@paralleldrive/cuid2'
-import { dropChristmasCupcake, dropFromTree } from '../core/inventory/drop'
+import { dropFromTree } from '../core/inventory/drop'
 import { activeRooms } from '../core/rooms'
 import { AddonRoom } from '../core/rooms/addon'
 
@@ -145,7 +145,6 @@ export default defineWebSocketHandler({
             const player = activeRoom.objects.find((obj) => obj.type === 'PLAYER' && obj.id === peer.id) as GameObject & GameObjectPlayer
             if (player) {
               await dropFromTree(player.telegramId)
-              await dropChristmasCupcake(player.telegramId, 'TREE')
             }
           }
         }

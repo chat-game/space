@@ -7,14 +7,14 @@
         <div class="cards">
           <img src="/qr.png" alt="qr" width="150" class="qr">
 
-          <div class="wagon-card event">
+          <div class="hidden wagon-card event">
             <Image src="/units/santa/head.png" width="44" />
             <p class="title">
               Рождественский переполох
             </p>
           </div>
 
-          <div class="top-players">
+          <div class="hidden top-players">
             <div v-for="member in leaderboard?.members" :key="member.id" class="card">
               <p>{{ member.profile.telegramProfile.firstName }}</p>
               <div class="points">
@@ -133,10 +133,6 @@ onMounted(async () => {
 
   .distance {
     font-size: 48px;
-  }
-
-  .hidden {
-    display: none;
   }
 
   .event {

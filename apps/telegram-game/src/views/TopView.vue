@@ -1,6 +1,6 @@
 <template>
   <PageContainer>
-    <div>
+    <div v-if="leaderboard?.title">
       <SectionHeader text="Активное событие" />
 
       <div class="tg-section-bg mb-1 px-3 py-3 rounded-2xl">

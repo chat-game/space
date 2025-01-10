@@ -1,6 +1,7 @@
 export default defineEventHandler(
   async () => {
     const products = await prisma.product.findMany({
+      where: { isActive: true },
       orderBy: {
         priority: 'asc',
       },
