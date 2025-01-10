@@ -51,8 +51,8 @@ const id = route.query.id?.toString() ?? ''
 const stage = ref<HTMLElement>()
 const game = ref<BaseGameAddon>()
 
-const christmasId = 'iq9f2634d3q3ans243dhxmj7'
-const { data: leaderboard, execute: refreshLeaderboard } = useFetch<LeaderboardData>(`https://chatgame.space/api/leaderboard/${christmasId}/list?limit=9`)
+const currentEventId = 'iq9f2634d3q3ans243dhxmj7'
+const { data: leaderboard, execute: refreshLeaderboard } = useFetch<LeaderboardData>(`https://chatgame.space/api/leaderboard/${currentEventId}/list?limit=9`)
 
 onMounted(async () => {
   game.value = new BaseGameAddon({ websocketUrl: publicEnv.websocketUrl, client: 'WAGON_CLIENT', updateUI: () => {} })
@@ -129,6 +129,10 @@ onMounted(async () => {
     border-radius: 6px;
     background-color: #fed7aa;
     font-size: 32px;
+  }
+
+  .hidden {
+    display: none;
   }
 
   .distance {
