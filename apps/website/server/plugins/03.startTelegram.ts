@@ -1,5 +1,5 @@
 import process from 'node:process'
-import { bot } from '../core/telegram/bot'
+import { bot, gameBot } from '../core/telegram/bot'
 
 export default defineNitroPlugin(() => {
   if (process.env.NODE_ENV !== 'production') {
@@ -7,15 +7,16 @@ export default defineNitroPlugin(() => {
   }
 
   const logger = useLogger('plugin-start-telegram')
-  const { telegramBotToken } = useRuntimeConfig()
+  const { telegramBotToken, telegramGameBotToken } = useRuntimeConfig()
 
-  if (!telegramBotToken) {
+  if (!telegramBotToken || !telegramGameBotToken) {
     // No config provided
     return
   }
 
-  // Start the bot (using long polling)
+  // Start the bots (using long polling)
   bot.start()
+  gameBot.start()
 
   logger.success('Telegram server started')
 })

@@ -1,12 +1,12 @@
-# 👑 Chat Game for Twitch
+# 🌲 hmbanan666's Woodlands: Online Game
 
 - 📺 [Developing and playing it live](https://www.twitch.tv/hmbanan666)
-- 👾 [Telegram Mini App as Player controller](https://t.me/ChatGameSpaceBot)
-- 🏠 [Website](https://chatgame.space)
+- 👾 [Telegram Mini App as Player controller](https://t.me/WoodlandsGameBot)
+- 🏠 [Project Website](https://chatgame.space)
 
 ![Screen](https://raw.githubusercontent.com/chat-game/space/main/.github/static/wagon-room-screen.jpg)
 
-🤔 Imagine procedurally generated world where Twitch viewers can:
+🤔 Imagine procedurally generated world where players can:
 
 - 💬 **Use Telegram Mini App as input** to see own char performing actions in real time
 - 🗺️ **Travel** with the Wagon
