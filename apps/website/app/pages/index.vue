@@ -2,7 +2,7 @@
   <div v-element-visibility="[onVisibilityChangeGame, observerOptions]" class="my-24 md:my-30 px-4 max-w-4xl mx-auto text-center">
     <div class="mb-8 space-y-4">
       <h1 class="text-3xl md:text-3xl lg:text-4xl">
-        Интерактивная онлайн-игра в Telegram
+        Woodlands: онлайн-игра в Telegram
       </h1>
       <p class="text-base md:text-lg lg:text-xl">
         Группа игроков сопровождает Машину из точки А в точку Б. По пути встречаются препятствия, от которых нужно избавляться. Все это транслируется на <a href="https://twitch.tv/hmbanan666" target="_blank" class="opacity-70 duration-200 hover:opacity-100 hover:text-emerald-600">Twitch стриме</a>.
@@ -10,7 +10,7 @@
     </div>
 
     <div class="max-w-160 mx-auto flex flex-col md:flex-row gap-4 items-center justify-center">
-      <a href="https://t.me/ChatGameSpaceBot" target="_blank" class="px-6 py-4 md:py-5 w-full bg-emerald-500 border-b-6 border-emerald-600 text-white text-lg md:text-xl font-semibold tracking-wide rounded-lg cursor-pointer hover:opacity-85 active:scale-95 duration-200 flex flex-row justify-center items-center gap-3">
+      <a href="https://t.me/WoodlandsGameBot" target="_blank" class="px-6 py-4 md:py-5 w-full bg-emerald-500 border-b-6 border-emerald-600 text-white text-lg md:text-xl font-semibold tracking-wide rounded-lg cursor-pointer hover:opacity-85 active:scale-95 duration-200 flex flex-row justify-center items-center gap-3">
         <Icon name="simple-icons:telegram" size="32" />
         <p>Открыть игру</p>
       </a>

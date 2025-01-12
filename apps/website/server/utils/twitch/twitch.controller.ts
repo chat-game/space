@@ -120,7 +120,7 @@ class TwitchController {
 
   getRandomInfoMessage(): string {
     const messages = [
-      `Присоединяйся к рубке деревьев на стриме! Запусти приложение в Telegram: https://t.me/ChatGameSpaceBot`,
+      `Присоединяйся к рубке деревьев на стриме! Запусти игру в Telegram: https://t.me/WoodlandsGameBot`,
       `Поддержи стримера: https://chatgame.space/donate`,
       `Приобретай Монеты в ChatGame: https://chatgame.space/#shop. Разблокируй вручную созданных персонажей. Спасибо за поддержку!`,
       `Еще не подписан? Стань фолловером, подпишись на канал! Чем вас больше, тем больше интерактива создадим.`,

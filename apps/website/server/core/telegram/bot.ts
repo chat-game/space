@@ -11,24 +11,74 @@ const gameChannelUrl = 'https://t.me/chatgamespace'
 const woodlandsBotUrl = 'https://t.me/WoodlandsGameBot'
 const twitchUrl = 'https://twitch.tv/hmbanan666'
 
+const ru: typeof en = {
+  chatgame: {
+    welcomeMessage: `Добро пожаловать в ChatGame! 🥳
+
+Выбери игру или действие 👇`,
+    playingOnTwitch: '👾 Играем на Twitch',
+  },
+  woodland: {
+    welcomeMessage: `Добро пожаловать в Woodlands! 🥳
+
+Одна из задач - сопровождать Машину из точки А в точку Б. По пути могут встречаться препятствия. Тапай их! 👆💪
+
+Участвуй в событиях, приглашай друзей, добывай Монеты и разблокируй вручную созданных персонажей. 🤴🎅🐶`,
+    title: '🌲 Woodlands: Онлайн-игра',
+    play: '🎮 Играть',
+    developingGameOnTwitch: '👾 Улучшаем игру на Twitch',
+  },
+  subscribeToChannel: '📢 Подпишись на канал',
+  defaultBotReply: 'Я пока не умею отвечать на сообщения. Свяжись с @hmbanan666, если есть вопросы.',
+}
+
+const en = {
+  chatgame: {
+    welcomeMessage: `Welcome to ChatGame! 🥳
+
+Choose the game or action 👇`,
+    playingOnTwitch: '👾 Playing on Twitch',
+  },
+  woodland: {
+    welcomeMessage: `Welcome to Woodlands! 🥳
+
+One of the tasks is to accompany the Machine from point A to point B. Along the way, obstacles may appear. Tap them! 👆💪
+
+Participate in events, invite friends, collect Coins and unlock manually created characters. 🤴🎅🐶`,
+    title: '🌲 Woodlands: Online Game',
+    play: '🎮 Play',
+    developingGameOnTwitch: '👾 Developing game on Twitch',
+  },
+  subscribeToChannel: '📢 Subscribe to the channel',
+  defaultBotReply: 'I dont know how to reply to messages yet. Contact @hmbanan666 if you have any questions.',
+}
+
+function dictionary(locale: string | undefined = 'en') {
+  switch (locale) {
+    case 'ru':
+      return ru
+    default:
+      return en
+  }
+}
+
 const bot = new Bot(telegramBotToken)
 const gameBot = new Bot(telegramGameBotToken)
 
 // Old bot
 bot.on('message:text', async (ctx) => {
+  const locale = ctx.message.from.language_code
+
   if (ctx.hasCommand('start')) {
     // Welcome message with buttons
     await ctx.reply(
-      `Добро пожаловать в ChatGame! 🥳
-
-Выбери игру 👇
-      `,
+      dictionary(locale).chatgame.welcomeMessage,
       {
         reply_markup: {
           inline_keyboard: [
-            [{ text: '🌲 Woodlands: Online Game', url: woodlandsBotUrl }],
-            [{ text: '📢 Подпишись на канал', url: gameChannelUrl }],
-            [{ text: '👾 Играем на стримах', url: twitchUrl }],
+            [{ text: dictionary(locale).woodland.title, url: woodlandsBotUrl }],
+            [{ text: dictionary(locale).subscribeToChannel, url: gameChannelUrl }],
+            [{ text: dictionary(locale).chatgame.playingOnTwitch, url: twitchUrl }],
           ],
         },
       },
@@ -38,39 +88,38 @@ bot.on('message:text', async (ctx) => {
   }
 
   logger.log(ctx.message.from.id, ctx.message.text)
-  ctx.reply('Я пока не умею отвечать на сообщения.')
+  ctx.reply(dictionary(locale).defaultBotReply)
 })
 
 // Game bot
 gameBot.on('message:text', async (ctx) => {
+  const locale = ctx.message.from.language_code
+
   if (ctx.hasCommand('start')) {
     // Tree sticker
     await ctx.replyWithSticker('CAACAgEAAxkBAAENexdng5nCguO04hJRGAABxUYQUdZlkmMAAj8CAALjmxhEgCIYC2AbEOM2BA')
 
     // Welcome message with buttons
     await ctx.reply(
-      `Добро пожаловать в Woodlands! 🥳
-
-Одна из задач - сопровождать Машину из точки А в точку Б. По пути могут встречаться препятствия. Тапай их! 👆💪
-
-Участвуй в событиях, приглашай друзей, добывай Монеты и разблокируй вручную созданных персонажей. 🤴🎅🐶
-      `,
+      dictionary(locale).woodland.welcomeMessage,
       {
         reply_markup: {
           inline_keyboard: [
-            [{ text: '🎮 Играть', url: gameUrl }],
-            [{ text: '📢 Подпишись на канал', url: gameChannelUrl }],
-            [{ text: '👾 Улучшаем игру на стримах', url: twitchUrl }],
+            [{ text: dictionary(locale).woodland.play, url: gameUrl }],
+            [{ text: dictionary(locale).subscribeToChannel, url: gameChannelUrl }],
+            [{ text: dictionary(locale).woodland.developingGameOnTwitch, url: twitchUrl }],
           ],
         },
       },
     )
 
+    await notifyAdmin(`[Woodlands] Команда старт от пользователя ${ctx.message.from.id} ${ctx.message.from.first_name}, locale: ${ctx.message.from.language_code}`)
+
     return
   }
 
   logger.log(ctx.message.from.id, ctx.message.text)
-  ctx.reply('Я пока не умею отвечать на сообщения.')
+  ctx.reply(dictionary(locale).defaultBotReply)
 })
 
 // regexp: id in object like { payment_id: 123 }
@@ -115,7 +164,7 @@ gameBot.on('message:successful_payment', async (ctx) => {
 
         await activateProduct(payment.productId, payment.profileId)
 
-        await notifyAdmin(`Пользователь ${payment.profileId} совершил покупку. +${payment.amount} XTR`)
+        await notifyAdmin(`[Woodlands] Профиль ${payment.profileId} совершил покупку. +${payment.amount} XTR`)
       }
     }
 
