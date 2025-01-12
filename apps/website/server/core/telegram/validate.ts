@@ -2,7 +2,7 @@ import type { InitData } from '@telegram-apps/init-data-node'
 import type { H3Event } from 'h3'
 import { parse, validate } from '@telegram-apps/init-data-node'
 
-const { telegramBotToken } = useRuntimeConfig()
+const { telegramGameBotToken } = useRuntimeConfig()
 
 const logger = useLogger('validateTelegramData')
 
@@ -19,7 +19,7 @@ export function validateTelegramData(event: H3Event): InitData | undefined {
   }
 
   try {
-    validate(authData, telegramBotToken, { expiresIn: 0 })
+    validate(authData, telegramGameBotToken, { expiresIn: 0 })
     return parse(authData)
   } catch (e) {
     logger.error(e)

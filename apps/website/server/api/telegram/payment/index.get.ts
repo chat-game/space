@@ -1,5 +1,5 @@
 import { createId } from '@paralleldrive/cuid2'
-import { bot } from '~~/server/core/telegram/bot'
+import { gameBot } from '~~/server/core/telegram/bot'
 import { validateTelegramData } from '~~/server/core/telegram/validate'
 
 export default defineEventHandler(async (event) => {
@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
 
     // Create invoice via bot
     const paymentId = createId()
-    const link = await bot.api.createInvoiceLink(
+    const link = await gameBot.api.createInvoiceLink(
       product.title,
       product.description,
       `{"payment_id":"${paymentId}"}`,

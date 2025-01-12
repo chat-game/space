@@ -65,6 +65,7 @@ export default defineNuxtConfig({
     oauthTwitchClientId: '', // NUXT_OAUTH_TWITCH_CLIENT_ID
     oauthTwitchClientSecret: '', // NUXT_OAUTH_TWITCH_CLIENT_SECRET
     telegramBotToken: '', // NUXT_TELEGRAM_BOT_TOKEN
+    telegramGameBotToken: '', // NUXT_TELEGRAM_GAME_BOT_TOKEN
     telegramAdminId: '', // NUXT_TELEGRAM_ADMIN_ID
     public: {
       signInRedirectUrl: '', // NUXT_PUBLIC_SIGN_IN_REDIRECT_URL
