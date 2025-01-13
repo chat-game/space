@@ -51,13 +51,13 @@ export class BaseWebSocketService implements WebSocketService {
 
   async handleMessage(message: WebSocketMessage) {
     if (message.type === 'CONNECTED_TO_WAGON_ROOM') {
-      const { id, type, objects } = message.data
+      const { id, roomId, type, objects } = message.data
 
       // Other room?
-      if (id !== this.roomId) {
+      if (roomId !== this.roomId) {
         // Remove all previous objects
         this.addon.rebuildScene()
-        this.roomId = id
+        this.roomId = roomId
       }
 
       // Init all objects
