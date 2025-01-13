@@ -114,6 +114,7 @@ export interface WebSocketConnectedToWagonRoom {
   type: 'CONNECTED_TO_WAGON_ROOM'
   data: {
     id: string
+    roomId: string
     type: 'WAGON' | 'PLAYER'
     objects: GameObject[]
   }

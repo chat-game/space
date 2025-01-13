@@ -84,7 +84,7 @@ export default defineWebSocketHandler({
           activeRoom.addPlayer({ id: peer.id, telegramId: parsed.data.token, x: wagon?.x ? wagon.x - 200 : 100, character })
 
           peer.subscribe(activeRoom.id)
-          void sendMessage({ type: 'CONNECTED_TO_WAGON_ROOM', data: { type: 'PLAYER', id: peer.id, objects: activeRoom.objects } }, activeRoom.token)
+          void sendMessage({ type: 'CONNECTED_TO_WAGON_ROOM', data: { type: 'PLAYER', roomId: activeRoom.id, id: peer.id, objects: activeRoom.objects } }, activeRoom.token)
 
           logger.log(`Telegram client ${parsed.data.token} subscribed to Wagon Room ${activeRoom.id}`, peer.id)
         }
@@ -96,7 +96,7 @@ export default defineWebSocketHandler({
           }
 
           peer.subscribe(activeRoom.id)
-          void sendMessage({ type: 'CONNECTED_TO_WAGON_ROOM', data: { type: 'WAGON', id: peer.id, objects: activeRoom.objects } }, activeRoom.token)
+          void sendMessage({ type: 'CONNECTED_TO_WAGON_ROOM', data: { type: 'WAGON', roomId: activeRoom.id, id: peer.id, objects: activeRoom.objects } }, activeRoom.token)
 
           logger.log(`Wagon client subscribed to Wagon Room ${activeRoom.id}`, peer.id)
         }
