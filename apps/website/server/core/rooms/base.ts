@@ -1,6 +1,10 @@
+import type { GameObject } from '@chat-game/types'
 import type { Peer } from 'crossws'
 import type { Room } from '~~/types/room'
+import type { Chunk } from './types'
 import { createId } from '@paralleldrive/cuid2'
+import { ForestChunk } from './chunk/forestChunk'
+import { VillageChunk } from './chunk/villageChunk'
 
 interface BaseRoomOptions {
   id: string
@@ -14,6 +18,8 @@ export class BaseRoom implements Room {
   type: Room['type']
   server: { ws: WebSocket, peer: Peer | null }
   peers: string[] = []
+  objects: GameObject[] = []
+  chunks: Chunk[] = []
 
   constructor({ id, token, type }: BaseRoomOptions) {
     this.id = id
@@ -65,5 +71,41 @@ export class BaseRoom implements Room {
   onclose() {
     this.initServerSocket()
     this.connectServer()
+  }
+
+  static async updateChunksInStorage(roomId: string, chunks: Chunk[]) {
+    const chunksKey = `room:${roomId}:chunks`
+    useStorage('redis').setItem(chunksKey, chunks)
+  }
+
+  async getChunksFromStorage() {
+    const chunksKey = `room:${this.id}:chunks`
+    const chunks = await useStorage<Chunk[]>('redis').getItem(chunksKey)
+    if (!chunks) {
+      return []
+    }
+
+    return chunks
+  }
+
+  async initChunks() {
+    const chunksInStorage = await this.getChunksFromStorage()
+    if (chunksInStorage.length) {
+      for (const chunk of chunksInStorage) {
+        if (chunk.type === 'FOREST') {
+          const newChunk = new ForestChunk(chunk)
+          this.chunks.push(newChunk)
+          this.objects.push(...newChunk.objects)
+          continue
+        }
+
+        if (chunk.type === 'VILLAGE') {
+          const newChunk = new VillageChunk(chunk)
+          this.chunks.push(newChunk)
+          this.objects.push(...newChunk.objects)
+          continue
+        }
+      }
+    }
   }
 }
