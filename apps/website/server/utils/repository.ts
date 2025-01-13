@@ -338,11 +338,7 @@ export class DBRepository {
       return
     }
 
-    const points
-      = profile.collectorPoints
-      + profile.trophyHunterPoints
-      + profile.storytellerPoints
-      + profile.patronPoints
+    const points = profile.collectorPoints + profile.trophyHunterPoints + profile.storytellerPoints + profile.patronPoints
     if (points !== profile.points) {
       await prisma.profile.update({
         where: { id },
