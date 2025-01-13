@@ -27,7 +27,7 @@ export interface GameAddon extends Container {
   findObject: (id: string) => GameObject | undefined
   createObject: (data: { type: GameObject['type'], id: string, x: number, zIndex?: number, telegramId?: string }) => void
   removeObject: (id: string) => void
-  rebuildScene: () => Promise<void>
+  rebuildScene: () => void
 }
 
 export interface GameObject extends Container {
@@ -106,6 +106,7 @@ export interface ServerService {
 }
 
 export interface WebSocketService {
+  roomId: string | null
   socket: UseWebSocketReturn<WebSocketMessage>
   connect: (roomId: string) => void
   send: (event: WebSocketEvents) => void

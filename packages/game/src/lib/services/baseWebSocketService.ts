@@ -4,6 +4,7 @@ import { createId } from '@paralleldrive/cuid2'
 import { useWebSocket } from '@vueuse/core'
 
 export class BaseWebSocketService implements WebSocketService {
+  roomId: string | null = null
   socket: WebSocketService['socket']
 
   constructor(readonly addon: GameAddon, readonly websocketUrl: string) {
@@ -52,6 +53,14 @@ export class BaseWebSocketService implements WebSocketService {
     if (message.type === 'CONNECTED_TO_WAGON_ROOM') {
       const { id, type, objects } = message.data
 
+      // Other room?
+      if (id !== this.roomId) {
+        // Remove all previous objects
+        this.addon.rebuildScene()
+        this.roomId = id
+      }
+
+      // Init all objects
       for (const obj of objects) {
         if (this.addon.findObject(obj.id)) {
           continue
@@ -70,6 +79,7 @@ export class BaseWebSocketService implements WebSocketService {
 
       if (type === 'PLAYER' && this.addon.player) {
         const player = objects.find((obj) => obj.type === 'PLAYER' && obj.id === id) as GameObject & GameObjectPlayer
+        // Me?
         if (player && player?.telegramId === this.addon.player?.telegramId) {
           this.addon.player.id = id
           this.addon.player.x = player.x

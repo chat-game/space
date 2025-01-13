@@ -199,7 +199,7 @@ export class BaseGameAddon extends Container implements GameAddon {
     return this.children.find((obj) => obj.id === id)
   }
 
-  async rebuildScene() {
+  rebuildScene() {
     this.removeChild(...this.children)
     // this.app.ticker.remove()
   }

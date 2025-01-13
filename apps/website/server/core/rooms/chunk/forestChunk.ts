@@ -15,7 +15,7 @@ export class ForestChunk extends BaseChunk {
   variant: GameObjectTree['variant'] = 'GREEN'
 
   constructor({ startX, endX, id, objects, variant }: ForestChunkOptions) {
-    super({ startX, endX, id })
+    super({ type: 'FOREST', startX, endX, id })
 
     this.variant = variant ?? this.getRandomVariant()
     this.objects = objects ?? []
