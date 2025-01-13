@@ -3,9 +3,9 @@
     <div class="game-block">
       <div id="game-canvas" ref="stage" />
 
-      <div class="interface">
+      <div class="interface bg-orange-950 text-orange-950">
         <div class="cards">
-          <img src="/qr.png" alt="qr" width="150" class="qr">
+          <img src="/qr.png" alt="qr" class="relative w-50 h-auto mb-6 px-1 pt-3 bg-orange-950 rounded-tr-xl">
 
           <div class="hidden wagon-card event px-3 py-2 gap-3">
             <Image src="/units/santa/head.png" width="44" />
@@ -91,24 +91,12 @@ onMounted(async () => {
     left: 0;
     width: 100%;
     height: 40px;
-    background-color: #450a0a;
-    color: #450a0a;
     /* selection remove */
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-  }
-
-  .qr {
-    width: 200px;
-    height: auto;
-    position: relative;
-    margin-top: -200px;
-    padding: 6px 2px 8px;
-    background-color: #450a0a;
-    border-radius: 0 14px 0 0;
   }
 
   .cards {
