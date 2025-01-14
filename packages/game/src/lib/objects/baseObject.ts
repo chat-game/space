@@ -39,10 +39,6 @@ export class BaseObject extends Container implements GameObject {
     this.script = undefined
     this.isOnWagonPath = false
 
-    this.init()
-  }
-
-  init() {
     this.addon.addChild(this)
   }
 
