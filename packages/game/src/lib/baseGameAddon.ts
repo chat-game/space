@@ -55,6 +55,22 @@ export class BaseGameAddon extends Container implements GameAddon {
   cameraPerfectX = 0
   cameraPerfectY = 0
 
+  baseAppTicker = () => {
+    this.tick = this.app.ticker.FPS
+
+    this.playerService.update()
+    this.treeService.update()
+    this.updateObjects()
+
+    if (this.cameraTarget) {
+      this.leftX = this.cameraTarget.x
+      this.rectangle.x = this.cameraTarget.x - this.app.screen.width / 2
+
+      this.changeCameraPosition(this.cameraTarget.x)
+      this.moveCamera()
+    }
+  }
+
   constructor({ websocketUrl, client, updateUI }: BaseGameAddonOptions) {
     super()
 
@@ -94,57 +110,47 @@ export class BaseGameAddon extends Container implements GameAddon {
     this.app.stage.addChild(this)
 
     if (this.client === 'TELEGRAM_CLIENT') {
-      this.player = await this.playerService.createPlayer({ id: createId(), telegramId, x: 200 })
-      this.cameraTarget = this.player
-
-      this.app.stage.addEventListener('pointerdown', (e) => {
-        if (!this.player || !this.player.canClick) {
-          return
-        }
-
-        const isTargetAnObject = e.target.children.length === 0
-        if (isTargetAnObject) {
-          return
-        }
-
-        const middle = this.app.screen.width / 2
-        const offsetX = e.clientX - middle
-        const serverX = offsetX + this.leftX
-
-        const flag = new FlagObject({ addon: this, x: serverX, y: this.bottomY, variant: 'PLAYER_MOVEMENT' })
-        if (this.player.target && this.player.target.type === 'FLAG') {
-          const flag = this.player.target
-          this.player.target = undefined
-          flag.state = 'DESTROYED'
-        }
-        this.player.target = flag
-
-        this.player.click()
-
-        this.websocketService.send({
-          type: 'NEW_PLAYER_TARGET',
-          data: {
-            x: serverX,
-            id: this.player.id,
-          },
-        })
-      })
+      await this.initTelegramPlayer(telegramId)
     }
 
-    this.app.ticker.add(() => {
-      this.tick = this.app.ticker.FPS
+    this.app.ticker.add(this.baseAppTicker, 'baseAppTicker')
+  }
 
-      this.playerService.update()
-      this.treeService.update()
-      this.updateObjects()
+  async initTelegramPlayer(telegramId: string) {
+    this.player = await this.playerService.createPlayer({ id: createId(), telegramId, x: 200 })
+    this.cameraTarget = this.player
 
-      if (this.cameraTarget) {
-        this.leftX = this.cameraTarget.x
-        this.rectangle.x = this.cameraTarget.x - this.app.screen.width / 2
-
-        this.changeCameraPosition(this.cameraTarget.x)
-        this.moveCamera()
+    this.app.stage.addEventListener('pointerdown', (e) => {
+      if (!this.player || !this.player.canClick) {
+        return
       }
+
+      const isTargetAnObject = e.target.children.length === 0
+      if (isTargetAnObject) {
+        return
+      }
+
+      const middle = this.app.screen.width / 2
+      const offsetX = e.clientX - middle
+      const serverX = offsetX + this.leftX
+
+      const flag = new FlagObject({ addon: this, x: serverX, y: this.bottomY, variant: 'PLAYER_MOVEMENT' })
+      if (this.player.target && this.player.target.type === 'FLAG') {
+        const flag = this.player.target
+        this.player.target = undefined
+        flag.state = 'DESTROYED'
+      }
+      this.player.target = flag
+
+      this.player.click()
+
+      this.websocketService.send({
+        type: 'NEW_PLAYER_TARGET',
+        data: {
+          x: serverX,
+          id: this.player.id,
+        },
+      })
     })
   }
 
@@ -200,8 +206,19 @@ export class BaseGameAddon extends Container implements GameAddon {
   }
 
   rebuildScene() {
-    this.removeChild(...this.children)
-    // this.app.ticker.remove()
+    for (const obj of this.children) {
+      if (obj.type === 'PLAYER' && obj.id === this.player?.id) {
+        continue
+      }
+
+      // this.children.splice(this.children.indexOf(obj), 1)
+
+      this.removeChild(obj)
+      // this.app.stage.removeChild(obj)
+    }
+
+    this.app.ticker.remove(this.baseAppTicker, 'baseAppTicker')
+    this.app.ticker.add(this.baseAppTicker, 'baseAppTicker')
   }
 
   updateObjects() {
@@ -246,7 +263,7 @@ export class BaseGameAddon extends Container implements GameAddon {
   }
 
   moveCamera() {
-    const cameraMaxSpeed = 2
+    const cameraMaxSpeed = 20
     const bufferX = Math.abs(this.cameraPerfectX - this.cameraX)
     const moduleX = this.cameraPerfectX - this.cameraX > 0 ? 1 : -1
     const addToX = bufferX > cameraMaxSpeed ? cameraMaxSpeed : bufferX
