@@ -20,18 +20,20 @@ export class VillageChunk extends BaseChunk {
   }
 
   init() {
-    this.objects.push({
-      type: 'TREE',
-      id: createId(),
-      x: this.endX - 500,
-      state: 'IDLE',
-      health: 100,
-      speedPerSecond: 0,
-      size: 150,
-      maxSize: 150,
-      zIndex: getRandomInRange(-10, 1),
-      variant: 'GREEN',
-      treeType: '4',
-    })
+    if (!this.objects.length) {
+      this.objects.push({
+        type: 'TREE',
+        id: createId(),
+        x: this.endX - 500,
+        state: 'IDLE',
+        health: 100,
+        speedPerSecond: 0,
+        size: 150,
+        maxSize: 150,
+        zIndex: getRandomInRange(-10, 1),
+        variant: 'GREEN',
+        treeType: '4',
+      })
+    }
   }
 }

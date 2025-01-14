@@ -16,9 +16,7 @@ export class BaseTreeService implements TreeService {
     size: number
     maxSize: number
   }) {
-    const tree = new TreeObject({ id: data.id, addon: this.addon, x: data.x, y: this.addon.bottomY + 2, size: data.size, maxSize: data.maxSize, zIndex: data.zIndex, treeType: data.treeType, variant: data.variant })
-    this.addon.app.stage.addChild(tree)
-    this.addon.addChild(tree)
+    return new TreeObject({ id: data.id, addon: this.addon, x: data.x, y: this.addon.bottomY + 2, size: data.size, maxSize: data.maxSize, zIndex: data.zIndex, treeType: data.treeType, variant: data.variant })
   }
 
   update() {}

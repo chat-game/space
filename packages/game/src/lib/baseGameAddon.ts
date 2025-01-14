@@ -211,11 +211,10 @@ export class BaseGameAddon extends Container implements GameAddon {
         continue
       }
 
-      // this.children.splice(this.children.indexOf(obj), 1)
-
-      this.removeChild(obj)
-      // this.app.stage.removeChild(obj)
+      obj.state = 'DESTROYED'
     }
+
+    this.wagon = null
 
     this.app.ticker.remove(this.baseAppTicker, 'baseAppTicker')
     this.app.ticker.add(this.baseAppTicker, 'baseAppTicker')
