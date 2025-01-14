@@ -183,6 +183,10 @@ export class WagonRoom extends BaseRoom {
       return
     }
 
+    if (this.wagon.state === 'IDLE') {
+      return
+    }
+
     // if is close - wagon need to wait
     if (Math.abs(this.wagon.x - availableTree.x) < this.wagonViewNearDistance + 50) {
       this.wagon.state = 'IDLE'
