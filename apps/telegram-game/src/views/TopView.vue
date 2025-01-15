@@ -58,7 +58,7 @@
       <div v-if="trophies.length" class="grid grid-cols-3 gap-2">
         <ActiveCard v-for="edition in trophies" :key="edition.id" class="flex flex-col gap-2 items-center" @click="selectTrophy(edition.id)">
           <Image :src="getTrophyImage(edition.trophy)" class="w-full h-auto" />
-          <p class="text-center text-sm font-medium leading-3 line-clamp-2">
+          <p class="text-center text-sm font-medium leading-4 line-clamp-2">
             {{ edition.trophy.name }}
           </p>
         </ActiveCard>

@@ -5,7 +5,7 @@
 
       <div class="flex flex-col gap-2">
         <div v-for="room in rooms" :key="room.id" class="tg-section-bg mb-4 px-3 py-3 flex flex-col gap-2 items-center rounded-2xl">
-          <div class="space-y-3">
+          <div class="w-full space-y-3">
             <div class="text-xl font-medium">
               {{ room.name }}
             </div>
@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import SectionHeader from '@/components/SectionHeader.vue'
 import { hapticFeedback } from '@telegram-apps/sdk-vue'
-import { gameClient, roomConnected } from '../utils/gameClient'
+import { gameClient, isLoading, roomConnected } from '../utils/gameClient'
 
 const router = useRouter()
 
@@ -37,6 +37,8 @@ function connectToRoom(roomId: string) {
 
   gameClient.websocketService.connect(roomId)
   roomConnected.value = roomId
+
+  isLoading.value = true
 
   // redirect
   router.push({ name: 'game' })

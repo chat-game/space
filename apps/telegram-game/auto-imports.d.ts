@@ -27,6 +27,7 @@ declare global {
   const h: typeof import('vue')['h']
   const init: typeof import('./src/utils/init')['init']
   const inject: typeof import('vue')['inject']
+  const isLoading: typeof import('./src/utils/gameClient')['isLoading']
   const isProxy: typeof import('vue')['isProxy']
   const isReactive: typeof import('vue')['isReactive']
   const isReadonly: typeof import('vue')['isReadonly']

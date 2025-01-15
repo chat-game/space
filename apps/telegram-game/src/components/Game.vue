@@ -21,12 +21,14 @@
       </div>
     </div>
   </div>
+
+  <GameLoader />
 </template>
 
 <script setup lang="ts">
 import type { BaseGameAddon } from '@chat-game/game'
 import { initData } from '@telegram-apps/sdk-vue'
-import { gameClient, roomConnected } from '../utils/gameClient'
+import { gameClient, isLoading, roomConnected, setAsLoaded } from '../utils/gameClient'
 
 const { refreshCharacter } = useCharacter()
 const { hmbanan666 } = useRoom()
@@ -43,11 +45,16 @@ onMounted(async () => {
     return
   }
 
+  isLoading.value = true
+
   await game.value.init(data.id.toString())
   canvas.value?.appendChild(game.value.app.canvas)
 
+  setAsLoaded()
+
   game.value.updateUI = async () => {
     await refreshCharacter()
+    setAsLoaded()
   }
 
   return () => game.value.destroy()
