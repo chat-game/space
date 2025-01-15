@@ -62,6 +62,9 @@ importers:
       '@neoconfetti/vue':
         specifier: ^2.2.1
         version: 2.2.1
+      '@number-flow/vue':
+        specifier: ^0.4.3
+        version: 0.4.3(vue@3.5.13(typescript@5.7.2))
       '@telegram-apps/sdk-vue':
         specifier: ^1.0.15
         version: 1.0.15(vue@3.5.13(typescript@5.7.2))
@@ -145,8 +148,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/types
       '@number-flow/vue':
-        specifier: ^0.4.1
-        version: 0.4.1(vue@3.5.13(typescript@5.7.2))
+        specifier: ^0.4.3
+        version: 0.4.3(vue@3.5.13(typescript@5.7.2))
       '@paralleldrive/cuid2':
         specifier: ^2.2.2
         version: 2.2.2
@@ -1194,8 +1197,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@number-flow/vue@0.4.1':
-    resolution: {integrity: sha512-AbMtVAMf4+J0JuWgc11KCBRJB5Cm+U0m200u9nwePEPuDpubMi75UeMaZjQYauHd3oqv9lrQzLqjB/G4xkVpsQ==}
+  '@number-flow/vue@0.4.3':
+    resolution: {integrity: sha512-FSgAzisKV/qOSExDKXT22P632dMaK0E86uGJ0lXYJXvdeE3ReDKh07tZiiAtV6DGuvti2fhNHKB+6XGjuuj3hw==}
     peerDependencies:
       vue: ^3
 
@@ -4804,8 +4807,8 @@ packages:
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
 
-  number-flow@0.5.1:
-    resolution: {integrity: sha512-+dHy+9gB6htu6P5GCILM8Oq0+q08J7mYwwYDj6EuY05ofiaLblG6afAgkVdYEil5MPVp/AMfVvjjJEQCGcxi1A==}
+  number-flow@0.5.3:
+    resolution: {integrity: sha512-iLKyssImNWQmJ41rza9K7P5lHRZTyishi/9FarWPLQHYY2Ydtl6eiXINEjZ1fa8dHeY0O7+YOD+Py3ZsJddYkg==}
 
   nuxi@3.17.2:
     resolution: {integrity: sha512-JDVtBBwEe9VjVkhxwR/crtGJnyLHzvl2F1pjtglekjTVeiMThfhQHcvsI/u007gBAfPpmaCIdRGnoeTF4VKS8w==}
@@ -7590,10 +7593,10 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.18.0
 
-  '@number-flow/vue@0.4.1(vue@3.5.13(typescript@5.7.2))':
+  '@number-flow/vue@0.4.3(vue@3.5.13(typescript@5.7.2))':
     dependencies:
       esm-env: 1.2.1
-      number-flow: 0.5.1
+      number-flow: 0.5.3
       vue: 3.5.13(typescript@5.7.2)
 
   '@nuxt/devalue@2.0.2': {}
@@ -11982,7 +11985,7 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
-  number-flow@0.5.1:
+  number-flow@0.5.3:
     dependencies:
       esm-env: 1.2.1
 

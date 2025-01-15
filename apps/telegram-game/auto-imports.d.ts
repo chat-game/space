@@ -56,6 +56,7 @@ declare global {
   const ref: typeof import('vue')['ref']
   const resolveComponent: typeof import('vue')['resolveComponent']
   const roomConnected: typeof import('./src/utils/gameClient')['roomConnected']
+  const setAsLoaded: typeof import('./src/utils/gameClient')['setAsLoaded']
   const shallowReactive: typeof import('vue')['shallowReactive']
   const shallowReadonly: typeof import('vue')['shallowReadonly']
   const shallowRef: typeof import('vue')['shallowRef']
