@@ -84,6 +84,9 @@ export class BaseWebSocketService implements WebSocketService {
           this.addon.player.id = id
           this.addon.player.x = player.x
           this.addon.player.initChar(player.character)
+
+          // Close loader
+          this.addon.updateUI()
         }
       }
     }
