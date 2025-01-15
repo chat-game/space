@@ -73,24 +73,14 @@ export default defineEventHandler(async (event) => {
       },
     })
 
-    await prisma.transaction.create({
-      data: {
-        id: createId(),
-        profileId: telegramProfile.profile.id,
-        entityId: edition.id,
-        amount: character.price,
-        type: 'POINTS_FROM_CHARACTER_UNLOCK',
-      },
-    })
-
     await prisma.profile.update({
       where: { id: telegramProfile.profile.id },
       data: {
         coins: {
           decrement: character.price,
         },
-        collectorPoints: {
-          increment: character.price,
+        points: {
+          increment: character.price * 10,
         },
       },
     })

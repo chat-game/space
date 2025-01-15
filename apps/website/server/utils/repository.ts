@@ -328,28 +328,7 @@ export class DBRepository {
       },
     })
 
-    await this.recountProfilePoints(profile.id)
-
     return profile
-  }
-
-  async recountProfilePoints(id: string) {
-    const profile = await prisma.profile.findUnique({ where: { id } })
-    if (!profile) {
-      return
-    }
-
-    const points = profile.collectorPoints + profile.trophyHunterPoints + profile.storytellerPoints + profile.patronPoints
-    if (points !== profile.points) {
-      await prisma.profile.update({
-        where: { id },
-        data: { points },
-      })
-    }
-
-    if (this.checkIfNeedToLevelUpProfile(points, profile.level)) {
-      await this.addLevelToProfile(id)
-    }
   }
 
   addLevelToProfile(id: string) {
@@ -371,8 +350,6 @@ export class DBRepository {
       },
     })
 
-    await this.recountProfilePoints(profile.id)
-
     return profile
   }
 
@@ -384,71 +361,7 @@ export class DBRepository {
       },
     })
 
-    await this.recountProfilePoints(profile.id)
-
     return profile
-  }
-
-  checkIfNeedToLevelUpProfile(xpNow: number, levelNow: number) {
-    if (levelNow >= 50) {
-      return false
-    }
-
-    const levelProgress = {
-      1: 0,
-      2: 25,
-      3: 50,
-      4: 100,
-      5: 200,
-      6: 400,
-      7: 800,
-      8: 1600,
-      9: 3200,
-      10: 6400,
-      11: 9600,
-      12: 14400,
-      13: 21600,
-      14: 32400,
-      15: 48600,
-      16: 72900,
-      17: 110000,
-      18: 165000,
-      19: 247000,
-      20: 370000,
-      21: 444000,
-      22: 532000,
-      23: 638000,
-      24: 765000,
-      25: 918000,
-      26: 1100000,
-      27: 1320000,
-      28: 1580000,
-      29: 1890000,
-      30: 2260000,
-      31: 2480000,
-      32: 2720000,
-      33: 2990000,
-      34: 3200000,
-      35: 3500000,
-      36: 3800000,
-      37: 4100000,
-      38: 4500000,
-      39: 4900000,
-      40: 5300000,
-      41: 5800000,
-      42: 6300000,
-      43: 6900000,
-      44: 7500000,
-      45: 8200000,
-      46: 9000000,
-      47: 9900000,
-      48: 11000000,
-      49: 13000000,
-      50: 15000000,
-    }
-
-    const key = (levelNow + 1) as keyof typeof levelProgress
-    return xpNow >= levelProgress[key]
   }
 
   async findOrCreatePlayer({ userName, profileId }: { userName: string, profileId: string }) {

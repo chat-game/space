@@ -137,6 +137,16 @@ async function addXpToCharacterEdition(activeEditionId: string, amount: number) 
     },
   })
 
+  // Add Woodlands: 1xp = 1 Woodland
+  await prisma.profile.update({
+    where: { id: edition.profileId },
+    data: {
+      points: {
+        increment: amount,
+      },
+    },
+  })
+
   // Level up?
   if (updated.xp >= nextLevel.requiredXp) {
     await prisma.characterEdition.update({

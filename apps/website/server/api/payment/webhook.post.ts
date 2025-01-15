@@ -28,6 +28,13 @@ export default defineEventHandler<EventHandlerRequest, Promise<{ ok: boolean }>>
     }
 
     if (payment.status !== 'PAID') {
+      const product = await prisma.product.findFirst({
+        where: { id: payment.productId },
+        include: {
+          items: true,
+        },
+      })
+
       if (payment.productId === 'jehj4mxo0g6fp1eopf3jg641') {
         await activateProduct1(payment.profileId)
       }
@@ -45,14 +52,21 @@ export default defineEventHandler<EventHandlerRequest, Promise<{ ok: boolean }>>
       }
 
       // patron points
-      await prisma.profile.update({
-        where: { id: payment.profileId },
-        data: {
-          patronPoints: {
-            increment: payment.amount,
+      const itemPatronPoints = product?.items.find(({ type }) => type === 'PATRON_POINT')
+      if (itemPatronPoints) {
+        const increment = itemPatronPoints.amount
+        await prisma.profile.update({
+          where: { id: payment.profileId },
+          data: {
+            patronPoints: {
+              increment,
+            },
+            points: {
+              increment,
+            },
           },
-        },
-      })
+        })
+      }
 
       await prisma.payment.update({
         where: { id: payment.id },

@@ -162,7 +162,7 @@ gameBot.on('message:successful_payment', async (ctx) => {
           },
         })
 
-        await activateProduct(payment.productId, payment.profileId)
+        await activateProduct({ productId: payment.productId, profileId: payment.profileId })
 
         await notifyAdmin(`[Woodlands] Профиль ${payment.profileId} совершил покупку. +${payment.amount} XTR`)
       }
