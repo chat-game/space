@@ -27,5 +27,6 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SectionHeader: typeof import('./src/components/SectionHeader.vue')['default']
+    WoodlandPointsBackground: typeof import('./src/components/WoodlandPointsBackground.vue')['default']
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <PageContainer>
-    <div class="tg-section-bg px-3 py-3 flex flex-row gap-2 items-center rounded-2xl">
+    <div class="hidden tg-section-bg px-3 py-3 flex-row gap-2 items-center rounded-2xl">
       <img :src="data?.photoUrl" alt="avatar" class="w-14 h-14 rounded-full">
       <div>
         <div class="text-xl font-medium">
@@ -12,17 +12,17 @@
       </div>
     </div>
 
-    <div class="tg-section-bg px-3 py-3 flex flex-row gap-2 items-center rounded-2xl">
+    <ActiveCard class="tg-section-bg px-3 py-3 flex flex-row gap-2 items-center rounded-2xl" @click="openWoodlandPointsModal">
       <div class="flex flex-row gap-2 items-center">
         <Image src="woodland-small.png" class="w-14 h-14" />
         <div class="flex flex-col">
-          <NumberFlow :value="profile?.profile.points ?? 0" class="-mt-2 !p-0 text-3xl font-semibold" />
-          <p class="leading-tight">
+          <NumberFlow :value="profile?.profile.points ?? 67788" class="font-serif -mt-2 !p-0 text-3xl font-semibold" />
+          <p class="leading-3">
             Woodland Points
           </p>
         </div>
       </div>
-    </div>
+    </ActiveCard>
 
     <div v-if="inventoryItems.length" class="grid grid-cols-3 gap-2">
       <ActiveCard v-for="edition in inventoryItems" :key="edition.id" class="aspect-square" @click="selectItem(edition.id)">
@@ -58,6 +58,18 @@
     </div>
   </PageContainer>
 
+  <Modal title="Woodland Points" :is-opened="isPointsOpened" @close="isPointsOpened = false">
+    <template #bg>
+      <WoodlandPointsBackground />
+    </template>
+
+    <Image src="woodland-small.png" class="absolute -top-18 left-8 w-22 h-22" />
+
+    <p class="tg-hint text-sm leading-tight">
+      Является основным показателем прогресса в игре. Это как уровень профиля, но в виде очков. Их нельзя тратить - только накапливать.
+    </p>
+  </Modal>
+
   <Modal :title="selectedItem?.item.name ?? ''" :is-opened="isItemOpened" @close="isItemOpened = false">
     <p class="tg-hint text-sm leading-tight">
       {{ selectedItem?.item.description ?? '' }}
@@ -82,6 +94,12 @@ onMounted(() => {
 
 const isEmptyProfile = computed(() => profile.value?.profile?.twitchId ? profile.value?.profile?.twitchId?.length >= 24 : false)
 const inventoryItems = computed(() => profile.value?.profile?.itemEditions ?? [])
+
+const isPointsOpened = ref(false)
+
+function openWoodlandPointsModal() {
+  isPointsOpened.value = true
+}
 
 const isItemOpened = ref(false)
 const selectedItemId = ref<string>()
