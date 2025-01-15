@@ -1,27 +1,51 @@
 import { createId } from '@paralleldrive/cuid2'
 
-export async function activateProduct(id: string, profileId: string) {
-  if (id === 'jehj4mxo0g6fp1eopf3jg641') {
+export async function activateProduct({ profileId, productId }: { productId: string, profileId: string }) {
+  const product = await prisma.product.findFirst({
+    where: { id: productId },
+    include: {
+      items: true,
+    },
+  })
+
+  // Patron points
+  const itemPatronPoints = product?.items.find(({ type }) => type === 'PATRON_POINT')
+  if (itemPatronPoints) {
+    const increment = itemPatronPoints.amount
+    await prisma.profile.update({
+      where: { id: profileId },
+      data: {
+        patronPoints: {
+          increment,
+        },
+        points: {
+          increment,
+        },
+      },
+    })
+  }
+
+  if (productId === 'jehj4mxo0g6fp1eopf3jg641') {
     // 10 coins
     return activateProduct1(profileId)
   }
-  if (id === 'w0895g3t9q75ys2maod0zd1a') {
+  if (productId === 'w0895g3t9q75ys2maod0zd1a') {
     // 50+10 coins
     return activateProduct2(profileId)
   }
-  if (id === 'nar1acws8c3s4w3cxs6i8qdn') {
+  if (productId === 'nar1acws8c3s4w3cxs6i8qdn') {
     // 150+30 coins
     return activateProduct3(profileId)
   }
-  if (id === 'tp5w874gchf6hjfca9vory2r') {
+  if (productId === 'tp5w874gchf6hjfca9vory2r') {
     // 250+80 coins
     return activateProduct4(profileId)
   }
-  if (id === 'izh5v4vxztqi55gquts9ukn2') {
+  if (productId === 'izh5v4vxztqi55gquts9ukn2') {
     // 500+150 coins
     return activateProduct5(profileId)
   }
-  if (id === 'xo7wmjsmawgb2rfxfzr7sexb') {
+  if (productId === 'xo7wmjsmawgb2rfxfzr7sexb') {
     // Christmas pack 2024
     return activateProduct6(profileId)
   }
@@ -35,9 +59,6 @@ function activateProduct1(profileId: string) {
       coins: {
         increment: 10,
       },
-      patronPoints: {
-        increment: 110,
-      },
     },
   })
 }
@@ -49,9 +70,6 @@ function activateProduct2(profileId: string) {
     data: {
       coins: {
         increment: 60,
-      },
-      patronPoints: {
-        increment: 450,
       },
     },
   })
@@ -65,9 +83,6 @@ function activateProduct3(profileId: string) {
       coins: {
         increment: 180,
       },
-      patronPoints: {
-        increment: 1250,
-      },
     },
   })
 }
@@ -80,9 +95,6 @@ function activateProduct4(profileId: string) {
       coins: {
         increment: 330,
       },
-      patronPoints: {
-        increment: 2150,
-      },
     },
   })
 }
@@ -94,9 +106,6 @@ async function activateProduct5(profileId: string) {
     data: {
       coins: {
         increment: 650,
-      },
-      patronPoints: {
-        increment: 3900,
       },
     },
   })
@@ -123,9 +132,6 @@ async function activateProduct6(profileId: string) {
     data: {
       coins: {
         increment: 50,
-      },
-      patronPoints: {
-        increment: 990,
       },
     },
   })

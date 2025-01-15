@@ -1,8 +1,7 @@
-import type { ActiveCharacter, ProfileWithTokens } from '@chat-game/types'
+import type { ProfileWithTokens } from '@chat-game/types'
 import type { Listener } from '@d-fischer/typed-event-emitter'
 import { ChatClient } from '@twurple/chat'
 import { sendMessage } from '../../api/websocket'
-import { getDateMinusMinutes } from '../date'
 import { QuestService } from '../quest'
 import { DBRepository } from '../repository'
 
@@ -16,16 +15,10 @@ class TwitchAddonController {
   #checkerId!: ReturnType<typeof setInterval>
   #tokensCount: number = 0
   #streamerProfiles: ProfileWithTokens[] = []
-  #activeCharacters: ActiveCharacter[] = []
-  #activeCharactersUpdater!: ReturnType<typeof setInterval> | null
 
   constructor() {
     this.#quest = new QuestService()
     this.#repository = new DBRepository()
-  }
-
-  get status() {
-    return this.#activeCharactersUpdater ? 'RUNNING' : 'STOPPED'
   }
 
   async serve() {
@@ -43,50 +36,6 @@ class TwitchAddonController {
     }, 60000)
   }
 
-  async startCharacters() {
-    if (this.#activeCharactersUpdater) {
-      return
-    }
-
-    this.#logger.info('Starting characters updater...')
-
-    this.#activeCharactersUpdater = setInterval(async () => {
-      for (const c of this.#activeCharacters) {
-        const checkTime = getDateMinusMinutes(4)
-        if (c.lastActionAt.getTime() <= checkTime.getTime()) {
-          // Inactive - remove via splice
-          this.#activeCharacters.splice(this.#activeCharacters.indexOf(c), 1)
-          continue
-        }
-
-        const xp = await this.#repository.addXpToCharacterEdition(c.id)
-        if (c.level < this.#getLevelByXp(xp.xp)) {
-          // Level up!
-          const newLevel = await this.#repository.addLevelToCharacterEdition(c.id)
-          c.level = newLevel.level
-
-          await this.#repository.addCollectorPoints(c.profileId, 5)
-          await this.#repository.addCoinsToProfile(c.profileId, c.id, 1)
-
-          sendMessage(
-            {
-              type: 'LEVEL_UP',
-              data: { playerId: c.playerId, text: `Новый уровень: ${newLevel.level}!` },
-            },
-            c.token,
-          )
-        }
-      }
-    }, 30000)
-  }
-
-  stopCharacters() {
-    if (this.#activeCharactersUpdater) {
-      clearInterval(this.#activeCharactersUpdater)
-      this.#activeCharactersUpdater = null
-    }
-  }
-
   async #initClient() {
     if (this.#client) {
       clearInterval(this.#loggerId)
@@ -96,7 +45,6 @@ class TwitchAddonController {
       }
 
       this.#activeListeners = []
-      this.#activeCharacters = []
 
       this.#client.quit()
     }
@@ -158,15 +106,6 @@ class TwitchAddonController {
     }, 10000)
   }
 
-  #getLevelByXp(xp: number, needed = 20): number {
-    if (xp >= needed) {
-      needed = needed * 1.05
-      return this.#getLevelByXp(xp - needed, needed) + 1
-    }
-
-    return 1
-  }
-
   async #handleMessage({
     userName,
     userId,
@@ -205,18 +144,6 @@ class TwitchAddonController {
         },
         token,
       )
-    }
-
-    if (!this.#activeCharacters.find((c) => c.id === character.id)) {
-      // Not allow bots
-      if (character.id !== 'krzq22sjnbj4crrxzdwvrcym') {
-        this.#activeCharacters.push({
-          ...character,
-          lastActionAt: new Date(),
-          token,
-          playerId: player.id,
-        })
-      }
     }
 
     sendMessage({ type: 'MESSAGE', data: { player, profile, character, text } }, token)

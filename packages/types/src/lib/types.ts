@@ -356,7 +356,7 @@ export interface InventoryItemEdition {
 }
 
 export interface TwitchServiceStatus {
-  service: 'PUBLIC_ADDON' | 'HMBANAN666_TWITCH' | 'COUPON_GENERATOR' | 'AI_VIEW' | 'WOODLAND'
+  service: 'HMBANAN666_TWITCH' | 'COUPON_GENERATOR' | 'WOODLAND'
   status: 'RUNNING' | 'STOPPED'
 }
 
