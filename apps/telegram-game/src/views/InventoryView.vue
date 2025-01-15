@@ -12,6 +12,18 @@
       </div>
     </div>
 
+    <div class="tg-section-bg px-3 py-3 flex flex-row gap-2 items-center rounded-2xl">
+      <div class="flex flex-row gap-2 items-center">
+        <Image src="woodland-small.png" class="w-14 h-14" />
+        <div class="flex flex-col">
+          <NumberFlow :value="profile?.profile.points ?? 0" class="-mt-2 !p-0 text-3xl font-semibold" />
+          <p class="leading-tight">
+            Woodland Points
+          </p>
+        </div>
+      </div>
+    </div>
+
     <div v-if="inventoryItems.length" class="grid grid-cols-3 gap-2">
       <ActiveCard v-for="edition in inventoryItems" :key="edition.id" class="aspect-square" @click="selectItem(edition.id)">
         <Image :src="`items/${edition.itemId}/128.png`" class="w-full h-auto" />
@@ -58,6 +70,7 @@
 </template>
 
 <script setup lang="ts">
+import NumberFlow from '@number-flow/vue'
 import { initData, openLink } from '@telegram-apps/sdk-vue'
 
 const data = initData.user()

@@ -90,7 +90,7 @@ function getItemIconByType(type: ProductItem['type'], entityId: string | null) {
     case 'TROPHY':
       return 'trophy.png'
     case 'PATRON_POINT':
-      return 'patron.png'
+      return 'woodland-small.png'
     default:
       return ''
   }

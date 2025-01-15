@@ -9,7 +9,7 @@ const isLoading = ref(false)
 function setAsLoaded() {
   setTimeout(() => {
     isLoading.value = false
-  }, 1000)
+  }, 1500)
 }
 
 export { gameClient, isLoading, roomConnected, setAsLoaded }
