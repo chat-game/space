@@ -14,7 +14,7 @@
   "dependencies": {
     "@chat-game/types": "workspace:*",
     "@paralleldrive/cuid2": "^2.2.2",
-    "@vueuse/core": "^12.3.0",
+    "@vueuse/core": "^12.4.0",
     "pixi.js": "^8.6.6"
   },
   "devDependencies": {

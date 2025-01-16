@@ -1,7 +1,7 @@
 {
   "name": "@chat-game/space",
   "private": true,
-  "packageManager": "pnpm@9.15.3",
+  "packageManager": "pnpm@9.15.4",
   "pnpm": {
     "supportedArchitectures": {
       "os": [
@@ -17,7 +17,7 @@
   },
   "engines": {
     "node": ">=20.18.1",
-    "pnpm": ">=9.15.3"
+    "pnpm": ">=9.15.4"
   },
   "description": "Chat Game for Twitch",
   "author": "Nick Kosarev <hmbanan666@hotmail.com>",
@@ -57,14 +57,14 @@
     "@semantic-release/commit-analyzer": "^13.0.1",
     "@semantic-release/exec": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
-    "@types/node": "^22.10.5",
+    "@types/node": "^22.10.7",
     "dotenv-cli": "^8.0.0",
     "husky": "^9.1.7",
-    "lint-staged": "^15.3.0",
+    "lint-staged": "^15.4.0",
     "semantic-release": "^24.2.1",
     "semantic-release-monorepo": "^8.0.2",
     "turbo": "^2.3.3",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   },
   "lint-staged": {
     "*.ts": "pnpm run lint"
