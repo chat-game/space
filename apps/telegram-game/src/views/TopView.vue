@@ -1,9 +1,9 @@
 <template>
   <PageContainer>
     <div v-if="leaderboard?.title">
-      <SectionHeader text="Woodland Points: Топ-50" />
+      <SectionHeader text="Топ игроков" />
 
-      <div class="tg-section-bg mb-1 px-3 py-3 rounded-2xl">
+      <div class="tg-section-bg mb-4 px-3 py-3 rounded-2xl">
         <div class="flex flex-row gap-2 items-center">
           <Image src="woodland-small.png" class="w-12 h-12" />
           <div>
@@ -42,7 +42,7 @@
               {{ member.position }}
             </p>
             <p class="font-medium text-lg">
-              {{ member.profile.telegramProfile?.firstName }}
+              {{ member.profile.telegramProfile?.firstName ?? 'Аноним' }}
             </p>
           </div>
           <div class="flex flex-row gap-1 items-center text-lg">
