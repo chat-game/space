@@ -48,7 +48,7 @@ export default defineConfig({
   ],
   server: {
     port: 4300,
-    host: '0.0.0.0',
+    host: 'app.local',
     https: {
       key: '../../.cert/localhost-key.pem',
       cert: '../../.cert/localhost.pem',

@@ -1,6 +1,34 @@
 <template>
   <PageContainer>
     <div>
+      <SectionHeader text="Активный персонаж" />
+
+      <div v-if="character?.nextLevel" class="grid grid-cols-3 gap-2">
+        <div class="col-span-2 tg-section-bg mb-4 px-3 py-3 flex flex-col gap-2 items-center rounded-2xl">
+          <div class="flex flex-row flex-wrap gap-2">
+            <CharacterAvatar :codename="character?.character.codename" class="" />
+            <p class="leading-tight">
+              Осталось <span class="font-semibold text-blue-600">{{ character?.xpToNextLevel }} XP</span> до следующего уровня
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <InventoryItemCard v-if="character?.nextLevel && character.nextLevel?.inventoryItemId" :item-id="character.nextLevel.inventoryItemId" :amount="character.nextLevel.awardAmount" @click="isRewardOpened = true" />
+          <p class="mt-1 tg-hint text-center font-semibold">
+            Награда
+          </p>
+        </div>
+      </div>
+      <div v-else>
+        <div class="col-span-2 tg-section-bg mb-4 px-3 py-3 flex flex-col gap-2 items-center rounded-2xl">
+          <CharacterAvatar :codename="character?.character.codename" />
+          <p>Персонаж достиг максимального уровня</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
       <SectionHeader text="Активные комнаты" />
 
       <div class="flex flex-col gap-2">
@@ -21,14 +49,24 @@
       </div>
     </div>
   </PageContainer>
+
+  <Modal v-if="rewardItem" :title="rewardItem.name" :is-opened="isRewardOpened" @close="isRewardOpened = false">
+    <p class="tg-hint text-sm leading-tight">
+      {{ rewardItem.description }}
+    </p>
+  </Modal>
 </template>
 
 <script setup lang="ts">
-import SectionHeader from '@/components/SectionHeader.vue'
 import { hapticFeedback } from '@telegram-apps/sdk-vue'
 import { gameClient, isLoading, roomConnected } from '../utils/gameClient'
 
 const router = useRouter()
+
+const { character } = useCharacter()
+
+const isRewardOpened = ref(false)
+const rewardItem = computed(() => character.value?.nextLevel?.inventoryItem)
 
 function connectToRoom(roomId: string) {
   if (hapticFeedback.impactOccurred.isAvailable()) {

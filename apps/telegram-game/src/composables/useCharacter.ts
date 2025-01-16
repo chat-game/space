@@ -1,11 +1,15 @@
-import type { Character, CharacterEdition, CharacterLevel } from '@chat-game/types'
+import type { Character, CharacterEdition, CharacterLevel, InventoryItem } from '@chat-game/types'
 import { useApiFetch } from './useTelegramProfile'
+
+type CharacterLevelWithItem = CharacterLevel & {
+  inventoryItem: InventoryItem
+}
 
 type CharacterEditionData = CharacterEdition & {
   character: Character
-  levels: CharacterLevel[]
-  currentLevel: CharacterLevel | null
-  nextLevel: CharacterLevel | null
+  levels: CharacterLevelWithItem[]
+  currentLevel: CharacterLevelWithItem | null
+  nextLevel: CharacterLevelWithItem | null
   xpToNextLevel: number | null
 }
 

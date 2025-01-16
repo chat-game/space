@@ -1,11 +1,6 @@
 <template>
   <div class="flex flex-row gap-2">
-    <div class="relative w-16 h-16 flex flex-col justify-center items-center bg-gradient-to-br from-orange-300 to-orange-500 rounded-2xl">
-      <Image :src="character?.character.codename ? `units/${character?.character.codename}/head.png` : 'units/telegramo/head.png'" class="p-0.5 h-16 w-16" />
-      <div class="absolute -bottom-2 -right-3 px-1 w-fit min-w-6 bg-orange-50 text-orange-600 text-base font-semibold text-center rounded-full">
-        {{ character?.level ?? 1 }}
-      </div>
-    </div>
+    <CharacterAvatar :codename="character?.character.codename" :level="character?.level" />
 
     <div class="relative h-8 grow bg-blue-900 rounded-2xl overflow-hidden">
       <div class="h-full bg-gradient-to-br from-blue-300 to-blue-600 rounded-r-xl duration-1000" :style="{ width: `${progressWidth}%` }" />

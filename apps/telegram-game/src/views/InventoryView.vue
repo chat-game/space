@@ -25,14 +25,7 @@
     </ActiveCard>
 
     <div v-if="inventoryItems.length" class="grid grid-cols-3 gap-2">
-      <ActiveCard v-for="edition in inventoryItems" :key="edition.id" class="aspect-square" @click="selectItem(edition.id)">
-        <Image :src="`items/${edition.itemId}/128.png`" class="w-full h-auto" />
-        <div class="absolute bottom-0 right-0">
-          <p class="mx-auto w-fit px-3 py-2 tg-secondary-bg rounded-tl-2xl rounded-br-2xl leading-none">
-            {{ edition.amount }}
-          </p>
-        </div>
-      </ActiveCard>
+      <InventoryItemCard v-for="edition in inventoryItems" :key="edition.id" :item-id="edition.itemId" :amount="edition.amount" @click="selectItem(edition.id)" />
     </div>
     <div v-else class="tg-section-bg p-3 flex flex-col gap-2 items-center rounded-2xl">
       <p class="font-medium tg-hint">
