@@ -41,6 +41,9 @@ export default defineEventHandler(async (event) => {
 
     const levels = await prisma.characterLevel.findMany({
       where: { characterId: character.characterId },
+      include: {
+        inventoryItem: true,
+      },
     })
 
     const currentLevel = levels.find((l) => l.level === character.level) ?? null
