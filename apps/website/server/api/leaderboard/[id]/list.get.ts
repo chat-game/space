@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
     include: {
       members: {
         orderBy: {
-          points: 'desc',
+          position: 'asc',
         },
         take: limit,
         include: {
