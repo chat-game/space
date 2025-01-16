@@ -1,11 +1,11 @@
 <template>
   <PageContainer>
     <div v-if="leaderboard?.title">
-      <SectionHeader text="Активное событие" />
+      <SectionHeader text="Woodland Points: Топ-50" />
 
       <div class="tg-section-bg mb-1 px-3 py-3 rounded-2xl">
         <div class="flex flex-row gap-2 items-center">
-          <Image src="units/santa/head.png" class="w-12 h-12" />
+          <Image src="woodland-small.png" class="w-12 h-12" />
           <div>
             <h3 class="text-xl font-medium">
               {{ leaderboard?.title }}
@@ -30,7 +30,7 @@
             </p>
           </div>
           <div class="flex flex-row gap-1 items-center text-lg">
-            {{ profileInLeaderboard.points }} <Image src="items/k3bitdush5wqbwphhdfnxqtl/128.png" class="w-6 h-6" />
+            {{ profileInLeaderboard.points }} <Image src="woodland-small.png" class="w-6 h-6" />
           </div>
         </div>
       </div>
@@ -46,7 +46,7 @@
             </p>
           </div>
           <div class="flex flex-row gap-1 items-center text-lg">
-            {{ member.points }} <Image src="items/k3bitdush5wqbwphhdfnxqtl/128.png" class="w-6 h-6" />
+            {{ member.points }} <Image src="woodland-small.png" class="w-6 h-6" />
           </div>
         </div>
       </div>
