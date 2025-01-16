@@ -6,9 +6,9 @@
       <div v-if="character?.nextLevel" class="grid grid-cols-3 gap-2">
         <div class="col-span-2 tg-section-bg mb-4 px-3 py-3 flex flex-col gap-2 items-center rounded-2xl">
           <div class="flex flex-row flex-wrap gap-2">
-            <CharacterAvatar :codename="character?.character.codename" class="" />
+            <CharacterAvatar :codename="character?.character.codename" class="w-18 h-18" />
             <p class="leading-tight">
-              Осталось <span class="font-semibold text-blue-600">{{ character?.xpToNextLevel }} XP</span> до следующего уровня
+              Осталось <span class="font-semibold tg-accent-text">{{ character?.xpToNextLevel }} XP</span> до следующего уровня
             </p>
           </div>
         </div>
