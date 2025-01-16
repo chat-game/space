@@ -20,17 +20,19 @@
           {{ leaderboard?.description }}
         </p>
 
-        <div v-if="profileInLeaderboard" class="mt-3 flex flex-row gap-2 justify-between">
-          <div class="flex flex-row gap-3 items-center">
-            <p class="font-medium text-lg">
-              {{ profileInLeaderboard.position }}
-            </p>
-            <p class="font-medium text-lg">
-              Мой результат
-            </p>
-          </div>
-          <div class="flex flex-row gap-1 items-center text-lg">
-            {{ profileInLeaderboard.points }} <Image src="woodland-small.png" class="w-6 h-6" />
+        <div v-if="profileInLeaderboard" class="z-30 fixed bottom-24 left-4 right-4 fixed-bg tg-section-bg px-3 pt-3 pb-4 rounded-t-2xl">
+          <div class="flex flex-row gap-2 justify-between">
+            <div class="flex flex-row gap-3 items-center">
+              <p class="font-medium text-lg">
+                {{ profileInLeaderboard.position }}
+              </p>
+              <p class="font-medium text-lg">
+                Мой результат
+              </p>
+            </div>
+            <div class="flex flex-row gap-1 items-center text-lg">
+              {{ profileInLeaderboard.points }} <Image src="woodland-small.png" class="w-6 h-6" />
+            </div>
           </div>
         </div>
       </div>
@@ -38,9 +40,19 @@
       <div class="flex flex-col gap-1">
         <div v-for="member in leaderboard?.members" :key="member.id" class="px-3 py-2 tg-section-bg rounded-2xl flex flex-row gap-2 justify-between">
           <div class="flex flex-row gap-3 items-center">
-            <p class="font-medium text-lg">
+            <div v-if="member.position === 1">
+              <Image :src="getTrophyImage({ rarity: 3 })" class="w-10 h-10" />
+            </div>
+            <div v-else-if="member.position === 2">
+              <Image :src="getTrophyImage({ rarity: 1 })" class="w-8 h-8" />
+            </div>
+            <div v-else-if="member.position === 3">
+              <Image :src="getTrophyImage({ rarity: 0 })" class="w-6 h-6" />
+            </div>
+            <p v-else class="font-medium text-lg">
               {{ member.position }}
             </p>
+
             <p class="font-medium text-lg">
               {{ member.profile.telegramProfile?.firstName ?? 'Аноним' }}
             </p>
@@ -56,9 +68,9 @@
       <SectionHeader text="Мои трофеи" />
 
       <div v-if="trophies.length" class="grid grid-cols-3 gap-2">
-        <ActiveCard v-for="edition in trophies" :key="edition.id" class="flex flex-col gap-2 items-center" @click="selectTrophy(edition.id)">
+        <ActiveCard v-for="edition in trophies" :key="edition.id" class="px-2 flex flex-col flex-wrap gap-2 items-center" @click="selectTrophy(edition.id)">
           <Image :src="getTrophyImage(edition.trophy)" class="w-full h-auto" />
-          <p class="text-center text-sm font-medium leading-4 line-clamp-2">
+          <p class="w-full text-center text-sm font-medium leading-4 line-clamp-2">
             {{ edition.trophy.name }}
           </p>
         </ActiveCard>
@@ -102,7 +114,7 @@ function selectTrophy(id: string) {
   selectedTrophyId.value = id
 }
 
-function getTrophyImage(data: { rarity: number, id: string, hasImage: boolean }): string {
+function getTrophyImage(data: { rarity: number, id?: string, hasImage?: boolean }): string {
   if (!data.hasImage) {
     switch (data.rarity) {
       case 0:
@@ -123,3 +135,9 @@ function getTrophyImage(data: { rarity: number, id: string, hasImage: boolean })
   return `trophies/${data.id}/128.png`
 }
 </script>
+
+<style scoped>
+.fixed-bg {
+  border: 1px solid var(--tg-theme-section-separator-color);
+}
+</style>
