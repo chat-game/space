@@ -3,10 +3,12 @@
     <div>
       <SectionHeader text="Активный персонаж" />
 
-      <div v-if="character?.nextLevel" class="grid grid-cols-3 gap-2">
-        <div class="col-span-2 tg-section-bg mb-4 px-3 py-3 flex flex-col gap-2 items-center rounded-2xl">
+      <div v-if="character?.nextLevel" class="grid grid-cols-4 gap-2">
+        <div class="col-span-3 tg-section-bg mb-4 px-3 py-3 flex flex-col gap-2 items-center rounded-2xl">
           <div class="flex flex-row flex-wrap gap-2">
-            <CharacterAvatar :codename="character?.character.codename" class="w-18 h-18" />
+            <ActiveCard class="!p-0" @click="isCharacterProgressionOpened = true">
+              <CharacterAvatar :codename="character?.character.codename" />
+            </ActiveCard>
             <p class="leading-tight">
               Осталось <span class="font-semibold tg-accent-text">{{ character?.xpToNextLevel }} XP</span> до следующего уровня
             </p>
@@ -15,15 +17,17 @@
 
         <div>
           <InventoryItemCard v-if="character?.nextLevel && character.nextLevel?.inventoryItemId" :item-id="character.nextLevel.inventoryItemId" :amount="character.nextLevel.awardAmount" @click="isRewardOpened = true" />
-          <p class="mt-1 tg-hint text-center font-semibold">
+          <p class="mt-0.5 tg-hint text-center font-semibold">
             Награда
           </p>
         </div>
       </div>
       <div v-else>
-        <div class="col-span-2 tg-section-bg mb-4 px-3 py-3 flex flex-col gap-2 items-center rounded-2xl">
+        <div class="tg-section-bg mb-4 px-3 py-3 flex flex-col gap-2 items-center rounded-2xl">
           <CharacterAvatar :codename="character?.character.codename" />
-          <p>Персонаж достиг максимального уровня</p>
+          <p class="max-w-48 text-center leading-tight">
+            {{ character?.character.nickname }} достиг максимального уровня
+          </p>
         </div>
       </div>
     </div>
@@ -55,6 +59,8 @@
       {{ rewardItem.description }}
     </p>
   </Modal>
+
+  <CharacterProgressionModal v-if="character?.levels" :levels="character.levels" :current-level="character.level" :is-opened="isCharacterProgressionOpened" @close="isCharacterProgressionOpened = false" />
 </template>
 
 <script setup lang="ts">
@@ -67,6 +73,8 @@ const { character } = useCharacter()
 
 const isRewardOpened = ref(false)
 const rewardItem = computed(() => character.value?.nextLevel?.inventoryItem)
+
+const isCharacterProgressionOpened = ref(false)
 
 function connectToRoom(roomId: string) {
   if (hapticFeedback.impactOccurred.isAvailable()) {

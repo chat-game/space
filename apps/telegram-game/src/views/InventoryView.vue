@@ -24,7 +24,7 @@
       </div>
     </ActiveCard>
 
-    <div v-if="inventoryItems.length" class="grid grid-cols-3 gap-2">
+    <div v-if="inventoryItems.length" class="grid grid-cols-4 gap-2">
       <InventoryItemCard v-for="edition in inventoryItems" :key="edition.id" :item-id="edition.itemId" :amount="edition.amount" @click="selectItem(edition.id)" />
     </div>
     <div v-else class="tg-section-bg p-3 flex flex-col gap-2 items-center rounded-2xl">

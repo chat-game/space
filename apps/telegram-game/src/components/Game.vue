@@ -1,5 +1,5 @@
 <template>
-  <div class="absolute top-0 left-0 right-0 bottom-0 overflow-hidden select-none bg-orange-200" :class="{ hidden: !isOpened }">
+  <div class="absolute top-0 left-0 right-0 bottom-0 overflow-hidden select-none bg-orange-200" :class="{ hidden: !isGameOpened }">
     <div ref="canvas" class="absolute w-full h-full bottom-10" />
     <div class="absolute w-full h-35 bottom-0 bg-red-950" />
 
@@ -38,7 +38,7 @@ const data = initData.user()
 const router = useRouter()
 const canvas = ref<HTMLElement>()
 const game = ref<BaseGameAddon>(gameClient)
-const isOpened = ref(false)
+const isGameOpened = ref(false)
 
 onMounted(async () => {
   if (!data?.id) {
@@ -61,7 +61,7 @@ onMounted(async () => {
 })
 
 watch(router.currentRoute, (value) => {
-  isOpened.value = value.path === '/'
+  isGameOpened.value = value.path === '/'
 })
 
 watch(
