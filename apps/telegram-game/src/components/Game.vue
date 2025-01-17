@@ -3,7 +3,7 @@
     <div ref="canvas" class="absolute w-full h-full bottom-10" />
     <div class="absolute w-full h-35 bottom-0 bg-red-950" />
 
-    <div class="tg-content-safe-area-top touch-pan-x absolute top-0 left-0 right-0 w-full h-16">
+    <div class="tg-content-safe-area-top touch-pan-x absolute top-4 left-0 right-0 w-full h-16">
       <div class="max-w-[28rem] mx-auto px-4 space-y-2">
         <GameNavigator :player-x="game.player?.x" :wagon-x="game.wagon?.x" />
         <GameCharacterProgression />

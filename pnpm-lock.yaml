@@ -108,6 +108,9 @@ importers:
       '@vueuse/core':
         specifier: ^12.4.0
         version: 12.4.0(typescript@5.7.2)
+      eruda:
+        specifier: ^3.4.1
+        version: 3.4.1
       tailwindcss:
         specifier: 4.0.0-beta.9
         version: 4.0.0-beta.9
@@ -3111,6 +3114,9 @@ packages:
 
   errx@0.1.0:
     resolution: {integrity: sha512-fZmsRiDNv07K6s2KkKFTiD2aIvECa7++PKyD5NC32tpRw46qZA3sOz+aM+/V9V0GDHxVTKLziveV4JhzBHDp9Q==}
+
+  eruda@3.4.1:
+    resolution: {integrity: sha512-RmaO5yD97URY/9Q0lye3cmmNPoXNKreeePIw7c/zllbscR92CjGFZFuQ70+0fLIvLcKW3Xha8DS8NFhmeNbEBQ==}
 
   es-module-lexer@1.5.4:
     resolution: {integrity: sha512-MVNK56NiMrOwitFB7cqDwq0CQutbw+0BvLshJSse0MUNU+y1FC3bUS/AQg7oUng+/wKrrki7JfmwtVHkVfPLlw==}
@@ -9986,6 +9992,8 @@ snapshots:
   error-stack-parser-es@0.1.5: {}
 
   errx@0.1.0: {}
+
+  eruda@3.4.1: {}
 
   es-module-lexer@1.5.4: {}
 

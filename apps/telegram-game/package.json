@@ -33,6 +33,7 @@
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/tsconfig": "^0.7.0",
     "@vueuse/core": "^12.4.0",
+    "eruda": "^3.4.1",
     "tailwindcss": "4.0.0-beta.9",
     "typescript": "*",
     "unplugin-auto-import": "^19.0.0",
