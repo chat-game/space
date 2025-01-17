@@ -150,6 +150,18 @@ export interface CharacterLevel {
   characterId: string
 }
 
+export type CharacterLevelWithItem = CharacterLevel & {
+  inventoryItem: InventoryItem
+}
+
+export type CharacterEditionData = CharacterEdition & {
+  character: Character
+  levels: CharacterLevelWithItem[]
+  currentLevel: CharacterLevelWithItem | null
+  nextLevel: CharacterLevelWithItem | null
+  xpToNextLevel: number | null
+}
+
 export interface ActiveCharacter extends CharacterEditionWithCharacter {
   lastActionAt: Date
   token: string
