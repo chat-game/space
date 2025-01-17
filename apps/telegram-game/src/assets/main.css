@@ -20,7 +20,7 @@
   --tg-theme-accent-text-color: #168dcd;
   --tg-theme-destructive-text-color: #d14e4e;
 
-  --tg-content-safe-area-inset-top: 20px;
+  --tg-viewport-content-safe-area-inset-top: 20px;
 }
 
 @utility tg-bg {
@@ -69,9 +69,9 @@
 }
 
 @utility tg-content-safe-area-top {
-  padding-top: 100px;
+  padding-top: var(--tg-viewport-content-safe-area-inset-top);
 }
 @utility tg-content-safe-area {
-  padding-top: 100px;
+  padding-top: var(--tg-viewport-content-safe-area-inset-top);
   padding-bottom: 200px;
 }

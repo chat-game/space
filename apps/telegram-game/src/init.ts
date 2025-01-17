@@ -79,4 +79,11 @@ export function init(debug: boolean): void {
       window.scrollTo(0, 0)
     }
   })
+
+  // Add Eruda if needed.
+  if (debug) {
+    import('eruda')
+      .then((lib) => lib.default.init())
+      .catch(console.error)
+  }
 }
