@@ -19,12 +19,12 @@ export default defineNitroPlugin(async () => {
   }
 
   if (!activeRooms.find((room) => room.id === wagonRoomId)) {
-    rebootRoom()
+    void rebootRoom()
 
     setInterval(() => {
       const room = activeRooms.find((room) => room.id === wagonRoomId) as WagonRoom
       if (room.status === 'FINISHED') {
-        rebootRoom()
+        void rebootRoom()
       }
     }, 5000)
   }
@@ -36,11 +36,12 @@ export default defineNitroPlugin(async () => {
   logger.success('Wagon rooms created')
 })
 
-function rebootRoom() {
-  const room = new WagonRoom({ id: wagonRoomId, token: wagonRoomId })
+async function rebootRoom() {
   if (activeRooms.find((room) => room.id === wagonRoomId)) {
     activeRooms.splice(activeRooms.findIndex((room) => room.id === wagonRoomId), 1)
   }
 
-  activeRooms.push(room)
+  await WagonRoom.generate({ chunksCount: 6, roomId: wagonRoomId })
+
+  activeRooms.push(new WagonRoom({ id: wagonRoomId, token: wagonRoomId }))
 }
