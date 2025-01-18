@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 import type { BaseGameAddon } from '@chat-game/game'
-import { initData } from '@telegram-apps/sdk-vue'
+import { hapticFeedback, initData } from '@telegram-apps/sdk-vue'
 import { gameClient, isLoading, roomConnected, setAsLoaded } from '../utils/gameClient'
 
 const { refreshCharacter } = useCharacter()
@@ -66,6 +66,12 @@ onMounted(async () => {
   game.value.updateUI = async () => {
     await refreshCharacter()
     setAsLoaded()
+  }
+
+  game.value.vibrate = () => {
+    if (hapticFeedback.impactOccurred.isAvailable()) {
+      hapticFeedback.impactOccurred('light')
+    }
   }
 
   return () => game.value.destroy()

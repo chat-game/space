@@ -58,12 +58,13 @@ export class TreeObject extends BaseObject implements GameObjectTree {
     }
 
     this.addon.player.click()
+    this.addon.vibrate()
     this.chop()
   }
 
   chop() {
     this.state = 'CHOPPING'
-    this.health -= getRandomInRange(7, 12)
+    this.health -= getRandomInRange(9, 15)
     this.alpha = 0.9
   }
 
