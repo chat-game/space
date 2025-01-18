@@ -31,7 +31,9 @@ export class BaseGameAddon extends Container implements GameAddon {
   override children: GameAddon['children'] = []
   app: Application
   tick: GameAddon['tick'] = 0
+
   updateUI: () => void
+  vibrate: () => void
 
   wagon: GameObjectWagon | null = null
   player: GameObjectPlayer | null = null
@@ -77,7 +79,9 @@ export class BaseGameAddon extends Container implements GameAddon {
     this.id = createId()
     this.client = client
     this.app = new Application()
+
     this.updateUI = updateUI || (() => {})
+    this.vibrate = () => {}
 
     this.assetService = new BaseAssetService(this as GameAddon)
     this.playerService = new BasePlayerService(this as GameAddon)
