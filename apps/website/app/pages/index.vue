@@ -19,7 +19,7 @@
         <p>GitHub</p>
         <div class="flex flex-row items-center gap-1">
           <Icon name="lucide:star" class="!w-5 !h-5" />
-          <p>14</p>
+          <p>15</p>
         </div>
       </a>
     </div>
