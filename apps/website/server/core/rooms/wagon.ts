@@ -17,6 +17,7 @@ interface GenerateWagonRoomOptions {
 interface WagonRoomOptions {
   id: string
   token: string
+  onReboot: () => void
 }
 
 export class WagonRoom extends BaseRoom {
@@ -25,9 +26,12 @@ export class WagonRoom extends BaseRoom {
   wagonViewDistance = 4500
   wagonViewNearDistance = 200
 
-  constructor({ id, token }: WagonRoomOptions) {
+  onReboot: () => void
+
+  constructor({ id, token, onReboot }: WagonRoomOptions) {
     super({ id, token, type: 'WAGON' })
 
+    this.onReboot = onReboot
     this.init()
   }
 
@@ -79,10 +83,10 @@ export class WagonRoom extends BaseRoom {
 
   async reboot() {
     await WagonRoom.generate({ chunksCount: 6, roomId: this.id })
-    await this.initChunks()
-    await this.initWagon()
 
     sendMessage({ type: 'ROOM_DESTROYED', data: { id: this.id } }, this.token)
+
+    this.onReboot()
   }
 
   closeRoomOnFinish() {
@@ -223,6 +227,7 @@ export class WagonRoom extends BaseRoom {
 
     const availableTree = this.getNearestObstacle(this.wagon.x)
     if (!availableTree) {
+      void this.reboot()
       return
     }
 
