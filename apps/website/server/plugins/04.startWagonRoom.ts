@@ -20,6 +20,13 @@ export default defineNitroPlugin(async () => {
 
   if (!activeRooms.find((room) => room.id === wagonRoomId)) {
     rebootRoom()
+
+    setInterval(() => {
+      const room = activeRooms.find((room) => room.id === wagonRoomId) as WagonRoom
+      if (room.status === 'FINISHED') {
+        rebootRoom()
+      }
+    }, 5000)
   }
 
   if (!activeRooms.find((room) => room.id === customRoomId)) {
@@ -36,11 +43,4 @@ function rebootRoom() {
   }
 
   activeRooms.push(room)
-
-  const id = setInterval(() => {
-    if (room.status === 'FINISHED') {
-      rebootRoom()
-      clearInterval(id)
-    }
-  }, 5000)
 }
