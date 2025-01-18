@@ -96,33 +96,37 @@ bot.on('message:text', async (ctx) => {
 
 // Game bot
 gameBot.on('message:text', async (ctx) => {
-  const locale = ctx.message.from.language_code
+  try {
+    const locale = ctx.message.from.language_code
 
-  if (ctx.hasCommand('start')) {
-    // Tree sticker
-    await ctx.replyWithSticker('CAACAgEAAxkBAAENexdng5nCguO04hJRGAABxUYQUdZlkmMAAj8CAALjmxhEgCIYC2AbEOM2BA')
+    if (ctx.hasCommand('start')) {
+      // Tree sticker
+      // await ctx.replyWithSticker('CAACAgEAAxkBAAENexdng5nCguO04hJRGAABxUYQUdZlkmMAAj8CAALjmxhEgCIYC2AbEOM2BA')
 
-    // Welcome message with buttons
-    await ctx.reply(
-      dictionary(locale).woodland.welcomeMessage,
-      {
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: dictionary(locale).woodland.play, url: gameUrl }],
-            [{ text: dictionary(locale).subscribeToChannel, url: gameChannelUrl }],
-            [{ text: dictionary(locale).woodland.website, url: chatgameUrl }],
-          ],
+      // Welcome message with buttons
+      await ctx.reply(
+        dictionary(locale).woodland.welcomeMessage,
+        {
+          reply_markup: {
+            inline_keyboard: [
+              [{ text: dictionary(locale).woodland.play, url: gameUrl }],
+              [{ text: dictionary(locale).subscribeToChannel, url: gameChannelUrl }],
+              [{ text: dictionary(locale).woodland.website, url: chatgameUrl }],
+            ],
+          },
         },
-      },
-    )
+      )
 
-    await notifyAdmin(`[Woodlands] Команда старт от пользователя ${ctx.message.from.id} ${ctx.message.from.first_name}, locale: ${ctx.message.from.language_code}`)
+      await notifyAdmin(`[Woodlands] Команда старт от пользователя ${ctx.message.from.id} ${ctx.message.from.first_name}, locale: ${ctx.message.from.language_code}`)
 
-    return
+      return
+    }
+
+    logger.log(ctx.message.from.id, ctx.message.text)
+    ctx.reply(dictionary(locale).defaultBotReply)
+  } catch (error) {
+    logger.error(error)
   }
-
-  logger.log(ctx.message.from.id, ctx.message.text)
-  ctx.reply(dictionary(locale).defaultBotReply)
 })
 
 // regexp: id in object like { payment_id: 123 }
