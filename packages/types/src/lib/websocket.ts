@@ -48,6 +48,7 @@ export type WebSocketEvents =
   | WebSocketDestroyTree
   | WebSocketNewWagonTarget
   | WebSocketNewPlayerTarget
+  | WebSocketWagonRoomDestroy
 
 export interface WebSocketConnect {
   type: 'CONNECT'
@@ -157,6 +158,14 @@ export interface WebSocketNewTree {
 
 export interface WebSocketDestroyTree {
   type: 'DESTROY_TREE'
+  data: {
+    peerId: string
+    id: string
+  }
+}
+
+export interface WebSocketWagonRoomDestroy {
+  type: 'ROOM_DESTROYED'
   data: {
     id: string
   }

@@ -40,7 +40,6 @@ import { hapticFeedback, initData } from '@telegram-apps/sdk-vue'
 import { gameClient, isLoading, roomConnected, setAsLoaded } from '../utils/gameClient'
 
 const { refreshCharacter } = useCharacter()
-const { hmbanan666 } = useRoom()
 const { profile } = useTelegramProfile()
 
 const data = initData.user()
@@ -63,6 +62,10 @@ onMounted(async () => {
 
   setAsLoaded()
 
+  game.value.openLoader = () => {
+    isLoading.value = true
+  }
+
   game.value.updateUI = async () => {
     await refreshCharacter()
     setAsLoaded()
@@ -70,7 +73,7 @@ onMounted(async () => {
 
   game.value.vibrate = () => {
     if (hapticFeedback.impactOccurred.isAvailable()) {
-      hapticFeedback.impactOccurred('light')
+      hapticFeedback.impactOccurred('medium')
     }
   }
 
@@ -82,11 +85,12 @@ watch(router.currentRoute, (value) => {
 })
 
 watch(
-  () => hmbanan666.value && game.value.player,
+  () => game.value.player,
   () => {
     if (!roomConnected.value) {
-      game.value.websocketService.connect('12345')
-      roomConnected.value = '12345'
+      const roomId = '12345'
+      game.value.websocketService.connect(roomId)
+      roomConnected.value = roomId
     }
   },
 )

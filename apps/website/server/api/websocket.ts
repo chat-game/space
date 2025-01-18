@@ -112,7 +112,25 @@ export default defineWebSocketHandler({
           logger.log(`Server subscribed to Room ${activeRoom.id}`, peer.id)
         }
       }
-      if (parsed.type === 'NEW_WAGON_TARGET' || parsed.type === 'NEW_PLAYER_TARGET' || parsed.type === 'NEW_TREE' || parsed.type === 'DESTROY_TREE') {
+      if (parsed.type === 'DESTROY_TREE') {
+        const activeRoom = activeRooms.find((room) => room.peers.find((id) => id === peer.id)) as WagonRoom
+        if (!activeRoom) {
+          return
+        }
+
+        const tree = activeRoom.objects.find((obj) => obj.type === 'TREE' && obj.id === parsed.data.id)
+        if (tree) {
+          activeRoom.removeObject(parsed.data.id)
+
+          const player = activeRoom.objects.find((obj) => obj.type === 'PLAYER' && obj.id === peer.id) as GameObject & GameObjectPlayer
+          if (player) {
+            await dropFromTree(player.telegramId)
+          }
+
+          peer.publish(activeRoom.id, JSON.stringify({ id: createId(), type: parsed.type, data: parsed.data }))
+        }
+      }
+      if (parsed.type === 'NEW_WAGON_TARGET' || parsed.type === 'NEW_PLAYER_TARGET' || parsed.type === 'NEW_TREE') {
         const activeRoom = activeRooms.find((room) => room.peers.find((id) => id)) as WagonRoom
         if (!activeRoom) {
           return
@@ -135,17 +153,6 @@ export default defineWebSocketHandler({
           const tree = activeRoom.objects.find((obj) => obj.type === 'TREE' && obj.id === parsed.data.id)
           if (!tree) {
             activeRoom.addTree({ ...parsed.data })
-          }
-        }
-        if (parsed.type === 'DESTROY_TREE') {
-          const tree = activeRoom.objects.find((obj) => obj.type === 'TREE' && obj.id === parsed.data.id)
-          if (tree) {
-            activeRoom.removeObject(parsed.data.id)
-
-            const player = activeRoom.objects.find((obj) => obj.type === 'PLAYER' && obj.id === peer.id) as GameObject & GameObjectPlayer
-            if (player) {
-              await dropFromTree(player.telegramId)
-            }
           }
         }
 

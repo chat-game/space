@@ -34,6 +34,7 @@ export class WagonRoom extends BaseRoom {
   update() {
     this.checkIfObstacleIsClose()
     this.setNearestTarget()
+    this.closeRoomOnFinish()
     // this.createNewChunks()
     // this.removeChunksBeforeWagon()
   }
@@ -74,6 +75,26 @@ export class WagonRoom extends BaseRoom {
     }
 
     return wagon
+  }
+
+  async reboot() {
+    await WagonRoom.generate({ chunksCount: 6, roomId: this.id })
+    await this.initChunks()
+    await this.initWagon()
+
+    sendMessage({ type: 'ROOM_DESTROYED', data: { id: this.id } }, this.token)
+  }
+
+  closeRoomOnFinish() {
+    // if wagon is on last chunk - close room
+    const lastChunk = this.chunks[this.chunks.length - 1]
+    if (!lastChunk) {
+      return
+    }
+
+    if (this.wagon.x >= lastChunk.startX - 350) {
+      void this.reboot()
+    }
   }
 
   initFirstChunk() {
