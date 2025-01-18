@@ -17,7 +17,6 @@ interface GenerateWagonRoomOptions {
 interface WagonRoomOptions {
   id: string
   token: string
-  onReboot: () => void
 }
 
 export class WagonRoom extends BaseRoom {
@@ -26,12 +25,11 @@ export class WagonRoom extends BaseRoom {
   wagonViewDistance = 4500
   wagonViewNearDistance = 200
 
-  onReboot: () => void
+  status: 'ACTIVE' | 'FINISHED' = 'ACTIVE'
 
-  constructor({ id, token, onReboot }: WagonRoomOptions) {
+  constructor({ id, token }: WagonRoomOptions) {
     super({ id, token, type: 'WAGON' })
 
-    this.onReboot = onReboot
     this.init()
   }
 
@@ -86,7 +84,7 @@ export class WagonRoom extends BaseRoom {
 
     sendMessage({ type: 'ROOM_DESTROYED', data: { id: this.id } }, this.token)
 
-    this.onReboot()
+    this.status = 'FINISHED'
   }
 
   closeRoomOnFinish() {
