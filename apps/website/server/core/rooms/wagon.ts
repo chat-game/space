@@ -224,7 +224,7 @@ export class WagonRoom extends BaseRoom {
   }
 
   setNearestTarget() {
-    if (this.wagon.state === 'MOVING' || this.wagonObstacle) {
+    if (this.wagonObstacle) {
       return
     }
 
