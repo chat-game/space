@@ -80,10 +80,11 @@ export class WagonRoom extends BaseRoom {
   }
 
   async reboot() {
-    await WagonRoom.generate({ chunksCount: 6, roomId: this.id })
+    if (this.status !== 'ACTIVE') {
+      return
+    }
 
     sendMessage({ type: 'ROOM_DESTROYED', data: { id: this.id } }, this.token)
-
     this.status = 'FINISHED'
   }
 
