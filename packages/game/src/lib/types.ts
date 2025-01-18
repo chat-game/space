@@ -22,6 +22,7 @@ export interface GameAddon extends Container {
   serverService: ServerService
   websocketService: WebSocketService
   updateUI: () => void
+  openLoader: () => void
   vibrate: () => void
   play: () => void
   checkIfThisFlagIsTarget: (id: string) => boolean

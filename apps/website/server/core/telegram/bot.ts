@@ -10,6 +10,7 @@ const gameChannelUrl = 'https://t.me/chatgamespace'
 
 const woodlandsBotUrl = 'https://t.me/WoodlandsGameBot'
 const twitchUrl = 'https://twitch.tv/hmbanan666'
+const chatgameUrl = 'https://chatgame.space'
 
 const ru: typeof en = {
   chatgame: {
@@ -27,6 +28,7 @@ const ru: typeof en = {
     title: '🌲 Woodlands: Онлайн-игра',
     play: '🎮 Играть',
     developingGameOnTwitch: '👾 Улучшаем игру на Twitch',
+    website: 'Веб-сайт проекта',
   },
   subscribeToChannel: '📢 Подпишись на канал',
   defaultBotReply: 'Я пока не умею отвечать на сообщения. Свяжись с @hmbanan666, если есть вопросы.',
@@ -48,6 +50,7 @@ Participate in events, invite friends, collect Coins and unlock manually created
     title: '🌲 Woodlands: Online Game',
     play: '🎮 Play',
     developingGameOnTwitch: '👾 Developing game on Twitch',
+    website: 'Website of project',
   },
   subscribeToChannel: '📢 Subscribe to the channel',
   defaultBotReply: 'I dont know how to reply to messages yet. Contact @hmbanan666 if you have any questions.',
@@ -107,7 +110,7 @@ gameBot.on('message:text', async (ctx) => {
           inline_keyboard: [
             [{ text: dictionary(locale).woodland.play, url: gameUrl }],
             [{ text: dictionary(locale).subscribeToChannel, url: gameChannelUrl }],
-            [{ text: dictionary(locale).woodland.developingGameOnTwitch, url: twitchUrl }],
+            [{ text: dictionary(locale).woodland.website, url: chatgameUrl }],
           ],
         },
       },

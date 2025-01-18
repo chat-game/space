@@ -33,6 +33,7 @@ export class BaseGameAddon extends Container implements GameAddon {
   tick: GameAddon['tick'] = 0
 
   updateUI: () => void
+  openLoader: () => void
   vibrate: () => void
 
   wagon: GameObjectWagon | null = null
@@ -81,6 +82,7 @@ export class BaseGameAddon extends Container implements GameAddon {
     this.app = new Application()
 
     this.updateUI = updateUI || (() => {})
+    this.openLoader = () => {}
     this.vibrate = () => {}
 
     this.assetService = new BaseAssetService(this as GameAddon)
@@ -210,6 +212,8 @@ export class BaseGameAddon extends Container implements GameAddon {
   }
 
   rebuildScene() {
+    this.openLoader()
+
     for (const obj of this.children) {
       if (obj.type === 'PLAYER' && obj.id === this.player?.id) {
         continue

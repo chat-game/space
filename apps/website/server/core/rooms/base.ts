@@ -91,6 +91,10 @@ export class BaseRoom implements Room {
   async initChunks() {
     const chunksInStorage = await this.getChunksFromStorage()
     if (chunksInStorage.length) {
+      // clear
+      this.chunks = []
+      this.objects = []
+
       for (const chunk of chunksInStorage) {
         if (chunk.type === 'FOREST') {
           const newChunk = new ForestChunk(chunk)

@@ -93,6 +93,11 @@ export class BaseWebSocketService implements WebSocketService {
     if (message.type === 'DISCONNECTED_FROM_WAGON_ROOM') {
       this.addon.playerService.removePlayer(message.data.id)
     }
+    if (message.type === 'ROOM_DESTROYED') {
+      // reconnect
+      this.roomId = null
+      this.connect('12345')
+    }
 
     if (this.addon.client === 'TELEGRAM_CLIENT') {
       if (message.type === 'NEW_PLAYER_TARGET') {
