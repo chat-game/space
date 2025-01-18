@@ -88,6 +88,10 @@ export class WagonRoom extends BaseRoom {
   }
 
   closeRoomOnFinish() {
+    if (this.status !== 'ACTIVE') {
+      return
+    }
+
     // if wagon is on last chunk - close room
     const lastChunk = this.chunks[this.chunks.length - 1]
     if (!lastChunk) {
