@@ -19,21 +19,28 @@ export default defineNitroPlugin(async () => {
   }
 
   if (!activeRooms.find((room) => room.id === wagonRoomId)) {
-    onReboot()
+    rebootRoom()
   }
 
   if (!activeRooms.find((room) => room.id === customRoomId)) {
-    activeRooms.push(new WagonRoom({ id: customRoomId, token: customRoomId, onReboot: () => {} }))
+    activeRooms.push(new WagonRoom({ id: customRoomId, token: customRoomId }))
   }
 
   logger.success('Wagon rooms created')
 })
 
-function onReboot() {
-  const room = new WagonRoom({ id: wagonRoomId, token: wagonRoomId, onReboot })
+function rebootRoom() {
+  const room = new WagonRoom({ id: wagonRoomId, token: wagonRoomId })
   if (activeRooms.find((room) => room.id === wagonRoomId)) {
     activeRooms.splice(activeRooms.findIndex((room) => room.id === wagonRoomId), 1)
   }
 
   activeRooms.push(room)
+
+  const id = setInterval(() => {
+    if (room.status === 'FINISHED') {
+      rebootRoom()
+      clearInterval(id)
+    }
+  }, 5000)
 }
