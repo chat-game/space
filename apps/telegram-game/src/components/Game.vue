@@ -3,7 +3,7 @@
     <div ref="canvas" class="absolute w-full h-full bottom-10" />
     <div class="absolute w-full h-35 bottom-0 bg-red-950" />
 
-    <div class="touch-pan-x absolute top-2 left-0 right-0 w-full h-16 tg-safe-area">
+    <div class="touch-pan-x pt-2 w-full h-16 tg-safe-area">
       <div class="max-w-[28rem] mx-auto px-4 space-y-2 tg-content-safe-area">
         <GameNavigator :player-x="game.player?.x" :wagon-x="game.wagon?.x" />
         <GameCharacterProgression />
@@ -22,6 +22,15 @@
     </div>
   </div>
 
+  <Modal title="Приветствуем в игре!" :is-opened="isHelpModalOpened" @close="isHelpModalOpened = false">
+    <p class="leading-tight">
+      Тапай куда угодно, чтобы передвигаться. Тапай деревья, чтобы их срубить.
+    </p>
+    <p class="tg-hint leading-tight">
+      Что дальше: прокачивай персонажа, получай награды за уровни. Открывай новых персонажей.
+    </p>
+  </Modal>
+
   <GameLoader />
 </template>
 
@@ -39,6 +48,8 @@ const router = useRouter()
 const canvas = ref<HTMLElement>()
 const game = ref<BaseGameAddon>(gameClient)
 const isGameOpened = ref(false)
+
+const isHelpModalOpened = ref(true)
 
 onMounted(async () => {
   if (!data?.id) {
