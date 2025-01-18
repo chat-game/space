@@ -95,6 +95,7 @@ export class BaseWebSocketService implements WebSocketService {
     }
     if (message.type === 'ROOM_DESTROYED') {
       // reconnect
+      this.addon.rebuildScene()
       this.roomId = null
       this.connect('12345')
     }

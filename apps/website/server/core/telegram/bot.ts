@@ -117,7 +117,7 @@ gameBot.on('message:text', async (ctx) => {
         },
       )
 
-      await notifyAdmin(`[Woodlands] Команда старт от пользователя ${ctx.message.from.id} ${ctx.message.from.first_name}, locale: ${ctx.message.from.language_code}`)
+      // await notifyAdmin(`[Woodlands] Команда старт от пользователя ${ctx.message.from.id} ${ctx.message.from.first_name}, locale: ${ctx.message.from.language_code}`)
 
       return
     }
