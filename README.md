@@ -4,16 +4,16 @@
 - 👾 [Telegram Mini App as Player controller](https://t.me/WoodlandsGameBot)
 - 🏠 [Project Website](https://chatgame.space)
 
-![Screen](https://raw.githubusercontent.com/chat-game/space/main/.github/static/wagon-room-screen.jpg)
+![Screen](https://raw.githubusercontent.com/chat-game/space/main/.github/static/wagon-room-screen-2.jpg)
 
 🤔 Imagine procedurally generated world where players can:
 
-- 💬 **Use Telegram Mini App as input** to see own char performing actions in real time
+- 💬 **Use Telegram Mini App as input** to see characters performing actions in real time
 - 🗺️ **Travel** with the Wagon
 - 🦄 **Complete** main and side quests from game characters
-- 💎 **Gather** a variety of materials
+- 💎 **Gather** a variety of materials in your Inventory
 - 🏗️ **Construct** buildings
-- 🏆 **Earn** achievements!
+- 🏆 **Earn** Trophies!
 
 Let's build a similar world together! ⭐️ Become a Stargazer ⭐️
 
