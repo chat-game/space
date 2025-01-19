@@ -39,10 +39,6 @@ export class BaseWagonObject extends BaseObject implements GameObjectWagon {
     if (this.state === 'IDLE' && !this.target) {
       // this.setNearestTarget()
     }
-
-    if (this.state === 'DESTROYED' && this.visible) {
-      this.visible = false
-    }
   }
 
   override animate() {

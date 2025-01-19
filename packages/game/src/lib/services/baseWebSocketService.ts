@@ -83,7 +83,7 @@ export class BaseWebSocketService implements WebSocketService {
         if (player && player?.telegramId === this.addon.player?.telegramId) {
           this.addon.player.id = id
           this.addon.player.x = player.x
-          this.addon.player.initChar(player.character)
+          this.addon.player.initVisual(player.character.character.codename)
 
           // Close loader
           this.addon.updateUI()
@@ -94,9 +94,11 @@ export class BaseWebSocketService implements WebSocketService {
       this.addon.playerService.removePlayer(message.data.id)
     }
     if (message.type === 'ROOM_DESTROYED') {
-      // reconnect
-      this.roomId = null
-      this.connect('12345')
+      // wait and reconnect
+      setTimeout(() => {
+        this.roomId = null
+        this.connect('12345')
+      }, 3000)
     }
 
     if (this.addon.client === 'TELEGRAM_CLIENT') {

@@ -37,9 +37,7 @@ export class BasePlayerService implements PlayerService {
   }
 
   findPlayer(id: string) {
-    return this.addon.children.find(
-      (p) => p.id === id && p.type === 'PLAYER',
-    ) as PlayerObject | undefined
+    return this.addon.children.find((p) => p.id === id && p.type === 'PLAYER') as PlayerObject | undefined
   }
 
   async createPlayer({ id, telegramId, x, character }: { id: string, telegramId: string, x: number, character?: CharacterEditionWithCharacter }) {
@@ -50,7 +48,7 @@ export class BasePlayerService implements PlayerService {
       x,
       y: this.addon.bottomY,
     })
-    await player.initChar(character)
+    await player.initVisual(character?.character.codename)
 
     return player
   }
@@ -59,7 +57,6 @@ export class BasePlayerService implements PlayerService {
     const player = this.findPlayer(id)
     if (player) {
       player.state = 'DESTROYED'
-      this.addon.removeObject(player.id)
     }
   }
 
@@ -77,26 +74,4 @@ export class BasePlayerService implements PlayerService {
 
     return player
   }
-
-  // #removeInactivePlayers() {
-  //   for (const player of this.activePlayers) {
-  //     const checkTime = getDateMinusMinutes(30)
-  //     if (player.lastActionAt.getTime() <= checkTime.getTime()) {
-  //       if (player.script) {
-  //         continue
-  //       }
-
-  //       const target = this.addon.randomOutFlag
-  //       const selfDestroyFunc = () => {
-  //         player.state = 'DESTROYED'
-  //       }
-
-  //       player.script = new MoveOffScreenAndSelfDestroyScript({
-  //         target,
-  //         object: player,
-  //         selfDestroyFunc,
-  //       })
-  //     }
-  //   }
-  // }
 }

@@ -28,28 +28,11 @@ export class FlagObject extends BaseObject implements GameObjectFlag {
     this.visible = false
   }
 
-  override live() {
-    super.live()
-
-    if (this.target?.state === 'DESTROYED') {
-      this.target = undefined
-    }
-
-    if (this.state === 'DESTROYED') {
-      this.visible = false
-    }
-  }
-
   override animate() {
     super.animate()
 
     if (this.addon.checkIfThisFlagIsTarget(this.id)) {
       this.visible = true
-      return
-    }
-
-    if (this.state === 'DESTROYED') {
-      this.visible = false
       return
     }
 

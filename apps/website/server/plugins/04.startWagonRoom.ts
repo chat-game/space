@@ -26,7 +26,7 @@ export default defineNitroPlugin(async () => {
       if (room.status === 'FINISHED') {
         void rebootRoom()
       }
-    }, 5000)
+    }, 2500)
   }
 
   if (!activeRooms.find((room) => room.id === customRoomId)) {

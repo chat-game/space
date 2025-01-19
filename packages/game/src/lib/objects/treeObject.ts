@@ -17,7 +17,6 @@ interface TreeObjectOptions {
 export class TreeObject extends BaseObject implements GameObjectTree {
   variant: GameObjectTree['variant']
   treeType: GameObjectTree['treeType']
-  isReadyToChop!: boolean
   isAnObstacleToWagon = false
   minSizeToChop = 75
   maxSize: number
@@ -71,23 +70,13 @@ export class TreeObject extends BaseObject implements GameObjectTree {
   override live() {
     super.live()
 
-    if (this.target?.state === 'DESTROYED') {
-      this.target = undefined
-    }
-
     if (this.health <= 0) {
       this.destroy()
+      return
     }
 
-    switch (this.state) {
-      case 'IDLE':
-        // this.grow()
-        break
-      case 'CHOPPING':
-        this.handleChoppingState()
-        break
-      case 'DESTROYED':
-        break
+    if (this.state === 'CHOPPING') {
+      this.handleChoppingState()
     }
   }
 
@@ -102,15 +91,6 @@ export class TreeObject extends BaseObject implements GameObjectTree {
 
     if (this.state === 'CHOPPING') {
       this.shakeAnimation()
-    }
-
-    if (this.state === 'DESTROYED') {
-      this.visible = false
-      return
-    }
-
-    if (!this.visible) {
-      this.visible = true
     }
   }
 
@@ -128,17 +108,6 @@ export class TreeObject extends BaseObject implements GameObjectTree {
     }
     this.animationAngle += this.animationSlowSpeed
     this.angle = this.animationAngle
-  }
-
-  grow() {
-    if (this.size >= this.minSizeToChop && !this.isReadyToChop) {
-      this.isReadyToChop = true
-    }
-    if (this.size >= this.maxSize) {
-      return
-    }
-
-    this.size += this.growSpeedPerSecond / this.addon.tick
   }
 
   handleChoppingState() {
