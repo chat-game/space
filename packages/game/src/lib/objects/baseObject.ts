@@ -42,10 +42,16 @@ export class BaseObject extends Container implements GameObject {
     this.addon.addChild(this)
   }
 
-  live() {}
+  live() {
+    if (this.target?.state === 'DESTROYED') {
+      this.target = undefined
+    }
+  }
 
   animate(): void {
-    // this.zIndex = Math.round(this.y)
+    if (this.state === 'DESTROYED' && this.visible) {
+      this.visible = false
+    }
   }
 
   move(): boolean {
