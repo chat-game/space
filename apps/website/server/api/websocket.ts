@@ -130,14 +130,14 @@ export default defineWebSocketHandler({
 
         const tree = activeRoom.objects.find((obj) => obj.type === 'TREE' && obj.id === parsed.data.id)
         if (tree) {
-          activeRoom.removeObject(parsed.data.id)
+          activeRoom.removeObject(tree.id)
 
-          const player = activeRoom.objects.find((obj) => obj.type === 'PLAYER' && obj.id === player.id) as GameObject & GameObjectPlayer
-          if (player) {
-            await dropFromTree(player.telegramId)
+          const playerObject = activeRoom.objects.find((obj) => obj.type === 'PLAYER' && obj.id === player.id) as GameObject & GameObjectPlayer
+          if (playerObject) {
+            await dropFromTree(playerObject.telegramId)
           }
 
-          peer.publish(activeRoom.id, JSON.stringify({ id: createId(), type: 'DESTROY_TREE', data: { id: parsed.data.id } }))
+          peer.publish(activeRoom.id, JSON.stringify({ id: createId(), type: 'DESTROY_TREE', data: { id: tree.id } }))
         }
       }
       if (parsed.type === 'NEW_PLAYER_TARGET') {
