@@ -73,7 +73,7 @@ onMounted(async () => {
 
   game.value.vibrate = () => {
     if (hapticFeedback.impactOccurred.isAvailable()) {
-      hapticFeedback.impactOccurred('medium')
+      hapticFeedback.impactOccurred('light')
     }
   }
 

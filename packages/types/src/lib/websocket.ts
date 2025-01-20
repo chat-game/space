@@ -159,7 +159,6 @@ export interface WebSocketNewTree {
 export interface WebSocketDestroyTree {
   type: 'DESTROY_TREE'
   data: {
-    peerId: string
     id: string
   }
 }
