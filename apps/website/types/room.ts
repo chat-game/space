@@ -8,5 +8,5 @@ export interface Room {
     ws: WebSocket
     peer: Peer | null
   }
-  peers: string[]
+  players: { id: string, peerId: string }[]
 }

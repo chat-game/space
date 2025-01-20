@@ -54,9 +54,6 @@ export default defineWebSocketHandler({
           }
 
           const activeRoom = activeRooms.find((room) => room.id === id) as WagonRoom
-          if (!activeRoom.peers.includes(peer.id)) {
-            activeRoom.peers.push(peer.id)
-          }
 
           // add to objects
           const wagon = activeRoom.objects.find((obj) => obj.type === 'WAGON')
@@ -81,22 +78,30 @@ export default defineWebSocketHandler({
             return
           }
 
-          activeRoom.addPlayer({ id: peer.id, telegramId: parsed.data.token, x: wagon?.x ? wagon.x - 200 : 100, character })
+          const playerId = createId()
+
+          if (!activeRoom.players.find((player) => player.peerId === peer.id)) {
+            activeRoom.players.push({ id: playerId, peerId: peer.id })
+          }
+
+          activeRoom.addPlayer({ id: playerId, telegramId: parsed.data.token, x: wagon?.x ? wagon.x - 200 : 100, character })
 
           peer.subscribe(activeRoom.id)
-          void sendMessage({ type: 'CONNECTED_TO_WAGON_ROOM', data: { type: 'PLAYER', roomId: activeRoom.id, id: peer.id, objects: activeRoom.objects } }, activeRoom.token)
+          void sendMessage({ type: 'CONNECTED_TO_WAGON_ROOM', data: { type: 'PLAYER', roomId: activeRoom.id, id: playerId, objects: activeRoom.objects } }, activeRoom.token)
 
           logger.log(`Telegram client ${parsed.data.token} subscribed to Wagon Room ${activeRoom.id}`, peer.id)
         }
 
         if (client === 'WAGON_CLIENT') {
           const activeRoom = activeRooms.find((room) => room.id === id) as WagonRoom
-          if (!activeRoom.peers.includes(peer.id)) {
-            activeRoom.peers.push(peer.id)
+
+          const wagonId = createId()
+          if (!activeRoom.players.find((player) => player.peerId === peer.id)) {
+            activeRoom.players.push({ id: wagonId, peerId: peer.id })
           }
 
           peer.subscribe(activeRoom.id)
-          void sendMessage({ type: 'CONNECTED_TO_WAGON_ROOM', data: { type: 'WAGON', roomId: activeRoom.id, id: peer.id, objects: activeRoom.objects } }, activeRoom.token)
+          void sendMessage({ type: 'CONNECTED_TO_WAGON_ROOM', data: { type: 'WAGON', roomId: activeRoom.id, id: wagonId, objects: activeRoom.objects } }, activeRoom.token)
 
           logger.log(`Wagon client subscribed to Wagon Room ${activeRoom.id}`, peer.id)
         }
@@ -113,8 +118,13 @@ export default defineWebSocketHandler({
         }
       }
       if (parsed.type === 'DESTROY_TREE') {
-        const activeRoom = activeRooms.find((room) => room.peers.find((id) => id === peer.id)) as WagonRoom
+        const activeRoom = activeRooms.find((room) => room.players.find((player) => player.peerId === peer.id)) as WagonRoom
         if (!activeRoom) {
+          return
+        }
+
+        const player = activeRoom.players.find((player) => player.peerId === peer.id)
+        if (!player) {
           return
         }
 
@@ -122,41 +132,32 @@ export default defineWebSocketHandler({
         if (tree) {
           activeRoom.removeObject(parsed.data.id)
 
-          const player = activeRoom.objects.find((obj) => obj.type === 'PLAYER' && obj.id === peer.id) as GameObject & GameObjectPlayer
+          const player = activeRoom.objects.find((obj) => obj.type === 'PLAYER' && obj.id === player.id) as GameObject & GameObjectPlayer
           if (player) {
             await dropFromTree(player.telegramId)
           }
 
-          peer.publish(activeRoom.id, JSON.stringify({ id: createId(), type: parsed.type, data: parsed.data }))
+          peer.publish(activeRoom.id, JSON.stringify({ id: createId(), type: 'DESTROY_TREE', data: { id: parsed.data.id } }))
         }
       }
-      if (parsed.type === 'NEW_WAGON_TARGET' || parsed.type === 'NEW_PLAYER_TARGET' || parsed.type === 'NEW_TREE') {
-        const activeRoom = activeRooms.find((room) => room.peers.find((id) => id)) as WagonRoom
+      if (parsed.type === 'NEW_PLAYER_TARGET') {
+        const activeRoom = activeRooms.find((room) => room.players.find((player) => player.peerId === peer.id)) as WagonRoom
         if (!activeRoom) {
           return
         }
 
-        // Update object
-        if (parsed.type === 'NEW_WAGON_TARGET') {
-          const wagon = activeRoom.objects.find((obj) => obj.type === 'WAGON')
-          if (wagon) {
-            wagon.x = parsed.data.x
-          }
-        }
-        if (parsed.type === 'NEW_PLAYER_TARGET') {
-          const player = activeRoom.objects.find((obj) => obj.type === 'PLAYER' && obj.id === parsed.data.id)
-          if (player) {
-            player.x = parsed.data.x
-          }
-        }
-        if (parsed.type === 'NEW_TREE') {
-          const tree = activeRoom.objects.find((obj) => obj.type === 'TREE' && obj.id === parsed.data.id)
-          if (!tree) {
-            activeRoom.addTree({ ...parsed.data })
-          }
+        const player = activeRoom.players.find((player) => player.peerId === peer.id)
+        if (!player) {
+          return
         }
 
-        peer.publish(activeRoom.id, JSON.stringify({ id: createId(), type: parsed.type, data: parsed.data }))
+        // Update object
+        const playerObject = activeRoom.objects.find((obj) => obj.type === 'PLAYER' && obj.id === player.id)
+        if (playerObject) {
+          playerObject.x = parsed.data.x
+        }
+
+        peer.publish(activeRoom.id, JSON.stringify({ id: createId(), type: 'NEW_PLAYER_TARGET', data: { id: player.id, x: parsed.data.x } }))
       }
     }
   },
@@ -165,20 +166,26 @@ export default defineWebSocketHandler({
     logger.log('close', peer.id, JSON.stringify(event))
 
     // Remove peer from peers array
-    const room = activeRooms.find((room) => room.peers.find((id) => id === peer.id))
+    const room = activeRooms.find((room) => room.players.find((player) => player.peerId === peer.id))
     if (room) {
       // if player - remove from objects
       if (room.type === 'WAGON') {
         const wagonRoom = room as WagonRoom
-        const player = wagonRoom.objects.find((obj) => obj.type === 'PLAYER' && obj.id === peer.id)
-        if (player) {
-          wagonRoom.removeObject(player.id)
+
+        const player = wagonRoom.players.find((player) => player.peerId === peer.id)
+        if (!player) {
+          return
         }
 
-        void sendMessage({ type: 'DISCONNECTED_FROM_WAGON_ROOM', data: { id: peer.id } }, room.token)
+        const playerObject = wagonRoom.objects.find((obj) => obj.type === 'PLAYER' && obj.id === player.id)
+        if (playerObject) {
+          wagonRoom.removeObject(playerObject.id)
+        }
+
+        void sendMessage({ type: 'DISCONNECTED_FROM_WAGON_ROOM', data: { id: player.id } }, room.token)
       }
 
-      room.peers = room.peers.filter((id) => id !== peer.id)
+      room.players = room.players.filter((player) => player.peerId !== peer.id)
     }
   },
 

@@ -17,7 +17,7 @@ export class BaseRoom implements Room {
   token: string
   type: Room['type']
   server: { ws: WebSocket, peer: Peer | null }
-  peers: string[] = []
+  players: Room['players'] = []
   objects: GameObject[] = []
   chunks: Chunk[] = []
 
