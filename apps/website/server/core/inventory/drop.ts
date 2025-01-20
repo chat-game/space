@@ -5,7 +5,11 @@ export async function dropFromTree(telegramId: string) {
   const profile = await prisma.telegramProfile.findFirst({
     where: { telegramId },
     include: {
-      profile: true,
+      profile: {
+        include: {
+          characterEditions: true,
+        },
+      },
     },
   })
   if (!profile?.profile) {
@@ -13,8 +17,9 @@ export async function dropFromTree(telegramId: string) {
   }
 
   // +xp to char
-  if (profile.profile.activeEditionId) {
-    await addXpToCharacterEdition(profile.profile.activeEditionId, getRandomInRange(2, 5))
+  const activeCharacter = profile.profile.characterEditions.find((e) => e.id === profile.profile?.activeEditionId)
+  if (profile.profile.activeEditionId && activeCharacter) {
+    await addXpToCharacterEdition(profile.profile.activeEditionId, getRandomInRange(2, 4 + activeCharacter.level))
   }
 
   const randomChance = getRandomInRange(0, 100)

@@ -93,7 +93,7 @@ export class BaseObject extends Container implements GameObject {
     this.state = 'DESTROYED'
 
     if (this.type === 'TREE') {
-      this.addon.websocketService.send({ type: 'DESTROY_TREE', data: { id: this.id, peerId: this.addon.player?.id ?? '' } })
+      this.addon.websocketService.send({ type: 'DESTROY_TREE', data: { id: this.id } })
     }
   }
 
