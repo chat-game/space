@@ -11,11 +11,6 @@ export default defineEventHandler(async (event) => {
     return
   }
 
-  // Payment webhook dont need auth
-  if (event.path.startsWith('/api/payment/webhook')) {
-    return
-  }
-
   // Telegram routes dont need basic auth
   if (event.path.startsWith('/api/telegram')) {
     return
