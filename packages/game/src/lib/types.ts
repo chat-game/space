@@ -1,6 +1,5 @@
 import type {
   CharacterEditionWithCharacter,
-  Player,
   WebSocketEvents,
   WebSocketMessage,
 } from '@chat-game/types'
@@ -19,7 +18,6 @@ export interface GameAddon extends Container {
   assetService: AssetService
   playerService: PlayerService
   treeService: TreeService
-  serverService: ServerService
   websocketService: WebSocketService
   updateUI: () => void
   openLoader: () => void
@@ -67,7 +65,6 @@ export interface GameObjectWagon extends GameObject {
 
 export interface GameObjectUnit extends GameObject {
   name: string
-  coins: number
   visual: {
     head: '1'
     hairstyle: 'BOLD' | 'CLASSIC' | 'COAL_LONG' | 'ORANGE_WITH_BEARD'
@@ -90,10 +87,6 @@ export interface GameObjectPlayer extends GameObjectUnit {
   canClick: boolean
   nextClick: number
   click: () => void
-}
-
-export interface ServerService {
-  getPlayer: (id: string) => Promise<Player | null>
 }
 
 export interface WebSocketService {
