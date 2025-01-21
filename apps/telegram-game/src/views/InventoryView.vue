@@ -64,13 +64,19 @@
   </Modal>
 
   <Modal :title="selectedItem?.item.name ?? ''" :is-opened="isItemOpened" @close="isItemOpened = false">
+    <template #bg>
+      <ConfettiBackground />
+    </template>
+
+    <p class="tg-hint font-medium leading-tight">
+      В наличии: {{ selectedItem?.amount ?? 0 }} шт.
+    </p>
+
     <p class="tg-hint text-sm leading-tight">
       {{ selectedItem?.item.description ?? '' }}
     </p>
 
-    <p class="px-8 tg-hint text-center font-medium leading-tight">
-      В наличии: {{ selectedItem?.amount ?? 0 }} шт.
-    </p>
+    <InventoryItemActivationBlock v-if="selectedItem && selectedItem.amount > 0" :id="selectedItem.id" :item-id="selectedItem.item.id" />
   </Modal>
 </template>
 

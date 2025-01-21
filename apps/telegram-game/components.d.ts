@@ -22,6 +22,7 @@ declare module 'vue' {
     GameLoader: typeof import('./src/components/GameLoader.vue')['default']
     GameNavigator: typeof import('./src/components/GameNavigator.vue')['default']
     Image: typeof import('./src/components/Image.vue')['default']
+    InventoryItemActivationBlock: typeof import('./src/components/InventoryItemActivationBlock.vue')['default']
     InventoryItemCard: typeof import('./src/components/InventoryItemCard.vue')['default']
     Modal: typeof import('./src/components/Modal.vue')['default']
     Navigation: typeof import('./src/components/Navigation.vue')['default']

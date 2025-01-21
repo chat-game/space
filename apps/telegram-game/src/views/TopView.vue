@@ -84,11 +84,12 @@
   </PageContainer>
 
   <Modal :title="selectedTrophy?.trophy.name ?? ''" :is-opened="isTrophyOpened" @close="isTrophyOpened = false">
+    <p v-if="selectedTrophy?.createdAt" class="tg-hint font-medium leading-tight">
+      Получен {{ new Date(selectedTrophy.createdAt).toLocaleString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }) }}
+    </p>
+
     <p class="tg-hint text-sm leading-tight">
       {{ selectedTrophy?.trophy.description ?? '' }}
-    </p>
-    <p v-if="selectedTrophy?.createdAt" class="px-8 tg-hint text-center font-medium leading-tight">
-      Получен {{ new Date(selectedTrophy.createdAt).toLocaleString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }) }}
     </p>
   </Modal>
 </template>
