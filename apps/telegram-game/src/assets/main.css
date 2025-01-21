@@ -40,6 +40,10 @@
   background-color: var(--tg-theme-section-bg-color);
 }
 
+@utility tg-border {
+  border-color: var(--tg-theme-section-separator-color);
+}
+
 @utility tg-text {
   color: var(--tg-theme-text-color);
 }
