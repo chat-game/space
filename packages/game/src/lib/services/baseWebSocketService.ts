@@ -1,4 +1,4 @@
-import type { GameObject, GameObjectPlayer, WebSocketConnect, WebSocketEvents, WebSocketMessage } from '@chat-game/types'
+import type { GameObject, GameObjectPlayer, WebSocketConnect, WebSocketConnectedToWagonRoom, WebSocketDestroyTree, WebSocketDisconnectedFromWagonRoom, WebSocketEvents, WebSocketMessage, WebSocketNewPlayerTarget, WebSocketNewWagonTarget } from '@chat-game/types'
 import type { GameAddon, WebSocketService } from '../types'
 import { createId } from '@paralleldrive/cuid2'
 import { useWebSocket } from '@vueuse/core'
@@ -38,7 +38,7 @@ export class BaseWebSocketService implements WebSocketService {
       data: {
         client: this.addon.client,
         id: roomId,
-        token: this.addon.player?.telegramId,
+        telegramId: this.addon.player?.telegramId,
       },
     }
     this.send(connectMessage)
@@ -50,91 +50,104 @@ export class BaseWebSocketService implements WebSocketService {
   }
 
   async handleMessage(message: WebSocketMessage) {
-    if (message.type === 'CONNECTED_TO_WAGON_ROOM') {
-      const { id, roomId, type, objects } = message.data
+    switch (message.type) {
+      case 'CONNECTED_TO_WAGON_ROOM':
+        return this.handleConnectToWagonRoom(message)
+      case 'DISCONNECTED_FROM_WAGON_ROOM':
+        return this.handleDisconnectFromWagonRoom(message)
+      case 'ROOM_DESTROYED':
+        return this.handleRoomDestroy()
+      case 'NEW_PLAYER_TARGET':
+        return this.handleNewPlayerTarget(message)
+      case 'NEW_WAGON_TARGET':
+        return this.handleNewWagonTarget(message)
+      case 'DESTROY_TREE':
+        return this.handleDestroyTree(message)
+    }
+  }
 
-      // Other room?
-      if (roomId !== this.roomId) {
-        // Remove all previous objects
-        this.addon.rebuildScene()
-        this.roomId = roomId
+  async handleConnectToWagonRoom(message: WebSocketConnectedToWagonRoom) {
+    const { id, roomId, type, objects } = message.data
+
+    // Other room?
+    if (roomId !== this.roomId) {
+      // Remove all previous objects
+      this.addon.rebuildScene()
+      this.roomId = roomId
+    }
+
+    // Init all objects
+    for (const obj of objects) {
+      if (this.addon.findObject(obj.id)) {
+        continue
       }
 
-      // Init all objects
-      for (const obj of objects) {
-        if (this.addon.findObject(obj.id)) {
-          continue
+      if (obj.type === 'PLAYER') {
+        if (obj?.telegramId !== this.addon.player?.telegramId) {
+          await this.addon.playerService.createPlayer({ id: obj.id, telegramId: obj.telegramId, x: obj.x, character: obj.character })
         }
-
-        if (obj.type === 'PLAYER') {
-          if (obj?.telegramId !== this.addon.player?.telegramId) {
-            this.addon.playerService.createPlayer({ id: obj.id, telegramId: obj.telegramId, x: obj.x, character: obj.character })
-          }
-        } else if (obj.type === 'TREE') {
-          this.addon.treeService.create({ id: obj.id, x: obj.x, zIndex: obj.zIndex, treeType: obj.treeType, variant: obj.variant, size: obj.size, maxSize: obj.maxSize })
-        } else {
-          this.addon.createObject({ type: obj.type, id: obj.id, x: obj.x, zIndex: obj?.zIndex })
-        }
-      }
-
-      if (type === 'PLAYER' && this.addon.player) {
-        const player = objects.find((obj) => obj.type === 'PLAYER' && obj.id === id) as GameObject & GameObjectPlayer
-        // Me?
-        if (player && player?.telegramId === this.addon.player?.telegramId) {
-          this.addon.player.id = id
-          this.addon.player.x = player.x
-          this.addon.player.initVisual(player.character.character.codename)
-
-          // Close loader
-          this.addon.updateUI()
-        }
+      } else if (obj.type === 'TREE') {
+        this.addon.treeService.create({ id: obj.id, x: obj.x, zIndex: obj.zIndex, treeType: obj.treeType, variant: obj.variant, size: obj.size, maxSize: obj.maxSize })
+      } else {
+        this.addon.createObject({ type: obj.type, id: obj.id, x: obj.x, zIndex: obj?.zIndex })
       }
     }
-    if (message.type === 'DISCONNECTED_FROM_WAGON_ROOM') {
-      this.addon.playerService.removePlayer(message.data.id)
+
+    if (type === 'PLAYER' && this.addon.player) {
+      const player = objects.find((obj) => obj.type === 'PLAYER' && obj.id === id) as GameObject & GameObjectPlayer
+      // Me?
+      if (player && player?.telegramId === this.addon.player?.telegramId) {
+        this.addon.player.id = id
+        this.addon.player.x = player.x
+        await this.addon.player.initVisual(player.character.character.codename)
+
+        // Close loader
+        this.addon.updateUI()
+      }
     }
-    if (message.type === 'ROOM_DESTROYED') {
-      // wait and reconnect
-      setTimeout(() => {
-        this.roomId = null
-        this.connect('12345')
-      }, 3000)
-    }
+  }
+
+  handleDisconnectFromWagonRoom(message: WebSocketDisconnectedFromWagonRoom) {
+    this.addon.playerService.removePlayer(message.data.id)
+  }
+
+  handleRoomDestroy() {
+    // wait and reconnect
+    setTimeout(() => {
+      this.roomId = null
+      this.connect('12345')
+    }, 3000)
+  }
+
+  handleNewPlayerTarget(message: WebSocketNewPlayerTarget) {
+    const { id, x } = message.data
 
     if (this.addon.client === 'TELEGRAM_CLIENT') {
-      if (message.type === 'NEW_PLAYER_TARGET') {
-        const { id, x } = message.data
-        if (this.addon.player?.id !== id) {
-          this.addon.playerService.movePlayer({ id, x })
-        }
-      }
-    }
-
-    if (this.addon.client === 'WAGON_CLIENT') {
-      if (message.type === 'NEW_PLAYER_TARGET') {
-        const { id, x } = message.data
+      if (this.addon.player?.id !== id) {
         this.addon.playerService.movePlayer({ id, x })
       }
     }
 
-    if (message.type === 'NEW_WAGON_TARGET') {
-      this.addon.wagon?.createFlagAndMove(message.data.x)
-    }
-
-    if (message.type === 'NEW_TREE') {
-      this.addon.treeService.create({ ...message.data })
-    }
-    if (message.type === 'DESTROY_TREE') {
-      this.addon.removeObject(message.data.id)
+    if (this.addon.client === 'WAGON_CLIENT') {
+      this.addon.playerService.movePlayer({ id, x })
     }
   }
 
-  parse(message: string): WebSocketMessage | undefined {
-    const parsed = JSON.parse(message)
-    if (parsed) {
-      return parsed as WebSocketMessage
-    }
+  handleNewWagonTarget(message: WebSocketNewWagonTarget) {
+    this.addon.wagon?.createFlagAndMove(message.data.x)
+  }
 
-    return undefined
+  handleDestroyTree(message: WebSocketDestroyTree) {
+    this.addon.removeObject(message.data.id)
+  }
+
+  parse(message: string): WebSocketMessage | undefined {
+    try {
+      const parsed = JSON.parse(message)
+      return parsed?.id ? parsed as WebSocketMessage : undefined
+    } catch (e) {
+      console.error(e)
+      return undefined
+    }
   }
 }

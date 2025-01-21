@@ -4,7 +4,6 @@ import type {
   GameObjectPlayer,
   GameObjectWagon,
   PlayerService,
-  ServerService,
   TreeService,
   WebSocketService,
 } from './types'
@@ -15,7 +14,6 @@ import { FlagObject } from './objects/flagObject'
 import { MoveToFlagScript } from './scripts/moveToFlagScript'
 import { BaseAssetService } from './services/baseAssetService'
 import { BasePlayerService } from './services/basePlayerService'
-import { BaseServerService } from './services/baseServerService'
 import { BaseTreeService } from './services/baseTreeService'
 import { BaseWebSocketService } from './services/baseWebSocketService'
 
@@ -43,7 +41,6 @@ export class BaseGameAddon extends Container implements GameAddon {
   playerService: PlayerService
   treeService: TreeService
   websocketService: WebSocketService
-  serverService: ServerService
 
   rectangle!: Rectangle
   bottomY = 0
@@ -89,7 +86,6 @@ export class BaseGameAddon extends Container implements GameAddon {
     this.playerService = new BasePlayerService(this as GameAddon)
     this.treeService = new BaseTreeService(this as GameAddon)
     this.websocketService = new BaseWebSocketService(this as GameAddon, websocketUrl)
-    this.serverService = new BaseServerService()
   }
 
   async init(telegramId: string) {
@@ -181,16 +177,18 @@ export class BaseGameAddon extends Container implements GameAddon {
 
   removeObject(id: string) {
     const obj = this.findObject(id)
-    if (obj) {
-      if (obj.type === 'TREE') {
-        this.updateUI()
-      }
-
-      const index = this.children.indexOf(obj)
-      this.children.splice(index, 1)
-
-      this.removeChild(obj)
+    if (!obj) {
+      return
     }
+
+    if (obj.type === 'TREE') {
+      this.updateUI()
+    }
+
+    const index = this.children.indexOf(obj)
+    this.children.splice(index, 1)
+
+    this.removeChild(obj)
   }
 
   override destroy() {

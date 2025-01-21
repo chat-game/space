@@ -16,7 +16,6 @@ interface GenerateWagonRoomOptions {
 
 interface WagonRoomOptions {
   id: string
-  token: string
 }
 
 export class WagonRoom extends BaseRoom {
@@ -27,8 +26,8 @@ export class WagonRoom extends BaseRoom {
 
   status: 'ACTIVE' | 'FINISHED' = 'ACTIVE'
 
-  constructor({ id, token }: WagonRoomOptions) {
-    super({ id, token, type: 'WAGON' })
+  constructor({ id }: WagonRoomOptions) {
+    super({ id, type: 'WAGON' })
 
     this.init()
   }
@@ -84,7 +83,7 @@ export class WagonRoom extends BaseRoom {
       return
     }
 
-    sendMessage({ type: 'ROOM_DESTROYED', data: { id: this.id } }, this.token)
+    sendMessage({ type: 'ROOM_DESTROYED', data: { id: this.id } }, this.id)
     this.status = 'FINISHED'
   }
 
@@ -132,7 +131,7 @@ export class WagonRoom extends BaseRoom {
 
     for (const obj of newForest.objects) {
       if (obj.type === 'TREE') {
-        sendMessage({ type: 'NEW_TREE', data: { ...obj } }, this.token)
+        sendMessage({ type: 'NEW_TREE', data: { ...obj } }, this.id)
       }
     }
 
@@ -236,7 +235,7 @@ export class WagonRoom extends BaseRoom {
 
     const targetX = availableTree.x - this.wagonViewNearDistance
 
-    sendMessage({ type: 'NEW_WAGON_TARGET', data: { x: targetX } }, this.token)
+    sendMessage({ type: 'NEW_WAGON_TARGET', data: { x: targetX } }, this.id)
 
     this.wagonObstacle = availableTree
     this.wagon.x = targetX

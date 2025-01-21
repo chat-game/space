@@ -1,6 +1,6 @@
 import { createId } from '@paralleldrive/cuid2'
 
-export async function activateProduct({ profileId, productId }: { productId: string, profileId: string }) {
+export async function activateProduct({ profileId, productId }: { profileId: string, productId: string }) {
   const product = await prisma.product.findFirst({
     where: { id: productId },
     include: {
@@ -11,43 +11,29 @@ export async function activateProduct({ profileId, productId }: { productId: str
   // Patron points
   const itemPatronPoints = product?.items.find(({ type }) => type === 'PATRON_POINT')
   if (itemPatronPoints) {
-    const increment = itemPatronPoints.amount
     await prisma.profile.update({
       where: { id: profileId },
       data: {
-        patronPoints: {
-          increment,
-        },
         points: {
-          increment,
+          increment: itemPatronPoints.amount,
         },
       },
     })
   }
 
-  if (productId === 'jehj4mxo0g6fp1eopf3jg641') {
-    // 10 coins
-    return activateProduct1(profileId)
-  }
-  if (productId === 'w0895g3t9q75ys2maod0zd1a') {
-    // 50+10 coins
-    return activateProduct2(profileId)
-  }
-  if (productId === 'nar1acws8c3s4w3cxs6i8qdn') {
-    // 150+30 coins
-    return activateProduct3(profileId)
-  }
-  if (productId === 'tp5w874gchf6hjfca9vory2r') {
-    // 250+80 coins
-    return activateProduct4(profileId)
-  }
-  if (productId === 'izh5v4vxztqi55gquts9ukn2') {
-    // 500+150 coins
-    return activateProduct5(profileId)
-  }
-  if (productId === 'xo7wmjsmawgb2rfxfzr7sexb') {
-    // Christmas pack 2024
-    return activateProduct6(profileId)
+  switch (productId) {
+    case 'jehj4mxo0g6fp1eopf3jg641':
+      return activateProduct1(profileId) // 10 coins
+    case 'w0895g3t9q75ys2maod0zd1a':
+      return activateProduct2(profileId) // 50+10 coins
+    case 'nar1acws8c3s4w3cxs6i8qdn':
+      return activateProduct3(profileId) // 150+30 coins
+    case 'tp5w874gchf6hjfca9vory2r':
+      return activateProduct4(profileId) // 250+80 coins
+    case 'izh5v4vxztqi55gquts9ukn2':
+      return activateProduct5(profileId) // 500+150 coins
+    case 'xo7wmjsmawgb2rfxfzr7sexb':
+      return activateProduct6(profileId) // Christmas pack 2024
   }
 }
 

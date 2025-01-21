@@ -96,6 +96,7 @@ export default defineNuxtConfig({
     },
     scheduledTasks: {
       '*/10 * * * *': ['game:leaderboard'],
+      '*/2 * * * *': ['payment:status'],
     },
   },
   modules: [

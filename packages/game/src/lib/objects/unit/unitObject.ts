@@ -18,7 +18,6 @@ interface UnitObjectOptions {
 export class UnitObject extends BaseObject implements GameObjectUnit {
   override name!: GameObjectUnit['name']
   visual!: GameObjectUnit['visual']
-  coins = 0
   dialogue: GameObjectUnit['dialogue']
 
   animationIdle!: AnimatedSprite | undefined
@@ -27,7 +26,6 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
   constructor({ addon, x, y, id, type }: UnitObjectOptions) {
     super({ addon, x, y, id, type })
 
-    this.coins = 0
     this.state = 'IDLE'
 
     this.dialogue = {
@@ -41,7 +39,7 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
     }
   }
 
-  async initVisual(codename: string | undefined | null = 'telegramo'): Promise<void> {
+  async initVisual(codename: string | undefined | null): Promise<void> {
     if (this.animationIdle) {
       this.removeChild(this.animationIdle)
       this.animationIdle = undefined
@@ -49,6 +47,10 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
     if (this.animationMoving) {
       this.removeChild(this.animationMoving)
       this.animationMoving = undefined
+    }
+
+    if (!codename) {
+      codename = 'telegramo'
     }
 
     try {
