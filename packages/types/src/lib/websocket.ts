@@ -37,6 +37,7 @@ export type WebSocketMessage = { id: string } & WebSocketEvents
 
 export type WebSocketEvents =
   | WebSocketConnect
+  | WebSocketConnectAddon
   | WebSocketConnectedToWagonRoom
   | WebSocketDisconnectedFromWagonRoom
   | WebSocketEventCommand
@@ -50,12 +51,19 @@ export type WebSocketEvents =
   | WebSocketNewPlayerTarget
   | WebSocketWagonRoomDestroy
 
+export interface WebSocketConnectAddon {
+  type: 'CONNECT_ADDON'
+  data: {
+    token: string
+  }
+}
+
 export interface WebSocketConnect {
   type: 'CONNECT'
   data: {
-    client: 'ADDON' | 'TELEGRAM_CLIENT' | 'WAGON_CLIENT'
+    client: 'TELEGRAM_CLIENT' | 'WAGON_CLIENT' | 'SERVER'
     id: string
-    token?: string
+    telegramId?: string
   }
 }
 

@@ -8,22 +8,19 @@ import { VillageChunk } from './chunk/villageChunk'
 
 interface BaseRoomOptions {
   id: string
-  token: string
   type: Room['type']
 }
 
 export class BaseRoom implements Room {
   id: string
-  token: string
   type: Room['type']
   server: { ws: WebSocket, peer: Peer | null }
-  players: Room['players'] = []
+  clients: Room['clients'] = []
   objects: GameObject[] = []
   chunks: Chunk[] = []
 
-  constructor({ id, token, type }: BaseRoomOptions) {
+  constructor({ id, type }: BaseRoomOptions) {
     this.id = id
-    this.token = token
     this.type = type
 
     const { public: publicEnv } = useRuntimeConfig()
@@ -62,7 +59,6 @@ export class BaseRoom implements Room {
       data: {
         client: 'SERVER',
         id: this.id,
-        token: this.token,
       },
     })
     this.server.ws.send(prepearedMessage)

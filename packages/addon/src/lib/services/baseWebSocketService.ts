@@ -1,4 +1,4 @@
-import type { WebSocketMessage } from '@chat-game/types'
+import type { WebSocketConnectAddon, WebSocketMessage } from '@chat-game/types'
 import type { GameAddon, WebSocketService } from '../types'
 import { createId } from '@paralleldrive/cuid2'
 
@@ -9,16 +9,13 @@ export class BaseWebSocketService implements WebSocketService {
     this.socket = new WebSocket(this.websocketUrl)
 
     this.socket.onopen = () => {
-      const prepearedMessage = JSON.stringify({
-        id: createId(),
-        type: 'CONNECT',
+      const prepearedMessage: WebSocketConnectAddon = {
+        type: 'CONNECT_ADDON',
         data: {
-          client: 'ADDON',
-          id: this.addon.id,
           token: this.addon.token,
         },
-      })
-      this.socket.send(prepearedMessage)
+      }
+      this.socket.send(JSON.stringify({ ...prepearedMessage, id: createId() }))
     }
 
     this.socket.addEventListener('message', (event) => {

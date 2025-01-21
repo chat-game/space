@@ -38,7 +38,7 @@ export class BaseWebSocketService implements WebSocketService {
       data: {
         client: this.addon.client,
         id: roomId,
-        token: this.addon.player?.telegramId,
+        telegramId: this.addon.player?.telegramId,
       },
     }
     this.send(connectMessage)
