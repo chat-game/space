@@ -83,7 +83,7 @@ function handleClose(peer: Peer) {
         wagonRoom.removeObject(playerObject.id)
       }
 
-      void sendMessage({ type: 'DISCONNECTED_FROM_WAGON_ROOM', data: { id: player.id } }, room.id)
+      sendMessage({ type: 'DISCONNECTED_FROM_WAGON_ROOM', data: { id: player.id } }, room.id)
     }
 
     room.clients = room.clients.filter((c) => c.peerId !== peer.id)
@@ -150,7 +150,7 @@ async function handleConnect(message: WebSocketConnect, peer: Peer) {
     activeRoom.addPlayer({ id: playerId, telegramId: message.data.telegramId, x: wagon?.x ? wagon.x - 200 : 100, character })
 
     peer.subscribe(activeRoom.id)
-    void sendMessage({ type: 'CONNECTED_TO_WAGON_ROOM', data: { type: 'PLAYER', roomId: activeRoom.id, id: playerId, objects: activeRoom.objects } }, activeRoom.id)
+    sendMessage({ type: 'CONNECTED_TO_WAGON_ROOM', data: { type: 'PLAYER', roomId: activeRoom.id, id: playerId, objects: activeRoom.objects } }, activeRoom.id)
 
     logger.log(`Telegram client ${message.data.telegramId} subscribed to Wagon Room ${activeRoom.id}`, peer.id)
   }
@@ -164,7 +164,7 @@ async function handleConnect(message: WebSocketConnect, peer: Peer) {
     }
 
     peer.subscribe(activeRoom.id)
-    void sendMessage({ type: 'CONNECTED_TO_WAGON_ROOM', data: { type: 'WAGON', roomId: activeRoom.id, id: wagonId, objects: activeRoom.objects } }, activeRoom.id)
+    sendMessage({ type: 'CONNECTED_TO_WAGON_ROOM', data: { type: 'WAGON', roomId: activeRoom.id, id: wagonId, objects: activeRoom.objects } }, activeRoom.id)
 
     logger.log(`Wagon client subscribed to Wagon Room ${activeRoom.id}`, peer.id)
   }
