@@ -1,5 +1,6 @@
 import { createId } from '@paralleldrive/cuid2'
 import { getRandomInRange } from '~/utils/random'
+import { addItemToInventory } from './item'
 
 export async function dropFromTree(telegramId: string) {
   const profile = await prisma.telegramProfile.findFirst({
@@ -27,13 +28,13 @@ export async function dropFromTree(telegramId: string) {
   // Simple wood: 5% chance
   if (randomChance <= 5) {
     const simpleWoodId = 'rrrsnr31bmzus12abhupq06n'
-    await addItemToInventory(profile.profile.id, simpleWoodId, 1)
+    await addItemToInventory({ profileId: profile.profile.id, itemId: simpleWoodId, amount: 1 })
     return
   }
   // Branch: 8% chance
   if (randomChance <= 5 + 8) {
     const branchId = 'rq8hovyeqg4bh2siw9flcerf'
-    await addItemToInventory(profile.profile.id, branchId, 1)
+    await addItemToInventory({ profileId: profile.profile.id, itemId: branchId, amount: 1 })
   }
 }
 
@@ -56,7 +57,7 @@ export async function dropChristmasCupcake(telegramId: string, type: 'TREE') {
     })
     if (telegramProfile?.profile) {
       // add item or +1 to amount
-      await addItemToInventory(telegramProfile.profile.id, itemId, 1)
+      await addItemToInventory({ profileId: telegramProfile.profile.id, itemId, amount: 1 })
 
       // add +1 to leaderboard member
       const member = telegramProfile.profile.leaderboardMembers.find((member) => member.leaderboardId === leaderboardId)
@@ -80,31 +81,6 @@ export async function dropChristmasCupcake(telegramId: string, type: 'TREE') {
         })
       }
     }
-  }
-}
-
-async function addItemToInventory(profileId: string, itemId: string, amount: number) {
-  const item = await prisma.inventoryItemEdition.findFirst({
-    where: { profileId, itemId },
-  })
-  if (item) {
-    await prisma.inventoryItemEdition.update({
-      where: { id: item?.id },
-      data: {
-        amount: {
-          increment: amount,
-        },
-      },
-    })
-  } else {
-    await prisma.inventoryItemEdition.create({
-      data: {
-        id: createId(),
-        itemId,
-        profileId,
-        amount,
-      },
-    })
   }
 }
 
@@ -165,7 +141,7 @@ async function addXpToCharacterEdition(activeEditionId: string, amount: number) 
 
     // Reward
     if (nextLevel.inventoryItemId && nextLevel.awardAmount > 0) {
-      await addItemToInventory(edition.profileId, nextLevel.inventoryItemId, nextLevel.awardAmount)
+      await addItemToInventory({ profileId: edition.profileId, itemId: nextLevel.inventoryItemId, amount: nextLevel.awardAmount })
     }
   }
 }
