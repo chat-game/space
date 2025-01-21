@@ -50,23 +50,19 @@ export class BaseWebSocketService implements WebSocketService {
   }
 
   async handleMessage(message: WebSocketMessage) {
-    if (message.type === 'CONNECTED_TO_WAGON_ROOM') {
-      return this.handleConnectToWagonRoom(message)
-    }
-    if (message.type === 'DISCONNECTED_FROM_WAGON_ROOM') {
-      return this.handleDisconnectFromWagonRoom(message)
-    }
-    if (message.type === 'ROOM_DESTROYED') {
-      return this.handleRoomDestroy()
-    }
-    if (message.type === 'NEW_PLAYER_TARGET') {
-      return this.handleNewPlayerTarget(message)
-    }
-    if (message.type === 'NEW_WAGON_TARGET') {
-      return this.handleNewWagonTarget(message)
-    }
-    if (message.type === 'DESTROY_TREE') {
-      return this.handleDestroyTree(message)
+    switch (message.type) {
+      case 'CONNECTED_TO_WAGON_ROOM':
+        return this.handleConnectToWagonRoom(message)
+      case 'DISCONNECTED_FROM_WAGON_ROOM':
+        return this.handleDisconnectFromWagonRoom(message)
+      case 'ROOM_DESTROYED':
+        return this.handleRoomDestroy()
+      case 'NEW_PLAYER_TARGET':
+        return this.handleNewPlayerTarget(message)
+      case 'NEW_WAGON_TARGET':
+        return this.handleNewWagonTarget(message)
+      case 'DESTROY_TREE':
+        return this.handleDestroyTree(message)
     }
   }
 
