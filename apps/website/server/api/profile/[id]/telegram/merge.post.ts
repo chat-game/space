@@ -1,4 +1,4 @@
-import { notifyAdmin } from '~~/server/core/telegram/bot'
+import { notifyAdmin } from '~~/server/core/telegram/oldBot'
 
 export default defineEventHandler(
   async (event) => {
