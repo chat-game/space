@@ -6,10 +6,10 @@
           <div class="icon-block relative py-1 w-full rounded-2xl flex flex-row items-center justify-center">
             <Component :is="route.icon" class="w-6 h-6" />
 
-            <div v-if="route.meta.title === 'Задания'" class="hidden absolute top-0 right-1 w-4 h-4 rounded-full tg-button animate-pulse" />
+            <!-- <div v-if="route.meta.title === 'Задания'" class="hidden absolute top-0 right-1 w-4 h-4 rounded-full tg-button animate-pulse" /> -->
           </div>
           <p class="text text-xs font-medium">
-            {{ route.meta.title }}
+            {{ t(route.meta.title) }}
           </p>
         </button>
       </div>
@@ -19,8 +19,10 @@
 
 <script setup lang="ts">
 import { hapticFeedback } from '@telegram-apps/sdk-vue'
+import { useI18n } from 'vue-i18n'
 import { routes } from '../router'
 
+const { t } = useI18n()
 const router = useRouter()
 
 function handleClick(path: string) {
