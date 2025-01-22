@@ -9,7 +9,6 @@
         <GameCharacterProgression />
 
         <div v-if="profile && profile.energy >= 0" class="hidden w-fit h-10 px-5 py-0 flex-row items-center gap-2 bg-orange-100/80 text-amber-600 rounded-full">
-          <Image src="energy.png" class="w-auto h-8" />
           <p class="text-xl font-semibold leading-none tracking-tight">
             {{ profile?.energy }}
           </p>
