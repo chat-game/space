@@ -20,7 +20,7 @@
       <slot />
 
       <Button @click="onClose()">
-        Закрыть
+        {{ t('close') }}
       </Button>
     </div>
   </div>
@@ -28,6 +28,7 @@
 
 <script setup lang="ts">
 import { onClickOutside, usePointerSwipe } from '@vueuse/core'
+import { useI18n } from 'vue-i18n'
 
 const { isOpened } = defineProps<{
   isOpened: boolean
@@ -35,6 +36,9 @@ const { isOpened } = defineProps<{
 }>()
 
 const emit = defineEmits(['close'])
+
+const { t } = useI18n()
+
 const isClosing = ref(false)
 const target = ref(null)
 

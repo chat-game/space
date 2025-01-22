@@ -6,16 +6,18 @@
     </div>
 
     <Button class="flex flex-row gap-2 items-center justify-center" @click="activate()">
-      <p>Съесть 1 шт. и получить награду</p>
+      <p>{{ t('item.eatAndGetReward') }}</p>
     </Button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { hapticFeedback } from '@telegram-apps/sdk-vue'
+import { useI18n } from 'vue-i18n'
 
 const { id, itemId } = defineProps<{ id: string, itemId: string }>()
 
+const { t } = useI18n()
 const { refreshProfile, useApiFetch } = useTelegramProfile()
 const { pop: popConfetti } = useConfetti()
 

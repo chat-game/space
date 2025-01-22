@@ -1,24 +1,12 @@
 <template>
   <PageContainer>
-    <div class="hidden tg-section-bg px-3 py-3 flex-row gap-2 items-center rounded-2xl">
-      <img :src="data?.photoUrl" alt="avatar" class="w-14 h-14 rounded-full">
-      <div>
-        <div class="text-xl font-medium">
-          {{ data?.firstName }} {{ data?.lastName }}
-        </div>
-        <div class="tg-hint text-sm">
-          {{ data?.id }}
-        </div>
-      </div>
-    </div>
-
     <ActiveCard class="tg-section-bg px-3 py-3 flex flex-row gap-2 items-center rounded-2xl" @click="openWoodlandPointsModal">
       <div class="flex flex-row gap-2 items-center">
         <Image src="woodland-small.png" class="w-14 h-14" />
         <div class="flex flex-col">
-          <NumberFlow :value="profile?.profile.points ?? 67788" class="font-serif -mt-2 !p-0 text-3xl font-semibold" />
+          <NumberFlow :value="profile?.profile.points ?? 0" class="font-serif -mt-2 !p-0 text-3xl font-semibold" />
           <p class="leading-3">
-            Woodland Points
+            {{ t('item.woodlandPoint.amount', profile?.profile.points ?? 0) }}
           </p>
         </div>
       </div>
@@ -29,29 +17,29 @@
     </div>
     <div v-else class="tg-section-bg p-3 flex flex-col gap-2 items-center rounded-2xl">
       <p class="font-medium tg-hint">
-        Нет предметов в инвентаре
+        {{ t('inventory.empty') }}
       </p>
     </div>
 
     <div v-if="isEmptyProfile" class="tg-section-bg p-3 flex flex-col gap-2 items-center rounded-2xl">
       <div class="w-full space-y-3">
         <div class="text-xl font-medium">
-          Есть профиль на ChatGame?
+          {{ t('inventory.chatgame.title') }}
         </div>
         <div class="tg-hint text-sm">
-          Привяжи свою основную учетную запись на сайте. Потребуется Twitch.
+          {{ t('inventory.chatgame.description') }}
         </div>
 
         <div class="flex flex-col items-center">
           <Button class="w-full" @click="openChatGameLink()">
-            Подключить
+            {{ t('inventory.chatgame.button') }}
           </Button>
         </div>
       </div>
     </div>
   </PageContainer>
 
-  <Modal title="Woodland Points" :is-opened="isPointsOpened" @close="isPointsOpened = false">
+  <Modal :title="t('item.woodlandPoint.title')" :is-opened="isPointsOpened" @close="isPointsOpened = false">
     <template #bg>
       <WoodlandPointsBackground />
     </template>
@@ -59,7 +47,7 @@
     <Image src="woodland-small.png" class="absolute -top-18 left-8 w-22 h-22" />
 
     <p class="tg-hint text-sm leading-tight">
-      Является основным показателем прогресса в игре. Это как уровень профиля, но в виде очков. Их нельзя тратить - только накапливать.
+      {{ t('item.woodlandPoint.description') }}
     </p>
   </Modal>
 
@@ -69,7 +57,7 @@
     </template>
 
     <p class="tg-hint font-medium leading-tight">
-      В наличии: {{ selectedItem?.amount ?? 0 }} шт.
+      {{ t('inventory.currentAmount', { n: selectedItem?.amount ?? 0 }) }}
     </p>
 
     <p class="tg-hint text-sm leading-tight">
@@ -83,9 +71,11 @@
 <script setup lang="ts">
 import NumberFlow from '@number-flow/vue'
 import { initData, openLink } from '@telegram-apps/sdk-vue'
+import { useI18n } from 'vue-i18n'
 
 const data = initData.user()
 const { profile, refreshProfile } = useTelegramProfile()
+const { t } = useI18n()
 
 onMounted(() => {
   refreshProfile()

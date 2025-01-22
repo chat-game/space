@@ -1,7 +1,7 @@
 <template>
   <PageContainer>
     <div v-if="leaderboard?.title">
-      <SectionHeader text="Топ игроков" />
+      <SectionHeader :text="t('top.players')" />
 
       <div class="tg-section-bg mb-4 px-3 py-3 rounded-2xl">
         <div class="flex flex-row gap-2 items-center">
@@ -11,7 +11,7 @@
               {{ leaderboard?.title }}
             </h3>
             <div v-if="leaderboard?.finishedAt">
-              Окончание {{ new Date(leaderboard.finishedAt).toLocaleString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }) }}
+              {{ t('availableUntil') }} {{ new Date(leaderboard.finishedAt).toLocaleString(locale, { day: 'numeric', month: 'long', year: 'numeric' }) }}
             </div>
           </div>
         </div>
@@ -27,7 +27,7 @@
                 {{ profileInLeaderboard.position }}
               </p>
               <p class="font-medium text-lg">
-                Мой результат
+                {{ t('top.myResult') }}
               </p>
             </div>
             <div class="flex flex-row gap-1 items-center text-lg">
@@ -54,7 +54,7 @@
             </p>
 
             <p class="font-medium text-lg">
-              {{ member.profile.telegramProfile?.firstName ?? 'Аноним' }}
+              {{ member.profile.telegramProfile?.firstName }}
             </p>
           </div>
           <div class="flex flex-row gap-1 items-center text-lg">
@@ -65,7 +65,7 @@
     </div>
 
     <div>
-      <SectionHeader text="Мои трофеи" />
+      <SectionHeader :text="t('item.trophy.titleMine')" />
 
       <div v-if="trophies.length" class="grid grid-cols-3 gap-2">
         <ActiveCard v-for="edition in trophies" :key="edition.id" class="px-2 flex flex-col flex-wrap gap-2 items-center" @click="selectTrophy(edition.id)">
@@ -77,7 +77,7 @@
       </div>
       <div v-else class="tg-section-bg p-3 flex flex-col gap-2 items-center rounded-2xl">
         <p class="font-medium tg-hint">
-          Нет полученных трофеев
+          {{ t('item.trophy.empty') }}
         </p>
       </div>
     </div>
@@ -85,7 +85,7 @@
 
   <Modal :title="selectedTrophy?.trophy.name ?? ''" :is-opened="isTrophyOpened" @close="isTrophyOpened = false">
     <p v-if="selectedTrophy?.createdAt" class="tg-hint font-medium leading-tight">
-      Получен {{ new Date(selectedTrophy.createdAt).toLocaleString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }) }}
+      {{ t('item.trophy.obtained') }} {{ new Date(selectedTrophy.createdAt).toLocaleString(locale, { day: 'numeric', month: 'long', year: 'numeric' }) }}
     </p>
 
     <p class="tg-hint text-sm leading-tight">
@@ -95,6 +95,9 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+
+const { t, locale } = useI18n()
 const { profile } = useTelegramProfile()
 const { leaderboard, refreshLeaderboard } = useLeaderboard()
 

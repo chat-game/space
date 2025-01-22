@@ -1,10 +1,10 @@
 <template>
   <Button v-if="character?.price" class="min-h-14">
     <div v-if="isClickedFirstTime" @click="unlockCharacter()">
-      <p>Нажми еще раз для подтверждения</p>
+      <p>{{ t('character.unlock.pressToConfirm') }}</p>
     </div>
-    <div v-else class="flex flex-row gap-2 items-center justify-center" @click="setWaitingApproval()">
-      <p>Разблокировать за</p>
+    <div v-else class="flex flex-row gap-1 items-center justify-center" @click="setWaitingApproval()">
+      <p>{{ t('character.unlock.for') }}</p>
       <div class="flex flex-row gap-1.5 items-center text-lg">
         <p>{{ character?.price }}</p>
         <Image src="coin-small.png" class="w-5 h-5" />
@@ -12,17 +12,19 @@
     </div>
   </Button>
   <div v-else class="px-8 tg-hint text-center font-medium leading-tight">
-    Персонажа нельзя разблокировать за Монеты
+    {{ t('character.unlock.notForCoins') }}
   </div>
 </template>
 
 <script setup lang="ts">
 import { hapticFeedback } from '@telegram-apps/sdk-vue'
+import { useI18n } from 'vue-i18n'
 
 const { characterId } = defineProps<{
   characterId: string
 }>()
 
+const { t } = useI18n()
 const { characters, refreshCharacters } = useCharacters()
 const { refreshProfile, useApiFetch } = useTelegramProfile()
 const { pop: popConfetti } = useConfetti()

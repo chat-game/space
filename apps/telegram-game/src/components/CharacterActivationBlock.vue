@@ -1,20 +1,22 @@
 <template>
   <div v-if="isActive" class="px-8 tg-accent-text text-center font-medium leading-tight">
-    Это твой активный персонаж
+    {{ t('character.activeLabel') }}
   </div>
   <Button v-else @click="activateCharacter()">
-    Активировать
+    {{ t('activate') }}
   </Button>
 </template>
 
 <script setup lang="ts">
 import { hapticFeedback } from '@telegram-apps/sdk-vue'
+import { useI18n } from 'vue-i18n'
 import { gameClient } from '../utils/gameClient'
 
 const { characterId } = defineProps<{
   characterId: string
 }>()
 
+const { t } = useI18n()
 const { refreshCharacter } = useCharacter()
 const { characters, refreshCharacters } = useCharacters()
 const { profile, refreshProfile, useApiFetch } = useTelegramProfile()

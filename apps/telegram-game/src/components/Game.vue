@@ -23,12 +23,12 @@
     <ConfettiBackground />
   </div>
 
-  <Modal title="Приветствуем в игре!" :is-opened="isHelpModalOpened" @close="isHelpModalOpened = false">
+  <Modal :title="t('welcome.title')" :is-opened="isHelpModalOpened" @close="isHelpModalOpened = false">
     <p class="leading-tight">
-      Тапай куда угодно, чтобы передвигаться. Тапай деревья, чтобы их срубить.
+      {{ t('welcome.description') }}
     </p>
     <p class="tg-hint leading-tight">
-      Что дальше: прокачивай персонажа, получай награды за уровни. Открывай новых персонажей.
+      {{ t('welcome.hint') }}
     </p>
   </Modal>
 
@@ -38,8 +38,10 @@
 <script setup lang="ts">
 import type { BaseGameAddon } from '@chat-game/game'
 import { hapticFeedback, initData } from '@telegram-apps/sdk-vue'
+import { useI18n } from 'vue-i18n'
 import { gameClient, isLoading, roomConnected, setAsLoaded } from '../utils/gameClient'
 
+const { t } = useI18n()
 const { refreshCharacter } = useCharacter()
 const { profile } = useTelegramProfile()
 
