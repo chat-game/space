@@ -24,6 +24,7 @@ declare module 'vue' {
     Image: typeof import('./src/components/Image.vue')['default']
     InventoryItemActivationBlock: typeof import('./src/components/InventoryItemActivationBlock.vue')['default']
     InventoryItemCard: typeof import('./src/components/InventoryItemCard.vue')['default']
+    ItemCard: typeof import('./src/components/ItemCard.vue')['default']
     Modal: typeof import('./src/components/Modal.vue')['default']
     Navigation: typeof import('./src/components/Navigation.vue')['default']
     PageContainer: typeof import('./src/components/PageContainer.vue')['default']

@@ -22,8 +22,23 @@
 
 <script setup lang="ts">
 const { character } = useCharacter()
+const { pop: popConfetti } = useConfetti()
 
 const progressWidth = computed(() => character.value?.xp && character.value.nextLevel && character.value.currentLevel ? ((character.value.xp - character.value.currentLevel.requiredXp) / (character.value.nextLevel.requiredXp - character.value.currentLevel.requiredXp)) * 100 : 100)
 
 const isCharacterProgressionOpened = ref(false)
+
+const currentLevel = ref<number>(character.value?.level ?? 0)
+
+watch(() => character.value?.level, () => {
+  if (!character.value?.level) {
+    return
+  }
+
+  if (currentLevel.value < character.value?.level) {
+    // Level up!
+    popConfetti()
+    currentLevel.value = character.value.level
+  }
+})
 </script>

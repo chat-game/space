@@ -19,6 +19,8 @@
         </div>
       </div>
     </div>
+
+    <ConfettiBackground />
   </div>
 
   <Modal title="Приветствуем в игре!" :is-opened="isHelpModalOpened" @close="isHelpModalOpened = false">
