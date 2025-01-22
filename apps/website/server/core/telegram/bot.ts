@@ -1,100 +1,18 @@
 import { Bot } from 'grammy'
 import { activateProduct } from '../product/activate'
+import { dictionary } from './locale'
+import { notifyAdmin } from './oldBot'
 
 const logger = useLogger('telegram')
-const { telegramBotToken, telegramGameBotToken, telegramAdminId } = useRuntimeConfig()
+const { telegramGameBotToken } = useRuntimeConfig()
 
 const startAppData = 'new'
 const gameUrl = `tg://resolve?domain=woodlandsgamebot&appname=game&startapp=${startAppData}`
 const gameChannelUrl = 'https://t.me/chatgamespace'
-
-const woodlandsBotUrl = 'https://t.me/WoodlandsGameBot'
-const twitchUrl = 'https://twitch.tv/hmbanan666'
 const chatgameUrl = 'https://chatgame.space'
 
-const ru: typeof en = {
-  chatgame: {
-    welcomeMessage: `Добро пожаловать в ChatGame! 🥳
-
-Выбери игру или действие 👇`,
-    playingOnTwitch: '👾 Играем на Twitch',
-  },
-  woodland: {
-    welcomeMessage: `Добро пожаловать в Woodlands! 🥳
-
-Одна из задач - сопровождать Машину из точки А в точку Б. По пути могут встречаться препятствия. Тапай их! 👆💪
-
-Участвуй в событиях, приглашай друзей, добывай Монеты и разблокируй вручную созданных персонажей. 🤴🎅🐶`,
-    title: '🌲 Woodlands: Онлайн-игра',
-    play: '🎮 Играть',
-    developingGameOnTwitch: '👾 Улучшаем игру на Twitch',
-    website: '👨‍💻 Веб-сайт проекта',
-  },
-  subscribeToChannel: '📢 Подпишись на канал',
-  defaultBotReply: 'Я пока не умею отвечать на сообщения. Свяжись с @hmbanan666, если есть вопросы.',
-}
-
-const en = {
-  chatgame: {
-    welcomeMessage: `Welcome to ChatGame! 🥳
-
-Choose the game or action 👇`,
-    playingOnTwitch: '👾 Playing on Twitch',
-  },
-  woodland: {
-    welcomeMessage: `Welcome to Woodlands! 🥳
-
-One of the tasks is to accompany the Machine from point A to point B. Along the way, obstacles may appear. Tap them! 👆💪
-
-Participate in events, invite friends, collect Coins and unlock manually created characters. 🤴🎅🐶`,
-    title: '🌲 Woodlands: Online Game',
-    play: '🎮 Play',
-    developingGameOnTwitch: '👾 Developing game on Twitch',
-    website: '👨‍💻 Project website',
-  },
-  subscribeToChannel: '📢 Subscribe to the channel',
-  defaultBotReply: 'I dont know how to reply to messages yet. Contact @hmbanan666 if you have any questions.',
-}
-
-function dictionary(locale: string | undefined = 'en') {
-  switch (locale) {
-    case 'ru':
-      return ru
-    default:
-      return en
-  }
-}
-
-const bot = new Bot(telegramBotToken)
 const gameBot = new Bot(telegramGameBotToken)
 
-// Old bot
-bot.on('message:text', async (ctx) => {
-  const locale = ctx.message.from.language_code
-
-  if (ctx.hasCommand('start')) {
-    // Welcome message with buttons
-    await ctx.reply(
-      dictionary(locale).chatgame.welcomeMessage,
-      {
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: dictionary(locale).woodland.title, url: woodlandsBotUrl }],
-            [{ text: dictionary(locale).subscribeToChannel, url: gameChannelUrl }],
-            [{ text: dictionary(locale).chatgame.playingOnTwitch, url: twitchUrl }],
-          ],
-        },
-      },
-    )
-
-    return
-  }
-
-  logger.log(ctx.message.from.id, ctx.message.text)
-  ctx.reply(dictionary(locale).defaultBotReply)
-})
-
-// Game bot
 gameBot.on('message:text', async (ctx) => {
   try {
     const locale = ctx.message.from.language_code
@@ -116,8 +34,6 @@ gameBot.on('message:text', async (ctx) => {
           },
         },
       )
-
-      // await notifyAdmin(`[Woodlands] Команда старт от пользователя ${ctx.message.from.id} ${ctx.message.from.first_name}, locale: ${ctx.message.from.language_code}`)
 
       return
     }
@@ -181,8 +97,4 @@ gameBot.on('message:successful_payment', async (ctx) => {
   }
 })
 
-async function notifyAdmin(message: string) {
-  return bot.api.sendMessage(telegramAdminId, message)
-}
-
-export { bot, gameBot, notifyAdmin }
+export { gameBot }

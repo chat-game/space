@@ -1,5 +1,6 @@
 import process from 'node:process'
-import { bot, gameBot } from '../core/telegram/bot'
+import { gameBot } from '../core/telegram/bot'
+import { bot } from '../core/telegram/oldBot'
 
 export default defineNitroPlugin(() => {
   if (process.env.NODE_ENV !== 'production') {
