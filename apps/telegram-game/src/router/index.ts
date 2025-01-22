@@ -17,7 +17,7 @@ export const routes = [
     component: GameView,
     icon: LucideGamepad2,
     meta: {
-      title: 'Игра',
+      title: 'route.title.game',
     },
   },
   {
@@ -26,7 +26,7 @@ export const routes = [
     component: InventoryView,
     icon: LucideArchiveRestore,
     meta: {
-      title: 'Инвентарь',
+      title: 'route.title.inventory',
     },
   },
   {
@@ -35,7 +35,7 @@ export const routes = [
     component: QuestView,
     icon: LucideBookCheck,
     meta: {
-      title: 'Задания',
+      title: 'route.title.quest',
     },
   },
   {
@@ -44,7 +44,7 @@ export const routes = [
     component: ShopView,
     icon: LucideShoppingBag,
     meta: {
-      title: 'Магазин',
+      title: 'route.title.shop',
     },
   },
   {
@@ -53,7 +53,7 @@ export const routes = [
     component: TopView,
     icon: LucideTrophy,
     meta: {
-      title: 'Топ',
+      title: 'route.title.top',
     },
   },
 ]
