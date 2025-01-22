@@ -1,14 +1,8 @@
 <template>
   <div v-if="checkIfItemIsConsumable(itemId)">
-    <div class="mb-2 px-8 text-center leading-tight">
-      <div class="flex flex-row items-center justify-center gap-1">
-        <div class="border tg-border tg-secondary-bg tg-text px-3 py-1 rounded-2xl">
-          +100 WP <Image src="woodland-small.png" class="inline-block w-5 h-5" />
-        </div>
-        <div class="border tg-border tg-secondary-bg tg-text px-3 py-1 rounded-2xl">
-          +1 Монета <Image src="coin.png" class="inline-block w-5 h-5" />
-        </div>
-      </div>
+    <div class="mb-2 grid grid-cols-4 gap-2">
+      <ItemCard :item="{ type: 'PATRON_POINT', amount: 100, entityId: null }" />
+      <ItemCard :item="{ type: 'COIN', amount: 1, entityId: null }" />
     </div>
 
     <Button class="flex flex-row gap-2 items-center justify-center" @click="activate()">
