@@ -9,11 +9,13 @@
 
 <script setup lang="ts">
 import type { ProductItem } from '@chat-game/types'
+import { useI18n } from 'vue-i18n'
 
 defineProps<{
   item: Pick<ProductItem, 'type' | 'amount' | 'entityId'>
 }>()
 
+const { t } = useI18n()
 const { characters } = useCharacters()
 
 function getItemIconByType(type: ProductItem['type'], entityId: string | null) {
@@ -41,11 +43,11 @@ function getItemIconByType(type: ProductItem['type'], entityId: string | null) {
 function getItemLabelByType(type: ProductItem['type']) {
   switch (type) {
     case 'CHARACTER':
-      return 'Персонаж'
+      return t('character.title')
     case 'COIN':
-      return 'Монета'
+      return t('item.coin.title')
     case 'TROPHY':
-      return 'Трофей'
+      return t('item.trophy.title')
     case 'PATRON_POINT':
       return 'Point'
     default:

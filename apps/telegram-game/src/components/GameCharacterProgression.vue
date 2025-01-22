@@ -11,7 +11,7 @@
           {{ character?.xp ?? 0 }} <span class="text-xs">XP</span>
         </p>
         <p v-else class="font-semibold text-lg text-white tracking-tight">
-          MAX
+          {{ t('character.maxLevel') }}
         </p>
       </div>
     </div>
@@ -21,6 +21,9 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 const { character } = useCharacter()
 const { pop: popConfetti } = useConfetti()
 

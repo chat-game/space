@@ -3,7 +3,7 @@ import { useFetch } from '@vueuse/core'
 
 const woodlandLeaderboardId = 'jfb1d82u6brqjttrc2v8bs15'
 
-const { data, execute: refreshLeaderboard } = useFetch(`https://chatgame.space/api/leaderboard/${woodlandLeaderboardId}/list?limit=15`, {
+const { data, execute: refreshLeaderboard } = useFetch(`https://chatgame.space/api/leaderboard/${woodlandLeaderboardId}/list?limit=30`, {
   async onFetchError(ctx) {
     return ctx
   },
