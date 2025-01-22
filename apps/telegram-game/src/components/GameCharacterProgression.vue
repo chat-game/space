@@ -28,6 +28,7 @@ const progressWidth = computed(() => character.value?.xp && character.value.next
 
 const isCharacterProgressionOpened = ref(false)
 
+const currentCharacterId = ref<string | null>(null)
 const currentLevel = ref<number>(character.value?.level ?? 0)
 
 watch(() => character.value?.level, () => {
@@ -35,7 +36,18 @@ watch(() => character.value?.level, () => {
     return
   }
 
-  if (currentLevel.value < character.value?.level) {
+  if (!currentCharacterId.value) {
+    currentCharacterId.value = character.value.id
+  }
+
+  // New or changed character
+  if (currentLevel.value === 0 || currentCharacterId.value !== character.value.id) {
+    currentCharacterId.value = character.value.id
+    currentLevel.value = character.value.level
+    return
+  }
+
+  if (currentLevel.value !== character.value?.level) {
     // Level up!
     popConfetti()
     currentLevel.value = character.value.level
