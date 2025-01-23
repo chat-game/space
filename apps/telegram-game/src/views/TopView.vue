@@ -8,7 +8,7 @@
           <Image src="woodland-small.png" class="w-12 h-12" />
           <div>
             <h3 class="text-xl font-medium">
-              {{ leaderboard?.title }}
+              {{ t(`leaderboards.${leaderboard.id}.title`) }}
             </h3>
             <div v-if="leaderboard?.finishedAt">
               {{ t('availableUntil') }} {{ new Date(leaderboard.finishedAt).toLocaleString(locale, { day: 'numeric', month: 'long', year: 'numeric' }) }}
@@ -17,10 +17,10 @@
         </div>
 
         <p class="mt-1 tg-hint text-sm leading-tight">
-          {{ leaderboard?.description }}
+          {{ t(`leaderboards.${leaderboard.id}.description`) }}
         </p>
 
-        <div v-if="profileInLeaderboard" class="z-30 fixed bottom-24 left-4 right-4 fixed-bg tg-section-bg px-3 pt-3 pb-4 rounded-t-2xl">
+        <div v-if="profileInLeaderboard" class="z-30 fixed bottom-24 left-4 right-4 border tg-border tg-section-bg px-3 pt-3 pb-4 rounded-t-2xl">
           <div class="flex flex-row gap-2 justify-between">
             <div class="flex flex-row gap-3 items-center">
               <p class="font-medium text-lg">
@@ -139,9 +139,3 @@ function getTrophyImage(data: { rarity: number, id?: string, hasImage?: boolean 
   return `trophies/${data.id}/128.png`
 }
 </script>
-
-<style scoped>
-.fixed-bg {
-  border: 1px solid var(--tg-theme-section-separator-color);
-}
-</style>
