@@ -94,7 +94,13 @@
         <h2 class="text-2xl md:text-2xl lg:text-3xl">
           {{ profile?.userName }}
         </h2>
-        <p>Игровой профиль <span class="text-orange-900/85">{{ profile?.level }} уровня</span></p>
+        <div class="flex flex-row gap-2 justify-center items-center">
+          Игровой профиль с
+          <div class="flex flex-row gap-1 items-center">
+            <span class="text-green-700 text-lg">{{ new Intl.NumberFormat().format(profile?.points ?? 0) }}</span>
+            <Image src="/woodland-small.png" class="h-6 w-6" />
+          </div>
+        </div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">

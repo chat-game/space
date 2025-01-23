@@ -4,6 +4,7 @@ import { items } from './items'
 import { leaderboards } from './leaderboards'
 import { products } from './products'
 import { rooms } from './rooms'
+import { trophies } from './trophies'
 
 export const ru: Dictionary = {
   route: {
@@ -104,4 +105,5 @@ export const ru: Dictionary = {
   rooms,
   products,
   items,
+  trophies,
 }

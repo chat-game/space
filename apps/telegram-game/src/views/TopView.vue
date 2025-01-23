@@ -71,7 +71,7 @@
         <ActiveCard v-for="edition in trophies" :key="edition.id" class="px-2 flex flex-col flex-wrap gap-2 items-center" @click="selectTrophy(edition.id)">
           <Image :src="getTrophyImage(edition.trophy)" class="w-full h-auto" />
           <p class="w-full text-center text-sm font-medium leading-4 line-clamp-2">
-            {{ edition.trophy.name }}
+            {{ t(`trophies.${edition.trophyId}.name`) }}
           </p>
         </ActiveCard>
       </div>
@@ -83,13 +83,13 @@
     </div>
   </PageContainer>
 
-  <Modal :title="selectedTrophy?.trophy.name ?? ''" :is-opened="isTrophyOpened" @close="isTrophyOpened = false">
+  <Modal :title="selectedTrophy?.trophy.name ? t(`trophies.${selectedTrophy.trophyId}.name`) : ''" :is-opened="isTrophyOpened" @close="isTrophyOpened = false">
     <p v-if="selectedTrophy?.createdAt" class="tg-hint font-medium leading-tight">
       {{ t('item.trophy.obtained') }} {{ new Date(selectedTrophy.createdAt).toLocaleString(locale, { day: 'numeric', month: 'long', year: 'numeric' }) }}
     </p>
 
-    <p class="tg-hint text-sm leading-tight">
-      {{ selectedTrophy?.trophy.description ?? '' }}
+    <p v-if="selectedTrophy?.trophyId" class="tg-hint text-sm leading-tight">
+      {{ t(`trophies.${selectedTrophy.trophyId}.description`) }}
     </p>
   </Modal>
 </template>
