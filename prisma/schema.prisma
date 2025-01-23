@@ -30,7 +30,6 @@ model Profile {
   quests             Quest[]
   questEditions      QuestEdition[]
   twitchTokens       TwitchToken[]
-  characters         Character[]
   characterEditions  CharacterEdition[]
   transactions       Transaction[]
   trophyEditions     TrophyEdition[]
@@ -211,7 +210,7 @@ model Character {
   id              String             @id
   createdAt       DateTime           @default(now()) @map("created_at")
   updatedAt       DateTime           @default(now()) @map("updated_at")
-  codename        String?
+  codename        String
   nickname        String
   name            String
   description     String
@@ -219,12 +218,6 @@ model Character {
   unlockedBy      String             @default("COINS") @map("unlocked_by")
   coefficient     Int                @default(1)
   price           Int                @default(0)
-  animationIdle   String?            @map("animation_idle")
-  animationMoving String?            @map("animation_moving")
-  profileId       String             @map("profile_id")
-  profile         Profile            @relation(fields: [profileId], references: [id])
-  gameId          String             @map("game_id")
-  game            Game               @relation(fields: [gameId], references: [id])
   editions        CharacterEdition[]
   levels          CharacterLevel[]
 
@@ -366,19 +359,6 @@ model QuestReward {
   quest     Quest    @relation(fields: [questId], references: [id])
 
   @@map("quest_reward")
-}
-
-model Game {
-  id              String      @id
-  createdAt       DateTime    @default(now()) @map("created_at")
-  updatedAt       DateTime    @default(now()) @map("updated_at")
-  slug            String      @unique
-  title           String
-  imageId         String      @map("image_id")
-  charactersCount Int         @default(0) @map("characters_count")
-  characters      Character[]
-
-  @@map("game")
 }
 
 model Transaction {
