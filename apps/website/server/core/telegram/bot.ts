@@ -1,6 +1,6 @@
 import { Bot } from 'grammy'
+import { dictionary } from '../locale'
 import { activateProduct } from '../product/activate'
-import { dictionary } from './locale'
 import { notifyAdmin } from './oldBot'
 
 const logger = useLogger('telegram')

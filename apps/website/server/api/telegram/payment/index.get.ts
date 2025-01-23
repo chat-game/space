@@ -1,4 +1,6 @@
+import type { Dictionary } from '~~/server/core/locale'
 import { createId } from '@paralleldrive/cuid2'
+import { dictionary } from '~~/server/core/locale'
 import { gameBot } from '~~/server/core/telegram/bot'
 import { validateTelegramData } from '~~/server/core/telegram/validate'
 
@@ -44,16 +46,28 @@ export default defineEventHandler(async (event) => {
       })
     }
 
+    let title = product.title
+    let description = product.description
+
+    const languageCode = telegramProfile.languageCode ?? 'en'
+    const locale = dictionary(languageCode)
+
+    if (locale.products[product.id as keyof Dictionary['products']]) {
+      const productLocale = locale.products[product.id as keyof Dictionary['products']]
+      title = productLocale.title
+      description = productLocale.description
+    }
+
     // Create invoice via bot
     const paymentId = createId()
     const link = await gameBot.api.createInvoiceLink(
-      product.title,
-      product.description,
+      title,
+      description,
       `{"payment_id":"${paymentId}"}`,
       '',
       'XTR',
       [
-        { label: product.title, amount: product.starsPrice },
+        { label: title, amount: product.starsPrice },
       ],
     )
 
