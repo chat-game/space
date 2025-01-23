@@ -14,6 +14,7 @@ export const ru: Dictionary = {
       quest: 'Задания',
       shop: 'Магазин',
       top: 'Топ',
+      character: 'Персонаж',
     },
   },
   inventory: {

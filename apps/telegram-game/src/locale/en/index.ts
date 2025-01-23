@@ -13,6 +13,7 @@ export const en = {
       quest: 'Quests',
       shop: 'Shop',
       top: 'Top',
+      character: 'Character',
     },
   },
   inventory: {

@@ -9,6 +9,9 @@ export default defineEventHandler(async () => {
         orderBy: {
           level: 'asc',
         },
+        include: {
+          inventoryItem: true,
+        },
       },
     },
   })
