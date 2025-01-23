@@ -17,12 +17,11 @@ const { characterId } = defineProps<{
 }>()
 
 const { t } = useI18n()
-const { refreshCharacter } = useCharacter()
-const { characters, refreshCharacters } = useCharacters()
-const { profile, refreshProfile, useApiFetch } = useTelegramProfile()
+const { character, refreshCharacter } = useCharacter()
+const { refreshCharacters } = useCharacters()
+const { refreshProfile, useApiFetch } = useTelegramProfile()
 
-const character = computed(() => characters.value?.find(({ id }) => id === characterId))
-const isActive = computed(() => profile.value?.profile?.activeEditionId === character.value?.editions?.find(({ profileId }) => profileId === profile.value?.profile.id)?.id)
+const isActive = computed(() => character.value?.characterId === characterId)
 
 async function activateCharacter() {
   const { data } = await useApiFetch(`/character/${characterId}/activate`).get().json<{ ok: true }>()

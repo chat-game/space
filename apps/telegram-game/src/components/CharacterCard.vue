@@ -2,7 +2,7 @@
   <ActiveCard class="aspect-square">
     <div v-if="!edition" class="z-10 absolute top-0 left-0 right-0 bottom-0 tg-secondary-bg opacity-40" />
 
-    <div v-if="activeEditionId === edition?.id" class="tg-accent-text text-base font-medium leading-tight">
+    <div v-if="character?.id === edition?.id" class="tg-accent-text text-base font-medium leading-tight">
       {{ t('character.active') }}
     </div>
     <p class="font-medium text-lg leading-tight">
@@ -22,12 +22,14 @@
 </template>
 
 <script setup lang="ts">
-import type { Character, CharacterEdition } from '@chat-game/types'
+import type { Character } from '@chat-game/types'
 import { useI18n } from 'vue-i18n'
 
-const { char, profileId } = defineProps<{ char: Character & { editions: CharacterEdition[] }, profileId: string, activeEditionId: string }>()
+const { char } = defineProps<{ char: Character }>()
 
 const { t } = useI18n()
+const { profileCharacters } = useCharacters()
+const { character } = useCharacter()
 
-const edition = computed(() => char.editions?.find(({ profileId: id }) => id === profileId))
+const edition = computed(() => profileCharacters.value?.find(({ characterId }) => characterId === char.id))
 </script>

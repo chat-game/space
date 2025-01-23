@@ -160,6 +160,14 @@ export type CharacterEditionData = CharacterEdition & {
   xpToNextLevel: number | null
 }
 
+type CharacterWithLevels = Character & {
+  levels: CharacterLevelWithItem[]
+}
+
+export type CharacterEditionsOnProfileData = (CharacterEdition & {
+  character: CharacterWithLevels
+})[]
+
 export interface ActiveCharacter extends CharacterEditionWithCharacter {
   lastActionAt: Date
   token: string

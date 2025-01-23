@@ -4,10 +4,6 @@ export default defineEventHandler(
 
     const character = await prisma.character.findFirst({
       where: { id },
-      include: {
-        profile: true,
-        editions: true,
-      },
     })
     if (!character) {
       throw createError({
