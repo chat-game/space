@@ -18,7 +18,6 @@ const { characterId } = defineProps<{
 
 const { t } = useI18n()
 const { character, refreshCharacter } = useCharacter()
-const { refreshCharacters } = useCharacters()
 const { refreshProfile, useApiFetch } = useTelegramProfile()
 
 const isActive = computed(() => character.value?.characterId === characterId)
@@ -28,7 +27,6 @@ async function activateCharacter() {
 
   if (data.value?.ok) {
     await refreshProfile()
-    await refreshCharacters()
     await refreshCharacter()
 
     gameClient.websocketService.connect('12345')

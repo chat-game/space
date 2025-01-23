@@ -25,7 +25,7 @@ const { characterId } = defineProps<{
 }>()
 
 const { t } = useI18n()
-const { characters, refreshCharacters } = useCharacters()
+const { characters, refreshProfileCharacters } = useCharacters()
 const { refreshProfile, useApiFetch } = useTelegramProfile()
 const { pop: popConfetti } = useConfetti()
 
@@ -34,7 +34,7 @@ const character = computed(() => characters.value?.find(({ id }) => id === chara
 async function unlockCharacter() {
   const { data } = await useApiFetch(`/character/${characterId}/unlock`).get().json<{ ok: boolean }>()
   await refreshProfile()
-  await refreshCharacters()
+  await refreshProfileCharacters()
 
   if (data.value?.ok) {
     popConfetti()

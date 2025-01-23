@@ -1,23 +1,23 @@
 <template>
   <PageContainer>
-    <div>
+    <div v-if="character?.id">
       <SectionHeader :text="t('character.titleActive')" />
 
-      <div v-if="character?.nextLevel" class="grid grid-cols-4 gap-2">
+      <div v-if="character.nextLevel" class="grid grid-cols-4 gap-2">
         <ActiveCard class="col-span-3 tg-section-bg mb-4 !p-3 flex flex-col gap-2 items-center rounded-2xl" @click="isCharacterProgressionOpened = true">
           <div class="flex flex-row flex-wrap gap-2">
-            <CharacterAvatar :codename="character?.character.codename" />
+            <CharacterAvatar :codename="character.character.codename" />
 
             <i18n-t keypath="character.xpLeft" tag="p" class="leading-tight">
               <template #xp>
-                <span class="font-semibold tg-accent-text">{{ character?.xpToNextLevel }} XP</span>
+                <span class="font-semibold tg-accent-text">{{ character.xpToNextLevel }} XP</span>
               </template>
             </i18n-t>
           </div>
         </ActiveCard>
 
         <div>
-          <InventoryItemCard v-if="character?.nextLevel && character.nextLevel?.inventoryItemId" :item-id="character.nextLevel.inventoryItemId" :amount="character.nextLevel.awardAmount" @click="isRewardOpened = true" />
+          <InventoryItemCard v-if="character.nextLevel && character.nextLevel.inventoryItemId" :item-id="character.nextLevel.inventoryItemId" :amount="character.nextLevel.awardAmount" @click="isRewardOpened = true" />
           <p class="mt-0.5 tg-hint text-center font-semibold">
             {{ t('reward') }}
           </p>
@@ -25,9 +25,9 @@
       </div>
       <div v-else>
         <div class="tg-section-bg mb-4 p-3 flex flex-col gap-2 items-center rounded-2xl">
-          <CharacterAvatar :codename="character?.character.codename" />
+          <CharacterAvatar :codename="character.character.codename" />
           <p class="max-w-48 text-center leading-tight">
-            {{ character?.character.nickname }} {{ t('character.maxLevelLabel') }}
+            {{ t(`characters.${character.characterId}.nickname`) }} {{ t('character.maxLevelLabel') }}
           </p>
         </div>
       </div>
