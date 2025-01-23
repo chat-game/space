@@ -133,7 +133,7 @@ export class DBRepository {
     })
   }
 
-  async findOrCreateTelegramProfile({ telegramId, username, firstName, lastName }: { telegramId: string, username?: string, firstName?: string, lastName?: string }) {
+  async findOrCreateTelegramProfile({ telegramId, username, firstName, lastName, languageCode }: { telegramId: string, username?: string, firstName?: string, lastName?: string, languageCode?: string }) {
     const profile = await this.getTelegramProfile(telegramId)
     if (!profile) {
       const telegramProfileId = createId()
@@ -150,6 +150,7 @@ export class DBRepository {
           energy: 10,
           firstName: finalFirstName,
           lastName,
+          languageCode,
         },
       })
 
@@ -180,7 +181,7 @@ export class DBRepository {
       return this.getTelegramProfile(createdProfile.telegramId)
     }
 
-    // If firstName or lastName changed
+    // If some profile data changed
     if (profile.firstName !== firstName || profile.lastName !== lastName) {
       await prisma.telegramProfile.update({
         where: { id: profile.id },
@@ -188,6 +189,13 @@ export class DBRepository {
           firstName,
           lastName,
         },
+      })
+    }
+
+    if (languageCode && profile.languageCode !== languageCode) {
+      await prisma.telegramProfile.update({
+        where: { id: profile.id },
+        data: { languageCode },
       })
     }
 

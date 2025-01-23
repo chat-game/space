@@ -41,17 +41,18 @@ model Profile {
 }
 
 model TelegramProfile {
-  id         String   @id
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @default(now()) @map("updated_at")
-  telegramId String   @map("telegram_id")
-  level      Int      @default(1)
-  coins      Int      @default(0)
-  energy     Int      @default(0)
-  username   String?
-  firstName  String   @map("first_name")
-  lastName   String?  @map("last_name")
-  profile    Profile?
+  id           String   @id
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @map("updated_at")
+  telegramId   String   @map("telegram_id")
+  level        Int      @default(1)
+  coins        Int      @default(0)
+  energy       Int      @default(0)
+  username     String?
+  firstName    String   @map("first_name")
+  lastName     String?  @map("last_name")
+  languageCode String?  @map("language_code")
+  profile      Profile?
 
   @@map("telegram_profile")
 }
@@ -207,19 +208,19 @@ model InventoryItemEdition {
 }
 
 model Character {
-  id              String             @id
-  createdAt       DateTime           @default(now()) @map("created_at")
-  updatedAt       DateTime           @default(now()) @map("updated_at")
-  codename        String
-  nickname        String
-  name            String
-  description     String
-  isReady         Boolean            @default(false) @map("is_ready")
-  unlockedBy      String             @default("COINS") @map("unlocked_by")
-  coefficient     Int                @default(1)
-  price           Int                @default(0)
-  editions        CharacterEdition[]
-  levels          CharacterLevel[]
+  id          String             @id
+  createdAt   DateTime           @default(now()) @map("created_at")
+  updatedAt   DateTime           @default(now()) @map("updated_at")
+  codename    String
+  nickname    String
+  name        String
+  description String
+  isReady     Boolean            @default(false) @map("is_ready")
+  unlockedBy  String             @default("COINS") @map("unlocked_by")
+  coefficient Int                @default(1)
+  price       Int                @default(0)
+  editions    CharacterEdition[]
+  levels      CharacterLevel[]
 
   @@map("character")
 }

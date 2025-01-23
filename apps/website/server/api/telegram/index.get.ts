@@ -18,6 +18,7 @@ export default defineEventHandler(async (event) => {
       username: telegram.user?.username,
       firstName: telegram.user?.firstName,
       lastName: telegram.user?.lastName,
+      languageCode: telegram.user?.languageCode,
     })
 
     return profile

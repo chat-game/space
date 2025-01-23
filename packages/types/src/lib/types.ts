@@ -51,6 +51,7 @@ export interface TelegramProfile {
   username: string | null
   firstName: string
   lastName: string | null
+  languageCode: string | null
   level: number
   coins: number
   energy: number

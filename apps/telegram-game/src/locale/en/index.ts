@@ -3,6 +3,7 @@ import { items } from './items'
 import { leaderboards } from './leaderboards'
 import { products } from './products'
 import { rooms } from './rooms'
+import { trophies } from './trophies'
 
 export const en = {
   route: {
@@ -103,4 +104,5 @@ export const en = {
   rooms,
   products,
   items,
+  trophies,
 }
