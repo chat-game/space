@@ -5,7 +5,6 @@ export default defineEventHandler(async () => {
       { price: 'asc' },
     ],
     include: {
-      editions: true,
       levels: {
         orderBy: {
           level: 'asc',

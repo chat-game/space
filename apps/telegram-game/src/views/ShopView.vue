@@ -50,7 +50,7 @@
       <SectionHeader :text="t('character.collection.coins')" />
 
       <div class="grid grid-cols-2 gap-2">
-        <CharacterCard v-for="char in coinsCharacters" :key="char.id" :char="char" :profile-id="profile?.profile.id ?? ''" :active-edition-id="profile?.profile?.activeEditionId ?? ''" @click="selectCharacter(char.id)" />
+        <CharacterCard v-for="char in coinsCharacters" :key="char.id" :char="char" @click="selectCharacter(char.id)" />
       </div>
     </div>
 
@@ -58,7 +58,7 @@
       <SectionHeader :text="t('character.collection.rare')" />
 
       <div class="grid grid-cols-2 gap-2">
-        <CharacterCard v-for="char in rareCharacters" :key="char.id" :char="char" :profile-id="profile?.profile.id ?? ''" :active-edition-id="profile?.profile?.activeEditionId ?? ''" @click="selectCharacter(char.id)" />
+        <CharacterCard v-for="char in rareCharacters" :key="char.id" :char="char" @click="selectCharacter(char.id)" />
       </div>
     </div>
   </PageContainer>
@@ -74,7 +74,7 @@
       {{ t(`characters.${selectedCharacter?.id}.description`) }}
     </p>
 
-    <CharacterActivationBlock v-if="selectedCharacter?.editions?.find(({ profileId }) => profileId === profile?.profile.id)" :character-id="selectedCharacterId ?? ''" />
+    <CharacterActivationBlock v-if="isSelectedCharacterUnlocked" :character-id="selectedCharacterId ?? ''" />
     <CharacterUnlockBlock v-else :character-id="selectedCharacterId ?? ''" />
   </Modal>
 
@@ -126,7 +126,7 @@ import { useI18n } from 'vue-i18n'
 
 const { t, locale } = useI18n()
 const { profile } = useTelegramProfile()
-const { characters } = useCharacters()
+const { characters, profileCharacters } = useCharacters()
 const { products } = useShop()
 
 const coinsCharacters = computed(() => characters.value?.filter((char) => char.price > 0 || char.id === 'staoqh419yy3k22cbtm9wquc' || char.id === 'c3hrpu39wodc2nlv6pmgmm2k'))
@@ -135,6 +135,7 @@ const rareCharacters = computed(() => characters.value?.filter((char) => char.pr
 const isCharacterOpened = ref(false)
 const selectedCharacterId = ref<string>()
 const selectedCharacter = computed(() => characters.value?.find(({ id }) => id === selectedCharacterId.value))
+const isSelectedCharacterUnlocked = computed(() => profileCharacters.value?.some((c) => c.characterId === selectedCharacter.value?.id))
 
 function selectCharacter(id: string) {
   isCharacterOpened.value = true
