@@ -161,7 +161,7 @@ export type CharacterEditionData = CharacterEdition & {
   xpToNextLevel: number | null
 }
 
-type CharacterWithLevels = Character & {
+export type CharacterWithLevels = Character & {
   levels: CharacterLevelWithItem[]
 }
 

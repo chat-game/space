@@ -1,3 +1,4 @@
+import CharacterView from '@/views/CharacterView.vue'
 import GameView from '@/views/GameView.vue'
 import InventoryView from '@/views/InventoryView.vue'
 import QuestView from '@/views/QuestView.vue'
@@ -18,6 +19,7 @@ export const routes = [
     icon: LucideGamepad2,
     meta: {
       title: 'route.title.game',
+      type: 'MAIN_NAVIGATION',
     },
   },
   {
@@ -27,6 +29,7 @@ export const routes = [
     icon: LucideArchiveRestore,
     meta: {
       title: 'route.title.inventory',
+      type: 'MAIN_NAVIGATION',
     },
   },
   {
@@ -36,6 +39,7 @@ export const routes = [
     icon: LucideBookCheck,
     meta: {
       title: 'route.title.quest',
+      type: 'MAIN_NAVIGATION',
     },
   },
   {
@@ -45,6 +49,7 @@ export const routes = [
     icon: LucideShoppingBag,
     meta: {
       title: 'route.title.shop',
+      type: 'MAIN_NAVIGATION',
     },
   },
   {
@@ -54,6 +59,17 @@ export const routes = [
     icon: LucideTrophy,
     meta: {
       title: 'route.title.top',
+      type: 'MAIN_NAVIGATION',
+    },
+  },
+  {
+    path: '/character',
+    name: 'character',
+    component: CharacterView,
+    icon: undefined,
+    meta: {
+      title: 'route.title.character',
+      type: 'INNER_PAGE',
     },
   },
 ]

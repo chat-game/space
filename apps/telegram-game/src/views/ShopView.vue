@@ -124,6 +124,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 
+const router = useRouter()
 const { t, locale } = useI18n()
 const { profile } = useTelegramProfile()
 const { characters, profileCharacters } = useCharacters()
@@ -138,8 +139,14 @@ const selectedCharacter = computed(() => characters.value?.find(({ id }) => id =
 const isSelectedCharacterUnlocked = computed(() => profileCharacters.value?.some((c) => c.characterId === selectedCharacter.value?.id))
 
 function selectCharacter(id: string) {
-  isCharacterOpened.value = true
   selectedCharacterId.value = id
+
+  // If character is unlocked, then open modal
+  if (isSelectedCharacterUnlocked.value) {
+    isCharacterOpened.value = true
+  } else {
+    router.push(`/character?id=${id}`)
+  }
 }
 
 const isProductOpened = ref(false)
