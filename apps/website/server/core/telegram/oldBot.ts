@@ -1,5 +1,5 @@
 import { Bot } from 'grammy'
-import { dictionary } from './locale'
+import { dictionary } from '../locale'
 
 const logger = useLogger('telegram')
 const { telegramBotToken, telegramAdminId } = useRuntimeConfig()

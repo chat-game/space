@@ -1,4 +1,5 @@
-import type { Dictionary } from '.'
+import type { Dictionary } from '..'
+import { products } from './products'
 
 export const ru: Dictionary = {
   chatgame: {
@@ -20,4 +21,5 @@ export const ru: Dictionary = {
   },
   subscribeToChannel: '📢 Подпишись на канал',
   defaultBotReply: 'Я пока не умею отвечать на сообщения. Свяжись с @hmbanan666, если есть вопросы.',
+  products,
 }
