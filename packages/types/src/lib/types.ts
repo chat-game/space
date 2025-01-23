@@ -101,14 +101,12 @@ export interface Character {
   updatedAt: Date
   name: string
   description: string
+  codename: string
   nickname: string
-  profileId: string
-  gameId: string
   isReady: boolean
   unlockedBy: 'COINS' | 'SHOP' | 'TROPHY'
   price: number
   coefficient: number
-  codename: string | null
 }
 
 export interface CharacterWithProfile extends Character {
@@ -179,20 +177,6 @@ export interface CharacterPostCreateRequest {
     profileId: string
     text: string
   }
-}
-
-export interface Game {
-  id: string
-  createdAt: Date
-  updatedAt: Date
-  slug: string
-  title: string
-  imageId: string
-  charactersCount: number
-}
-
-export interface GameWithCharacters extends Game {
-  characters: Character[]
 }
 
 export interface Trophy {
