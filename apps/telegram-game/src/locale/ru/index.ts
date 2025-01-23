@@ -1,4 +1,9 @@
-import type { Dictionary } from '.'
+import type { Dictionary } from '..'
+import { characters } from './characters'
+import { items } from './items'
+import { leaderboards } from './leaderboards'
+import { products } from './products'
+import { rooms } from './rooms'
 
 export const ru: Dictionary = {
   route: {
@@ -94,4 +99,9 @@ export const ru: Dictionary = {
   connect: 'Подключиться',
   activate: 'Активировать',
   reward: 'Награда',
+  leaderboards,
+  characters,
+  rooms,
+  products,
+  items,
 }

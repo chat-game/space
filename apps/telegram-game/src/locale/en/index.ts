@@ -1,3 +1,9 @@
+import { characters } from './characters'
+import { items } from './items'
+import { leaderboards } from './leaderboards'
+import { products } from './products'
+import { rooms } from './rooms'
+
 export const en = {
   route: {
     title: {
@@ -92,4 +98,9 @@ export const en = {
   connect: 'Connect',
   activate: 'Activate',
   reward: 'Reward',
+  leaderboards,
+  characters,
+  rooms,
+  products,
+  items,
 }

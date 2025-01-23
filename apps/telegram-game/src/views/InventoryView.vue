@@ -51,7 +51,7 @@
     </p>
   </Modal>
 
-  <Modal :title="selectedItem?.item.name ?? ''" :is-opened="isItemOpened" @close="isItemOpened = false">
+  <Modal :title="selectedItem?.item.name ? t(`items.${selectedItem.itemId}.name`) : ''" :is-opened="isItemOpened" @close="isItemOpened = false">
     <template #bg>
       <ConfettiBackground />
     </template>
@@ -60,8 +60,8 @@
       {{ t('inventory.currentAmount', { n: selectedItem?.amount ?? 0 }) }}
     </p>
 
-    <p class="tg-hint text-sm leading-tight">
-      {{ selectedItem?.item.description ?? '' }}
+    <p v-if="selectedItem?.item.description" class="tg-hint text-sm leading-tight">
+      {{ t(`items.${selectedItem.item.id}.description`) }}
     </p>
 
     <InventoryItemActivationBlock v-if="selectedItem && selectedItem.amount > 0" :id="selectedItem.id" :item-id="selectedItem.item.id" />

@@ -32,7 +32,7 @@
       <div class="grid grid-cols-2 gap-2">
         <ActiveCard v-for="product in products" :key="product.id" class="aspect-square" @click="selectProduct(product.id)">
           <p class="font-medium text-lg leading-tight">
-            {{ product.title }}
+            {{ t(`products.${product.id}.title`) }}
           </p>
           <p v-if="product.bonusCoins" class="hidden text-sm tg-hint">
             +++
@@ -50,26 +50,7 @@
       <SectionHeader :text="t('character.collection.coins')" />
 
       <div class="grid grid-cols-2 gap-2">
-        <ActiveCard v-for="char in coinsCharacters" :key="char.id" class="aspect-square" @click="selectCharacter(char.id)">
-          <div v-if="!char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)" class="z-10 absolute top-0 left-0 right-0 bottom-0 tg-secondary-bg opacity-40" />
-
-          <div v-if="profile?.profile?.activeEditionId && profile?.profile?.activeEditionId === char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)?.id" class="tg-accent-text text-base font-medium leading-tight">
-            {{ t('character.active') }}
-          </div>
-          <p class="font-medium text-lg leading-tight">
-            {{ char?.nickname }}
-          </p>
-          <p v-if="char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)" class="text-sm tg-hint">
-            {{ char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)?.level }} {{ t('character.level') }}
-          </p>
-
-          <div v-if="char?.price && !char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)" class="flex flex-row gap-1 items-center">
-            <Image src="coin-small.png" class="w-5 h-5 grayscale-100" />
-            <p>{{ char?.price }}</p>
-          </div>
-
-          <Image :src="`units/${char?.codename}/128.png`" class="absolute bottom-0 right-0 w-32 h-auto" :class="{ 'grayscale-100 opacity-70': !char?.editions?.find(({ profileId }) => profileId === profile?.profile.id) }" />
-        </ActiveCard>
+        <CharacterCard v-for="char in coinsCharacters" :key="char.id" :char="char" :profile-id="profile?.profile.id ?? ''" :active-edition-id="profile?.profile?.activeEditionId ?? ''" @click="selectCharacter(char.id)" />
       </div>
     </div>
 
@@ -77,46 +58,27 @@
       <SectionHeader :text="t('character.collection.rare')" />
 
       <div class="grid grid-cols-2 gap-2">
-        <ActiveCard v-for="char in rareCharacters" :key="char.id" class="aspect-square" @click="selectCharacter(char.id)">
-          <div v-if="!char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)" class="z-10 absolute top-0 left-0 right-0 bottom-0 tg-secondary-bg opacity-40" />
-
-          <div v-if="profile?.profile?.activeEditionId && profile?.profile?.activeEditionId === char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)?.id" class="tg-accent-text text-base font-medium leading-tight">
-            {{ t('character.active') }}
-          </div>
-          <p class="font-medium text-lg leading-tight">
-            {{ char?.nickname }}
-          </p>
-          <p v-if="char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)" class="text-sm tg-hint">
-            {{ char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)?.level }} {{ t('character.level') }}
-          </p>
-
-          <div v-if="char?.price && !char?.editions?.find(({ profileId }) => profileId === profile?.profile.id)" class="flex flex-row gap-1 items-center">
-            <Image src="coin-small.png" class="w-5 h-5 grayscale-100" />
-            <p>{{ char?.price }}</p>
-          </div>
-
-          <Image :src="`units/${char?.codename}/128.png`" class="absolute bottom-0 right-0 w-32 h-auto" :class="{ 'grayscale-100 opacity-70': !char?.editions?.find(({ profileId }) => profileId === profile?.profile.id) }" />
-        </ActiveCard>
+        <CharacterCard v-for="char in rareCharacters" :key="char.id" :char="char" :profile-id="profile?.profile.id ?? ''" :active-edition-id="profile?.profile?.activeEditionId ?? ''" @click="selectCharacter(char.id)" />
       </div>
     </div>
   </PageContainer>
 
-  <Modal :title="`&laquo;${selectedCharacter?.nickname}&raquo; ${selectedCharacter?.name}`" :is-opened="isCharacterOpened" @close="isCharacterOpened = false">
+  <Modal :title="selectedCharacter?.id ? `&laquo;${t(`characters.${selectedCharacter?.id}.nickname`)}&raquo; ${t(`characters.${selectedCharacter?.id}.name`)}` : ''" :is-opened="isCharacterOpened" @close="isCharacterOpened = false">
     <template #bg>
       <ConfettiBackground />
     </template>
 
     <Image :src="`units/${selectedCharacter?.codename}/idle.gif`" class="absolute -top-30 left-0 w-34 h-34" />
 
-    <p class="text-sm tg-hint leading-tight">
-      {{ selectedCharacter?.description }}
+    <p v-if="selectedCharacter?.id" class="text-sm tg-hint leading-tight">
+      {{ t(`characters.${selectedCharacter?.id}.description`) }}
     </p>
 
     <CharacterActivationBlock v-if="selectedCharacter?.editions?.find(({ profileId }) => profileId === profile?.profile.id)" :character-id="selectedCharacterId ?? ''" />
     <CharacterUnlockBlock v-else :character-id="selectedCharacterId ?? ''" />
   </Modal>
 
-  <Modal :title="selectedProduct?.title ?? ''" :is-opened="isProductOpened" @close="isProductOpened = false">
+  <Modal :title="selectedProduct?.id ? t(`products.${selectedProduct.id}.title`) : ''" :is-opened="isProductOpened" @close="isProductOpened = false">
     <template #bg>
       <CoinBackground :coins-amount="selectedProduct?.coins" />
       <ChristmasBackground v-if="selectedProduct?.finishAt" />
@@ -126,8 +88,8 @@
     <p v-if="selectedProduct?.finishAt">
       {{ t('availableUntil') }} {{ new Date(selectedProduct.finishAt).toLocaleString(locale, { day: 'numeric', month: 'long', year: 'numeric' }) }}
     </p>
-    <p class="text-sm tg-hint leading-tight">
-      {{ selectedProduct?.description }}
+    <p v-if="selectedProduct?.id" class="text-sm tg-hint leading-tight">
+      {{ t(`products.${selectedProduct.id}.description`) }}
     </p>
 
     <ProductActivationBlock :product-id="selectedProductId ?? ''" />
