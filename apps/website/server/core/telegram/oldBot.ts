@@ -16,13 +16,13 @@ bot.on('message:text', async (ctx) => {
   if (ctx.hasCommand('start')) {
     // Welcome message with buttons
     await ctx.reply(
-      dictionary(locale).chatgame.welcomeMessage,
+      dictionary(locale).bots.chatgame.welcomeMessage,
       {
         reply_markup: {
           inline_keyboard: [
-            [{ text: dictionary(locale).woodland.title, url: woodlandsBotUrl }],
-            [{ text: dictionary(locale).subscribeToChannel, url: gameChannelUrl }],
-            [{ text: dictionary(locale).chatgame.playingOnTwitch, url: twitchUrl }],
+            [{ text: dictionary(locale).bots.woodland.title, url: woodlandsBotUrl }],
+            [{ text: dictionary(locale).bots.subscribeToChannel, url: gameChannelUrl }],
+            [{ text: dictionary(locale).bots.chatgame.playingOnTwitch, url: twitchUrl }],
           ],
         },
       },
@@ -32,7 +32,7 @@ bot.on('message:text', async (ctx) => {
   }
 
   logger.log(ctx.message.from.id, ctx.message.text)
-  ctx.reply(dictionary(locale).defaultBotReply)
+  ctx.reply(dictionary(locale).bots.defaultBotReply)
 })
 
 async function notifyAdmin(message: string) {

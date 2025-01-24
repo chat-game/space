@@ -1,4 +1,4 @@
-import type { Dictionary } from '~~/server/core/locale'
+import type { Dictionary } from '@chat-game/locale'
 import { createId } from '@paralleldrive/cuid2'
 import { dictionary } from '~~/server/core/locale'
 import { gameBot } from '~~/server/core/telegram/bot'

@@ -56,6 +56,9 @@ importers:
       '@chat-game/game':
         specifier: workspace:*
         version: link:../../packages/game
+      '@chat-game/locale':
+        specifier: workspace:*
+        version: link:../../packages/locale
       '@chat-game/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -150,6 +153,9 @@ importers:
       '@chat-game/game':
         specifier: workspace:*
         version: link:../../packages/game
+      '@chat-game/locale':
+        specifier: workspace:*
+        version: link:../../packages/locale
       '@chat-game/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -293,6 +299,12 @@ importers:
       pixi.js:
         specifier: ^8.6.6
         version: 8.6.6
+    devDependencies:
+      '@chat-game/eslint':
+        specifier: workspace:*
+        version: link:../eslint
+
+  packages/locale:
     devDependencies:
       '@chat-game/eslint':
         specifier: workspace:*
