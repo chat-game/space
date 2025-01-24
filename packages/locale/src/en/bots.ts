@@ -1,6 +1,4 @@
-import { products } from './products'
-
-export const en = {
+export const bots = {
   chatgame: {
     welcomeMessage: `Welcome to ChatGame! 🥳
 
@@ -20,5 +18,4 @@ Participate in events, invite friends, collect Coins and unlock manually created
   },
   subscribeToChannel: '📢 Subscribe to the channel',
   defaultBotReply: 'I dont know how to reply to messages yet. Contact @hmbanan666 if you have any questions.',
-  products,
 }

@@ -23,13 +23,13 @@ gameBot.on('message:text', async (ctx) => {
 
       // Welcome message with buttons
       await ctx.reply(
-        dictionary(locale).woodland.welcomeMessage,
+        dictionary(locale).bots.woodland.welcomeMessage,
         {
           reply_markup: {
             inline_keyboard: [
-              [{ text: dictionary(locale).woodland.play, url: gameUrl }],
-              [{ text: dictionary(locale).subscribeToChannel, url: gameChannelUrl }],
-              [{ text: dictionary(locale).woodland.website, url: chatgameUrl }],
+              [{ text: dictionary(locale).bots.woodland.play, url: gameUrl }],
+              [{ text: dictionary(locale).bots.subscribeToChannel, url: gameChannelUrl }],
+              [{ text: dictionary(locale).bots.woodland.website, url: chatgameUrl }],
             ],
           },
         },
@@ -39,7 +39,7 @@ gameBot.on('message:text', async (ctx) => {
     }
 
     logger.log(ctx.message.from.id, ctx.message.text)
-    ctx.reply(dictionary(locale).defaultBotReply)
+    ctx.reply(dictionary(locale).bots.defaultBotReply)
   } catch (error) {
     logger.error(error)
   }

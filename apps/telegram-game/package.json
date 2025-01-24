@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@chat-game/game": "workspace:*",
+    "@chat-game/locale": "workspace:*",
     "@chat-game/types": "workspace:*",
     "@neoconfetti/vue": "^2.2.1",
     "@number-flow/vue": "^0.4.3",

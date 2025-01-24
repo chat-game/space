@@ -1,4 +1,5 @@
 import type { Dictionary } from '..'
+import { bots } from './bots'
 import { characters } from './characters'
 import { items } from './items'
 import { leaderboards } from './leaderboards'
@@ -107,4 +108,5 @@ export const ru: Dictionary = {
   products,
   items,
   trophies,
+  bots,
 }

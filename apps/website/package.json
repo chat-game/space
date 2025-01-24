@@ -16,6 +16,7 @@
   "dependencies": {
     "@chat-game/addon": "workspace:*",
     "@chat-game/game": "workspace:*",
+    "@chat-game/locale": "workspace:*",
     "@chat-game/types": "workspace:*",
     "@number-flow/vue": "^0.4.3",
     "@paralleldrive/cuid2": "^2.2.2",
