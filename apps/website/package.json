@@ -21,7 +21,7 @@
     "@number-flow/vue": "^0.4.3",
     "@paralleldrive/cuid2": "^2.2.2",
     "@prisma/client": "^6.2.1",
-    "@telegram-apps/init-data-node": "^1.2.2",
+    "@telegram-apps/init-data-node": "^2.0.2",
     "@twurple/api": "^7.2.1",
     "@twurple/auth": "^7.2.1",
     "@twurple/chat": "^7.2.1",
