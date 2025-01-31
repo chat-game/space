@@ -18,7 +18,7 @@ RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 appuser
 COPY --from=builder /app/apps/telegram-game/dist /app/dist
 COPY --from=builder /app/docker/telegram-game/default.conf /etc/nginx/conf.d/default.conf
 
-RUN chown -R appuser:nodejs /var/cache/nginx/client_temp
+RUN mkdir -p /var/cache/nginx/client_temp && chown -R appuser:nodejs /var/cache/nginx/client_temp
 
 USER appuser
 
