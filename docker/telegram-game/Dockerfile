@@ -15,8 +15,8 @@ FROM nginx:stable-alpine
 
 RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 appuser
 
-COPY --from=builder --chown=nodejs:appuser /app/apps/telegram-game/dist /app/dist
-COPY --from=builder --chown=nodejs:appuser /app/docker/telegram-game/default.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/apps/telegram-game/dist /app/dist
+COPY --from=builder /app/docker/telegram-game/default.conf /etc/nginx/conf.d/default.conf
 
 RUN chown -R appuser:nodejs /var/cache/nginx/client_temp
 
