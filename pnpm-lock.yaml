@@ -71,6 +71,9 @@ importers:
       '@telegram-apps/sdk-vue':
         specifier: ^1.0.15
         version: 1.0.15(vue@3.5.13(typescript@5.7.2))
+      '@tsparticles/engine':
+        specifier: ^3.8.1
+        version: 3.8.1
       '@tsparticles/slim':
         specifier: ^3.8.1
         version: 3.8.1
@@ -1947,9 +1950,6 @@ packages:
 
   '@tsparticles/basic@3.8.1':
     resolution: {integrity: sha512-my114zRmekT/+I2cGuEnHxlX5G/jO0iVtNnsxxlsgspXUTSY+fDixmrNF4UgFkuaIwd9Bv/yH+7S/4HE4qte7A==}
-
-  '@tsparticles/engine@3.7.1':
-    resolution: {integrity: sha512-GYzBgq/oOE9YJdOL1++MoawWmYg4AvVct6CIrJGx84ZRb3U2owYmLsRGabYl0qX1CWWOvUG569043RJmyp/vQA==}
 
   '@tsparticles/engine@3.8.1':
     resolution: {integrity: sha512-S8h10nuZfElY7oih//NUHnT5qf4v3/dnsU8CMs7dz5lBEGr3amrYrXk0V+YKPTIQwfdmJHUaSBoAqFiv4aEGIA==}
@@ -8644,8 +8644,6 @@ snapshots:
       '@tsparticles/updater-out-modes': 3.8.1
       '@tsparticles/updater-size': 3.8.1
 
-  '@tsparticles/engine@3.7.1': {}
-
   '@tsparticles/engine@3.8.1': {}
 
   '@tsparticles/interaction-external-attract@3.8.1':
@@ -8811,7 +8809,7 @@ snapshots:
 
   '@tsparticles/vue3@3.0.1(typescript@5.7.2)':
     dependencies:
-      '@tsparticles/engine': 3.7.1
+      '@tsparticles/engine': 3.8.1
       vue: 3.5.13(typescript@5.7.2)
     transitivePeerDependencies:
       - typescript

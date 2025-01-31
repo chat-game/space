@@ -19,6 +19,7 @@
     "@neoconfetti/vue": "^2.2.1",
     "@number-flow/vue": "^0.4.3",
     "@telegram-apps/sdk-vue": "^1.0.15",
+    "@tsparticles/engine": "^3.8.1",
     "@tsparticles/slim": "^3.8.1",
     "@tsparticles/vue3": "^3.0.1",
     "vue": "^3.5.13",
