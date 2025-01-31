@@ -1,4 +1,4 @@
-FROM node:22.13.0-alpine AS builder
+FROM node:22.13.1-alpine AS builder
 
 WORKDIR /app
 
@@ -13,8 +13,14 @@ RUN pnpm build --filter @chat-game/telegram-game
 
 FROM nginx:stable-alpine
 
+RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 appuser
+
 COPY --from=builder /app/apps/telegram-game/dist /app/dist
 COPY --from=builder /app/docker/telegram-game/default.conf /etc/nginx/conf.d/default.conf
+
+RUN chown -R appuser:nodejs /var/cache/nginx/client_temp
+
+USER appuser
 
 EXPOSE 80
 
