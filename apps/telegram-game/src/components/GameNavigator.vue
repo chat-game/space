@@ -24,7 +24,4 @@ const { playerX, wagonX } = defineProps<{
 }>()
 
 const wagonOnNavigator = computed(() => playerX && wagonX ? (wagonX - playerX) / 50 + 50 : 0)
-
-// player can see objects between player X - 2500 and player X + 2500
-// calculate wagon position on navigator relative to player X (in the middle)
 </script>
