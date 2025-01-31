@@ -50,7 +50,6 @@ const router = useRouter()
 const canvas = ref<HTMLElement>()
 const game = ref<BaseGameAddon>(gameClient)
 const isGameOpened = ref(false)
-
 const isHelpModalOpened = ref(true)
 
 onMounted(async () => {
