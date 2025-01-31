@@ -1,4 +1,4 @@
-FROM node:22.13.0-alpine as builder
+FROM node:22.13.0-alpine AS builder
 
 WORKDIR /app
 
@@ -11,12 +11,11 @@ COPY ./ ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm build --filter @chat-game/telegram-game
 
-FROM nginx:alpine
+FROM nginx:stable-alpine
 
 COPY --from=builder /app/apps/telegram-game/dist /app/dist
-COPY --from=builder /app/docker/telegram-game/conf.d/vhost.conf /etc/nginx/conf.d/default.conf
-COPY --from=builder /app/docker/telegram-game/entrypoint.sh /docker-entrypoint.d/entrypoint.sh
-
-RUN chmod +x /docker-entrypoint.d/entrypoint.sh
+COPY --from=builder /app/docker/telegram-game/default.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
