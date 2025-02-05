@@ -1,7 +1,7 @@
 import type { Dictionary } from '@chat-game/locale'
 import { createId } from '@paralleldrive/cuid2'
 import { dictionary } from '~~/server/core/locale'
-import { gameBot } from '~~/server/core/telegram/bot'
+import { useGameBot } from '~~/server/core/telegram/bot'
 import { validateTelegramData } from '~~/server/core/telegram/validate'
 
 export default defineEventHandler(async (event) => {
@@ -60,7 +60,7 @@ export default defineEventHandler(async (event) => {
 
     // Create invoice via bot
     const paymentId = createId()
-    const link = await gameBot.api.createInvoiceLink(
+    const link = await useGameBot().api.createInvoiceLink(
       title,
       description,
       `{"payment_id":"${paymentId}"}`,
