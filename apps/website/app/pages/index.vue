@@ -25,7 +25,7 @@
     </div>
   </div>
 
-  <div class="wagon-block">
+  <div class="wagon-block w-full">
     <div class="wagon my-0 mx-auto w-fit text-center">
       <img src="~/assets/img/wagon-full.png" alt="">
     </div>
@@ -256,7 +256,6 @@ const shopProducts = [
 
 <style scoped>
 .wagon-block {
-  width: 100%;
   margin: 2em 0;
   padding: 4em 0;
   background-image: url(~/assets/img/background-green.webp);

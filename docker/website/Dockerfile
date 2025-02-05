@@ -9,7 +9,7 @@ COPY ./prisma ./prisma
 COPY ./packages ./packages
 COPY ./apps/website ./apps/website
 
-RUN corepack enable pnpm \
+RUN npm install -g pnpm \
   && pnpm i --frozen-lockfile --ignore-scripts \
   && pnpm build --filter @chat-game/website
 
