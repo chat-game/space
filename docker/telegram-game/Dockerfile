@@ -1,15 +1,11 @@
 FROM node:22.13.1-alpine AS builder
-
 WORKDIR /app
-
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
 
 COPY ./ ./
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm build --filter @chat-game/telegram-game
+RUN npm install -g pnpm \
+  && pnpm i --frozen-lockfile --ignore-scripts \
+  && pnpm build --filter @chat-game/telegram-game
 
 FROM nginx:stable-alpine
 
