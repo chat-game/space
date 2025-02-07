@@ -3,7 +3,7 @@ WORKDIR /app
 
 COPY ./ ./
 
-RUN npm install -g pnpm \
+RUN npm install -g pnpm --ignore-scripts \
   && pnpm i --frozen-lockfile --ignore-scripts \
   && pnpm build --filter @chat-game/telegram-game
 

@@ -27,12 +27,16 @@ jobs:
           APPS=("website" "telegram-game")
           CHANGED=()
 
-          for app in "${APPS[@]}"; do
-            folder="apps/${app}"
-            if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q "^${folder}/"; then
-              CHANGED+=("${app}")
-            fi
-          done
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            CHANGED=("${APPS[@]}")
+          else
+            for app in "${APPS[@]}"; do
+              folder="apps/${app}"
+              if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q "^${folder}/"; then
+                CHANGED+=("${app}")
+              fi
+            done
+          fi
 
           if [ ${#CHANGED[@]} -gt 0 ]; then
             echo "matrix=$(printf '%s\n' "${CHANGED[@]}" | jq -R . | jq -s . | tr -d '[:space:]')" >> $GITHUB_OUTPUT
