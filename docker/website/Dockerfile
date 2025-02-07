@@ -9,7 +9,7 @@ COPY ./prisma ./prisma
 COPY ./packages ./packages
 COPY ./apps/website ./apps/website
 
-RUN npm install -g pnpm \
+RUN npm install -g pnpm --ignore-scripts \
   && pnpm i --frozen-lockfile --ignore-scripts \
   && pnpm build --filter @chat-game/website
 

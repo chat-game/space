@@ -57,7 +57,7 @@
     "@semantic-release/commit-analyzer": "^13.0.1",
     "@semantic-release/exec": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
-    "@types/node": "^22.10.7",
+    "@types/node": "^22.13.1",
     "dotenv-cli": "^8.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.4.0",
