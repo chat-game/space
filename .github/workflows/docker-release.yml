@@ -1,4 +1,4 @@
-name: Release
+name: Docker Release
 
 on:
   release:
@@ -6,11 +6,11 @@ on:
   workflow_dispatch:
     inputs:
       release:
-        description: 'ex: @chat-game/website-v1.0.0'
+        description: "ex: @chat-game/website-v1.0.0"
         type: string
         required: true
       ref:
-        description: 'branch, tag or SHA'
+        description: "branch, tag or SHA"
         type: string
 
 jobs:
@@ -91,49 +91,3 @@ jobs:
           file: docker/${{ env.APP_NAME }}/Dockerfile
           push: true
           tags: ${{ secrets.NAMESPACE }}/${{ env.APP_NAME }}:latest,${{ secrets.NAMESPACE }}/${{ env.APP_NAME }}:${{ env.APP_VERSION }}
-
-  deploy:
-    needs: [determine-changes, build]
-    if: ${{ needs.determine-changes.outputs.package != '' }}
-    runs-on: ubuntu-latest
-    permissions:
-      deployments: write
-    steps:
-      - name: Set APP ID in env
-        id: set-app-id
-        run: |
-          app_id=$(echo '${{ secrets.DOKPLOY_APPS }}' | jq -r '."${{ needs.determine-changes.outputs.package }}"')
-          echo "::add-mask::$app_id"
-          echo "APP_ID=$app_id" >> $GITHUB_OUTPUT
-
-      - name: Create GitHub deployment
-        if: ${{ steps.set-app-id.outputs.APP_ID != '' }}
-        uses: chrnorm/deployment-action@v2
-        id: deployment
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          environment: production ${{ needs.determine-changes.outputs.package }}
-
-      - name: Dokploy Deployment
-        if: ${{ steps.set-app-id.outputs.APP_ID != '' }}
-        uses: benbristow/dokploy-deploy-action@0.0.1
-        with:
-          auth_token: ${{ secrets.DOKPLOY_AUTH_TOKEN }}
-          application_id: ${{ steps.set-app-id.outputs.APP_ID }}
-          dokploy_url: ${{ secrets.DOKPLOY_URL }}
-
-      - name: Update deployment status (success)
-        if: ${{ steps.set-app-id.outputs.APP_ID != '' && success() }}
-        uses: chrnorm/deployment-status@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
-          state: 'success'
-
-      - name: Update deployment status (failure)
-        if: ${{ steps.set-app-id.outputs.APP_ID != '' && failure() }}
-        uses: chrnorm/deployment-status@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
-          state: 'failure'

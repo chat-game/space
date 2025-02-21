@@ -1,25 +1,45 @@
 <template>
-  <div v-element-visibility="[onVisibilityChangeGame, observerOptions]" class="my-24 md:my-30 px-4 max-w-4xl mx-auto text-center">
+  <div
+    v-element-visibility="[onVisibilityChangeGame, observerOptions]"
+    class="my-24 md:my-30 px-4 max-w-4xl mx-auto text-center"
+  >
     <div class="mb-8 space-y-4">
       <h1 class="text-3xl md:text-3xl lg:text-4xl">
         Woodlands: онлайн-игра в Telegram
       </h1>
       <p class="text-base md:text-lg lg:text-xl">
-        Группа игроков сопровождает Машину из точки А в точку Б. По пути встречаются препятствия, от которых нужно избавляться. Все это транслируется на <a href="https://twitch.tv/hmbanan666" target="_blank" class="opacity-70 duration-200 hover:opacity-100 hover:text-emerald-600">Twitch стриме</a>.
+        Группа игроков сопровождает Машину из точки А в точку Б. По пути
+        встречаются препятствия, от которых нужно избавляться. Все это
+        транслируется на
+        <a
+          href="https://twitch.tv/hmbanan666"
+          target="_blank"
+          class="opacity-70 duration-200 hover:opacity-100 hover:text-emerald-600"
+        >Twitch стриме</a>.
       </p>
     </div>
 
-    <div class="max-w-160 mx-auto flex flex-col md:flex-row gap-4 items-center justify-center">
-      <a href="https://t.me/WoodlandsGameBot" target="_blank" class="px-6 py-4 md:py-5 w-full bg-emerald-500 border-b-6 border-emerald-600 text-white text-lg md:text-xl font-semibold tracking-wide rounded-lg cursor-pointer hover:opacity-85 active:scale-95 duration-200 flex flex-row justify-center items-center gap-3">
+    <div
+      class="max-w-160 mx-auto flex flex-col md:flex-row gap-4 items-center justify-center"
+    >
+      <a
+        href="https://t.me/WoodlandsGameBot"
+        target="_blank"
+        class="px-6 py-4 md:py-5 w-full bg-emerald-500 border-b-6 border-emerald-600 text-white text-lg md:text-xl font-semibold tracking-wide rounded-lg cursor-pointer hover:opacity-85 active:scale-95 duration-200 flex flex-row justify-center items-center gap-3"
+      >
         <Icon name="simple-icons:telegram" size="32" />
         <p>Открыть игру</p>
       </a>
-      <a href="https://github.com/chat-game/space" target="_blank" class="px-6 py-4 md:py-5 w-full bg-orange-900/75 border-b-6 border-orange-900/75 text-white text-lg md:text-xl font-semibold tracking-wide rounded-lg cursor-pointer hover:opacity-85 active:scale-95 duration-200 flex flex-row justify-center items-center gap-3">
+      <a
+        href="https://github.com/chat-game/space"
+        target="_blank"
+        class="px-6 py-4 md:py-5 w-full bg-orange-900/75 border-b-6 border-orange-900/75 text-white text-lg md:text-xl font-semibold tracking-wide rounded-lg cursor-pointer hover:opacity-85 active:scale-95 duration-200 flex flex-row justify-center items-center gap-3"
+      >
         <Icon name="simple-icons:github" size="32" />
         <p>GitHub</p>
         <div class="flex flex-row items-center gap-1">
           <Icon name="lucide:star" class="!w-5 !h-5" />
-          <p>17</p>
+          <p>20</p>
         </div>
       </a>
     </div>
@@ -31,18 +51,40 @@
     </div>
   </div>
 
-  <div id="characters" v-element-visibility="[onVisibilityChangeCharacters, observerOptions]" class="max-w-4xl my-24 md:my-30 px-4 mx-auto text-center space-y-6">
+  <div
+    id="characters"
+    v-element-visibility="[onVisibilityChangeCharacters, observerOptions]"
+    class="max-w-4xl my-24 md:my-30 px-4 mx-auto text-center space-y-6"
+  >
     <div class="space-y-2">
       <h2 class="text-2xl md:text-2xl lg:text-3xl">
         Персонажи из игры
       </h2>
-      <p>Создаются вручную. Разблокируются за Монеты и за участие в событиях.</p>
+      <p>
+        Создаются вручную. Разблокируются за Монеты и за участие в событиях.
+      </p>
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-      <ActiveCard v-for="char in characters" :key="char.id" class="px-2 py-2 md:aspect-square flex flex-col items-center justify-center cursor-pointer" @click="() => { isCharacterOpened = true; selectedCharacterId = char.id; }">
-        <Image :src="`/units/${char.codename}/128.png`" class="w-20 h-20 block group-hover:hidden" />
-        <Image :src="`/units/${char.codename}/idle.gif`" class="w-20 h-20 hidden group-hover:block" />
+      <ActiveCard
+        v-for="char in characters"
+        :key="char.id"
+        class="px-2 py-2 md:aspect-square flex flex-col items-center justify-center cursor-pointer"
+        @click="
+          () => {
+            isCharacterOpened = true;
+            selectedCharacterId = char.id;
+          }
+        "
+      >
+        <Image
+          :src="`/units/${char.codename}/128.png`"
+          class="w-20 h-20 block group-hover:hidden"
+        />
+        <Image
+          :src="`/units/${char.codename}/idle.gif`"
+          class="w-20 h-20 hidden group-hover:block"
+        />
         <p class="mt-2 text-orange-900/85 font-semibold">
           {{ char.nickname }}
         </p>
@@ -50,7 +92,11 @@
     </div>
   </div>
 
-  <div id="shop" v-element-visibility="[onVisibilityChangeShop, observerOptions]" class="max-w-4xl my-24 md:my-30 px-4 mx-auto text-center space-y-6">
+  <div
+    id="shop"
+    v-element-visibility="[onVisibilityChangeShop, observerOptions]"
+    class="max-w-4xl my-24 md:my-30 px-4 mx-auto text-center space-y-6"
+  >
     <div class="space-y-2">
       <h2 class="text-2xl md:text-2xl lg:text-3xl">
         Магазин
@@ -61,7 +107,10 @@
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
       <ActiveCard v-for="product in shopProducts" :key="product.id">
         <div class="w-full h-24 bg-orange-500/5">
-          <Image :src="`/shop-assets/${product.id}/512.png`" class="w-40 h-auto absolute -top-14 right-0" />
+          <Image
+            :src="`/shop-assets/${product.id}/512.png`"
+            class="w-40 h-auto absolute -top-14 right-0"
+          />
         </div>
 
         <div class="p-4 flex flex-col justify-between">
@@ -72,7 +121,9 @@
           <div class="">
             <form method="POST" action="/api/payment">
               <input type="hidden" name="productId" :value="product.id">
-              <button class="px-6 py-3 w-full bg-teal-500 border-b-4 border-teal-600 text-white text-xl tracking-wide rounded-lg cursor-pointer hover:opacity-85 active:scale-95 duration-200 flex flex-row justify-center items-center gap-3">
+              <button
+                class="px-6 py-3 w-full bg-teal-500 border-b-4 border-teal-600 text-white text-xl tracking-wide rounded-lg cursor-pointer hover:opacity-85 active:scale-95 duration-200 flex flex-row justify-center items-center gap-3"
+              >
                 {{ product.price }} ₽
               </button>
             </form>
@@ -82,14 +133,24 @@
     </div>
 
     <p>
-      Можешь <NuxtLink to="/donate" class="text-emerald-600 hover:opacity-85 duration-200">
+      Можешь
+      <NuxtLink
+        to="/donate"
+        class="text-emerald-600 hover:opacity-85 duration-200"
+      >
         поддержать стримера
-      </NuxtLink> другими способами.
+      </NuxtLink>
+      другими способами.
     </p>
   </div>
 
   <ClientOnly>
-    <div v-if="loggedIn" id="profile" v-element-visibility="[onVisibilityChangeProfile, observerOptions]" class="max-w-4xl my-24 md:my-30 px-4 mx-auto text-center space-y-6">
+    <div
+      v-if="loggedIn"
+      id="profile"
+      v-element-visibility="[onVisibilityChangeProfile, observerOptions]"
+      class="max-w-4xl my-24 md:my-30 px-4 mx-auto text-center space-y-6"
+    >
       <div class="space-y-2">
         <h2 class="text-2xl md:text-2xl lg:text-3xl">
           {{ profile?.userName }}
@@ -97,15 +158,22 @@
         <div class="flex flex-row gap-2 justify-center items-center">
           Игровой профиль с
           <div class="flex flex-row gap-1 items-center">
-            <span class="text-green-700 text-lg">{{ new Intl.NumberFormat().format(profile?.points ?? 0) }}</span>
+            <span class="text-green-700 text-lg">{{
+              new Intl.NumberFormat().format(profile?.points ?? 0)
+            }}</span>
             <Image src="/woodland-small.png" class="h-6 w-6" />
           </div>
         </div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-        <ActiveCard class="px-4 py-0 flex flex-row gap-0 items-center justify-center">
-          <Image :src="`/units/${profile?.activeCharacter?.character.codename}/idle.gif`" class="h-24 w-24" />
+        <ActiveCard
+          class="px-4 py-0 flex flex-row gap-0 items-center justify-center"
+        >
+          <Image
+            :src="`/units/${profile?.activeCharacter?.character.codename}/idle.gif`"
+            class="h-24 w-24"
+          />
           <div>
             <p>Активный персонаж</p>
             <p class="font-semibold text-lg text-orange-900/85">
@@ -114,7 +182,9 @@
           </div>
         </ActiveCard>
 
-        <ActiveCard class="px-4 py-6 flex flex-row gap-8 items-center justify-center">
+        <ActiveCard
+          class="px-4 py-6 flex flex-row gap-8 items-center justify-center"
+        >
           <div class="flex flex-row gap-2 items-center justify-center">
             <Image src="/coin.png" class="h-12 w-12" />
             <div>
@@ -122,7 +192,13 @@
                 {{ profile?.coins }}
               </p>
               <p class="text-sm leading-tight">
-                {{ pluralizationRu(profile?.coins ?? 0, ['Монета', 'Монет', 'Монет']) }}
+                {{
+                  pluralizationRu(profile?.coins ?? 0, [
+                    "Монета",
+                    "Монет",
+                    "Монет",
+                  ])
+                }}
               </p>
             </div>
           </div>
@@ -134,7 +210,13 @@
                 {{ profile?.coupons }}
               </p>
               <p class="text-sm leading-tight">
-                {{ pluralizationRu(profile?.coupons ?? 0, ['Купон', 'Купона', 'Купонов']) }}
+                {{
+                  pluralizationRu(profile?.coupons ?? 0, [
+                    "Купон",
+                    "Купона",
+                    "Купонов",
+                  ])
+                }}
               </p>
             </div>
           </div>
@@ -148,17 +230,24 @@
       Благодарности от hmbanan666
     </h2>
     <p class="thanks-block">
-      Спасибо моим зрителям: <em>kungfux010</em> за активные тесты игры, <em>sava5621</em> за вкусные шавухи, <em>BezSovesty</em> за помощь на
-      старте, <em>flack_zombi</em> за упорство в рубке деревьев, <em>player_mmcm</em> за первые тесты Дополнения, <em>a_hywax</em> за помощь с open source, <em>PeregonStream</em> и <em>siberiacancode</em> за крутые рейды.
-      Спасибо <em>tozikab_</em>, <em>6alt1ca</em>, <em>derailon</em>, <em>sloghniy</em>, <em>MaN0ol</em>, <em>dO_Oy</em>, <em>VombatDrago</em>,
-      <em>sleeplessness8</em>.
-      <br>Вы все крутые!
+      Спасибо моим зрителям: <em>kungfux010</em> за активные тесты игры,
+      <em>sava5621</em> за вкусные шавухи, <em>BezSovesty</em> за помощь на
+      старте, <em>flack_zombi</em> за упорство в рубке деревьев,
+      <em>player_mmcm</em> за первые тесты Дополнения, <em>a_hywax</em> за
+      помощь с open source, <em>PeregonStream</em> и <em>siberiacancode</em> за
+      крутые рейды. Спасибо <em>tozikab_</em>, <em>6alt1ca</em>,
+      <em>derailon</em>, <em>sloghniy</em>, <em>MaN0ol</em>, <em>dO_Oy</em>,
+      <em>VombatDrago</em>, <em>sleeplessness8</em>. <br>Вы все крутые!
     </p>
   </div>
 
-  <Modal :title="`&laquo;${selectedCharacter?.nickname}&raquo; ${selectedCharacter?.name}`" :is-opened="isCharacterOpened" @close="isCharacterOpened = false">
+  <Modal
+    :title="`&laquo;${selectedCharacter?.nickname}&raquo; ${selectedCharacter?.name}`"
+    :is-opened="isCharacterOpened"
+    @close="isCharacterOpened = false"
+  >
     <p class="tg-hint text-sm leading-tight">
-      {{ selectedCharacter?.description ?? '' }}
+      {{ selectedCharacter?.description ?? "" }}
     </p>
 
     <div v-if="selectedCharacter?.levels.length">
@@ -166,14 +255,23 @@
         Награды за прокачку
       </h3>
       <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2">
-        <ActiveCard v-for="reward in selectedCharacter?.levels" :key="reward.id" class="px-4 py-4 flex flex-col gap-2 items-center justify-center">
+        <ActiveCard
+          v-for="reward in selectedCharacter?.levels"
+          :key="reward.id"
+          class="px-4 py-4 flex flex-col gap-2 items-center justify-center"
+        >
           <p class="font-semibold">
             {{ reward.level }} уровень
           </p>
 
           <div v-if="reward.inventoryItemId" class="mb-1 relative text-center">
-            <Image :src="`/items/${reward.inventoryItemId}/128.png`" class="p-2 h-16 w-16 bg-orange-800/10 rounded-lg" />
-            <p class="absolute -bottom-2 -right-1 px-3 py-1 bg-orange-100 rounded-2xl text-sm leading-tight">
+            <Image
+              :src="`/items/${reward.inventoryItemId}/128.png`"
+              class="p-2 h-16 w-16 bg-orange-800/10 rounded-lg"
+            />
+            <p
+              class="absolute -bottom-2 -right-1 px-3 py-1 bg-orange-100 rounded-2xl text-sm leading-tight"
+            >
               <span class="text-xs">x</span>{{ reward.awardAmount }}
             </p>
           </div>
@@ -191,7 +289,8 @@ useHead({
   meta: [
     {
       name: 'description',
-      content: 'Группа игроков сопровождает Машину из точки А в точку Б. По пути встречаются препятствия, от которых нужно избавляться.',
+      content:
+        'Группа игроков сопровождает Машину из точки А в точку Б. По пути встречаются препятствия, от которых нужно избавляться.',
     },
   ],
 })
@@ -221,7 +320,9 @@ const { data: characters } = await useFetch('/api/character')
 
 const isCharacterOpened = ref(false)
 const selectedCharacterId = ref<string>()
-const selectedCharacter = computed(() => characters.value?.find(({ id }) => id === selectedCharacterId.value))
+const selectedCharacter = computed(() =>
+  characters.value?.find(({ id }) => id === selectedCharacterId.value),
+)
 
 const { data: profile } = await useFetch(`/api/profile/${user.value?.id}`)
 
