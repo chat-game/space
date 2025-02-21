@@ -1,4 +1,4 @@
-name: Nightly
+name: Docker Nightly
 
 on:
   push:
@@ -89,52 +89,3 @@ jobs:
           file: docker/${{ env.APP_NAME }}/Dockerfile
           push: true
           tags: ${{ secrets.NAMESPACE }}/${{ env.APP_NAME }}:${{ env.APP_VERSION }}
-
-  deploy:
-    needs: [determine-changes, build]
-    if: ${{ needs.determine-changes.outputs.matrix != '[]' }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        app: ${{ fromJson(needs.determine-changes.outputs.matrix) }}
-    permissions:
-      deployments: write
-    steps:
-      - name: Set APP ID in env
-        id: set-app-id
-        run: |
-          app_id=$(echo '${{ secrets.DOKPLOY_STAGE_APPS }}' | jq -r '."${{ matrix.app }}"')
-          echo "::add-mask::$app_id"
-          echo "APP_ID=$app_id" >> $GITHUB_OUTPUT
-
-      - name: Create GitHub deployment
-        if: ${{ steps.set-app-id.outputs.APP_ID != '' }}
-        uses: chrnorm/deployment-action@v2
-        id: deployment
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          environment: stage ${{ matrix.app }}
-
-      - name: Dokploy Deployment
-        if: ${{ steps.set-app-id.outputs.APP_ID != '' }}
-        uses: benbristow/dokploy-deploy-action@0.0.1
-        with:
-          auth_token: ${{ secrets.DOKPLOY_AUTH_TOKEN }}
-          application_id: ${{ steps.set-app-id.outputs.APP_ID }}
-          dokploy_url: ${{ secrets.DOKPLOY_URL }}
-
-      - name: Update deployment status (success)
-        if: ${{ steps.set-app-id.outputs.APP_ID != '' && success() }}
-        uses: chrnorm/deployment-status@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
-          state: 'success'
-
-      - name: Update deployment status (failure)
-        if: ${{ steps.set-app-id.outputs.APP_ID != '' && failure() }}
-        uses: chrnorm/deployment-status@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
-          state: 'failure'
