@@ -1,7 +1,7 @@
 {
   "name": "@chat-game/space",
   "private": true,
-  "packageManager": "pnpm@9.15.4",
+  "packageManager": "pnpm@10.10.0",
   "pnpm": {
     "supportedArchitectures": {
       "os": [
@@ -17,7 +17,7 @@
   },
   "engines": {
     "node": ">=20.18.1",
-    "pnpm": ">=9.15.4"
+    "pnpm": ">=10.10.0"
   },
   "description": "Chat Game for Twitch",
   "author": "Nick Kosarev <hmbanan666@hotmail.com>",
