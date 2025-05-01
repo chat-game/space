@@ -3,37 +3,8 @@
     <div class="game-block">
       <div id="game-canvas" ref="stage" />
 
-      <div class="absolute bottom-62 left-0 pl-6 pt-2 pb-4 w-50 flex flex-col justify-center items-start bg-[#f3ca7e] rounded-r-xl">
-        <NumberFlowGroup>
-          <div
-            class="flex items-baseline text-4xl font-semibold"
-          >
-            <NumberFlow :trend="-1" :value="hh" :format="{ minimumIntegerDigits: 2 }" />
-            <NumberFlow
-              prefix=":"
-              :trend="-1"
-              :value="mm"
-              :digits="{ 1: { max: 5 } }"
-              :format="{ minimumIntegerDigits: 2 }"
-            />
-            <NumberFlow
-              prefix=":"
-              :trend="-1"
-              :value="ss"
-              :digits="{ 1: { max: 5 } }"
-              :format="{ minimumIntegerDigits: 2 }"
-            />
-          </div>
-        </NumberFlowGroup>
-        <div class="uppercase text-xs leading-tight">
-          До окончания стрима
-        </div>
-      </div>
-
       <div class="interface bg-orange-950 text-orange-950">
         <div class="cards">
-          <img src="/qr.png" alt="qr" class="relative w-50 h-auto mb-6 px-1 pt-3 bg-orange-950 rounded-tr-xl">
-
           <div class="hidden wagon-card event px-3 py-2 gap-3">
             <Image src="/units/santa/head.png" width="44" />
             <p class="max-w-40 text-xl font-semibold leading-1">
@@ -66,7 +37,7 @@
 <script setup lang="ts">
 import type { LeaderboardData } from '@chat-game/types'
 import { BaseGameAddon } from '@chat-game/game'
-import NumberFlow, { NumberFlowGroup } from '@number-flow/vue'
+import NumberFlow from '@number-flow/vue'
 
 definePageMeta({
   layout: 'game',
@@ -75,7 +46,6 @@ definePageMeta({
 const { public: publicEnv } = useRuntimeConfig()
 const route = useRoute()
 const id = route.query.id?.toString() ?? ''
-const endTime = route.query.end?.toString() ?? new Date().toISOString()
 
 const stage = ref<HTMLElement>()
 const game = ref<BaseGameAddon>()
@@ -94,25 +64,6 @@ onMounted(async () => {
   }, 60 * 1000)
 
   return () => game.value?.destroy()
-})
-
-// Countdown timer
-const date = new Date(endTime)
-const initSeconds = Math.floor((date.getTime() - new Date().getTime()) / 1000)
-const seconds = ref(initSeconds > 0 ? initSeconds : 0)
-
-const hh = computed(() => Math.floor(seconds.value / 3600))
-const mm = computed(() => Math.floor((seconds.value % 3600) / 60))
-const ss = computed(() => seconds.value % 60)
-
-onMounted(() => {
-  const timer = setInterval(() => {
-    seconds.value--
-  }, 1000)
-
-  if (seconds.value <= 0) {
-    clearInterval(timer)
-  }
 })
 </script>
 

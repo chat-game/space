@@ -8,7 +8,6 @@ body {
   font-style: normal;
   font-variation-settings: 'wdth' 100;
   color: var(--color-orange-950);
-  background: var(--color-orange-100);
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
 }
