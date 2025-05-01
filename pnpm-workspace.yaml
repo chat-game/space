@@ -11,7 +11,7 @@ catalog:
   '@iconify/vue': ^4.3.0
   '@neoconfetti/vue': ^2.2.1
   '@number-flow/vue': ^0.4.3
-  '@nuxt/devtools': ^1.7.0
+  '@nuxt/devtools': ^2.4.0
   '@nuxt/fonts': ^0.10.3
   '@nuxt/icon': ^1.10.3
   '@nuxt/kit': ^3.15.2
