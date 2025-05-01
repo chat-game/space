@@ -1,3 +1,85 @@
 packages:
-  - "apps/*"
-  - "packages/*"
+  - apps/*
+  - packages/*
+catalog:
+  '@antfu/eslint-config': ^4.12.0
+  '@commitlint/cli': ^19.6.1
+  '@commitlint/config-conventional': ^19.6.0
+  '@d-fischer/typed-event-emitter': ^3.3.3
+  '@iconify-json/lucide': ^1.2.39
+  '@iconify-json/simple-icons': ^1.2.33
+  '@iconify/vue': ^4.3.0
+  '@neoconfetti/vue': ^2.2.1
+  '@number-flow/vue': ^0.4.3
+  '@nuxt/devtools': ^1.7.0
+  '@nuxt/fonts': ^0.10.3
+  '@nuxt/icon': ^1.10.3
+  '@nuxt/kit': ^3.15.2
+  '@nuxtjs/i18n': ^9.1.1
+  '@paralleldrive/cuid2': ^2.2.2
+  '@prisma/client': ^6.2.1
+  '@tailwindcss/vite': ^4.1.5
+  '@telegram-apps/init-data-node': ^1.2.2
+  '@telegram-apps/sdk-vue': ^1.0.15
+  '@tsconfig/node22': ^22.0.0
+  '@tsparticles/engine': ^3.8.1
+  '@tsparticles/slim': ^3.8.1
+  '@tsparticles/vue3': ^3.0.1
+  '@twurple/api': ^7.2.1
+  '@twurple/auth': ^7.2.1
+  '@twurple/chat': ^7.2.1
+  '@twurple/easy-bot': ^7.2.1
+  '@twurple/eventsub-ws': ^7.2.1
+  '@twurple/pubsub': ^7.2.1
+  '@types/howler': ^2.2.12
+  '@types/node': ^22.15.3
+  '@vitejs/plugin-vue': ^5.2.1
+  '@vitest/browser': ^3.1.2
+  '@vitest/coverage-v8': ^3.1.2
+  '@vue/tsconfig': ^0.7.0
+  '@vueuse/components': ^12.4.0
+  '@vueuse/core': ^12.4.0
+  '@vueuse/nuxt': ^12.4.0
+  changelogen-monorepo: ^0.4.2
+  dotenv-cli: ^8.0.0
+  eruda: ^3.4.1
+  grammy: ^1.34.0
+  howler: ^2.2.4
+  husky: ^9.1.7
+  ioredis: ^5.4.2
+  lint-staged: ^15.4.0
+  nuxt: ^3.15.4
+  nuxt-auth-utils: ^0.5.7
+  pixi.js: ^8.9.2
+  playwright: ^1.52.0
+  prisma: ^6.2.1
+  tailwindcss: ^4.0.4
+  typescript: ^5.8.3
+  unplugin-auto-import: ^19.0.0
+  unplugin-icons: ^22.0.0
+  unplugin-vue-components: ^28.0.0
+  vite: ^6.1.0
+  vite-plugin-terminal: ^1.2.0
+  vite-plugin-vue-devtools: ^7.7.1
+  vitest: ^3.1.2
+  vitest-browser-vue: ^0.2.0
+  vue: ^3.5.13
+  vue-i18n: ^11.1.0
+  vue-router: ^4.5.0
+  vue-tsc: ^2.2.0
+  zod: ^3.24.1
+ignoredBuiltDependencies:
+  - '@parcel/watcher'
+  - esbuild
+  - msw
+  - vue-demi
+onlyBuiltDependencies:
+  - sharp
+supportedArchitectures:
+  cpu:
+    - x64
+    - arm64
+  os:
+    - linux
+    - darwin
+    - win32

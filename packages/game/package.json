@@ -3,21 +3,18 @@
   "type": "module",
   "private": true,
   "main": "./src/index.ts",
-  "files": ["src/**/*"],
+  "files": [
+    "src/**/*"
+  ],
   "scripts": {
     "clean": "rm -rf dist",
-    "clean:modules": "rm -rf .turbo node_modules",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
+    "clean:modules": "rm -rf node_modules",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@chat-game/types": "workspace:*",
-    "@paralleldrive/cuid2": "^2.2.2",
-    "@vueuse/core": "^12.5.0",
-    "pixi.js": "^8.7.3"
-  },
-  "devDependencies": {
-    "@chat-game/eslint": "workspace:*"
+    "@paralleldrive/cuid2": "catalog:",
+    "@vueuse/core": "catalog:",
+    "pixi.js": "catalog:"
   }
 }

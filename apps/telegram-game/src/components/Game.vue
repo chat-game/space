@@ -23,7 +23,11 @@
     <ConfettiBackground />
   </div>
 
-  <Modal :title="t('welcome.title')" :is-opened="isHelpModalOpened" @close="isHelpModalOpened = false">
+  <Modal
+    :title="t('welcome.title')"
+    :is-opened="isHelpModalOpened"
+    @close="isHelpModalOpened = false"
+  >
     <p class="leading-tight">
       {{ t('welcome.description') }}
     </p>

@@ -11,7 +11,6 @@
     "skipLibCheck": true
   },
   "exclude": [
-    ".turbo",
     "dist",
     "node_modules"
   ]

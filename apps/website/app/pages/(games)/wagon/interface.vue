@@ -2,7 +2,11 @@
   <ClientOnly>
     <div class="relative w-dvw h-dvh overscroll-none overflow-hidden">
       <div class="absolute bottom-16 left-0 py-2 px-1.5 w-46 bg-orange-950 rounded-r-xl">
-        <img src="/qr-website.png" alt="qr" class="relative">
+        <img
+          src="/qr-website.png"
+          alt="qr"
+          class="relative"
+        >
       </div>
 
       <div class="absolute bottom-10 left-0 right-0 h-1.5 bg-orange-900">
@@ -43,7 +47,8 @@
               locales="en-US"
               suffix=" в минуту"
               :format="{ style: 'percent', maximumFractionDigits: 2, signDisplay: 'always' }"
-              class="text-sm transition-colors duration-300" :class="[
+              class="text-sm transition-colors duration-300"
+              :class="[
                 changeRateInMinute < 0 ? 'text-orange-600' : 'text-orange-300',
               ]"
             />

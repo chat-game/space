@@ -8,7 +8,11 @@
       <p>Это действие нельзя будет отменить.</p>
 
       <div class="images-block">
-        <img :src="user?.imageUrl ?? '/icons/twitch/112.png'" alt="" class="image">
+        <img
+          :src="user?.imageUrl ?? '/icons/twitch/112.png'"
+          alt=""
+          class="image"
+        >
         <div>
           <Icon name="simple-icons:telegram" class="tg-icon" />
         </div>

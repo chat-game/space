@@ -120,7 +120,11 @@
 
           <div class="">
             <form method="POST" action="/api/payment">
-              <input type="hidden" name="productId" :value="product.id">
+              <input
+                type="hidden"
+                name="productId"
+                :value="product.id"
+              >
               <button
                 class="px-6 py-3 w-full bg-teal-500 border-b-4 border-teal-600 text-white text-xl tracking-wide rounded-lg cursor-pointer hover:opacity-85 active:scale-95 duration-200 flex flex-row justify-center items-center gap-3"
               >

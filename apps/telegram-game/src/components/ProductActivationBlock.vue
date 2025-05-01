@@ -1,9 +1,17 @@
 <template>
   <div v-if="product?.items?.length" class="grid grid-cols-4 gap-2">
-    <ItemCard v-for="item in product.items" :key="item.id" :item="item" />
+    <ItemCard
+      v-for="item in product.items"
+      :key="item.id"
+      :item="item"
+    />
   </div>
 
-  <Button v-if="product?.starsPrice && !wasPurchased" class="flex flex-row gap-1 items-center justify-center" @click="activateProduct()">
+  <Button
+    v-if="product?.starsPrice && !wasPurchased"
+    class="flex flex-row gap-1 items-center justify-center"
+    @click="activateProduct()"
+  >
     <p>{{ t('purchase.for') }} {{ product.starsPrice }}</p>
     <Image src="telegram-star.png" class="w-5 h-5" />
   </Button>

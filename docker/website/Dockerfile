@@ -1,10 +1,10 @@
-FROM node:22.13.1-alpine AS base
+FROM node:22.15.0-alpine AS base
 
 # Install dependencies and build
 FROM base AS builder
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc turbo.json ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY ./prisma ./prisma
 COPY ./packages ./packages
 COPY ./apps/website ./apps/website

@@ -13,7 +13,13 @@
     </ActiveCard>
 
     <div v-if="inventoryItems.length" class="grid grid-cols-4 gap-2">
-      <InventoryItemCard v-for="edition in inventoryItems" :key="edition.id" :item-id="edition.itemId" :amount="edition.amount" @click="selectItem(edition.id)" />
+      <InventoryItemCard
+        v-for="edition in inventoryItems"
+        :key="edition.id"
+        :item-id="edition.itemId"
+        :amount="edition.amount"
+        @click="selectItem(edition.id)"
+      />
     </div>
     <div v-else class="tg-section-bg p-3 flex flex-col gap-2 items-center rounded-2xl">
       <p class="font-medium tg-hint">
@@ -39,7 +45,11 @@
     </div>
   </PageContainer>
 
-  <Modal :title="t('item.woodlandPoint.title')" :is-opened="isPointsOpened" @close="isPointsOpened = false">
+  <Modal
+    :title="t('item.woodlandPoint.title')"
+    :is-opened="isPointsOpened"
+    @close="isPointsOpened = false"
+  >
     <template #bg>
       <WoodlandPointsBackground />
     </template>
@@ -51,7 +61,11 @@
     </p>
   </Modal>
 
-  <Modal :title="selectedItem?.item.name ? t(`items.${selectedItem.itemId}.name`) : ''" :is-opened="isItemOpened" @close="isItemOpened = false">
+  <Modal
+    :title="selectedItem?.item.name ? t(`items.${selectedItem.itemId}.name`) : ''"
+    :is-opened="isItemOpened"
+    @close="isItemOpened = false"
+  >
     <template #bg>
       <ConfettiBackground />
     </template>
@@ -64,7 +78,11 @@
       {{ t(`items.${selectedItem.item.id}.description`) }}
     </p>
 
-    <InventoryItemActivationBlock v-if="selectedItem && selectedItem.amount > 0" :id="selectedItem.id" :item-id="selectedItem.item.id" />
+    <InventoryItemActivationBlock
+      v-if="selectedItem && selectedItem.amount > 0"
+      :id="selectedItem.id"
+      :item-id="selectedItem.item.id"
+    />
   </Modal>
 </template>
 

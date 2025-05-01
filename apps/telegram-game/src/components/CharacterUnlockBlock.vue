@@ -4,7 +4,11 @@
       <div v-if="isClickedFirstTime" @click="unlockCharacter()">
         <p>{{ t('character.unlock.pressToConfirm') }}</p>
       </div>
-      <div v-else class="flex flex-row gap-1 items-center justify-center" @click="setWaitingApproval()">
+      <div
+        v-else
+        class="flex flex-row gap-1 items-center justify-center"
+        @click="setWaitingApproval()"
+      >
         <p>{{ t('character.unlock.for') }}</p>
         <div class="flex flex-row gap-1.5 items-center text-lg">
           <p>{{ character?.price }}</p>

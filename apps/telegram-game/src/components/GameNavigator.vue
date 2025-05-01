@@ -1,6 +1,10 @@
 <template>
   <div class="relative h-8 bg-red-950/15 text-white rounded-full">
-    <div v-if="wagonOnNavigator > 3 && wagonOnNavigator < 97" class="absolute transform -translate-x-1/2" :style="{ left: `${wagonOnNavigator}%` }">
+    <div
+      v-if="wagonOnNavigator > 3 && wagonOnNavigator < 97"
+      class="absolute transform -translate-x-1/2"
+      :style="{ left: `${wagonOnNavigator}%` }"
+    >
       <div class="p-1 bg-purple-200 rounded-xl">
         <Image src="wheel-1.png" class="w-6 h-6" />
       </div>
