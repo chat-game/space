@@ -10,7 +10,7 @@ const logger = useLogger('ws')
 
 export function sendMessage(message: WebSocketEvents, roomId: string) {
   const room = activeRooms.find((room) => room.id === roomId)
-  if (!room || !room.server.peer?.id) {
+  if (!room?.server.peer?.id) {
     return
   }
 
@@ -35,7 +35,7 @@ export default defineWebSocketHandler({
     }
 
     const parsed = JSON.parse(text)
-    if (!parsed || !parsed?.id || !parsed?.type) {
+    if (!parsed?.id || !parsed?.type) {
       return
     }
 

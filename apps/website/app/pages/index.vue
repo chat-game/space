@@ -38,8 +38,8 @@
         <Icon name="simple-icons:github" size="32" />
         <p>GitHub</p>
         <div class="flex flex-row items-center gap-1">
-          <Icon name="lucide:star" class="!w-5 !h-5" />
-          <p>20</p>
+          <Icon name="lucide:star" class="!size-5" />
+          <p>23</p>
         </div>
       </a>
     </div>
