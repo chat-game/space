@@ -1,7 +1,11 @@
 <template>
   <nav class="hidden md:flex">
     <ul class="text-lg">
-      <li v-for="link in links" :key="link.path" :class="{ active: visibleBlock === link.block }">
+      <li
+        v-for="link in links"
+        :key="link.path"
+        :class="{ active: visibleBlock === link.block }"
+      >
         <NuxtLink :to="link.path">
           {{ link.name }}
         </NuxtLink>

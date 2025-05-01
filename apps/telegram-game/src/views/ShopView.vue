@@ -30,7 +30,12 @@
       <SectionHeader :text="t('shop.titleSpecial')" />
 
       <div class="grid grid-cols-2 gap-2">
-        <ActiveCard v-for="product in products" :key="product.id" class="aspect-square" @click="selectProduct(product.id)">
+        <ActiveCard
+          v-for="product in products"
+          :key="product.id"
+          class="aspect-square"
+          @click="selectProduct(product.id)"
+        >
           <p class="font-medium text-lg leading-tight">
             {{ t(`products.${product.id}.title`) }}
           </p>
@@ -50,7 +55,12 @@
       <SectionHeader :text="t('character.collection.coins')" />
 
       <div class="grid grid-cols-2 gap-2">
-        <CharacterCard v-for="char in coinsCharacters" :key="char.id" :char="char" @click="selectCharacter(char.id)" />
+        <CharacterCard
+          v-for="char in coinsCharacters"
+          :key="char.id"
+          :char="char"
+          @click="selectCharacter(char.id)"
+        />
       </div>
     </div>
 
@@ -58,12 +68,21 @@
       <SectionHeader :text="t('character.collection.rare')" />
 
       <div class="grid grid-cols-2 gap-2">
-        <CharacterCard v-for="char in rareCharacters" :key="char.id" :char="char" @click="selectCharacter(char.id)" />
+        <CharacterCard
+          v-for="char in rareCharacters"
+          :key="char.id"
+          :char="char"
+          @click="selectCharacter(char.id)"
+        />
       </div>
     </div>
   </PageContainer>
 
-  <Modal :title="selectedCharacter?.id ? `&laquo;${t(`characters.${selectedCharacter?.id}.nickname`)}&raquo; ${t(`characters.${selectedCharacter?.id}.name`)}` : ''" :is-opened="isCharacterOpened" @close="isCharacterOpened = false">
+  <Modal
+    :title="selectedCharacter?.id ? `&laquo;${t(`characters.${selectedCharacter?.id}.nickname`)}&raquo; ${t(`characters.${selectedCharacter?.id}.name`)}` : ''"
+    :is-opened="isCharacterOpened"
+    @close="isCharacterOpened = false"
+  >
     <template #bg>
       <ConfettiBackground />
     </template>
@@ -78,7 +97,11 @@
     <CharacterUnlockBlock v-else :character-id="selectedCharacterId ?? ''" />
   </Modal>
 
-  <Modal :title="selectedProduct?.id ? t(`products.${selectedProduct.id}.title`) : ''" :is-opened="isProductOpened" @close="isProductOpened = false">
+  <Modal
+    :title="selectedProduct?.id ? t(`products.${selectedProduct.id}.title`) : ''"
+    :is-opened="isProductOpened"
+    @close="isProductOpened = false"
+  >
     <template #bg>
       <CoinBackground :coins-amount="selectedProduct?.coins" />
       <ChristmasBackground v-if="selectedProduct?.finishAt" />
@@ -95,7 +118,11 @@
     <ProductActivationBlock :product-id="selectedProductId ?? ''" />
   </Modal>
 
-  <Modal :title="t('item.coin.title')" :is-opened="isCoinOpened" @close="isCoinOpened = false">
+  <Modal
+    :title="t('item.coin.title')"
+    :is-opened="isCoinOpened"
+    @close="isCoinOpened = false"
+  >
     <Image src="coin.png" class="absolute -top-18 left-8 w-22 h-22" />
 
     <p class="text-sm tg-hint leading-tight">
@@ -103,7 +130,11 @@
     </p>
   </Modal>
 
-  <Modal :title="t('item.coupon.title')" :is-opened="isCouponOpened" @close="isCouponOpened = false">
+  <Modal
+    :title="t('item.coupon.title')"
+    :is-opened="isCouponOpened"
+    @close="isCouponOpened = false"
+  >
     <template #bg>
       <ConfettiBackground />
     </template>

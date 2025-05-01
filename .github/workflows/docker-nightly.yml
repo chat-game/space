@@ -13,6 +13,8 @@ on:
 jobs:
   determine-changes:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -53,8 +55,8 @@ jobs:
     if: ${{ needs.determine-changes.outputs.matrix != '[]' }}
     runs-on: ubuntu-latest
     permissions:
-      packages: write
       contents: read
+      packages: write
     strategy:
       matrix:
         app: ${{ fromJson(needs.determine-changes.outputs.matrix) }}
@@ -62,20 +64,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Use Latest Corepack
-        run: |
-          echo "Before: corepack version => $(corepack --version || echo 'not installed')"
-          npm install -g corepack@latest
-          echo "After : corepack version => $(corepack --version)"
-          corepack enable
-          pnpm --version
-
       - name: Set APP in env
         run: |
           echo "APP_NAME=${{ matrix.app }}" >> $GITHUB_ENV
           echo "APP_VERSION=nightly" >> $GITHUB_ENV
 
-      - name: Login to Registry
+      - name: Login to Github Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -88,4 +82,6 @@ jobs:
           context: .
           file: docker/${{ env.APP_NAME }}/Dockerfile
           push: true
-          tags: ${{ secrets.NAMESPACE }}/${{ env.APP_NAME }}:${{ env.APP_VERSION }}
+          build-args: |
+            APP_VERSION=${{ env.APP_VERSION }}
+          tags: ghcr.io/${{ github.repository }}/${{ env.APP_NAME }}:${{ env.APP_VERSION }}

@@ -17,7 +17,11 @@
       <p>{{ char.price }}</p>
     </div>
 
-    <Image :src="`units/${char.codename}/128.png`" class="absolute bottom-0 right-0 w-32 h-auto" :class="{ 'grayscale-100 opacity-70': !edition }" />
+    <Image
+      :src="`units/${char.codename}/128.png`"
+      class="absolute bottom-0 right-0 w-32 h-auto"
+      :class="{ 'grayscale-100 opacity-70': !edition }"
+    />
   </ActiveCard>
 </template>
 

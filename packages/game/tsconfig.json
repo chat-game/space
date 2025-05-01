@@ -15,7 +15,6 @@
   },
   "include": ["src/lib/**/*"],
   "exclude": [
-    ".turbo",
     "dist",
     "node_modules"
   ]

@@ -8,7 +8,11 @@
           <div class="flex flex-row flex-wrap gap-2">
             <CharacterAvatar :codename="character.character.codename" />
 
-            <i18n-t keypath="character.xpLeft" tag="p" class="leading-tight">
+            <i18n-t
+              keypath="character.xpLeft"
+              tag="p"
+              class="leading-tight"
+            >
               <template #xp>
                 <span class="font-semibold tg-accent-text">{{ character.xpToNextLevel }} XP</span>
               </template>
@@ -17,7 +21,12 @@
         </ActiveCard>
 
         <div>
-          <InventoryItemCard v-if="character.nextLevel && character.nextLevel.inventoryItemId" :item-id="character.nextLevel.inventoryItemId" :amount="character.nextLevel.awardAmount" @click="isRewardOpened = true" />
+          <InventoryItemCard
+            v-if="character.nextLevel && character.nextLevel.inventoryItemId"
+            :item-id="character.nextLevel.inventoryItemId"
+            :amount="character.nextLevel.awardAmount"
+            @click="isRewardOpened = true"
+          />
           <p class="mt-0.5 tg-hint text-center font-semibold">
             {{ t('reward') }}
           </p>
@@ -37,7 +46,11 @@
       <SectionHeader :text="t('room.titleActive')" />
 
       <div class="flex flex-col gap-2">
-        <div v-for="room in rooms" :key="room.id" class="tg-section-bg mb-4 px-3 py-3 flex flex-col gap-2 items-center rounded-2xl">
+        <div
+          v-for="room in rooms"
+          :key="room.id"
+          class="tg-section-bg mb-4 px-3 py-3 flex flex-col gap-2 items-center rounded-2xl"
+        >
           <div class="w-full space-y-3">
             <div class="text-xl font-medium">
               {{ t(`rooms.${room.id}.name`) }}
@@ -55,13 +68,24 @@
     </div>
   </PageContainer>
 
-  <Modal v-if="rewardItem" :title="t(`items.${rewardItem.id}.name`)" :is-opened="isRewardOpened" @close="isRewardOpened = false">
+  <Modal
+    v-if="rewardItem"
+    :title="t(`items.${rewardItem.id}.name`)"
+    :is-opened="isRewardOpened"
+    @close="isRewardOpened = false"
+  >
     <p class="tg-hint text-sm leading-tight">
       {{ t(`items.${rewardItem.id}.description`) }}
     </p>
   </Modal>
 
-  <CharacterProgressionModal v-if="character?.levels" :levels="character.levels" :current-level="character.level" :is-opened="isCharacterProgressionOpened" @close="isCharacterProgressionOpened = false" />
+  <CharacterProgressionModal
+    v-if="character?.levels"
+    :levels="character.levels"
+    :current-level="character.level"
+    :is-opened="isCharacterProgressionOpened"
+    @close="isCharacterProgressionOpened = false"
+  />
 </template>
 
 <script setup lang="ts">

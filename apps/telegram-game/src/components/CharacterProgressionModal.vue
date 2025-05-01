@@ -1,9 +1,24 @@
 <template>
-  <Modal :title="t('character.reward.title')" :is-opened="isOpened" @close="emit('close')">
+  <Modal
+    :title="t('character.reward.title')"
+    :is-opened="isOpened"
+    @close="emit('close')"
+  >
     <div class="max-w-full overflow-x-scroll snap-x">
       <div class="w-max flex flex-row flex-wrap gap-2">
-        <div v-for="level in preparedLevels" :id="currentLevel && currentLevel === level.level ? id : undefined" :key="level.id" class="mb-2 scroll-ml-6 snap-start">
-          <InventoryItemCard v-if="level.inventoryItemId" :item-id="level.inventoryItemId" :amount="level.awardAmount" class="!px-4 !pt-2 mb-1.5 w-24 h-18 bg-gradient-to-br from-sky-50 to-blue-200" :class="{ '!grayscale !opacity-50': currentLevel && currentLevel < level.level }" />
+        <div
+          v-for="level in preparedLevels"
+          :id="currentLevel && currentLevel === level.level ? id : undefined"
+          :key="level.id"
+          class="mb-2 scroll-ml-6 snap-start"
+        >
+          <InventoryItemCard
+            v-if="level.inventoryItemId"
+            :item-id="level.inventoryItemId"
+            :amount="level.awardAmount"
+            class="!px-4 !pt-2 mb-1.5 w-24 h-18 bg-gradient-to-br from-sky-50 to-blue-200"
+            :class="{ '!grayscale !opacity-50': currentLevel && currentLevel < level.level }"
+          />
           <div class="text-center text-sm">
             <p v-if="currentLevel && currentLevel >= level.level">
               {{ t('character.reward.received') }}

@@ -2,14 +2,11 @@
   "name": "@chat-game/locale",
   "private": true,
   "main": "./src/index.ts",
-  "files": ["src/**/*"],
+  "files": [
+    "src/**/*"
+  ],
   "scripts": {
     "clean": "rm -rf dist",
-    "clean:modules": "rm -rf .turbo node_modules",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix ."
-  },
-  "devDependencies": {
-    "@chat-game/eslint": "workspace:*"
+    "clean:modules": "rm -rf node_modules"
   }
 }

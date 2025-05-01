@@ -13,11 +13,19 @@
           </div>
 
           <div class="top-players hidden gap-2">
-            <div v-for="member in leaderboard?.members" :key="member.id" class="card">
+            <div
+              v-for="member in leaderboard?.members"
+              :key="member.id"
+              class="card"
+            >
               <p>{{ member.profile.telegramProfile.firstName }}</p>
               <div class="points">
                 <p>{{ member.points }}</p>
-                <Image src="/items/k3bitdush5wqbwphhdfnxqtl/128.png" width="32" height="32" />
+                <Image
+                  src="/items/k3bitdush5wqbwphhdfnxqtl/128.png"
+                  width="32"
+                  height="32"
+                />
               </div>
             </div>
           </div>

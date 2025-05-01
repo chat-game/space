@@ -17,7 +17,13 @@
     </div>
   </div>
 
-  <CharacterProgressionModal v-if="character?.levels" :levels="character.levels" :current-level="character.level" :is-opened="isCharacterProgressionOpened" @close="isCharacterProgressionOpened = false" />
+  <CharacterProgressionModal
+    v-if="character?.levels"
+    :levels="character.levels"
+    :current-level="character.level"
+    :is-opened="isCharacterProgressionOpened"
+    @close="isCharacterProgressionOpened = false"
+  />
 </template>
 
 <script setup lang="ts">

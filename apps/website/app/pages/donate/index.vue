@@ -13,7 +13,11 @@
       <p class="col-span-2">
         Укажи любую сумму и напиши сообщение, которое появится на активном стриме. И даже будет озвучка.
       </p>
-      <a href="https://www.donationalerts.com/r/hmbanan666" target="_blank" class="px-6 py-5 w-full bg-orange-400 border-b-6 border-orange-600 text-white text-base font-semibold tracking-wide rounded-lg cursor-pointer hover:opacity-85 active:scale-95 duration-200 flex flex-row justify-center items-center gap-3 flex-wrap">
+      <a
+        href="https://www.donationalerts.com/r/hmbanan666"
+        target="_blank"
+        class="px-6 py-5 w-full bg-orange-400 border-b-6 border-orange-600 text-white text-base font-semibold tracking-wide rounded-lg cursor-pointer hover:opacity-85 active:scale-95 duration-200 flex flex-row justify-center items-center gap-3 flex-wrap"
+      >
         <Icon name="simple-icons:twitch" class="!w-8 !h-8" />
         <p class="uppercase">Donationalerts</p>
       </a>

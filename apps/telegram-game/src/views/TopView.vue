@@ -38,7 +38,11 @@
       </div>
 
       <div class="flex flex-col gap-1">
-        <div v-for="member in leaderboard?.members" :key="member.id" class="px-3 py-2 tg-section-bg rounded-2xl flex flex-row gap-2 justify-between">
+        <div
+          v-for="member in leaderboard?.members"
+          :key="member.id"
+          class="px-3 py-2 tg-section-bg rounded-2xl flex flex-row gap-2 justify-between"
+        >
           <div class="flex flex-row gap-3 items-center">
             <div v-if="member.position === 1">
               <Image :src="getTrophyImage({ rarity: 3 })" class="w-10 h-10" />
@@ -68,7 +72,12 @@
       <SectionHeader :text="t('item.trophy.titleMine')" />
 
       <div v-if="trophies.length" class="grid grid-cols-3 gap-2">
-        <ActiveCard v-for="edition in trophies" :key="edition.id" class="px-2 flex flex-col flex-wrap gap-2 items-center" @click="selectTrophy(edition.id)">
+        <ActiveCard
+          v-for="edition in trophies"
+          :key="edition.id"
+          class="px-2 flex flex-col flex-wrap gap-2 items-center"
+          @click="selectTrophy(edition.id)"
+        >
           <Image :src="getTrophyImage(edition.trophy)" class="w-full h-auto" />
           <p class="w-full text-center text-sm font-medium leading-4 line-clamp-2">
             {{ t(`trophies.${edition.trophyId}.name`) }}
@@ -83,7 +92,11 @@
     </div>
   </PageContainer>
 
-  <Modal :title="selectedTrophy?.trophy.name ? t(`trophies.${selectedTrophy.trophyId}.name`) : ''" :is-opened="isTrophyOpened" @close="isTrophyOpened = false">
+  <Modal
+    :title="selectedTrophy?.trophy.name ? t(`trophies.${selectedTrophy.trophyId}.name`) : ''"
+    :is-opened="isTrophyOpened"
+    @close="isTrophyOpened = false"
+  >
     <p v-if="selectedTrophy?.createdAt" class="tg-hint font-medium leading-tight">
       {{ t('item.trophy.obtained') }} {{ new Date(selectedTrophy.createdAt).toLocaleString(locale, { day: 'numeric', month: 'long', year: 'numeric' }) }}
     </p>
