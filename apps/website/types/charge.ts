@@ -4,4 +4,5 @@ export interface Charge {
   energy: number
   rate: number
   difficulty: number
+  twitchStreamName: string
 }
