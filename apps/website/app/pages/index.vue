@@ -25,7 +25,7 @@
       <a
         href="https://t.me/WoodlandsGameBot"
         target="_blank"
-        class="px-6 py-4 md:py-5 w-full bg-emerald-500 border-b-6 border-emerald-600 text-white text-lg md:text-xl font-semibold tracking-wide rounded-lg cursor-pointer hover:opacity-85 active:scale-95 duration-200 flex flex-row justify-center items-center gap-3"
+        class="px-6 py-3 md:py-4 w-full bg-emerald-500 border-b-6 border-emerald-600 text-white text-lg md:text-xl font-semibold tracking-wide rounded-lg cursor-pointer hover:opacity-85 active:scale-95 duration-200 flex flex-row justify-center items-center gap-3"
       >
         <Icon name="simple-icons:telegram" size="32" />
         <p>Открыть игру</p>
@@ -33,21 +33,25 @@
       <a
         href="https://github.com/chat-game/space"
         target="_blank"
-        class="px-6 py-4 md:py-5 w-full bg-orange-900/75 border-b-6 border-orange-900/75 text-white text-lg md:text-xl font-semibold tracking-wide rounded-lg cursor-pointer hover:opacity-85 active:scale-95 duration-200 flex flex-row justify-center items-center gap-3"
+        class="px-6 py-3 md:py-4 w-full bg-orange-900/75 border-b-6 border-orange-900/75 text-white text-lg md:text-xl font-semibold tracking-wide rounded-lg cursor-pointer hover:opacity-85 active:scale-95 duration-200 flex flex-row justify-center items-center gap-3"
       >
         <Icon name="simple-icons:github" size="32" />
         <p>GitHub</p>
         <div class="flex flex-row items-center gap-1">
           <Icon name="lucide:star" class="!size-5" />
-          <p>23</p>
+          <p>24</p>
         </div>
       </a>
     </div>
   </div>
 
-  <div class="wagon-block w-full">
-    <div class="wagon my-0 mx-auto w-fit text-center">
-      <img src="~/assets/img/wagon-full.png" alt="">
+  <div class="my-2 py-8 w-full" style="background-image: url('/img/background-green.webp')">
+    <div class="my-0 mx-auto w-fit text-center">
+      <img
+        src="/img/wagon-full.png"
+        class="w-auto max-h-64"
+        alt=""
+      >
     </div>
   </div>
 
@@ -360,17 +364,6 @@ const shopProducts = [
 </script>
 
 <style scoped>
-.wagon-block {
-  margin: 2em 0;
-  padding: 4em 0;
-  background-image: url(~/assets/img/background-green.webp);
-}
-
-.wagon img {
-  width: 50vw;
-  max-width: fit-content;
-}
-
 .thanks-block {
   em {
     font-style: normal;

@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
     const telegramId = telegram.user.id.toString()
 
     const query = getQuery(event)
-    const type = query?.type?.toString()
+    const type = typeof query.type === 'string' ? query.type : undefined
 
     const telegramProfile = await prisma.telegramProfile.findFirst({
       where: { telegramId },
