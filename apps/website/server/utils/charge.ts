@@ -1,5 +1,6 @@
 import type { Charge } from '~~/types/charge'
 import { StreamCharge } from '../core/charge/stream'
+import { TwitchChatController } from './twitch/chat.controller'
 
 export const chargeRooms: StreamCharge[] = []
 
@@ -25,7 +26,7 @@ export async function initCharges() {
   for (const charge of charges) {
     chargeRooms.push(new StreamCharge({
       ...charge,
-    }))
+    }, new TwitchChatController({ streamName: charge.twitchStreamName })))
   }
 
   logger.success('Stream charges created')
