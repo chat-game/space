@@ -95,7 +95,7 @@ async function update(id: string) {
   difficulty.value = data.difficulty
 }
 
-const changeRateInSecond = computed(() => rate.value / 1000)
+const changeRateInSecond = computed(() => rate.value / 1000 * difficulty.value)
 const changeRateInMinute = computed(() => changeRateInSecond.value * 60)
 
 const chargeTextColor = computed(() => {

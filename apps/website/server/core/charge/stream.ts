@@ -16,7 +16,6 @@ export class StreamCharge {
   difficulty: number
 
   mainTicker!: NodeJS.Timeout
-  mainTickerUpdatedAt!: number
   mainTickerInterval: number = 1000
 
   difficultyTicker!: NodeJS.Timeout
@@ -27,9 +26,9 @@ export class StreamCharge {
   constructor(data: StreamChargeOptions) {
     this.id = data.id ?? createId()
     this.startedAt = data.startedAt ?? new Date().toISOString()
-    this.energy = 100
-    this.rate = -15
-    this.difficulty = 1
+    this.energy = data.energy ?? 0
+    this.rate = data.rate ?? 0
+    this.difficulty = data.difficulty ?? 0
 
     this.createMainTicker()
     this.createDifficultyTicker()
@@ -38,14 +37,9 @@ export class StreamCharge {
   }
 
   createMainTicker() {
-    this.mainTickerUpdatedAt = Date.now()
     this.mainTicker = setInterval(() => {
-      const now = Date.now()
-      const deltaSeconds = (now - this.mainTickerUpdatedAt) / 1000
-      this.mainTickerUpdatedAt = now
-
-      const changeRateInSecond = this.rate / 1000
-      this.energy = Math.max(0, Math.min(1000, this.energy + (changeRateInSecond * deltaSeconds)))
+      const addTo = this.energy + (this.rate / 1000 * this.difficulty)
+      this.energy = Math.max(0, Math.min(1000, addTo))
 
       this.logger.debug('Stream charge ticker', this.energy)
     }, this.mainTickerInterval)
@@ -53,9 +47,7 @@ export class StreamCharge {
 
   createDifficultyTicker() {
     this.difficultyTicker = setInterval(() => {
-      const timeMs = Math.floor((Date.now() - new Date(this.startedAt).getTime()))
-      const timeBlock = Math.floor(timeMs / this.difficultyTickerInterval)
-      this.difficulty += timeBlock
+      this.difficulty += 0.25
     }, this.difficultyTickerInterval)
   }
 
