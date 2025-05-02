@@ -1,7 +1,7 @@
 <template>
   <ClientOnly>
     <div class="relative w-dvw h-dvh overscroll-none overflow-hidden">
-      <div class="absolute bottom-16 left-0 py-2 px-1.5 w-46 bg-orange-950 rounded-r-xl">
+      <div class="absolute bottom-16 left-0 py-2 px-1.5 w-36 bg-orange-950 rounded-r-xl">
         <img
           src="/qr-website.png"
           alt="qr"
@@ -12,7 +12,7 @@
       <div class="absolute bottom-10 left-0 right-0 h-1.5 bg-orange-900">
         <div
           class="absolute top-0 left-0 h-full bg-orange-300 transition-all duration-1000 ease-out overflow-visible"
-          :style="{ width: `${chargeLevel > 100 ? 100 : chargeLevel}%` }"
+          :style="{ width: `${energy > 100 ? 100 : energy}%` }"
         >
           <div class="absolute inset-0 bg-orange-100 opacity-10 animate-pulse" />
 
@@ -36,22 +36,33 @@
 
           <div class="grow flex flex-row justify-between items-center gap-3">
             <NumberFlow
-              :value="chargeLevel / 100"
+              :value="energy / 100"
               :format="{ style: 'percent', maximumFractionDigits: 1 }"
               locales="en-US"
               class="text-xl font-bold"
               :class="chargeTextColor"
             />
-            <NumberFlow
-              :value="changeRateInMinute / 100"
-              locales="en-US"
-              suffix=" в минуту"
-              :format="{ style: 'percent', maximumFractionDigits: 2, signDisplay: 'always' }"
-              class="text-sm transition-colors duration-300"
-              :class="[
-                changeRateInMinute < 0 ? 'text-orange-600' : 'text-orange-300',
-              ]"
-            />
+
+            <div class="flex flex-row items-center gap-4">
+              <NumberFlow
+                :value="changeRateInMinute / 100"
+                locales="en-US"
+                suffix=" в минуту"
+                :format="{ style: 'percent', maximumFractionDigits: 2, signDisplay: 'always' }"
+                class="text-sm transition-colors duration-300"
+                :class="[
+                  changeRateInMinute < 0 ? 'text-orange-600' : 'text-orange-300',
+                ]"
+              />
+
+              <NumberFlow
+                :value="difficulty"
+                locales="en-US"
+                prefix="сложность x"
+                :format="{ style: 'decimal', maximumFractionDigits: 2 }"
+                class="text-sm transition-colors duration-300 text-orange-300"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -68,66 +79,65 @@ definePageMeta({
 
 const route = useRoute()
 
-const energy = ref(56)
-const changeRate = ref(-100)
+const id = route.query.id as string
+const energy = ref(0)
+const rate = ref(0)
+const difficulty = ref(0)
 
-const chargeLevel = computed(() => energy.value)
-const changeRateInSecond = computed(() => changeRate.value / 1000)
+async function update(id: string) {
+  const data = await $fetch(`/api/charge/${id}`)
+  if (!data) {
+    return
+  }
+
+  energy.value = data.energy
+  rate.value = data.rate
+  difficulty.value = data.difficulty
+}
+
+const changeRateInSecond = computed(() => rate.value / 1000)
 const changeRateInMinute = computed(() => changeRateInSecond.value * 60)
 
-const lastUpdate = ref(Date.now())
-let decayInterval: NodeJS.Timeout
-
 const chargeTextColor = computed(() => {
-  if (chargeLevel.value > 80) {
+  if (energy.value > 80) {
     return 'text-orange-100'
   }
-  if (chargeLevel.value > 60) {
+  if (energy.value > 60) {
     return 'text-orange-200'
   }
-  if (chargeLevel.value > 30) {
+  if (energy.value > 30) {
     return 'text-orange-300'
   }
-  if (chargeLevel.value > 10) {
+  if (energy.value > 10) {
     return 'text-orange-400'
   }
   return 'text-orange-500'
 })
 
 const batteryIconName = computed(() => {
-  if (chargeLevel.value < 10) {
+  if (energy.value < 10) {
     return 'i-lucide-battery'
   }
-  if (chargeLevel.value < 30) {
+  if (energy.value < 30) {
     return 'i-lucide-battery-low'
   }
-  if (chargeLevel.value < 80) {
+  if (energy.value < 80) {
     return 'i-lucide-battery-medium'
   }
   return 'i-lucide-battery-full'
 })
 
+let syncInterval: NodeJS.Timeout
+
 onMounted(() => {
-  const energyNow = route.query.energy?.toString() ?? energy.value
-  if (energyNow) {
-    energy.value = Number(energyNow)
-  }
+  update(id)
 
-  const changeRateNow = route.query.rate?.toString() ?? changeRate.value
-  if (changeRateNow) {
-    changeRate.value = Number(changeRateNow)
-  }
-
-  decayInterval = setInterval(() => {
-    const now = Date.now()
-    const deltaSeconds = (now - lastUpdate.value) / 1000
-    lastUpdate.value = now
-
-    energy.value = Math.max(0, Math.min(1000, energy.value + (changeRateInSecond.value * deltaSeconds)))
-  }, 1000)
+  syncInterval = setInterval(() => {
+    update(id)
+  }, 4000)
 })
 
 onUnmounted(() => {
-  clearInterval(decayInterval)
+  clearInterval(syncInterval)
 })
 </script>
