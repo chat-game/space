@@ -35,7 +35,12 @@ const links = [
   },
   {
     title: 'Bluesky',
-    url: 'https://bsky.app/profile/nick.kosarev.space',
+    url: 'https://bsky.app/profile/kosarev.space',
+    isOnNewTab: true,
+  },
+  {
+    title: 'TenChat',
+    url: 'https://tenchat.ru/hmbanan666',
     isOnNewTab: true,
   },
   {
