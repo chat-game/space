@@ -13,6 +13,8 @@ export default defineEventHandler(async (event) => {
     startedAt: chargeRoom.startedAt,
     energy: chargeRoom.energy,
     rate: chargeRoom.rate,
+    ratePerMinute: chargeRoom.ratePerMinute,
     difficulty: chargeRoom.difficulty,
+    messagesCount: chargeRoom.messages.length,
   }
 })
