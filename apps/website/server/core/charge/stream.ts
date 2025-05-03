@@ -15,6 +15,7 @@ interface StreamChargeMessage {
   createdAt: number
   text: string
   user: string
+  isExpired: boolean
 }
 
 export class StreamCharge {
@@ -22,17 +23,18 @@ export class StreamCharge {
   startedAt: string
   energy: number
   rate: number
+  ratePerMinute: number
   difficulty: number
   twitchStreamName: string
 
   messages: StreamChargeMessage[]
 
-  mainTicker!: NodeJS.Timeout
-  mainTickerInterval: number = 1000
+  energyTicker!: NodeJS.Timeout
+  energyTickerInterval: number = 1000
 
   difficultyTicker!: NodeJS.Timeout
   difficultyTickerInterval: number = 5 * 60 * 1000
-  difficultyMultiplier: number = 0.10
+  difficultyMultiplier: number = 0.05
 
   messagesTicker!: NodeJS.Timeout
   messagesTickerInterval: number = 1000
@@ -44,12 +46,15 @@ export class StreamCharge {
     this.startedAt = data.startedAt ?? new Date().toISOString()
     this.energy = data.energy ?? 0
     this.rate = data.rate ?? 0
+    this.ratePerMinute = 0
     this.difficulty = data.difficulty ?? 0
     this.twitchStreamName = data.twitchStreamName
 
     this.messages = []
 
-    this.initMainTicker()
+    this.recalculateRate()
+
+    this.initEnergyTicker()
     this.initDifficultyTicker()
     this.initMessagesTicker()
 
@@ -58,13 +63,19 @@ export class StreamCharge {
     this.logger.success('Stream charge initialized', this.id)
   }
 
-  initMainTicker() {
-    this.mainTicker = setInterval(() => {
-      const addTo = this.energy + (this.rate / 1000 * this.difficulty)
-      this.energy = Math.max(0, Math.min(1000, addTo))
+  calculateEnergyPerTick() {
+    return this.rate / this.energyTickerInterval * this.difficulty
+  }
 
-      this.logger.debug('Stream charge ticker', this.energy)
-    }, this.mainTickerInterval)
+  recalculateRate() {
+    this.ratePerMinute = this.rate / this.energyTickerInterval * this.difficulty * (60_000 / this.energyTickerInterval)
+  }
+
+  initEnergyTicker() {
+    this.energyTicker = setInterval(() => {
+      this.recalculateRate()
+      this.energy = Math.max(0, Math.min(1000, this.energy + this.calculateEnergyPerTick()))
+    }, this.energyTickerInterval)
   }
 
   initDifficultyTicker() {
@@ -76,10 +87,11 @@ export class StreamCharge {
   initMessagesTicker() {
     this.messagesTicker = setInterval(() => {
       for (const message of this.messages) {
-        const expiredTime = 1000 * 20 // 20s
+        const expiredTime = 30_000 // 30s
+        const isExpired = Date.now() - message.createdAt >= expiredTime
 
-        if (Date.now() - message.createdAt >= expiredTime) {
-          this.messages = this.messages.filter((m) => m.id !== message.id)
+        if (!message.isExpired && isExpired) {
+          message.isExpired = true
           this.rate -= 1
         }
       }
@@ -87,7 +99,7 @@ export class StreamCharge {
   }
 
   destroy() {
-    clearInterval(this.mainTicker)
+    clearInterval(this.energyTicker)
     clearInterval(this.difficultyTicker)
     clearInterval(this.messagesTicker)
   }
@@ -98,6 +110,7 @@ export class StreamCharge {
       createdAt: Date.now(),
       text,
       user,
+      isExpired: false,
     })
 
     this.rate += 1
