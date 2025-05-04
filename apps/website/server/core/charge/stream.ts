@@ -113,6 +113,12 @@ export class StreamCharge {
     return updatedRate
   }
 
+  expireAllModifiers() {
+    for (const modifier of this.modifiers) {
+      modifier.isExpired = true
+    }
+  }
+
   recalculateRate() {
     this.ratePerMinute = this.energyPerTick * (60_000 / this.energyTickerInterval)
   }
@@ -200,6 +206,11 @@ export class StreamCharge {
       this.energy -= 5
     }
 
+    // Neutral
+    if (reward.code === 'neutral1') {
+      this.expireAllModifiers()
+    }
+
     const modifier: ChargeModifier = {
       id: createId(),
       createdAt: Date.now(),
@@ -218,64 +229,72 @@ const TWITCH_CHANNEL_REWARDS = [
     code: 'positive1',
     rewardId: '57b753fb-3a74-47f3-bb88-5d4feab6f42e',
     rewardTitle: 'Солнечная панель',
-    description: 'Преобразует фоновое излучение в энергию, +2 каждый тик. Действует 2 минуты.',
-    price: 150,
-    actionTimeInSeconds: 120,
+    description: 'Преобразует фоновое излучение в энергию, +2 каждый тик. Действует 3 минуты.',
+    price: 100,
+    actionTimeInSeconds: 180,
   },
   {
     code: 'positive2',
     rewardId: '66e1569d-2226-49f6-9abd-f8b0b03fd5fd',
     rewardTitle: 'Квантовый аккумулятор',
-    description: 'Накапливает энергию из окружающего пространства, восстанавливая +5 каждый тик в течение минуты.',
-    price: 250,
-    actionTimeInSeconds: 60,
+    description: 'Накапливает энергию из окружающего пространства, восстанавливая +5 каждый тик в течение 2 минут.',
+    price: 200,
+    actionTimeInSeconds: 120,
   },
   {
     code: 'positive3',
     rewardId: 'd37c5835-db07-44b2-80cb-e16f854ae8b7',
     rewardTitle: 'Магнитный ускоритель',
-    description: 'Усиливает поток энергии, увеличивая скорость восстановления в 2 раза. Действует 5 минут.',
-    price: 500,
-    actionTimeInSeconds: 300,
+    description: 'Усиливает поток энергии, увеличивая скорость восстановления в 2 раза. Действует 8 минут.',
+    price: 400,
+    actionTimeInSeconds: 480,
   },
   {
     code: 'positive4',
     rewardId: '121c393a-d5a2-4167-aa4b-efe4a016ea6d',
     rewardTitle: 'Энергетический всплеск',
     description: 'Мощный выброс энергии, мгновенно восстанавливающий 5% уровня Заряженности.',
-    price: 1000,
+    price: 800,
     actionTimeInSeconds: 0,
   },
   {
     code: 'negative1',
     rewardId: 'e5420bca-e719-4b8d-8a15-d8ae46739d74',
     rewardTitle: 'Энергетическая утечка',
-    description: 'Создает дыру в энергетическом поле, -2 каждый тик. Действует 2 минуты.',
-    price: 200,
-    actionTimeInSeconds: 120,
+    description: 'Создает дыру в энергетическом поле, -2 каждый тик. Действует 3 минуты.',
+    price: 150,
+    actionTimeInSeconds: 180,
   },
   {
     code: 'negative2',
     rewardId: 'aa0ca8b8-cf9e-4161-8a75-b3c67dd97cb0',
     rewardTitle: 'Разряд конденсатора',
-    description: 'Упс, такие дела. -5 каждый тик в течение минуты.',
-    price: 300,
-    actionTimeInSeconds: 60,
+    description: 'Упс, такие дела. -5 каждый тик в течение 2 минут.',
+    price: 250,
+    actionTimeInSeconds: 120,
   },
   {
     code: 'negative3',
     rewardId: '0e6ebe0c-8d6a-4f0d-a300-1269c0d44339',
     rewardTitle: 'Энергетический шторм',
-    description: 'Создает хаос в энергетическом поле, снижающий скорость восстановления в 2 раза. Действует 5 минут.',
-    price: 600,
-    actionTimeInSeconds: 300,
+    description: 'Создает хаос в энергетическом поле, снижающий скорость восстановления в 2 раза. Действует 8 минут.',
+    price: 500,
+    actionTimeInSeconds: 480,
   },
   {
     code: 'negative4',
     rewardId: '48c5e058-2b71-4ae3-9f6f-b0342a9f2032',
     rewardTitle: 'Электромагнитный разряд',
     description: 'Мощный разряд, мгновенно уменьшающий уровень Заряженности на 5%.',
-    price: 1200,
+    price: 1000,
+    actionTimeInSeconds: 0,
+  },
+  {
+    code: 'neutral1',
+    rewardId: '178832f9-f84e-4376-a205-db57ac4f0406',
+    rewardTitle: 'Нулевой резонанс',
+    description: 'Создание состояния, при котором все эффекты взаимно уничтожаются.',
+    price: 2500,
     actionTimeInSeconds: 0,
   },
 ]
