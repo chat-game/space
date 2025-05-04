@@ -90,9 +90,6 @@ catalogs:
     '@twurple/eventsub-ws':
       specifier: ^7.3.0
       version: 7.3.0
-    '@twurple/pubsub':
-      specifier: ^7.3.0
-      version: 7.3.0
     '@types/howler':
       specifier: ^2.2.12
       version: 2.2.12
@@ -381,9 +378,6 @@ importers:
       '@twurple/eventsub-ws':
         specifier: 'catalog:'
         version: 7.3.0(@twurple/api@7.3.0(@twurple/auth@7.3.0))
-      '@twurple/pubsub':
-        specifier: 'catalog:'
-        version: 7.3.0(@twurple/auth@7.3.0)
       grammy:
         specifier: 'catalog:'
         version: 1.36.1
@@ -2299,11 +2293,6 @@ packages:
     resolution: {integrity: sha512-jtIMdW/atTrn5Eo3XGS8Lw0EIsK3GQsZGJDLYRwqw2bCV8ZnQoZ8YaXUJb5Wd+gebUfeBr4j7mvZlGc+Wkp17w==}
     peerDependencies:
       '@twurple/api': 7.3.0
-
-  '@twurple/pubsub@7.3.0':
-    resolution: {integrity: sha512-HnVolxlS7X3OZGc3A1zpG3Hxh+ACORYsYLTCRvaXcCYdxqNzlp3YDHPiiVrAMk2xayNkjNCF7Ee46axSSsTjqw==}
-    peerDependencies:
-      '@twurple/auth': 7.3.0
 
   '@tybys/wasm-util@0.9.0':
     resolution: {integrity: sha512-6+7nlbMVX/PVDCwaIQ8nTOPveOcFLSt8GcXdx8hD0bt39uWxYT88uXzqTd4fTvqta7oeUJqudepapKNt2DYJFw==}
@@ -9121,19 +9110,6 @@ snapshots:
     transitivePeerDependencies:
       - bufferutil
       - encoding
-      - utf-8-validate
-
-  '@twurple/pubsub@7.3.0(@twurple/auth@7.3.0)':
-    dependencies:
-      '@d-fischer/connection': 9.0.0
-      '@d-fischer/logger': 4.2.3
-      '@d-fischer/shared-utils': 3.6.4
-      '@d-fischer/typed-event-emitter': 3.3.3
-      '@twurple/auth': 7.3.0
-      '@twurple/common': 7.3.0
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - bufferutil
       - utf-8-validate
 
   '@tybys/wasm-util@0.9.0':

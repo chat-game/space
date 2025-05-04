@@ -25,7 +25,6 @@
     "@twurple/chat": "catalog:",
     "@twurple/easy-bot": "catalog:",
     "@twurple/eventsub-ws": "catalog:",
-    "@twurple/pubsub": "catalog:",
     "grammy": "catalog:",
     "howler": "catalog:",
     "ioredis": "catalog:",

@@ -1,7 +1,6 @@
 import { ApiClient } from '@twurple/api'
 import { Bot } from '@twurple/easy-bot'
 import { EventSubWsListener } from '@twurple/eventsub-ws'
-import { PubSubClient } from '@twurple/pubsub'
 import { DBRepository } from '../repository'
 import { twitchProvider } from './twitch.provider'
 import { TwitchService } from './twitch.service'
@@ -41,7 +40,7 @@ class TwitchController {
         this.#channel,
         `Появился новый Купон! Забирай: пиши команду "!купон ${coupon.activationCommand}" :D`,
       )
-    }, 1000 * 60 * 25)
+    }, 1000 * 60 * 45)
   }
 
   stopCouponGenerator() {
@@ -57,17 +56,6 @@ class TwitchController {
 
   async serve() {
     const authProvider = await twitchProvider.getAuthProvider()
-
-    const pubSubClient = new PubSubClient({ authProvider })
-
-    pubSubClient.onRedemption(this.#userId, ({ userId, userName, rewardId, message }) => {
-      this.#service.handleChannelRewardRedemption({
-        userId,
-        userName,
-        rewardId,
-        message,
-      })
-    })
 
     this.#bot = new Bot({
       authProvider,
@@ -91,14 +79,14 @@ class TwitchController {
 
     setInterval(() => {
       void this.#repository.updateManaOnProfiles()
-    }, 1000 * 60 * 60)
+    }, 1000 * 60 * 120)
 
     // Info message
     setInterval(() => {
       if (twitchProvider.isStreaming === true) {
         this.#bot.announce(this.#channel, this.getRandomInfoMessage())
       }
-    }, 1000 * 60 * 12)
+    }, 1000 * 60 * 10)
   }
 
   async serveStreamOnline() {
@@ -120,10 +108,12 @@ class TwitchController {
 
   getRandomInfoMessage(): string {
     const messages = [
-      `Присоединяйся к рубке деревьев на стриме! Запусти игру в Telegram: https://t.me/WoodlandsGameBot`,
-      `Поддержи стримера: https://chatgame.space/donate`,
-      `Приобретай Монеты в ChatGame: https://chatgame.space/#shop. Разблокируй вручную созданных персонажей. Спасибо за поддержку!`,
-      `Еще не подписан? Стань фолловером, подпишись на канал! Чем вас больше, тем больше интерактива создадим.`,
+      'Присоединяйся к рубке деревьев! Запусти игру в Telegram: https://t.me/WoodlandsGameBot',
+      'Поддержи стримера: https://chatgame.space/donate',
+      'Приобретай Монеты в ChatGame: https://chatgame.space/#shop. Разблокируй вручную созданных персонажей. Спасибо за поддержку!',
+      'Еще не подписан? Стань фолловером, подпишись на канал!',
+      'Активируй разные модификаторы за Баллы Канала! Влияй на изменение Заряженности.',
+      'Донаты имеют сильное влияние на Заряженность: разовый буст и рандомные эффекты.',
     ]
 
     return messages[Math.floor(Math.random() * messages.length)] as string
