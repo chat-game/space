@@ -6,7 +6,6 @@ import { DBRepository } from '../repository'
 import { twitchController } from './twitch.controller'
 
 class TwitchProvider {
-  readonly #logger = useLogger('twitch-provider')
   #authProvider!: AuthProvider
   #isStreaming: boolean = false
   readonly #userId: string
@@ -44,10 +43,8 @@ class TwitchProvider {
 
     if (value) {
       twitchController.startCouponGenerator()
-      // void twitchAddonController.startCharacters()
     } else {
       twitchController.stopCouponGenerator()
-      // twitchAddonController.stopCharacters()
     }
   }
 
@@ -56,10 +53,12 @@ class TwitchProvider {
       return this.#authProvider
     }
 
-    this.#authProvider = await this.#prepareAuthProvider()
-    if (!this.#authProvider) {
+    const provider = await this.#prepareAuthProvider()
+    if (!provider) {
       return this.#createNewAccessToken()
     }
+
+    this.#authProvider = provider
 
     return this.#authProvider
   }
@@ -100,14 +99,14 @@ class TwitchProvider {
     throw new Error('No access token found and no Twitch code. See .env.example')
   }
 
-  async #prepareAuthProvider() {
+  async #prepareAuthProvider(): Promise<RefreshingAuthProvider> {
     if (!this.#userId) {
       throw new Error('No user id')
     }
 
     const accessToken = await this.#repository.getTwitchAccessToken(this.#userId)
     if (!accessToken) {
-      throw new Error('No access token')
+      return this.#createNewAccessToken()
     }
 
     const authProvider = new RefreshingAuthProvider({
@@ -119,7 +118,8 @@ class TwitchProvider {
       await this.#repository.updateTwitchAccessToken(userId, newTokenData)
     })
 
-    await authProvider.addUserForToken(accessToken, ['chat', 'user', 'channel', 'moderator'])
+    const intents = ['chat', 'user', 'channel', 'moderator']
+    await authProvider.addUserForToken(accessToken, intents)
 
     return authProvider
   }

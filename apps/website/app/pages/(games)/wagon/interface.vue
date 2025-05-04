@@ -44,10 +44,15 @@
           </div>
 
           <div class="flex flex-row justify-center items-center gap-4">
-            <div class="flex flex-row items-center gap-2">
-              <div class="size-6 text-sm bg-orange-200 rounded-md opacity-10" />
-              <div class="size-6 text-sm bg-orange-200 rounded-md opacity-10" />
-              <div class="size-6 text-sm bg-orange-200 rounded-md opacity-10" />
+            <div class="z-20 -mt-1 flex flex-row items-end gap-2">
+              <ModifierIcon
+                v-for="modifier in modifiers"
+                :key="modifier.id"
+                :modifier="modifier"
+              />
+              <div v-if="modifiers.length <= 0" class="size-8 text-sm bg-orange-200 rounded-md opacity-10" />
+              <div v-if="modifiers.length <= 1" class="size-8 text-sm bg-orange-200 rounded-md opacity-10" />
+              <div v-if="modifiers.length <= 2" class="size-8 text-sm bg-orange-200 rounded-md opacity-10" />
             </div>
 
             <NumberFlow
@@ -84,6 +89,7 @@
 </template>
 
 <script setup lang="ts">
+import type { ChargeModifier } from '~~/types/charge'
 import NumberFlow from '@number-flow/vue'
 
 definePageMeta({
@@ -98,6 +104,7 @@ const rate = ref(0)
 const ratePerMinute = ref(0)
 const difficulty = ref(0)
 const messagesCount = ref(0)
+const modifiers = ref<ChargeModifier[]>([])
 
 async function update(id: string) {
   const data = await $fetch(`/api/charge/${id}`)
@@ -110,6 +117,7 @@ async function update(id: string) {
   ratePerMinute.value = data.ratePerMinute
   difficulty.value = data.difficulty
   messagesCount.value = data.messagesCount
+  modifiers.value = data.modifiers
 }
 
 const chargeTextColor = computed(() => {
@@ -148,7 +156,7 @@ onMounted(() => {
 
   syncInterval = setInterval(() => {
     update(id)
-  }, 4000)
+  }, 3000)
 })
 
 onUnmounted(() => {

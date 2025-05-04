@@ -24,9 +24,12 @@ export async function initCharges() {
     }))
 
   for (const charge of charges) {
-    chargeRooms.push(new StreamCharge({
-      ...charge,
-    }, new TwitchChatController({ streamName: charge.twitchStreamName })))
+    const chargeInstance = new StreamCharge(
+      charge,
+      new TwitchChatController({ streamName: charge.twitchStreamName }),
+      new TwitchSubController(),
+    )
+    chargeRooms.push(chargeInstance)
   }
 
   logger.success('Stream charges created')

@@ -30,7 +30,6 @@ catalog:
   '@twurple/chat': ^7.3.0
   '@twurple/easy-bot': ^7.3.0
   '@twurple/eventsub-ws': ^7.3.0
-  '@twurple/pubsub': ^7.3.0
   '@types/howler': ^2.2.12
   '@types/node': ^22.15.3
   '@vitejs/plugin-vue': ^5.2.3

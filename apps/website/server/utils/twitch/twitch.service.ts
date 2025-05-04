@@ -1,14 +1,7 @@
 import { QuestService } from '../quest'
 import { DBRepository } from '../repository'
 
-export const TWITCH_CHANNEL_REWARDS = {
-  add150ViewerPointsId: 'd8237822-c943-434f-9d7e-87a9f549f4c4',
-  villainStealFuelId: 'd5956de4-54ff-49e4-afbe-ee4e62718eee',
-  addNewIdea: '289457e8-18c2-4b68-8564-fc61dd60b2a2',
-}
-
 export class TwitchService {
-  readonly #logger = useLogger('twitch-service')
   readonly #quest: QuestService
   readonly #repository: DBRepository
 
@@ -94,43 +87,5 @@ export class TwitchService {
         message: null,
       }
     }
-  }
-
-  public async handleChannelRewardRedemption({
-    userId,
-    userName,
-    rewardId,
-    message,
-  }: {
-    userId: string
-    userName: string
-    rewardId: string
-    message: string
-  }) {
-    this.#logger.log('The viewer bought a reward using channel points', userId, userName, rewardId, message)
-
-    // const player = await this.game.repository.findOrCreatePlayer(
-    //   userId,
-    //   userName,
-    // )
-    // if (rewardId === TWITCH_CHANNEL_REWARDS.add150ViewerPointsId) {
-    //   await this.game.repository.addPlayerViewerPoints(player.id, 150)
-    //   return
-    // }
-    // if (rewardId === TWITCH_CHANNEL_REWARDS.villainStealFuelId) {
-    //   return this.game.handleActionFromChat({
-    //     action: 'STEAL_FUEL',
-    //     userId,
-    //     userName,
-    //   })
-    // }
-    // if (rewardId === TWITCH_CHANNEL_REWARDS.addNewIdea) {
-    //   return this.game.handleActionFromChat({
-    //     action: 'CREATE_IDEA',
-    //     userId,
-    //     userName,
-    //     params: [message],
-    //   })
-    // }
   }
 }

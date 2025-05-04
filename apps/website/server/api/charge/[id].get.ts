@@ -8,6 +8,8 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  const modifiers = chargeRoom.modifiers.filter((m) => !m.isExpired)
+
   return {
     id: chargeRoom.id,
     startedAt: chargeRoom.startedAt,
@@ -16,5 +18,6 @@ export default defineEventHandler(async (event) => {
     ratePerMinute: chargeRoom.ratePerMinute,
     difficulty: chargeRoom.difficulty,
     messagesCount: chargeRoom.messages.length,
+    modifiers,
   }
 })
