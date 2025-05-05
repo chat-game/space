@@ -55,21 +55,23 @@ export default defineNuxtConfig({
   },
   css: ['~/assets/css/styles.css'],
   runtimeConfig: {
-    redisUrl: '', // NUXT_REDIS_URL
-    websiteBearer: '', // NUXT_WEBSITE_BEARER
-    twitchChannelName: '', // NUXT_TWITCH_CHANNEL_NAME
-    twitchChannelId: '', // NUXT_TWITCH_CHANNEL_ID
-    twitchOauthCode: '', // NUXT_TWITCH_OAUTH_CODE
-    yookassaShopId: '', // NUXT_YOOKASSA_SHOP_ID
-    yookassaApiKey: '', // NUXT_YOOKASSA_API_KEY
-    oauthTwitchClientId: '', // NUXT_OAUTH_TWITCH_CLIENT_ID
-    oauthTwitchClientSecret: '', // NUXT_OAUTH_TWITCH_CLIENT_SECRET
-    telegramBotToken: '', // NUXT_TELEGRAM_BOT_TOKEN
-    telegramGameBotToken: '', // NUXT_TELEGRAM_GAME_BOT_TOKEN
-    telegramAdminId: '', // NUXT_TELEGRAM_ADMIN_ID
+    redisUrl: '',
+    websiteBearer: '',
+    twitchChannelName: '',
+    twitchChannelId: '',
+    twitchOauthCode: '',
+    yookassaShopId: '',
+    yookassaApiKey: '',
+    oauthTwitchClientId: '',
+    oauthTwitchClientSecret: '',
+    telegramBotToken: '',
+    telegramGameBotToken: '',
+    telegramAdminId: '',
+    donationAlertsClientId: '',
+    donationAlertsClientSecret: '',
     public: {
-      signInRedirectUrl: '', // NUXT_PUBLIC_SIGN_IN_REDIRECT_URL
-      websocketUrl: '', // NUXT_PUBLIC_WEBSOCKET_URL
+      signInRedirectUrl: '',
+      websocketUrl: '',
     },
   },
   i18n: {

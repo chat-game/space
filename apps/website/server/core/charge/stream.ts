@@ -1,5 +1,7 @@
+import type { DonationAlertsDonationEvent } from '@donation-alerts/events'
 import type { TwitchChatController } from '~~/server/utils/twitch/chat.controller'
 import type { ChargeModifier } from '~~/types/charge'
+import type { DonateController } from '../donate/controller'
 import { createId } from '@paralleldrive/cuid2'
 
 interface StreamChargeOptions {
@@ -20,6 +22,14 @@ interface StreamChargeMessage {
   isExpired: boolean
 }
 
+interface StreamChargeDonation {
+  id: string
+  createdAt: number
+  amount: number
+  userName: string
+  message: string
+}
+
 export class StreamCharge {
   id: string
   startedAt: string
@@ -30,8 +40,9 @@ export class StreamCharge {
   twitchStreamId: string
   twitchStreamName: string
 
-  messages: StreamChargeMessage[]
-  modifiers: ChargeModifier[]
+  messages: StreamChargeMessage[] = []
+  donations: StreamChargeDonation[] = []
+  modifiers: ChargeModifier[] = []
 
   energyTicker!: NodeJS.Timeout
   energyTickerInterval: number = 1000
@@ -52,6 +63,7 @@ export class StreamCharge {
     data: StreamChargeOptions,
     readonly chat: TwitchChatController,
     readonly sub: TwitchSubController,
+    readonly donate: DonateController,
   ) {
     this.id = data.id ?? createId()
     this.startedAt = data.startedAt ?? new Date().toISOString()
@@ -62,9 +74,6 @@ export class StreamCharge {
     this.twitchStreamId = data.twitchStreamId
     this.twitchStreamName = data.twitchStreamName
 
-    this.messages = []
-    this.modifiers = []
-
     this.recalculateRate()
 
     this.initEnergyTicker()
@@ -74,6 +83,7 @@ export class StreamCharge {
 
     this.initChatClient()
     this.initSubClient()
+    this.initDonateClient()
 
     this.#logger.success('Stream charge initialized', this.id)
   }
@@ -171,6 +181,12 @@ export class StreamCharge {
     })
   }
 
+  initDonateClient() {
+    this.donate.init().then(() => {
+      this.donate.client.onDonation(this.handleDonation.bind(this))
+    })
+  }
+
   destroy() {
     clearInterval(this.energyTicker)
     clearInterval(this.difficultyTicker)
@@ -221,6 +237,35 @@ export class StreamCharge {
     }
 
     this.modifiers.push(modifier)
+  }
+
+  handleDonation(event: DonationAlertsDonationEvent) {
+    this.#logger.log('The viewer donated', event.username, event.amount, event.currency, event.message)
+
+    function convertByCurrency(currency: string, amount: number): number {
+      if (currency === 'RUB') {
+        // 1 RUB = 0.1 energy
+        return amount * 0.1
+      }
+      if (currency === 'USD') {
+        // 1 USD = 10 energy
+        return amount * 10
+      }
+      return amount
+    }
+
+    const amount = convertByCurrency(event.currency, event.amount)
+    this.energy += amount
+
+    const donation: StreamChargeDonation = {
+      id: createId(),
+      createdAt: Date.now(),
+      amount,
+      userName: event.username,
+      message: event.message,
+    }
+
+    this.donations.push(donation)
   }
 }
 

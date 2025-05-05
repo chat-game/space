@@ -6,6 +6,9 @@ catalog:
   '@commitlint/cli': ^19.8.0
   '@commitlint/config-conventional': ^19.8.0
   '@d-fischer/typed-event-emitter': ^3.3.3
+  '@donation-alerts/api': ^4.0.0
+  '@donation-alerts/auth': ^4.0.0
+  '@donation-alerts/events': ^4.0.0
   '@iconify-json/lucide': ^1.2.39
   '@iconify-json/simple-icons': ^1.2.33
   '@iconify/vue': ^5.0.0
@@ -74,11 +77,7 @@ ignoredBuiltDependencies:
   - vue-demi
 onlyBuiltDependencies:
   - sharp
+  - protobufjs
 supportedArchitectures:
-  cpu:
-    - x64
-    - arm64
-  os:
-    - linux
-    - darwin
-    - win32
+  cpu: [x64, arm64]
+  os: [linux, darwin, win32]
