@@ -36,6 +36,7 @@ export class StreamCharge {
   energy: number
   rate: number
   ratePerMinute: number
+  baseRate: number
   difficulty: number
   twitchStreamId: string
   twitchStreamName: string
@@ -48,8 +49,8 @@ export class StreamCharge {
   energyTickerInterval: number = 1000
 
   difficultyTicker!: NodeJS.Timeout
-  difficultyTickerInterval: number = 5 * 60 * 1000
-  difficultyMultiplier: number = 0.05
+  difficultyTickerInterval: number = 60_000 * 5
+  difficultyMultiplier: number = 0.03
 
   messagesTicker!: NodeJS.Timeout
   messagesTickerInterval: number = 1000
@@ -69,6 +70,7 @@ export class StreamCharge {
     this.startedAt = data.startedAt ?? new Date().toISOString()
     this.energy = data.energy ?? 0
     this.rate = data.rate ?? 0
+    this.baseRate = data.rate ?? 0
     this.ratePerMinute = 0
     this.difficulty = data.difficulty ?? 0
     this.twitchStreamId = data.twitchStreamId
@@ -89,7 +91,7 @@ export class StreamCharge {
   }
 
   get energyPerTick() {
-    return this.getRateWithModifier(this.rate) / this.energyTickerInterval * this.difficulty
+    return this.getRateWithModifier(this.rate) / this.energyTickerInterval
   }
 
   getRateWithModifier(rate: number) {
@@ -119,6 +121,9 @@ export class StreamCharge {
         updatedRate -= Math.abs(this.rate)
       }
     }
+
+    // Difficulty
+    updatedRate -= Math.abs(this.baseRate * this.difficulty)
 
     return updatedRate
   }
