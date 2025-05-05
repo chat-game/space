@@ -1,5 +1,6 @@
 import type { Charge } from '~~/types/charge'
 import { StreamCharge } from '../core/charge/stream'
+import { DonateController } from '../core/donate/controller'
 import { TwitchChatController } from './twitch/chat.controller'
 
 export const chargeRooms: StreamCharge[] = []
@@ -28,6 +29,7 @@ export async function initCharges() {
       charge,
       new TwitchChatController({ streamName: charge.twitchStreamName }),
       new TwitchSubController(),
+      new DonateController({ userId: '367101' }),
     )
     chargeRooms.push(chargeInstance)
   }
