@@ -9,9 +9,9 @@ COPY ./prisma ./prisma
 COPY ./packages ./packages
 COPY ./apps/website ./apps/website
 
-RUN npm install -g pnpm --ignore-scripts \
-  && pnpm i --frozen-lockfile --ignore-scripts \
-  && pnpm build --filter @chat-game/website
+RUN npm install --ignore-scripts -g pnpm && \
+    pnpm i --frozen-lockfile && \
+    pnpm build --filter @chat-game/website
 
 # Production image, copy all the files and run
 FROM base

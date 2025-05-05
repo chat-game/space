@@ -3,9 +3,9 @@ WORKDIR /app
 
 COPY ./ ./
 
-RUN npm install -g pnpm --ignore-scripts \
-  && pnpm i --frozen-lockfile --ignore-scripts \
-  && pnpm build --filter @chat-game/telegram-game
+RUN npm install --ignore-scripts -g pnpm && \
+    pnpm i --frozen-lockfile && \
+    pnpm build --filter @chat-game/telegram-game
 
 FROM nginx:stable-alpine
 
