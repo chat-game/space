@@ -36,8 +36,6 @@ export class WagonRoom extends BaseRoom {
     this.checkIfObstacleIsClose()
     this.setNearestTarget()
     this.closeRoomOnFinish()
-    // this.createNewChunks()
-    // this.removeChunksBeforeWagon()
   }
 
   async init() {
@@ -99,7 +97,7 @@ export class WagonRoom extends BaseRoom {
     }
 
     if (this.wagon.x >= lastChunk.startX - 350) {
-      void this.reboot()
+      this.reboot()
     }
   }
 
@@ -229,7 +227,7 @@ export class WagonRoom extends BaseRoom {
 
     const availableTree = this.getNearestObstacle(this.wagon.x)
     if (!availableTree) {
-      void this.reboot()
+      this.reboot()
       return
     }
 

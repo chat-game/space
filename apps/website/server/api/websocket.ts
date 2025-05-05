@@ -104,81 +104,87 @@ function handleConnectAddon(message: WebSocketConnectAddon, peer: Peer) {
 }
 
 async function handleConnect(message: WebSocketConnect, peer: Peer) {
-  const client = message.data.client
-  const id = message.data.id
+  switch (message.data.client) {
+    case 'TELEGRAM_CLIENT':
+      return handleConnectTelegramClient(message, peer)
+    case 'WAGON_CLIENT':
+      return handleConnectWagonClient(peer, message.data.id)
+    case 'SERVER':
+      return handleConnectServer(peer, message.data.id)
+  }
+}
 
-  if (client === 'TELEGRAM_CLIENT') {
-    if (!message.data.telegramId) {
-      return
-    }
-
-    if (!activeRooms.find((room) => room.id === id)) {
-      return
-    }
-
-    const activeRoom = activeRooms.find((room) => room.id === id) as WagonRoom
-
-    // add to objects
-    const wagon = activeRoom.objects.find((obj) => obj.type === 'WAGON')
-    const telegramProfile = await prisma.telegramProfile.findFirst({
-      where: { telegramId: message.data.telegramId },
-      include: {
-        profile: true,
-      },
-    })
-    const activeEditionId = telegramProfile?.profile?.activeEditionId
-    const character = await prisma.characterEdition.findFirst({
-      where: { id: activeEditionId },
-      include: { character: true },
-    }) as CharacterEditionWithCharacter | null
-    if (!character) {
-      return
-    }
-
-    // Check, if already exists by Telegram
-    const playerExist = activeRoom.objects.find((obj) => obj.type === 'PLAYER' && obj.telegramId === message.data.telegramId)
-    if (playerExist) {
-      return
-    }
-
-    const playerId = createId()
-
-    if (!activeRoom.clients.find((c) => c.peerId === peer.id)) {
-      activeRoom.clients.push({ id: playerId, peerId: peer.id })
-    }
-
-    activeRoom.addPlayer({ id: playerId, telegramId: message.data.telegramId, x: wagon?.x ? wagon.x - 200 : 100, character })
-
-    peer.subscribe(activeRoom.id)
-    sendMessage({ type: 'CONNECTED_TO_WAGON_ROOM', data: { type: 'PLAYER', roomId: activeRoom.id, id: playerId, objects: activeRoom.objects } }, activeRoom.id)
-
-    logger.log(`Telegram client ${message.data.telegramId} subscribed to Wagon Room ${activeRoom.id}`, peer.id)
+async function handleConnectTelegramClient(message: WebSocketConnect, peer: Peer) {
+  if (!message.data.telegramId) {
+    return
   }
 
-  if (client === 'WAGON_CLIENT') {
-    const activeRoom = activeRooms.find((room) => room.id === id) as WagonRoom
-
-    const wagonId = createId()
-    if (!activeRoom.clients.find((c) => c.peerId === peer.id)) {
-      activeRoom.clients.push({ id: wagonId, peerId: peer.id })
-    }
-
-    peer.subscribe(activeRoom.id)
-    sendMessage({ type: 'CONNECTED_TO_WAGON_ROOM', data: { type: 'WAGON', roomId: activeRoom.id, id: wagonId, objects: activeRoom.objects } }, activeRoom.id)
-
-    logger.log(`Wagon client subscribed to Wagon Room ${activeRoom.id}`, peer.id)
+  if (!activeRooms.find((room) => room.id === message.data.id)) {
+    return
   }
 
-  if (client === 'SERVER') {
-    const activeRoom = activeRooms.find((room) => room.id === id)
-    if (!activeRoom) {
-      return
-    }
+  const activeRoom = activeRooms.find((room) => room.id === message.data.id) as WagonRoom
 
-    activeRoom.server.peer = peer
-    peer.subscribe(activeRoom.id)
-    logger.log(`Server subscribed to Room ${activeRoom.id}`, peer.id)
+  // add to objects
+  const wagon = activeRoom.objects.find((obj) => obj.type === 'WAGON')
+  const telegramProfile = await prisma.telegramProfile.findFirst({
+    where: { telegramId: message.data.telegramId },
+    include: {
+      profile: true,
+    },
+  })
+  const activeEditionId = telegramProfile?.profile?.activeEditionId
+  const character = await prisma.characterEdition.findFirst({
+    where: { id: activeEditionId },
+    include: { character: true },
+  }) as CharacterEditionWithCharacter | null
+  if (!character) {
+    return
   }
+
+  // Check, if already exists by Telegram
+  const playerExist = activeRoom.objects.find((obj) => obj.type === 'PLAYER' && obj.telegramId === message.data.telegramId)
+  if (playerExist) {
+    return
+  }
+
+  const playerId = createId()
+
+  if (!activeRoom.clients.find((c) => c.peerId === peer.id)) {
+    activeRoom.clients.push({ id: playerId, peerId: peer.id })
+  }
+
+  activeRoom.addPlayer({ id: playerId, telegramId: message.data.telegramId, x: wagon?.x ? wagon.x - 200 : 100, character })
+
+  peer.subscribe(activeRoom.id)
+  sendMessage({ type: 'CONNECTED_TO_WAGON_ROOM', data: { type: 'PLAYER', roomId: activeRoom.id, id: playerId, objects: activeRoom.objects } }, activeRoom.id)
+
+  logger.log(`Telegram client ${message.data.telegramId} subscribed to Wagon Room ${activeRoom.id}`, peer.id)
+}
+
+async function handleConnectWagonClient(peer: Peer, id: string) {
+  const activeRoom = activeRooms.find((room) => room.id === id) as WagonRoom
+
+  const wagonId = createId()
+  if (!activeRoom.clients.find((c) => c.peerId === peer.id)) {
+    activeRoom.clients.push({ id: wagonId, peerId: peer.id })
+  }
+
+  peer.subscribe(activeRoom.id)
+  sendMessage({ type: 'CONNECTED_TO_WAGON_ROOM', data: { type: 'WAGON', roomId: activeRoom.id, id: wagonId, objects: activeRoom.objects } }, activeRoom.id)
+
+  logger.log(`Wagon client subscribed to Wagon Room ${activeRoom.id}`, peer.id)
+}
+
+async function handleConnectServer(peer: Peer, id: string) {
+  const activeRoom = activeRooms.find((room) => room.id === id)
+  if (!activeRoom) {
+    return
+  }
+
+  activeRoom.server.peer = peer
+  peer.subscribe(activeRoom.id)
+  logger.log(`Server subscribed to Room ${activeRoom.id}`, peer.id)
 }
 
 async function handleDestroyTree(message: WebSocketDestroyTree, peer: Peer) {

@@ -39,7 +39,7 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
     }
   }
 
-  async initVisual(codename: string | undefined | null): Promise<void> {
+  async initVisual(codename: string | undefined | null = 'telegramo'): Promise<void> {
     if (this.animationIdle) {
       this.removeChild(this.animationIdle)
       this.animationIdle = undefined
@@ -47,10 +47,6 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
     if (this.animationMoving) {
       this.removeChild(this.animationMoving)
       this.animationMoving = undefined
-    }
-
-    if (!codename) {
-      codename = 'telegramo'
     }
 
     try {

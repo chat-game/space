@@ -15,7 +15,7 @@ export class BaseWebSocketService implements WebSocketService {
         interval: 10000,
         pongTimeout: 10000,
       },
-      onMessage: async (_, event) => {
+      onMessage: (_, event) => {
         if (event.data.toString() === 'pong') {
           return
         }
@@ -25,7 +25,7 @@ export class BaseWebSocketService implements WebSocketService {
           return
         }
 
-        await this.handleMessage(message)
+        this.handleMessage(message)
       },
     })
   }
@@ -94,16 +94,20 @@ export class BaseWebSocketService implements WebSocketService {
     }
 
     if (type === 'PLAYER' && this.addon.player) {
-      const player = objects.find((obj) => obj.type === 'PLAYER' && obj.id === id) as GameObject & GameObjectPlayer
-      // Me?
-      if (player && player?.telegramId === this.addon.player?.telegramId) {
-        this.addon.player.id = id
-        this.addon.player.x = player.x
-        await this.addon.player.initVisual(player.character.character.codename)
+      await this.initPlayer(objects, id)
+    }
+  }
 
-        // Close loader
-        this.addon.updateUI()
-      }
+  async initPlayer(objects: GameObject[], id: string) {
+    const player = objects.find((obj) => obj.type === 'PLAYER' && obj.id === id) as GameObject & GameObjectPlayer
+    // Me?
+    if (player && player?.telegramId === this.addon.player?.telegramId) {
+      this.addon.player.id = id
+      this.addon.player.x = player.x
+      await this.addon.player.initVisual(player.character.character.codename)
+
+      // Close loader
+      this.addon.updateUI()
     }
   }
 
