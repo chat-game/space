@@ -103,7 +103,6 @@ export class BaseRoom implements Room {
           const newChunk = new VillageChunk(chunk)
           this.chunks.push(newChunk)
           this.objects.push(...newChunk.objects)
-          continue
         }
       }
     }
