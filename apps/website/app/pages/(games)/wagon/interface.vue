@@ -117,7 +117,7 @@ async function update(id: string) {
   ratePerMinute.value = data.ratePerMinute
   difficulty.value = data.difficulty
   messagesCount.value = data.messagesCount
-  modifiers.value = data.modifiers.splice(0, 8)
+  modifiers.value = data.modifiers.slice(0, 8)
 }
 
 const chargeTextColor = computed(() => {
