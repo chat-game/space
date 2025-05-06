@@ -8,7 +8,7 @@ interface StreamChargeOptions {
   id: string
   startedAt: string
   energy: number
-  rate: number
+  baseRate: number
   difficulty: number
   twitchStreamId: string
   twitchStreamName: string
@@ -34,8 +34,8 @@ export class StreamCharge {
   id: string
   startedAt: string
   energy: number
-  rate: number
-  ratePerMinute: number
+  negativeRate: number
+  positiveRate: number
   baseRate: number
   difficulty: number
   twitchStreamId: string
@@ -69,14 +69,12 @@ export class StreamCharge {
     this.id = data.id ?? createId()
     this.startedAt = data.startedAt ?? new Date().toISOString()
     this.energy = data.energy ?? 0
-    this.rate = data.rate ?? 0
-    this.baseRate = data.rate ?? 0
-    this.ratePerMinute = 0
+    this.negativeRate = 0
+    this.positiveRate = 0
+    this.baseRate = data.baseRate ?? 0
     this.difficulty = data.difficulty ?? 0
     this.twitchStreamId = data.twitchStreamId
     this.twitchStreamName = data.twitchStreamName
-
-    this.recalculateRate()
 
     this.initEnergyTicker()
     this.initDifficultyTicker()
@@ -91,41 +89,52 @@ export class StreamCharge {
   }
 
   get energyPerTick() {
-    return this.getRateWithModifier(this.rate) / this.energyTickerInterval
+    return this.rate / this.energyTickerInterval
   }
 
-  getRateWithModifier(rate: number) {
-    let updatedRate = rate
+  get rate() {
+    this.negativeRate = 0
+    this.positiveRate = 0
 
+    // Difficulty
+    this.negativeRate += Math.abs(this.baseRate * this.difficulty)
+
+    // Modifiers
     for (const modifier of this.modifiers) {
       if (modifier.isExpired) {
         continue
       }
 
       if (modifier.code === 'positive1') {
-        updatedRate += 2
+        this.positiveRate += 2
       }
       if (modifier.code === 'positive2') {
-        updatedRate += 5
+        this.positiveRate += 5
       }
       if (modifier.code === 'positive3') {
-        updatedRate += Math.abs(this.rate)
+        this.positiveRate *= 2
       }
+
       if (modifier.code === 'negative1') {
-        updatedRate -= 2
+        this.negativeRate += 2
       }
       if (modifier.code === 'negative2') {
-        updatedRate -= 5
+        this.negativeRate += 5
       }
       if (modifier.code === 'negative3') {
-        updatedRate -= Math.abs(this.rate)
+        this.negativeRate *= 2
       }
     }
 
-    // Difficulty
-    updatedRate -= Math.abs(this.baseRate * this.difficulty)
+    // Messages: +1 each
+    const activeMessages = this.messages.filter((message) => !message.isExpired)
+    this.positiveRate += activeMessages.length
 
-    return updatedRate
+    return this.positiveRate - this.negativeRate
+  }
+
+  get ratePerMinute() {
+    return this.energyPerTick * (60_000 / this.energyTickerInterval)
   }
 
   expireAllModifiers() {
@@ -134,13 +143,8 @@ export class StreamCharge {
     }
   }
 
-  recalculateRate() {
-    this.ratePerMinute = this.energyPerTick * (60_000 / this.energyTickerInterval)
-  }
-
   initEnergyTicker() {
     this.energyTicker = setInterval(() => {
-      this.recalculateRate()
       this.energy = Math.max(0, Math.min(1000, this.energy + this.energyPerTick))
     }, this.energyTickerInterval)
   }
@@ -153,13 +157,16 @@ export class StreamCharge {
 
   initMessagesTicker() {
     this.messagesTicker = setInterval(() => {
-      for (const message of this.messages) {
-        const expiredTime = 30_000 // 30s
-        const isExpired = Date.now() - message.createdAt >= expiredTime
+      const now = Date.now()
 
-        if (!message.isExpired && isExpired) {
+      for (const message of this.messages) {
+        if (message.isExpired) {
+          continue
+        }
+
+        const expiredIn = 30_000 // 30s
+        if (now >= message.createdAt + expiredIn) {
           message.isExpired = true
-          this.rate -= 1
         }
       }
     }, this.messagesTickerInterval)
@@ -167,9 +174,14 @@ export class StreamCharge {
 
   initModifiersTicker() {
     this.modifiersTicker = setInterval(() => {
+      const now = Date.now()
+
       for (const modifier of this.modifiers) {
-        const isExpired = Date.now() >= modifier.expiredAt
-        if (!modifier.isExpired && isExpired) {
+        if (modifier.isExpired) {
+          continue
+        }
+
+        if (now >= modifier.expiredAt) {
           modifier.isExpired = true
         }
       }
@@ -207,8 +219,6 @@ export class StreamCharge {
       userName,
       isExpired: false,
     })
-
-    this.rate += 1
   }
 
   handleRedemption(data: { rewardId: string, userId: string, userName: string, rewardTitle: string }) {
@@ -232,45 +242,45 @@ export class StreamCharge {
       this.expireAllModifiers()
     }
 
-    const modifier: ChargeModifier = {
+    this.modifiers.push({
       id: createId(),
       createdAt: Date.now(),
       expiredAt: Date.now() + reward.actionTimeInSeconds * 1000,
       code: reward.code,
       userName: data.userName,
       isExpired: false,
-    }
-
-    this.modifiers.push(modifier)
+    })
   }
 
   handleDonation(event: DonationAlertsDonationEvent) {
     this.#logger.log('The viewer donated', event.username, event.amount, event.currency, event.message)
 
-    function convertByCurrency(currency: string, amount: number): number {
-      if (currency === 'RUB') {
-        // 1 RUB = 0.1 energy
-        return amount * 0.1
-      }
-      if (currency === 'USD') {
-        // 1 USD = 10 energy
-        return amount * 10
-      }
-      return amount
-    }
-
-    const amount = convertByCurrency(event.currency, event.amount)
+    const amount = this.convertDonationToEnergy(event.currency, event.amount)
     this.energy += amount
 
-    const donation: StreamChargeDonation = {
+    this.donations.push({
       id: createId(),
       createdAt: Date.now(),
       amount,
       userName: event.username,
       message: event.message,
+    })
+  }
+
+  convertDonationToEnergy(currency: string, amount: number): number {
+    const conversionRates = {
+      RUB: 0.1,
+      USD: 10,
+      EUR: 11,
+    } as const
+
+    const rate = conversionRates[currency as keyof typeof conversionRates]
+    if (!rate) {
+      this.#logger.warn(`Unsupported currency: ${currency}, treating as USD equivalent`)
+      return amount * conversionRates.USD
     }
 
-    this.donations.push(donation)
+    return amount * rate
   }
 }
 
@@ -295,9 +305,9 @@ const TWITCH_CHANNEL_REWARDS = [
     code: 'positive3',
     rewardId: 'd37c5835-db07-44b2-80cb-e16f854ae8b7',
     rewardTitle: 'Магнитный ускоритель',
-    description: 'Усиливает поток энергии, увеличивая скорость восстановления в 2 раза. Действует 8 минут.',
+    description: 'Усиливает поток энергии, увеличивая скорость восстановления в 2 раза. Действует 5 минут.',
     price: 400,
-    actionTimeInSeconds: 480,
+    actionTimeInSeconds: 300,
   },
   {
     code: 'positive4',
@@ -327,9 +337,9 @@ const TWITCH_CHANNEL_REWARDS = [
     code: 'negative3',
     rewardId: '0e6ebe0c-8d6a-4f0d-a300-1269c0d44339',
     rewardTitle: 'Энергетический шторм',
-    description: 'Создает хаос в энергетическом поле, снижающий скорость восстановления в 2 раза. Действует 8 минут.',
+    description: 'Создает хаос в энергетическом поле, снижающий скорость восстановления в 2 раза. Действует 5 минут.',
     price: 500,
-    actionTimeInSeconds: 480,
+    actionTimeInSeconds: 300,
   },
   {
     code: 'negative4',

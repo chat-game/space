@@ -1,19 +1,28 @@
 <template>
-  <div class="flex flex-col justify-center items-center size-8 rounded-md" :class="getEffectColor(modifier.code)">
-    <p class="text-sm font-semibold">
-      {{ seconds }}
-    </p>
+  <div class="flex flex-row justify-start items-center gap-1 w-14 h-6 px-1 rounded-md" :class="getEffectColor(modifier.code)">
+    <Icon :name="getEffectIcon(modifier.code)" class="!size-4 shrink-0 opacity-50" />
+
+    <NumberFlow
+      :value="remaining"
+      :format="{ style: 'decimal', maximumFractionDigits: 1 }"
+      locales="en-US"
+      class="text-sm font-semibold"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import type { ChargeModifier } from '~~/types/charge'
+import NumberFlow from '@number-flow/vue'
 
 const { modifier } = defineProps<{
   modifier: ChargeModifier
 }>()
 
-const seconds = computed(() => Math.round(Math.abs(modifier.expiredAt - Date.now()) / 1000))
+const seconds = ref<number>(Math.round(Math.abs(modifier.expiredAt - Date.now()) / 1000))
+const { start, remaining } = useCountdown(seconds)
+
+start()
 
 function getEffectColor(code: string) {
   if (code.startsWith('positive')) {
@@ -23,5 +32,15 @@ function getEffectColor(code: string) {
     return 'bg-rose-300'
   }
   return 'bg-orange-200'
+}
+
+function getEffectIcon(code: string) {
+  if (code.startsWith('positive')) {
+    return 'lucide:arrow-up'
+  }
+  if (code.startsWith('negative')) {
+    return 'lucide:arrow-down'
+  }
+  return 'lucide:arrow-right'
 }
 </script>

@@ -2,7 +2,7 @@ export interface Charge {
   id: string
   startedAt: string
   energy: number
-  rate: number
+  baseRate: number
   difficulty: number
   twitchStreamId: string
   twitchStreamName: string
