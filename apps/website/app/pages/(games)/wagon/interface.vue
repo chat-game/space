@@ -44,15 +44,15 @@
           </div>
 
           <div class="flex flex-row justify-center items-center gap-4">
-            <div class="z-20 -mt-1 flex flex-row items-end gap-2">
+            <div class="z-20 flex flex-row items-end gap-2">
               <ModifierIcon
                 v-for="modifier in modifiers"
                 :key="modifier.id"
                 :modifier="modifier"
               />
-              <div v-if="modifiers.length <= 0" class="size-8 text-sm bg-orange-200 rounded-md opacity-10" />
-              <div v-if="modifiers.length <= 1" class="size-8 text-sm bg-orange-200 rounded-md opacity-10" />
-              <div v-if="modifiers.length <= 2" class="size-8 text-sm bg-orange-200 rounded-md opacity-10" />
+              <div v-if="modifiers.length <= 0" class="w-14 h-6 text-sm bg-orange-200 rounded-md opacity-10" />
+              <div v-if="modifiers.length <= 1" class="w-14 h-6 text-sm bg-orange-200 rounded-md opacity-10" />
+              <div v-if="modifiers.length <= 2" class="w-14 h-6 text-sm bg-orange-200 rounded-md opacity-10" />
             </div>
 
             <NumberFlow
@@ -117,7 +117,7 @@ async function update(id: string) {
   ratePerMinute.value = data.ratePerMinute
   difficulty.value = data.difficulty
   messagesCount.value = data.messagesCount
-  modifiers.value = data.modifiers
+  modifiers.value = data.modifiers.splice(0, 8)
 }
 
 const chargeTextColor = computed(() => {
