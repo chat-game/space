@@ -12,7 +12,7 @@
       <div class="absolute bottom-10 left-0 right-0 h-1.5 bg-orange-900">
         <div
           class="absolute top-0 left-0 h-full bg-orange-300 transition-all duration-1000 ease-out overflow-visible"
-          :style="{ width: `${energy > 100 ? 100 : energy}%` }"
+          :style="{ width: `${Math.min(energy, 100)}%` }"
         >
           <div class="absolute inset-0 bg-orange-100 opacity-10 animate-pulse" />
 
