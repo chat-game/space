@@ -97,8 +97,8 @@ definePageMeta({
 })
 
 const route = useRoute()
-
 const id = route.query.id as string
+
 const energy = ref(0)
 const rate = ref(0)
 const ratePerMinute = ref(0)

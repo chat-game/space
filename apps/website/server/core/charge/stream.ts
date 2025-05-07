@@ -1,8 +1,10 @@
+import type { CharacterEditionWithCharacter } from '@chat-game/types'
 import type { DonationAlertsDonationEvent } from '@donation-alerts/events'
 import type { TwitchChatController } from '~~/server/utils/twitch/chat.controller'
-import type { ChargeModifier } from '~~/types/charge'
+import type { ChargeEventService, ChargeInstance, ChargeModifier } from '~~/types/charge'
 import type { DonateController } from '../donate/controller'
 import { createId } from '@paralleldrive/cuid2'
+import { EventService } from './event'
 
 interface StreamChargeOptions {
   id: string
@@ -30,7 +32,7 @@ interface StreamChargeDonation {
   message: string
 }
 
-export class StreamCharge {
+export class StreamCharge implements ChargeInstance {
   id: string
   startedAt: string
   energy: number
@@ -58,6 +60,8 @@ export class StreamCharge {
   modifiersTicker!: NodeJS.Timeout
   modifiersTickerInterval: number = 1000
 
+  event: ChargeEventService
+
   readonly #logger = useLogger('stream-charge')
 
   constructor(
@@ -75,6 +79,8 @@ export class StreamCharge {
     this.difficulty = data.difficulty ?? 0
     this.twitchStreamId = data.twitchStreamId
     this.twitchStreamName = data.twitchStreamName
+
+    this.event = new EventService(this)
 
     this.initEnergyTicker()
     this.initDifficultyTicker()
@@ -219,6 +225,13 @@ export class StreamCharge {
       userName,
       isExpired: false,
     })
+
+    // Push message as Event
+    this.event.send({
+      id: createId(),
+      type: 'NEW_PLAYER_MESSAGE',
+      data: { text, player: { id: userName, name: userName }, character: this.getBasicCharacter() },
+    })
   }
 
   handleRedemption(data: { rewardId: string, userId: string, userName: string, rewardTitle: string }) {
@@ -281,6 +294,32 @@ export class StreamCharge {
     }
 
     return amount * rate
+  }
+
+  getBasicCharacter() {
+    const character: CharacterEditionWithCharacter = {
+      id: '123',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      level: 1,
+      xp: 0,
+      profileId: '123',
+      characterId: 'staoqh419yy3k22cbtm9wquc',
+      character: {
+        id: 'staoqh419yy3k22cbtm9wquc',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        name: 'Том Стокер',
+        description: 'Описание',
+        codename: 'twitchy',
+        nickname: 'Твичи',
+        isReady: true,
+        unlockedBy: 'COINS',
+        price: 100,
+        coefficient: 1,
+      },
+    }
+    return character
   }
 }
 

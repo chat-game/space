@@ -1,50 +1,43 @@
-import type { CharacterEditionWithCharacter } from '@chat-game/types'
 import type {
+  EventService,
   GameAddon,
   GameObject,
   GameObjectPlayer,
   PlayerService,
-  ServerService,
-  WebSocketService,
 } from './types'
 import { createId } from '@paralleldrive/cuid2'
 import { Application, Container, TextureStyle } from 'pixi.js'
 import { FlagObject } from './objects/flagObject'
 import { MoveToTargetScript } from './scripts/moveToTargetScript'
+import { BaseEventService } from './services/baseEventService'
 import { BasePlayerService } from './services/basePlayerService'
-import { BaseServerService } from './services/baseServerService'
-import { BaseWebSocketService } from './services/baseWebSocketService'
 import { getRandomInRange } from './utils/random'
 
 interface BaseGameAddonOptions {
-  token: string
-  websocketUrl: string
+  id: string
+  eventsUrl: string
 }
 
 export class BaseGameAddon extends Container implements GameAddon {
   id: string
-  token: string
   override children: GameAddon['children'] = []
   app: Application
   tick: GameAddon['tick'] = 0
 
-  playerService: PlayerService
-  websocketService: WebSocketService
-  serverService: ServerService
+  player: PlayerService
+  event: EventService
 
-  #outFlags: FlagObject[] = []
-  #nearFlags: FlagObject[] = []
+  readonly #outFlags: FlagObject[] = []
+  readonly #nearFlags: FlagObject[] = []
 
-  constructor({ token, websocketUrl }: BaseGameAddonOptions) {
+  constructor({ id, eventsUrl }: BaseGameAddonOptions) {
     super()
 
-    this.token = token
-    this.id = createId()
+    this.id = id ?? createId()
     this.app = new Application()
 
-    this.playerService = new BasePlayerService(this as GameAddon)
-    this.websocketService = new BaseWebSocketService(this as GameAddon, websocketUrl)
-    this.serverService = new BaseServerService()
+    this.player = new BasePlayerService(this as GameAddon)
+    this.event = new BaseEventService(this as GameAddon, eventsUrl)
   }
 
   async init() {
@@ -67,13 +60,15 @@ export class BaseGameAddon extends Container implements GameAddon {
     this.app.ticker.add(() => {
       this.tick = this.app.ticker.FPS
 
-      this.playerService.update()
+      this.player.update()
       this.#updateObjects()
       this.#removeDestroyedObjects()
     })
   }
 
-  async play() {}
+  play() {
+    // console.log('Started!')
+  }
 
   override destroy() {
     this.app.destroy()
@@ -101,12 +96,14 @@ export class BaseGameAddon extends Container implements GameAddon {
     this.removeChild(...this.children)
   }
 
-  get randomOutFlag() {
-    return this.#outFlags[Math.floor(Math.random() * this.#outFlags.length)] as FlagObject
+  get randomOutFlag(): FlagObject {
+    const randomIndex = Math.floor(Math.random() * this.#outFlags.length)
+    return this.#outFlags[randomIndex] as FlagObject
   }
 
-  get randomNearFlag() {
-    return this.#nearFlags[Math.floor(Math.random() * this.#nearFlags.length)] as FlagObject
+  get randomNearFlag(): FlagObject {
+    const randomIndex = Math.floor(Math.random() * this.#nearFlags.length)
+    return this.#nearFlags[randomIndex] as FlagObject
   }
 
   #initOutFlags(count = 1) {
@@ -149,15 +146,18 @@ export class BaseGameAddon extends Container implements GameAddon {
     return flag
   }
 
-  async handleMessage({ playerId, text, character }: {
-    playerId: string
+  async handleMessage({ player, text, codename }: {
+    player: {
+      id: string
+      name: string
+    }
     text: string
-    character?: CharacterEditionWithCharacter
+    codename?: string | null
   }) {
-    const player = await this.playerService.init(playerId, character)
+    const playerObj = await this.player.init(player.id, player.name, codename)
 
-    player.addMessage(text)
-    player.updateLastActionAt()
+    playerObj.addMessage(text)
+    playerObj.updateLastActionAt()
 
     return { ok: true, message: null }
   }

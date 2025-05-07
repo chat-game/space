@@ -1,4 +1,3 @@
-import type { CharacterEditionWithCharacter } from '@chat-game/types'
 import type { GameAddon, GameObjectPlayer, PlayerService } from '../types'
 import { PlayerObject } from '../objects/unit/playerObject'
 import { MoveOffScreenAndSelfDestroyScript } from '../scripts/moveOffScreenAndSelfDestroyScript'
@@ -12,8 +11,8 @@ export class BasePlayerService implements PlayerService {
     this.#removeInactivePlayers()
   }
 
-  async init(id: string, character?: CharacterEditionWithCharacter) {
-    const player = await this.#findOrCreatePlayer(id, character)
+  async init(id: string, name: string, codename?: string | null) {
+    const player = await this.#findOrCreatePlayer(id, name, codename)
 
     this.addon.addChild(player)
     player.updateLastActionAt()
@@ -36,11 +35,12 @@ export class BasePlayerService implements PlayerService {
 
   async #findOrCreatePlayer(
     id: string,
-    character?: CharacterEditionWithCharacter,
+    name: string,
+    codename?: string | null,
   ): Promise<GameObjectPlayer> {
     const player = this.#findPlayer(id)
     if (!player) {
-      return this.#createPlayer(id, character)
+      return this.#createPlayer({ id, name }, codename)
     }
 
     return player
@@ -52,20 +52,20 @@ export class BasePlayerService implements PlayerService {
     ) as PlayerObject | undefined
   }
 
-  async #createPlayer(id: string, character?: CharacterEditionWithCharacter) {
-    const player = new PlayerObject({
+  async #createPlayer(player: { id: string, name: string }, codename?: string | null) {
+    const playerObj = new PlayerObject({
       addon: this.addon,
-      id,
+      id: player.id,
       x: -200,
       y: 0,
     })
-    await player.init(character)
+    await playerObj.init(player.name, codename)
 
     const flag = this.addon.randomOutFlag
-    player.x = flag.x
-    player.y = flag.y
+    playerObj.x = flag.x
+    playerObj.y = flag.y
 
-    return player
+    return playerObj
   }
 
   #removeInactivePlayers() {

@@ -1,16 +1,10 @@
-import type {
-  CharacterEditionWithCharacter,
-  Player,
-} from '@chat-game/types'
 import type { Container } from 'pixi.js'
 
 export interface GameAddon extends Container {
   id: string
-  token: string
   children: GameObject[]
   tick: number
-  playerService: PlayerService
-  serverService: ServerService
+  player: PlayerService
   play: () => void
   checkIfThisFlagIsTarget: (id: string) => boolean
   findObject: (id: string) => GameObject | undefined
@@ -18,14 +12,13 @@ export interface GameAddon extends Container {
   rebuildScene: () => void
   randomOutFlag: GameObjectFlag
   randomNearFlag: GameObjectFlag
-  handleMessage: ({
-    playerId,
-    text,
-    character,
-  }: {
-    playerId: string
+  handleMessage: (data: {
+    player: {
+      id: string
+      name: string
+    }
     text: string
-    character?: CharacterEditionWithCharacter
+    codename?: string | null
   }) => Promise<{
     ok: boolean
     message: string | null
@@ -71,30 +64,21 @@ export interface GameObjectUnit extends GameObject {
     messages: { id: string, text: string }[]
   }
   addMessage: (message: string) => void
-  initVisual: (character: CharacterEditionWithCharacter) => Promise<void>
+  initVisual: (codename: string | undefined | null) => Promise<void>
 }
 
 export interface GameObjectPlayer extends GameObjectUnit {
-  reputation: number
-  villainPoints: number
-  refuellerPoints: number
-  raiderPoints: number
   lastActionAt: Date
-  init: (character: CharacterEditionWithCharacter) => Promise<void>
+  init: (name: string, codename?: string | null) => Promise<void>
   updateLastActionAt: () => void
-  addReputation: (amount: number) => void
-  addVillainPoints: (amount: number) => void
-  addRefuellerPoints: (amount: number) => void
-  addRaiderPoints: (amount: number) => void
-  updateCoins: (amount: number) => void
 }
 
-export interface ServerService {
-  getPlayer: (id: string) => Promise<Player | null>
+export interface EventService {
+  stream: EventSource
 }
 
-export interface WebSocketService {
-  socket: WebSocket
+export interface EventStream {
+  onmessage: (event: MessageEvent) => void
 }
 
 export interface PlayerService {
@@ -102,7 +86,8 @@ export interface PlayerService {
   update: () => void
   init: (
     id: string,
-    character?: CharacterEditionWithCharacter,
+    name: string,
+    codename?: string | null,
   ) => Promise<GameObjectPlayer>
 }
 
