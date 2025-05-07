@@ -1,1 +1,1 @@
-export { BaseGameAddon } from './lib/baseGameAddon'
+export { BaseGameAddon as GameAddon } from './lib/baseGameAddon'

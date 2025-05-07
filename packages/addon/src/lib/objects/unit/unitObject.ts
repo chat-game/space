@@ -1,4 +1,3 @@
-import type { CharacterEditionWithCharacter } from '@chat-game/types'
 import type {
   GameAddon,
   GameObject,
@@ -25,8 +24,8 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
   dialogue: GameObjectUnit['dialogue']
 
   #dialogueInterface!: DialogueInterface
-  #animationIdle!: AnimatedSprite
-  #animationMoving!: AnimatedSprite
+  #animationIdle!: AnimatedSprite | undefined
+  #animationMoving!: AnimatedSprite | undefined
 
   constructor({ addon, x, y, id, type }: UnitObjectOptions) {
     super({ addon, x, y, id, type })
@@ -49,22 +48,37 @@ export class UnitObject extends BaseObject implements GameObjectUnit {
     }
   }
 
-  async initVisual(character?: CharacterEditionWithCharacter): Promise<void> {
-    const codename = character?.character.codename ?? 'twitchy'
+  async initVisual(codename: string | undefined | null = 'telegramo'): Promise<void> {
+    if (this.#animationIdle) {
+      this.removeChild(this.#animationIdle)
+      this.#animationIdle = undefined
+    }
+    if (this.#animationMoving) {
+      this.removeChild(this.#animationMoving)
+      this.#animationMoving = undefined
+    }
 
-    const idle = await Assets.load(`/units/${codename}/idle.json`)
-    const idleSprite = new AnimatedSprite(idle.animations.main)
-    idleSprite.anchor.set(0.5, 1)
-    idleSprite.scale.set(4)
-    this.#animationIdle = idleSprite
-    this.addChild(this.#animationIdle)
+    try {
+      const idle = await Assets.load(`https://storage.yandexcloud.net/chatgame-assets/units/${codename}/idle.json`)
+      const idleSprite = new AnimatedSprite(idle.animations.main)
+      idleSprite.anchor.set(0.5, 1)
+      idleSprite.scale.set(4)
+      this.#animationIdle = idleSprite
+      this.addChild(this.#animationIdle)
+    } catch (error) {
+      console.error('Error loading idle animation:', error)
+    }
 
-    const moving = await Assets.load(`/units/${codename}/moving.json`)
-    const movingSprite = new AnimatedSprite(moving.animations.main)
-    movingSprite.anchor.set(0.5, 1)
-    movingSprite.scale.set(4)
-    this.#animationMoving = movingSprite
-    this.addChild(this.#animationMoving)
+    try {
+      const moving = await Assets.load(`https://storage.yandexcloud.net/chatgame-assets/units/${codename}/moving.json`)
+      const movingSprite = new AnimatedSprite(moving.animations.main)
+      movingSprite.anchor.set(0.5, 1)
+      movingSprite.scale.set(4)
+      this.#animationMoving = movingSprite
+      this.addChild(this.#animationMoving)
+    } catch (error) {
+      console.error('Error loading moving animation:', error)
+    }
   }
 
   #initInterfaces() {
