@@ -208,8 +208,8 @@ catalogs:
       specifier: ^2.2.10
       version: 2.2.10
     zod:
-      specifier: ^3.24.3
-      version: 3.24.3
+      specifier: ^4.0.5
+      version: 4.0.5
 
 importers:
 
@@ -407,7 +407,7 @@ importers:
         version: 5.6.1
       zod:
         specifier: 'catalog:'
-        version: 3.24.3
+        version: 4.0.5
     devDependencies:
       '@d-fischer/typed-event-emitter':
         specifier: 'catalog:'
@@ -1688,6 +1688,7 @@ packages:
 
   '@oxc-parser/wasm@0.60.0':
     resolution: {integrity: sha512-Dkf9/D87WGBCW3L0+1DtpAfL4SrNsgeRvxwjpKCtbH7Kf6K+pxrT0IridaJfmWKu1Ml+fDvj+7HEyBcfUC/TXQ==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   '@oxc-project/types@0.60.0':
     resolution: {integrity: sha512-prhfNnb3ATFHOCv7mzKFfwLij5RzoUz6Y1n525ZhCEqfq5wreCXL+DyVoq3ShukPo7q45ZjYIdjFUgjj+WKzng==}
@@ -7050,6 +7051,9 @@ packages:
 
   zod@3.24.3:
     resolution: {integrity: sha512-HhY1oqzWCQWuUqvBFnsyrtZRhyPeR7SUGv+C4+MsisMuVfSPx8HpwWqH8tRahSlt6M3PiFAcoeFhZAqIXTxoSg==}
+
+  zod@4.0.5:
+    resolution: {integrity: sha512-/5UuuRPStvHXu7RS+gmvRf4NXrNxpSllGwDnCBcJZtQsKrviYXm54yDGV2KYNLT5kq0lHGcl7lqWJLgSaG+tgA==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -14655,5 +14659,7 @@ snapshots:
       readable-stream: 4.6.0
 
   zod@3.24.3: {}
+
+  zod@4.0.5: {}
 
   zwitch@2.0.4: {}
