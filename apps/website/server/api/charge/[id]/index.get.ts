@@ -15,8 +15,6 @@ export default defineEventHandler(async (event) => {
     startedAt: chargeRoom.startedAt,
     energy: chargeRoom.energy,
     baseRate: chargeRoom.baseRate,
-    negativeRate: chargeRoom.negativeRate,
-    positiveRate: chargeRoom.positiveRate,
     rate: chargeRoom.rate,
     ratePerMinute: chargeRoom.ratePerMinute,
     difficulty: chargeRoom.difficulty,
