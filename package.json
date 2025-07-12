@@ -1,7 +1,7 @@
 {
   "name": "@chat-game/space",
   "private": true,
-  "packageManager": "pnpm@10.10.0",
+  "packageManager": "pnpm@10.13.1",
   "description": "Chat Game for Twitch",
   "author": "Nick Kosarev <hmbanan666@hotmail.com>",
   "license": "MIT",
@@ -21,7 +21,7 @@
   ],
   "engines": {
     "node": ">=22.15.0",
-    "pnpm": ">=10.10.0"
+    "pnpm": ">=10.13.1"
   },
   "scripts": {
     "release": "changelogen-monorepo --release --push",

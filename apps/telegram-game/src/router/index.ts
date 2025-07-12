@@ -1,15 +1,15 @@
-import CharacterView from '@/views/CharacterView.vue'
-import GameView from '@/views/GameView.vue'
-import InventoryView from '@/views/InventoryView.vue'
-import QuestView from '@/views/QuestView.vue'
-import ShopView from '@/views/ShopView.vue'
-import TopView from '@/views/TopView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import LucideArchiveRestore from '~icons/lucide/archive-restore'
 import LucideBookCheck from '~icons/lucide/book-check'
 import LucideGamepad2 from '~icons/lucide/gamepad-2'
 import LucideShoppingBag from '~icons/lucide/shopping-bag'
 import LucideTrophy from '~icons/lucide/trophy'
+import CharacterView from '@/views/CharacterView.vue'
+import GameView from '@/views/GameView.vue'
+import InventoryView from '@/views/InventoryView.vue'
+import QuestView from '@/views/QuestView.vue'
+import ShopView from '@/views/ShopView.vue'
+import TopView from '@/views/TopView.vue'
 
 export const routes = [
   {

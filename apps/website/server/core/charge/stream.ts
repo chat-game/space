@@ -36,8 +36,6 @@ export class StreamCharge implements ChargeInstance {
   id: string
   startedAt: string
   energy: number
-  negativeRate: number
-  positiveRate: number
   baseRate: number
   difficulty: number
   twitchStreamId: string
@@ -52,7 +50,7 @@ export class StreamCharge implements ChargeInstance {
 
   difficultyTicker!: NodeJS.Timeout
   difficultyTickerInterval: number = 60_000 * 5
-  difficultyMultiplier: number = 0.03
+  difficultyMultiplier: number = 0.04
 
   messagesTicker!: NodeJS.Timeout
   messagesTickerInterval: number = 1000
@@ -73,8 +71,6 @@ export class StreamCharge implements ChargeInstance {
     this.id = data.id ?? createId()
     this.startedAt = data.startedAt ?? new Date().toISOString()
     this.energy = data.energy ?? 0
-    this.negativeRate = 0
-    this.positiveRate = 0
     this.baseRate = data.baseRate ?? 0
     this.difficulty = data.difficulty ?? 0
     this.twitchStreamId = data.twitchStreamId
@@ -99,44 +95,51 @@ export class StreamCharge implements ChargeInstance {
   }
 
   get rate() {
-    this.negativeRate = 0
-    this.positiveRate = 0
+    let negative = 0
+    let positive = 0
 
     // Difficulty
-    this.negativeRate += Math.abs(this.baseRate * this.difficulty)
+    negative += Math.abs(this.baseRate * this.difficulty)
 
-    // Modifiers
+    // Modifiers: +2, +4
     for (const modifier of this.modifiers) {
       if (modifier.isExpired) {
         continue
       }
 
       if (modifier.code === 'positive1') {
-        this.positiveRate += 2
+        positive += 2
       }
       if (modifier.code === 'positive2') {
-        this.positiveRate += 5
-      }
-      if (modifier.code === 'positive3') {
-        this.positiveRate *= 2
+        positive += 4
       }
 
       if (modifier.code === 'negative1') {
-        this.negativeRate += 2
+        negative += 2
       }
       if (modifier.code === 'negative2') {
-        this.negativeRate += 5
+        negative += 4
+      }
+    }
+
+    // Modifiers: x1.5
+    for (const modifier of this.modifiers) {
+      if (modifier.isExpired) {
+        continue
+      }
+
+      if (modifier.code === 'positive3') {
+        positive *= 1.5
       }
       if (modifier.code === 'negative3') {
-        this.negativeRate *= 2
+        negative *= 1.5
       }
     }
 
     // Messages: +1 each
-    const activeMessages = this.messages.filter((message) => !message.isExpired)
-    this.positiveRate += activeMessages.length
+    positive += this.messages.filter((message) => !message.isExpired).length
 
-    return this.positiveRate - this.negativeRate
+    return positive - negative
   }
 
   get ratePerMinute() {
@@ -328,64 +331,64 @@ const TWITCH_CHANNEL_REWARDS = [
     code: 'positive1',
     rewardId: '57b753fb-3a74-47f3-bb88-5d4feab6f42e',
     rewardTitle: 'Солнечная панель',
-    description: 'Преобразует фоновое излучение в энергию, +2 каждый тик. Действует 3 минуты.',
-    price: 100,
-    actionTimeInSeconds: 180,
+    description: 'Преобразует фоновое излучение в энергию, +2 каждый тик. Действует минуту.',
+    price: 200,
+    actionTimeInSeconds: 60,
   },
   {
     code: 'positive2',
     rewardId: '66e1569d-2226-49f6-9abd-f8b0b03fd5fd',
     rewardTitle: 'Квантовый аккумулятор',
-    description: 'Накапливает энергию из окружающего пространства, восстанавливая +5 каждый тик в течение 2 минут.',
-    price: 200,
+    description: 'Накапливает энергию из окружающего пространства, восстанавливая +4 каждый тик в течение 2 минут.',
+    price: 400,
     actionTimeInSeconds: 120,
   },
   {
     code: 'positive3',
     rewardId: 'd37c5835-db07-44b2-80cb-e16f854ae8b7',
-    rewardTitle: 'Магнитный ускоритель',
-    description: 'Усиливает поток энергии, увеличивая скорость восстановления в 2 раза. Действует 5 минут.',
-    price: 400,
-    actionTimeInSeconds: 300,
+    rewardTitle: 'Магнитный ускоритель x1.5',
+    description: 'Усиливает поток энергии, увеличивая скорость восстановления. Действует 3 минуты.',
+    price: 800,
+    actionTimeInSeconds: 180,
   },
   {
     code: 'positive4',
     rewardId: '121c393a-d5a2-4167-aa4b-efe4a016ea6d',
     rewardTitle: 'Энергетический всплеск',
     description: 'Мощный выброс энергии, мгновенно восстанавливающий 5% уровня Заряженности.',
-    price: 800,
+    price: 1600,
     actionTimeInSeconds: 0,
   },
   {
     code: 'negative1',
     rewardId: 'e5420bca-e719-4b8d-8a15-d8ae46739d74',
     rewardTitle: 'Энергетическая утечка',
-    description: 'Создает дыру в энергетическом поле, -2 каждый тик. Действует 3 минуты.',
+    description: 'Создает дыру в энергетическом поле, -2 каждый тик. Действует минуту.',
     price: 150,
-    actionTimeInSeconds: 180,
+    actionTimeInSeconds: 60,
   },
   {
     code: 'negative2',
     rewardId: 'aa0ca8b8-cf9e-4161-8a75-b3c67dd97cb0',
     rewardTitle: 'Разряд конденсатора',
-    description: 'Упс, такие дела. -5 каждый тик в течение 2 минут.',
-    price: 250,
+    description: 'Упс, такие дела. -4 каждый тик в течение 2 минут.',
+    price: 300,
     actionTimeInSeconds: 120,
   },
   {
     code: 'negative3',
     rewardId: '0e6ebe0c-8d6a-4f0d-a300-1269c0d44339',
-    rewardTitle: 'Энергетический шторм',
-    description: 'Создает хаос в энергетическом поле, снижающий скорость восстановления в 2 раза. Действует 5 минут.',
-    price: 500,
-    actionTimeInSeconds: 300,
+    rewardTitle: 'Энергетический шторм x1.5',
+    description: 'Создает хаос в энергетическом поле, снижающий скорость восстановления. Действует 3 минуты.',
+    price: 600,
+    actionTimeInSeconds: 180,
   },
   {
     code: 'negative4',
     rewardId: '48c5e058-2b71-4ae3-9f6f-b0342a9f2032',
     rewardTitle: 'Электромагнитный разряд',
     description: 'Мощный разряд, мгновенно уменьшающий уровень Заряженности на 5%.',
-    price: 1000,
+    price: 1200,
     actionTimeInSeconds: 0,
   },
   {
@@ -393,7 +396,7 @@ const TWITCH_CHANNEL_REWARDS = [
     rewardId: '178832f9-f84e-4376-a205-db57ac4f0406',
     rewardTitle: 'Нулевой резонанс',
     description: 'Создание состояния, при котором все эффекты взаимно уничтожаются.',
-    price: 2500,
+    price: 2250,
     actionTimeInSeconds: 0,
   },
 ]

@@ -114,13 +114,13 @@ export interface TreeService {
   getNearestObstacle: (x: number) => GameObjectTree | undefined
 }
 
-export type GameObjectState =
-  | 'MOVING'
-  | 'IDLE'
-  | 'WAITING'
-  | 'CHOPPING'
-  | 'MINING'
-  | 'DESTROYED'
+export type GameObjectState
+  = | 'MOVING'
+    | 'IDLE'
+    | 'WAITING'
+    | 'CHOPPING'
+    | 'MINING'
+    | 'DESTROYED'
 
 export type GameObjectDirection = 'LEFT' | 'RIGHT'
 

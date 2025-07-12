@@ -2,8 +2,8 @@ import type { CharacterEditionWithCharacter } from './types'
 
 export type EventMessage = { id: string } & Events
 
-export type Events =
-  | EventNewPlayerMessage
+export type Events
+  = | EventNewPlayerMessage
 
 type EventNewPlayerMessage = {
   type: 'NEW_PLAYER_MESSAGE'

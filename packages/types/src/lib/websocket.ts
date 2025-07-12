@@ -35,21 +35,21 @@ export interface GameObjectPlayer {
 
 export type WebSocketMessage = { id: string } & WebSocketEvents
 
-export type WebSocketEvents =
-  | WebSocketConnect
-  | WebSocketConnectAddon
-  | WebSocketConnectedToWagonRoom
-  | WebSocketDisconnectedFromWagonRoom
-  | WebSocketEventCommand
-  | WebSocketEventMessage
-  | WebSocketEventLevelUp
-  | WebSocketWoodlandMessage
-  | WebSocketWoodlandCommand
-  | WebSocketNewTree
-  | WebSocketDestroyTree
-  | WebSocketNewWagonTarget
-  | WebSocketNewPlayerTarget
-  | WebSocketWagonRoomDestroy
+export type WebSocketEvents
+  = | WebSocketConnect
+    | WebSocketConnectAddon
+    | WebSocketConnectedToWagonRoom
+    | WebSocketDisconnectedFromWagonRoom
+    | WebSocketEventCommand
+    | WebSocketEventMessage
+    | WebSocketEventLevelUp
+    | WebSocketWoodlandMessage
+    | WebSocketWoodlandCommand
+    | WebSocketNewTree
+    | WebSocketDestroyTree
+    | WebSocketNewWagonTarget
+    | WebSocketNewPlayerTarget
+    | WebSocketWagonRoomDestroy
 
 export interface WebSocketConnectAddon {
   type: 'CONNECT_ADDON'

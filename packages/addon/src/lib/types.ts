@@ -91,13 +91,13 @@ export interface PlayerService {
   ) => Promise<GameObjectPlayer>
 }
 
-export type GameObjectState =
-  | 'MOVING'
-  | 'IDLE'
-  | 'WAITING'
-  | 'CHOPPING'
-  | 'MINING'
-  | 'DESTROYED'
+export type GameObjectState
+  = | 'MOVING'
+    | 'IDLE'
+    | 'WAITING'
+    | 'CHOPPING'
+    | 'MINING'
+    | 'DESTROYED'
 
 export type GameObjectDirection = 'LEFT' | 'RIGHT'
 

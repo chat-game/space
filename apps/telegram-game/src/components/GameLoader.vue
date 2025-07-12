@@ -16,6 +16,6 @@
 </template>
 
 <script setup lang="ts">
-import { isLoading } from '@/utils/gameClient'
 import LucideLoaderCircle from '~icons/lucide/loader-circle'
+import { isLoading } from '@/utils/gameClient'
 </script>
