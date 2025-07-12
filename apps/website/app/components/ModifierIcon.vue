@@ -19,10 +19,11 @@ const { modifier } = defineProps<{
   modifier: ChargeModifier
 }>()
 
-const seconds = ref<number>(Math.round(Math.abs(modifier.expiredAt - Date.now()) / 1000))
-const { start, remaining } = useCountdown(seconds)
+const { start, remaining } = useCountdown(Math.round(Math.abs(modifier.expiredAt - Date.now()) / 1000))
 
-start()
+onMounted(() => {
+  start()
+})
 
 function getEffectColor(code: string) {
   if (code.startsWith('positive')) {
