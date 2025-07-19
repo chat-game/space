@@ -2,7 +2,7 @@ packages:
   - apps/*
   - packages/*
 catalog:
-  '@antfu/eslint-config': ^4.16.2
+  '@antfu/eslint-config': ^4.17.0
   '@commitlint/cli': ^19.8.1
   '@commitlint/config-conventional': ^19.8.1
   '@d-fischer/typed-event-emitter': ^3.3.3
@@ -10,21 +10,21 @@ catalog:
   '@donation-alerts/auth': ^4.0.0
   '@donation-alerts/events': ^4.0.0
   '@iconify-json/lucide': ^1.2.57
-  '@iconify-json/simple-icons': ^1.2.42
+  '@iconify-json/simple-icons': ^1.2.43
   '@iconify/vue': ^5.0.0
   '@neoconfetti/vue': ^2.2.1
   '@number-flow/vue': ^0.4.8
-  '@nuxt/devtools': ^2.4.0
+  '@nuxt/devtools': ^2.6.2
   '@nuxt/fonts': ^0.11.4
   '@nuxt/icon': ^1.15.0
-  '@nuxt/kit': ^3.17.1
-  '@nuxtjs/i18n': ^9.5.4
+  '@nuxt/kit': ^3.17.7
+  '@nuxtjs/i18n': ^9.5.6
   '@paralleldrive/cuid2': ^2.2.2
-  '@prisma/client': ^6.2.1
-  '@tailwindcss/vite': ^4.1.5
+  '@prisma/client': ^6.12.0
+  '@tailwindcss/vite': ^4.1.11
   '@telegram-apps/init-data-node': ^1.2.2
   '@telegram-apps/sdk-vue': ^1.0.15
-  '@tsconfig/node22': ^22.0.1
+  '@tsconfig/node22': ^22.0.2
   '@tsparticles/engine': ^3.8.1
   '@tsparticles/slim': ^3.8.1
   '@tsparticles/vue3': ^3.0.1
@@ -34,10 +34,10 @@ catalog:
   '@twurple/easy-bot': ^7.3.0
   '@twurple/eventsub-ws': ^7.3.0
   '@types/howler': ^2.2.12
-  '@types/node': ^24.0.13
-  '@vitejs/plugin-vue': ^5.2.3
-  '@vitest/browser': ^3.1.2
-  '@vitest/coverage-v8': ^3.1.2
+  '@types/node': ^24.0.15
+  '@vitejs/plugin-vue': ^5.2.4
+  '@vitest/browser': ^3.2.4
+  '@vitest/coverage-v8': ^3.2.4
   '@vue/tsconfig': ^0.7.0
   '@vueuse/components': ^13.5.0
   '@vueuse/core': ^13.5.0
@@ -49,26 +49,26 @@ catalog:
   howler: ^2.2.4
   husky: ^9.1.7
   ioredis: ^5.6.1
-  lint-staged: ^15.5.1
-  nuxt: ^3.17.1
+  lint-staged: ^15.5.2
+  nuxt: ^3.17.7
   nuxt-auth-utils: ^0.5.20
   pixi.js: ^8.11.0
-  playwright: ^1.52.0
-  prisma: ^6.2.1
-  tailwindcss: ^4.0.4
+  playwright: ^1.54.1
+  prisma: ^6.12.0
+  tailwindcss: ^4.1.11
   typescript: ^5.8.3
-  unplugin-auto-import: ^19.1.2
+  unplugin-auto-import: ^19.3.0
   unplugin-icons: ^22.1.0
-  unplugin-vue-components: ^28.5.0
-  vite: ^6.3.4
+  unplugin-vue-components: ^28.8.0
+  vite: ^6.3.5
   vite-plugin-terminal: ^1.3.0
-  vite-plugin-vue-devtools: ^7.7.6
-  vitest: ^3.1.2
+  vite-plugin-vue-devtools: ^7.7.7
+  vitest: ^3.2.4
   vitest-browser-vue: ^0.2.0
   vue: ^3.5.17
   vue-i18n: ^11.1.3
   vue-router: ^4.5.1
-  vue-tsc: ^2.2.10
+  vue-tsc: ^2.2.12
   zod: ^4.0.5
 ignoredBuiltDependencies:
   - '@parcel/watcher'

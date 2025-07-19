@@ -20,7 +20,7 @@
     "telegram"
   ],
   "engines": {
-    "node": ">=22.15.0",
+    "node": ">=22.17.1",
     "pnpm": ">=10.13.1"
   },
   "scripts": {
