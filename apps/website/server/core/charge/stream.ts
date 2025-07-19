@@ -139,6 +139,10 @@ export class StreamCharge implements ChargeInstance {
     // Messages: +1 each
     positive += this.messages.filter((message) => !message.isExpired).length
 
+    // Limit +3 or -3
+    positive = Math.min(positive, 3)
+    negative = Math.min(negative, 3)
+
     return positive - negative
   }
 
