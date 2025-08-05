@@ -193,8 +193,8 @@ catalogs:
       specifier: ^3.1.2
       version: 3.1.2
     vitest-browser-vue:
-      specifier: ^0.2.0
-      version: 0.2.0
+      specifier: ^1.1.0
+      version: 1.1.0
     vue:
       specifier: ^3.5.17
       version: 3.5.17
@@ -250,7 +250,7 @@ importers:
         version: 3.1.2(@types/debug@4.1.12)(@types/node@24.0.13)(@vitest/browser@3.1.2)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.37.0)(yaml@2.7.0)
       vitest-browser-vue:
         specifier: 'catalog:'
-        version: 0.2.0(@vitest/browser@3.1.2)(vitest@3.1.2)(vue@3.5.17(typescript@5.8.3))
+        version: 1.1.0(@vitest/browser@3.1.2)(vitest@3.1.2)(vue@3.5.17(typescript@5.8.3))
 
   apps/telegram-game:
     dependencies:
@@ -1874,6 +1874,7 @@ packages:
 
   '@oxc-parser/wasm@0.60.0':
     resolution: {integrity: sha512-Dkf9/D87WGBCW3L0+1DtpAfL4SrNsgeRvxwjpKCtbH7Kf6K+pxrT0IridaJfmWKu1Ml+fDvj+7HEyBcfUC/TXQ==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   '@oxc-project/types@0.60.0':
     resolution: {integrity: sha512-prhfNnb3ATFHOCv7mzKFfwLij5RzoUz6Y1n525ZhCEqfq5wreCXL+DyVoq3ShukPo7q45ZjYIdjFUgjj+WKzng==}
@@ -7071,12 +7072,12 @@ packages:
       yaml:
         optional: true
 
-  vitest-browser-vue@0.2.0:
-    resolution: {integrity: sha512-18v3uUQebbtSba2jbqcRvqfUCebd3f0nFA3BLKFZF9P0vnj7QgOm2JAxlcCA1ytNSnyzV3OtnNeNpThRaW6AfA==}
+  vitest-browser-vue@1.1.0:
+    resolution: {integrity: sha512-zeMJ0fXRmvG225dXx4sMf5rb7vQC4OCRK7tuVRPCca4x93e2E7VRuPiKSwHRWDvCQQoA3VV09mJPO0xGm9VEEA==}
     engines: {node: ^18.0.0 || >=20.0.0}
     peerDependencies:
-      '@vitest/browser': ^2.1.0 || ^3.0.0-0
-      vitest: ^2.1.0 || ^3.0.0-0
+      '@vitest/browser': ^2.1.0 || ^3.0.0 || ^4.0.0-0
+      vitest: ^2.1.0 || ^3.0.0 || ^4.0.0-0
       vue: ^3.0.0
 
   vitest@3.1.2:
@@ -8391,7 +8392,7 @@ snapshots:
       nopt: 5.0.0
       npmlog: 5.0.1
       rimraf: 3.0.2
-      semver: 7.7.1
+      semver: 7.7.2
       tar: 6.2.1
     transitivePeerDependencies:
       - encoding
@@ -9837,7 +9838,7 @@ snapshots:
       debug: 4.4.0
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.7.1
+      semver: 7.7.2
       tsutils: 3.21.0(typescript@5.8.3)
     optionalDependencies:
       typescript: 5.8.3
@@ -11183,7 +11184,7 @@ snapshots:
       '@one-ini/wasm': 0.1.1
       commander: 10.0.1
       minimatch: 9.0.1
-      semver: 7.7.1
+      semver: 7.7.2
 
   ee-first@1.1.1: {}
 
@@ -13211,7 +13212,7 @@ snapshots:
   normalize-package-data@6.0.2:
     dependencies:
       hosted-git-info: 7.0.2
-      semver: 7.7.1
+      semver: 7.7.2
       validate-npm-package-license: 3.0.4
 
   normalize-path@2.1.1:
@@ -14982,7 +14983,7 @@ snapshots:
       terser: 5.37.0
       yaml: 2.7.0
 
-  vitest-browser-vue@0.2.0(@vitest/browser@3.1.2)(vitest@3.1.2)(vue@3.5.17(typescript@5.8.3)):
+  vitest-browser-vue@1.1.0(@vitest/browser@3.1.2)(vitest@3.1.2)(vue@3.5.17(typescript@5.8.3)):
     dependencies:
       '@vitest/browser': 3.1.2(playwright@1.52.0)(vite@6.3.4(@types/node@24.0.13)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.37.0)(yaml@2.7.0))(vitest@3.1.2)
       '@vue/test-utils': 2.4.6
