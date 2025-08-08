@@ -49,7 +49,7 @@ catalog:
   howler: ^2.2.4
   husky: ^9.1.7
   ioredis: ^5.6.1
-  lint-staged: ^15.5.1
+  lint-staged: ^16.1.5
   nuxt: ^3.17.1
   nuxt-auth-utils: ^0.5.20
   pixi.js: ^8.11.0
