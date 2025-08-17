@@ -82,6 +82,11 @@ onMounted(async () => {
 })
 
 onUnmounted(() => {
+  // Detach the canvas and fully destroy the PIXI Application
+  if (stage.value?.contains(game.app.canvas)) {
+    stage.value.removeChild(game.app.canvas)
+  }
+
   game.destroy()
 })
 </script>
