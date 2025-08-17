@@ -1,4 +1,4 @@
-import { BaseGameAddon } from '@chat-game/game'
+import { BaseGameAddon } from '@chat-game/game-addon'
 
 const websocketUrl = 'wss://chatgame.space/api/websocket'
 const gameClient = new BaseGameAddon({ websocketUrl, client: 'TELEGRAM_CLIENT' })

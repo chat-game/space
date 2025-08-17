@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import type { LeaderboardData } from '@chat-game/types'
-import { BaseGameAddon } from '@chat-game/game'
+import { BaseGameAddon } from '@chat-game/game-addon'
 import NumberFlow from '@number-flow/vue'
 
 definePageMeta({
