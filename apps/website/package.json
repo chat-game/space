@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@chat-game/addon": "workspace:*",
-    "@chat-game/game": "workspace:*",
+    "@chat-game/game-addon": "workspace:*",
     "@chat-game/locale": "workspace:*",
     "@chat-game/types": "workspace:*",
     "@donation-alerts/api": "catalog:",

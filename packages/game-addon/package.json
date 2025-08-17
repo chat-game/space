@@ -1,5 +1,5 @@
 {
-  "name": "@chat-game/game",
+  "name": "@chat-game/game-addon",
   "type": "module",
   "private": true,
   "main": "./src/index.ts",

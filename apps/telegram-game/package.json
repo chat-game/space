@@ -11,7 +11,7 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "@chat-game/game": "workspace:*",
+    "@chat-game/game-addon": "workspace:*",
     "@chat-game/locale": "workspace:*",
     "@chat-game/types": "workspace:*",
     "@neoconfetti/vue": "catalog:",
