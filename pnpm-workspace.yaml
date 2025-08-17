@@ -15,9 +15,7 @@ catalog:
   '@neoconfetti/vue': ^2.2.1
   '@number-flow/vue': ^0.4.8
   '@nuxt/devtools': ^2.6.2
-  '@nuxt/fonts': ^0.11.4
-  '@nuxt/icon': ^2.0.0
-  '@nuxt/kit': ^4.0.3
+  '@nuxt/ui': ^3.3.2
   '@nuxtjs/i18n': ^10.0.5
   '@paralleldrive/cuid2': ^2.2.2
   '@prisma/client': ^6.2.1

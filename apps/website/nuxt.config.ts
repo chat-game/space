@@ -50,6 +50,13 @@ export default defineNuxtConfig({
       },
     },
   },
+  ui: {
+    colorMode: true,
+    fonts: true,
+  },
+  colorMode: {
+    storageKey: 'color-mode',
+  },
   css: ['~/assets/css/styles.css'],
   runtimeConfig: {
     redisUrl: '',
@@ -102,8 +109,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     'nuxt-auth-utils',
     '@nuxtjs/i18n',
-    '@nuxt/fonts',
-    '@nuxt/icon',
+    '@nuxt/ui',
   ],
   compatibilityDate: '2024-08-18',
 })
