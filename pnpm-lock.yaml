@@ -257,9 +257,9 @@ importers:
 
   apps/telegram-game:
     dependencies:
-      '@chat-game/game':
+      '@chat-game/game-addon':
         specifier: workspace:*
-        version: link:../../packages/game
+        version: link:../../packages/game-addon
       '@chat-game/locale':
         specifier: workspace:*
         version: link:../../packages/locale
@@ -354,9 +354,9 @@ importers:
       '@chat-game/addon':
         specifier: workspace:*
         version: link:../../packages/addon
-      '@chat-game/game':
+      '@chat-game/game-addon':
         specifier: workspace:*
-        version: link:../../packages/game
+        version: link:../../packages/game-addon
       '@chat-game/locale':
         specifier: workspace:*
         version: link:../../packages/locale
@@ -482,7 +482,7 @@ importers:
         specifier: 'catalog:'
         version: 8.12.0
 
-  packages/game:
+  packages/game-addon:
     dependencies:
       '@chat-game/types':
         specifier: workspace:*
