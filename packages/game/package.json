@@ -1,0 +1,20 @@
+{
+  "name": "@chat-game/game",
+  "type": "module",
+  "private": true,
+  "main": "./src/index.ts",
+  "files": [
+    "src/**/*"
+  ],
+  "scripts": {
+    "clean": "rm -rf dist",
+    "clean:modules": "rm -rf node_modules",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@chat-game/types": "workspace:*",
+    "@paralleldrive/cuid2": "catalog:",
+    "@vueuse/core": "catalog:",
+    "pixi.js": "catalog:"
+  }
+}
