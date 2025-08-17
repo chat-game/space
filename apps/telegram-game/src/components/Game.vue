@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import type { BaseGameAddon } from '@chat-game/game'
+import type { BaseGameAddon } from '@chat-game/game-addon'
 import { hapticFeedback, initData } from '@telegram-apps/sdk-vue'
 import { useI18n } from 'vue-i18n'
 import { gameClient, isLoading, roomConnected, setAsLoaded } from '../utils/gameClient'

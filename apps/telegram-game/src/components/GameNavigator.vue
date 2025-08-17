@@ -23,8 +23,8 @@
 
 <script setup lang="ts">
 const { playerX, wagonX } = defineProps<{
-  playerX?: number
-  wagonX?: number
+  playerX?: number | undefined
+  wagonX?: number | undefined
 }>()
 
 const wagonOnNavigator = computed(() => playerX && wagonX ? (wagonX - playerX) / 50 + 50 : 0)
