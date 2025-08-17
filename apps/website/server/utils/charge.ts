@@ -1,4 +1,4 @@
-import type { Charge } from '~~/types/charge'
+import type { Charge } from '#shared/types/charge'
 import { StreamCharge } from '../core/charge/stream'
 import { DonateController } from '../core/donate/controller'
 import { TwitchChatController } from './twitch/chat.controller'

@@ -1,6 +1,6 @@
+import type { Room } from '#shared/types/room'
 import type { GameObject } from '@chat-game/types'
 import type { Peer } from 'crossws'
-import type { Room } from '~~/types/room'
 import type { Chunk } from './types'
 import { createId } from '@paralleldrive/cuid2'
 import { ForestChunk } from './chunk/forestChunk'

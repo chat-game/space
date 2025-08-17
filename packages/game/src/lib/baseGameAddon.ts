@@ -277,6 +277,8 @@ export class BaseGameAddon extends Container implements GameAddon {
       this.cameraX += addToX * moduleX
     }
 
-    this.parent.x = this.cameraX
+    if (this.parent) {
+      this.parent.x = this.cameraX
+    }
   }
 }

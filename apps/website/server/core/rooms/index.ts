@@ -1,3 +1,3 @@
-import type { Room } from '~~/types/room'
+import type { Room } from '#shared/types/room'
 
 export const activeRooms: Room[] = []

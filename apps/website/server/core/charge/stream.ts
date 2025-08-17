@@ -1,7 +1,7 @@
+import type { ChargeEventService, ChargeInstance, ChargeModifier } from '#shared/types/charge'
 import type { CharacterEditionWithCharacter } from '@chat-game/types'
 import type { DonationAlertsDonationEvent } from '@donation-alerts/events'
 import type { TwitchChatController } from '~~/server/utils/twitch/chat.controller'
-import type { ChargeEventService, ChargeInstance, ChargeModifier } from '~~/types/charge'
 import type { DonateController } from '../donate/controller'
 import { createId } from '@paralleldrive/cuid2'
 import { EventService } from './event'

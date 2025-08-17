@@ -1,5 +1,5 @@
+import type { ChargeEventService, ChargeInstance, EventStream } from '#shared/types/charge'
 import type { EventMessage } from '@chat-game/types'
-import type { ChargeEventService, ChargeInstance, EventStream } from '~~/types/charge'
 
 export class EventService implements ChargeEventService {
   stream: EventStream | null = null
