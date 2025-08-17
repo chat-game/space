@@ -39,7 +39,7 @@
         <p>GitHub</p>
         <div class="flex flex-row items-center gap-1">
           <Icon name="lucide:star" class="!size-5" />
-          <p>24</p>
+          <p>26</p>
         </div>
       </a>
     </div>

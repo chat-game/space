@@ -106,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ChargeModifier } from '~~/types/charge'
+import type { ChargeModifier } from '#shared/types/charge'
 import NumberFlow from '@number-flow/vue'
 
 definePageMeta({
