@@ -1,7 +1,7 @@
 {
   "name": "@chat-game/space",
   "private": true,
-  "packageManager": "pnpm@10.14.0",
+  "packageManager": "pnpm@10.15.0",
   "description": "Chat Game for Twitch",
   "author": "Nick Kosarev <hmbanan666@hotmail.com>",
   "license": "MIT",
@@ -20,8 +20,8 @@
     "telegram"
   ],
   "engines": {
-    "node": ">=22.18.0",
-    "pnpm": ">=10.14.0"
+    "node": ">=22.19.0",
+    "pnpm": ">=10.15.0"
   },
   "scripts": {
     "release": "changelogen-monorepo --release --push",
@@ -55,7 +55,7 @@
     "vitest-browser-vue": "catalog:"
   },
   "resolutions": {
-    "unimport": "4.1.1"
+    "unimport": "4.2.0"
   },
   "lint-staged": {
     "*.ts": "pnpm run lint"
